@@ -1,0 +1,58 @@
+{
+    "name": "rekalogika/mapper",
+    "description": "An object mapper for PHP and Symfony. Maps an object to another object. Primarily used for transforming an entity to a DTO and vice versa.",
+    "homepage": "https://rekalogika.dev/mapper",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "keywords": [
+        "mapper",
+        "automapper",
+        "dto",
+        "transformation",
+        "mapping",
+        "api",
+        "symfony",
+        "api-platform"
+    ],
+    "authors": [
+        {
+            "name": "Priyadi Iman Nurcahyo",
+            "email": "priyadi@rekalogika.com"
+        }
+    ],
+    "require": {
+        "psr/container": "^2.0",
+        "symfony/clock": "^6.4",
+        "symfony/config": "^6.4",
+        "symfony/dependency-injection": "^6.4",
+        "symfony/property-access": "^6.4",
+        "symfony/property-info": "^6.4",
+        "symfony/serializer": "^6.4",
+        "phpstan/phpdoc-parser": "^1.25"
+    },
+    "require-dev": {
+        "bnf/phpstan-psr-container": "^1.0",
+        "doctrine/collections": "^2.1",
+        "ekino/phpstan-banned-code": "^1.0",
+        "phpstan/phpstan": "^1.10.50",
+        "phpstan/phpstan-deprecation-rules": "^1.1",
+        "phpstan/phpstan-phpunit": "^1.3",
+        "phpunit/phpunit": "^9.6",
+        "psalm/plugin-phpunit": "^0.18.4",
+        "symfony/framework-bundle": "^6.4",
+        "symfony/http-kernel": "^6.4",
+        "symfony/phpunit-bridge": "^6.4",
+        "symfony/var-dumper": "^6.4",
+        "vimeo/psalm": "^5.18"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rekalogika\\Mapper\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rekalogika\\Mapper\\Tests\\": "tests/"
+        }
+    }
+}
