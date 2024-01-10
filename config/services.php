@@ -119,7 +119,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.type_string_helper', TypeStringHelper::class)
 
         ->set('rekalogika.mapper.mapping_factory', MappingFactory::class)
-            ->args([tagged_iterator('rekalogika.mapper.transformer')])
+            ->args([tagged_iterator('rekalogika.mapper.transformer', 'key')])
 
         ->alias(MappingFactoryInterface::class, 'rekalogika.mapper.mapping_factory')
 
