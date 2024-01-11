@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper;
 
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
@@ -34,6 +35,7 @@ use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
 use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Console\Application;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -41,7 +43,9 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -74,7 +78,8 @@ class MapperFactory
     private ?TraversableToArrayAccessTransformer $traversableToArrayAccessTransformer = null;
     private ?TraversableToTraversableTransformer $traversableToTraversableTransformer = null;
 
-    private ?PropertyTypeExtractorInterface $propertyTypeExtractor = null;
+    private CacheItemPoolInterface $propertyInfoExtractorCache;
+    private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
     private ?TypeResolverInterface $typeResolver = null;
     private ?MainTransformer $mainTransformer = null;
     private ?MapperInterface $mapper = null;
@@ -95,7 +100,9 @@ class MapperFactory
         private ?PropertyAccessor $propertyAccessor = null,
         private ?NormalizerInterface $normalizer = null,
         private ?DenormalizerInterface $denormalizer = null,
+        ?CacheItemPoolInterface $propertyInfoExtractorCache = null,
     ) {
+        $this->propertyInfoExtractorCache = $propertyInfoExtractorCache ?? new ArrayAdapter();
     }
 
     public function getMapper(): MapperInterface
@@ -108,7 +115,7 @@ class MapperFactory
     }
 
     //
-    // concrete services
+    // property info
     //
 
     private function getReflectionExtractor(): ReflectionExtractor
@@ -128,6 +135,53 @@ class MapperFactory
 
         return $this->phpStanExtractor;
     }
+
+    private function getPropertyInfoExtractor(): PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface
+    {
+        if ($this->propertyInfoExtractor === null) {
+            $propertyInfoExtractor = new PropertyInfoExtractor(
+                listExtractors: [
+                    $this->getReflectionExtractor(),
+                ],
+                typeExtractors: [
+                    $this->getPhpStanExtractor(),
+                    $this->getReflectionExtractor(),
+                ],
+                accessExtractors: [
+                    $this->getReflectionExtractor(),
+                ],
+                initializableExtractors: [
+                    $this->getReflectionExtractor(),
+                ],
+            );
+
+            $this->propertyInfoExtractor = new PropertyInfoCacheExtractor(
+                $propertyInfoExtractor,
+                $this->propertyInfoExtractorCache,
+            );
+        }
+
+        return $this->propertyInfoExtractor;
+    }
+
+    private function getPropertyInitializableExtractor(): PropertyInitializableExtractorInterface
+    {
+        return $this->getPropertyInfoExtractor();
+    }
+
+    private function getPropertyAccessExtractor(): PropertyAccessExtractorInterface
+    {
+        return $this->getPropertyInfoExtractor();
+    }
+
+    private function getPropertyListExtractor(): PropertyListExtractorInterface
+    {
+        return $this->getPropertyInfoExtractor();
+    }
+
+    //
+    // concrete services
+    //
 
     private function getConcretePropertyAccessor(): PropertyAccessorInterface
     {
@@ -161,35 +215,6 @@ class MapperFactory
     //
     // interfaces
     //
-
-    private function getPropertyListExtractor(): PropertyListExtractorInterface
-    {
-        return $this->getReflectionExtractor();
-    }
-
-    private function getPropertyTypeExtractor(): PropertyTypeExtractorInterface
-    {
-        if ($this->propertyTypeExtractor === null) {
-            $this->propertyTypeExtractor = new PropertyInfoExtractor(
-                typeExtractors: [
-                    $this->getPhpStanExtractor(),
-                    $this->getReflectionExtractor(),
-                ],
-            );
-        }
-
-        return $this->propertyTypeExtractor;
-    }
-
-    private function getPropertyInitializableExtractor(): PropertyInitializableExtractorInterface
-    {
-        return $this->getReflectionExtractor();
-    }
-
-    private function getPropertyAccessExtractor(): PropertyAccessExtractorInterface
-    {
-        return $this->getReflectionExtractor();
-    }
 
     private function getPropertyAccessor(): PropertyAccessorInterface
     {
@@ -232,7 +257,7 @@ class MapperFactory
         if (null === $this->objectToObjectTransformer) {
             $this->objectToObjectTransformer = new ObjectToObjectTransformer(
                 $this->getPropertyListExtractor(),
-                $this->getPropertyTypeExtractor(),
+                $this->getPropertyInfoExtractor(),
                 $this->getPropertyInitializableExtractor(),
                 $this->getPropertyAccessExtractor(),
                 $this->getPropertyAccessor(),

@@ -5,6 +5,8 @@
 * Use `MappingFactoryInterface` everywhere instead of `MappingFactory`
 * Move some `TypeUtil` methods to `TypeResolver` for optimization opportunities
 * use `ObjectCacheFactory` to generate `ObjectCache` instances
+* Update `MapperFactory` to reflect framework usage
+* Use property info caching in non-framework usage
 
 ## 0.5.2
 

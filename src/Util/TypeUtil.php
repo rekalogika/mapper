@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\Util;
 
 use DaveLiddament\PhpLanguageExtensions\Friend;
 use DaveLiddament\PhpLanguageExtensions\NamespaceVisibility;
-use Rekalogika\Mapper\Contracts\TypeMapping;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\MapperReturnsUnexpectedValueException;
 use Rekalogika\Mapper\Model\MixedType;
