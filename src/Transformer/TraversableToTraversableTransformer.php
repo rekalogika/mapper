@@ -168,6 +168,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         ];
 
         $targetTypes = [
+            TypeFactory::objectOfClass(\Generator::class),
             TypeFactory::objectOfClass(\Traversable::class),
         ];
 

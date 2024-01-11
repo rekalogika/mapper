@@ -33,6 +33,7 @@ class TraversableToTraversableMappingTest extends AbstractIntegrationTest
 
         $this->assertInstanceOf(ObjectWithTraversablePropertyDto::class, $result);
         $this->assertNotNull($result->property);
+        $this->assertInstanceOf(\Generator::class, $result->property);
 
         foreach ($result->property as $item) {
             $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $item);
@@ -52,6 +53,7 @@ class TraversableToTraversableMappingTest extends AbstractIntegrationTest
 
         $this->assertInstanceOf(ObjectWithTraversablePropertyDto::class, $result);
         $this->assertNotNull($result->property);
+        $this->assertInstanceOf(\Generator::class, $result->property);
 
         foreach ($result->property as $item) {
             $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $item);
