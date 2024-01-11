@@ -84,12 +84,27 @@ class MainTransformer implements MainTransformerInterface
             $objectCache = $context[self::OBJECT_CACHE];
         }
 
-        // init vars
+        // gets simple target types from the provided target type
 
-        $targetType = $this->typeResolver->getSimpleTypes($targetType);
-        $sourceType = $this->typeResolver->guessTypeFromVariable($source);
+        if ($targetType instanceof Type) {
+            $targetType = [$targetType];
+        }
+
+        $simpleTargetTypes = [];
 
         foreach ($targetType as $singleTargetType) {
+            foreach ($this->typeResolver->getSimpleTypes($singleTargetType) as $simpleType) {
+                $simpleTargetTypes[] = $simpleType;
+            }
+        }
+
+        // guess the source type
+
+        $sourceType = $this->typeResolver->guessTypeFromVariable($source);
+
+        // iterate simple target types and find the suitable transformer
+
+        foreach ($simpleTargetTypes as $singleTargetType) {
             $transformers = $this->getTransformers($sourceType, $singleTargetType);
 
             foreach ($transformers as $transformer) {

@@ -67,17 +67,13 @@ class TypeUtil
     /**
      * Gets all the possible simple types from a Type
      *
-     * @param Type|array<array-key,Type> $type
+     * @param Type $type
      * @return array<array-key,Type>
      */
     #[Friend(TypeResolver::class)]
-    public static function getSimpleTypes(Type|array $type, bool $withParents = false): array
+    public static function getSimpleTypes(Type $type, bool $withParents = false): array
     {
-        if (!is_array($type)) {
-            $type = [$type];
-        }
-
-        return self::getTypePermutations($type, withParents: $withParents);
+        return self::getTypePermutations([$type], withParents: $withParents);
     }
 
     /**

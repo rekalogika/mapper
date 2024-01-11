@@ -33,6 +33,7 @@ use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
+use Rekalogika\Mapper\TypeResolver\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
@@ -358,7 +359,7 @@ class MapperFactory
     protected function getTypeResolver(): TypeResolverInterface
     {
         if (null === $this->typeResolver) {
-            $this->typeResolver = new TypeResolver();
+            $this->typeResolver = new CachingTypeResolver(new TypeResolver());
         }
 
         return $this->typeResolver;

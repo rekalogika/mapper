@@ -30,6 +30,7 @@ use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
+use Rekalogika\Mapper\TypeResolver\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
@@ -158,14 +159,23 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ])
         ->tag('kernel.cache_warmer');
 
+    # type resolver
+
+    $services
+        ->set('rekalogika.mapper.type_resolver', TypeResolver::class);
+
+    $services
+        ->set('rekalogika.mapper.type_resolver.caching', CachingTypeResolver::class)
+        ->decorate('rekalogika.mapper.type_resolver')
+        ->args([
+            service('rekalogika.mapper.type_resolver.caching.inner'),
+        ]);
+
     # other services
 
     $services
         ->set('rekalogika.mapper.object_cache_factory', ObjectCacheFactory::class)
         ->args([service('rekalogika.mapper.type_resolver')]);
-
-    $services
-        ->set('rekalogika.mapper.type_resolver', TypeResolver::class);
 
     $services
         ->set('rekalogika.mapper.main_transformer', MainTransformer::class)

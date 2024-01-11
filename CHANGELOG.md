@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.4
+
+* Add a caching layer for `TypeResolver`
+
 ## 0.5.3
 
 * Use `MappingFactoryInterface` everywhere instead of `MappingFactory`

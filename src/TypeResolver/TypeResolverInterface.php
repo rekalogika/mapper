@@ -23,15 +23,21 @@ interface TypeResolverInterface
      */
     public function guessTypeFromVariable(mixed $variable): Type;
 
+    /**
+     * Gets the string representation of a Type.
+     *
+     * @param Type|MixedType $type
+     * @return string
+     */
     public function getTypeString(Type|MixedType $type): string;
 
     /**
      * Gets all the possible simple types from a Type
      *
-     * @param Type|array<array-key,Type> $type
+     * @param Type $type
      * @return array<array-key,Type>
      */
-    public function getSimpleTypes(Type|array $type): array;
+    public function getSimpleTypes(Type $type): array;
 
     /**
      * Simple Type is a type that is not nullable, and does not have more
@@ -49,8 +55,8 @@ interface TypeResolverInterface
      *
      * Note: IteratorAggregate extends Traversable
      *
-     * @param array<int,Type>|Type|MixedType $type
+     * @param Type|MixedType $type
      * @return array<int,string>
      */
-    public function getApplicableTypeStrings(array|Type|MixedType $type): array;
+    public function getApplicableTypeStrings(Type|MixedType $type): array;
 }

@@ -74,31 +74,21 @@ class TypeResolver implements TypeResolverInterface
     /**
      * Gets all the possible simple types from a Type
      *
-     * @param Type|array<array-key,Type> $type
+     * @param Type $type
      * @return array<array-key,Type>
      */
-    public function getSimpleTypes(Type|array $type): array
+    public function getSimpleTypes(Type $type): array
     {
         return TypeUtil::getSimpleTypes($type);
     }
 
-    public function getApplicableTypeStrings(array|Type|MixedType $type): array
+    public function getApplicableTypeStrings(Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {
             $type = ['mixed'];
             return $type;
         }
 
-        if ($type instanceof Type) {
-            $type = [$type];
-        }
-
-        $typeStrings = [];
-
-        foreach ($type as $type) {
-            $typeStrings = array_merge($typeStrings, TypeUtil::getAllTypeStrings($type, true));
-        }
-
-        return $typeStrings;
+        return TypeUtil::getAllTypeStrings($type, true);
     }
 }
