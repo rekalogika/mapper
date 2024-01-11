@@ -22,7 +22,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'debug:mapper:mapping', description: 'Dump mapping table')]
+#[AsCommand(name: 'rekalogika:mapper:mapping', description: 'Dump mapping table')]
 class MappingCommand extends Command
 {
     public function __construct(

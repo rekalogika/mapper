@@ -8,6 +8,7 @@
 * Update `MapperFactory` to reflect framework usage
 * Use property info caching in non-framework usage
 * Add mapping caching
+* Change console command to use `rekalogika` prefix
 
 ## 0.5.2
 

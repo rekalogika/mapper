@@ -25,7 +25,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'debug:mapper:try', description: 'Gets the mapping result from a source and target type pair.')]
+#[AsCommand(name: 'rekalogika:mapper:try', description: 'Gets the mapping result from a source and target type pair.')]
 class TryCommand extends Command
 {
     public function __construct(
