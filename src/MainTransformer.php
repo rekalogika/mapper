@@ -20,7 +20,7 @@ use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Exception\UnableToFindSuitableTransformerException;
 use Rekalogika\Mapper\Mapping\MappingEntry;
-use Rekalogika\Mapper\Mapping\MappingFactory;
+use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Model\MixedType;
 use Rekalogika\Mapper\Model\ObjectCache;
 use Rekalogika\Mapper\Util\TypeUtil;
@@ -33,7 +33,7 @@ class MainTransformer implements MainTransformerInterface
     public function __construct(
         private ContainerInterface $transformersLocator,
         private TypeStringHelper $typeStringHelper,
-        private MappingFactory $mappingFactory
+        private MappingFactoryInterface $mappingFactory
     ) {
     }
 

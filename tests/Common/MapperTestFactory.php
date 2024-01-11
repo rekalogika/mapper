@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Tests\Common;
 
 use Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\MapperFactory;
-use Rekalogika\Mapper\Mapping\MappingFactory;
+use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\TypeStringHelper;
 
 class MapperTestFactory extends MapperFactory
@@ -35,7 +35,7 @@ class MapperTestFactory extends MapperFactory
         return parent::getMainTransformer();
     }
 
-    public function getMappingFactory(): MappingFactory
+    public function getMappingFactory(): MappingFactoryInterface
     {
         return parent::getMappingFactory();
     }

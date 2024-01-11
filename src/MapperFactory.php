@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Mapping\MappingFactory;
+use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Model\ServiceLocator;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
@@ -73,7 +74,7 @@ class MapperFactory
     private ?TypeStringHelper $typeStringHelper = null;
     private ?MainTransformer $mainTransformer = null;
     private ?MapperInterface $mapper = null;
-    private ?MappingFactory $mappingFactory = null;
+    private ?MappingFactoryInterface $mappingFactory = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -372,7 +373,7 @@ class MapperFactory
         return $this->mainTransformer;
     }
 
-    protected function getMappingFactory(): MappingFactory
+    protected function getMappingFactory(): MappingFactoryInterface
     {
         if (null === $this->mappingFactory) {
             $this->mappingFactory = new MappingFactory(

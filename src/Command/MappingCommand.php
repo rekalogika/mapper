@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Command;
 
-use Rekalogika\Mapper\Mapping\MappingFactory;
+use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -26,7 +26,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class MappingCommand extends Command
 {
     public function __construct(
-        private MappingFactory $mappingFactory
+        private MappingFactoryInterface $mappingFactory
     ) {
         parent::__construct();
     }

@@ -40,112 +40,134 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
-    $services = $containerConfigurator->services()
+    $services = $containerConfigurator->services();
 
     # Property info
 
+    $services
         ->set('rekalogika.mapper.property_info', PropertyInfoExtractor::class)
-            ->args([
-                '$listExtractors' => [
-                    service('property_info.reflection_extractor')
-                ],
-                '$typeExtractors' => [
-                    service('property_info.phpstan_extractor'),
-                    service('property_info.reflection_extractor'),
-                ],
-                '$accessExtractors' => [
-                    service('property_info.reflection_extractor')
-                ],
-                '$initializableExtractors' => [
-                    service('property_info.reflection_extractor')
-                ],
+        ->args([
+            '$listExtractors' => [
+                service('property_info.reflection_extractor')
+            ],
+            '$typeExtractors' => [
+                service('property_info.phpstan_extractor'),
+                service('property_info.reflection_extractor'),
+            ],
+            '$accessExtractors' => [
+                service('property_info.reflection_extractor')
+            ],
+            '$initializableExtractors' => [
+                service('property_info.reflection_extractor')
+            ],
 
-            ])
+        ]);
 
+    $services
         ->set('rekalogika.mapper.cache.property_info')
-            ->parent('cache.system')
-            ->tag('cache.pool')
+        ->parent('cache.system')
+        ->tag('cache.pool');
 
+    $services
         ->set('rekalogika.mapper.property_info.cache', PropertyInfoCacheExtractor::class)
-            ->decorate('rekalogika.mapper.property_info')
-            ->args([
-                service('rekalogika.mapper.property_info.cache.inner'),
-                service('rekalogika.mapper.cache.property_info')
-            ])
+        ->decorate('rekalogika.mapper.property_info')
+        ->args([
+            service('rekalogika.mapper.property_info.cache.inner'),
+            service('rekalogika.mapper.cache.property_info')
+        ]);
 
     # transformers
 
+    $services
         ->set('rekalogika.mapper.transformer.scalar_to_scalar', ScalarToScalarTransformer::class)
-            ->tag('rekalogika.mapper.transformer', ['priority' => -550])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
 
+    $services
         ->set('rekalogika.mapper.transformer.datetime', DateTimeTransformer::class)
-            ->tag('rekalogika.mapper.transformer', ['priority' => -600])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -600]);
 
+    $services
         ->set('rekalogika.mapper.transformer.string_to_backed_enum', StringToBackedEnumTransformer::class)
-            ->tag('rekalogika.mapper.transformer', ['priority' => -650])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -650]);
 
+    $services
         ->set('rekalogika.mapper.transformer.object_to_string', ObjectToStringTransformer::class)
-            ->tag('rekalogika.mapper.transformer', ['priority' => -700])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -700]);
 
+    $services
         ->set('rekalogika.mapper.transformer.traversable_to_arrayaccess', TraversableToArrayAccessTransformer::class)
-            ->tag('rekalogika.mapper.transformer', ['priority' => -750])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -750]);
 
+    $services
         ->set('rekalogika.mapper.transformer.traversable_to_traversable', TraversableToTraversableTransformer::class)
-            ->tag('rekalogika.mapper.transformer', ['priority' => -800])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -800]);
 
+    $services
         ->set('rekalogika.mapper.transformer.object_to_array', ObjectToArrayTransformer::class)
-            ->args([service(NormalizerInterface::class)])
-            ->tag('rekalogika.mapper.transformer', ['priority' => -850])
+        ->args([service(NormalizerInterface::class)])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -850]);
 
+    $services
         ->set('rekalogika.mapper.transformer.array_to_object', ArrayToObjectTransformer::class)
-            ->args([service(DenormalizerInterface::class)])
-            ->tag('rekalogika.mapper.transformer', ['priority' => -900])
+        ->args([service(DenormalizerInterface::class)])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -900]);
 
+    $services
         ->set('rekalogika.mapper.transformer.object_to_object', ObjectToObjectTransformer::class)
-            ->args([
-                '$propertyListExtractor' => service('rekalogika.mapper.property_info'),
-                '$propertyTypeExtractor' => service('rekalogika.mapper.property_info'),
-                '$propertyInitializableExtractor' => service('rekalogika.mapper.property_info'),
-                '$propertyAccessExtractor' => service('rekalogika.mapper.property_info'),
-                '$propertyAccessor' => service('property_accessor'),
-            ])
-            ->tag('rekalogika.mapper.transformer', ['priority' => -950])
+        ->args([
+            '$propertyListExtractor' => service('rekalogika.mapper.property_info'),
+            '$propertyTypeExtractor' => service('rekalogika.mapper.property_info'),
+            '$propertyInitializableExtractor' => service('rekalogika.mapper.property_info'),
+            '$propertyAccessExtractor' => service('rekalogika.mapper.property_info'),
+            '$propertyAccessor' => service('property_accessor'),
+        ])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -950]);
 
+    $services
         ->set('rekalogika.mapper.transformer.null', NullTransformer::class)
-            ->tag('rekalogika.mapper.transformer', ['priority' => -1000])
+        ->tag('rekalogika.mapper.transformer', ['priority' => -1000]);
+
+    # mappingfactory
+
+    $services
+        ->set('rekalogika.mapper.mapping_factory', MappingFactory::class)
+        ->args([tagged_iterator('rekalogika.mapper.transformer', 'key')]);
+
+    $services
+        ->alias(MappingFactoryInterface::class, 'rekalogika.mapper.mapping_factory');
 
     # other services
 
-        ->set('rekalogika.mapper.type_string_helper', TypeStringHelper::class)
+    $services
+        ->set('rekalogika.mapper.type_string_helper', TypeStringHelper::class);
 
-        ->set('rekalogika.mapper.mapping_factory', MappingFactory::class)
-            ->args([tagged_iterator('rekalogika.mapper.transformer', 'key')])
-
-        ->alias(MappingFactoryInterface::class, 'rekalogika.mapper.mapping_factory')
-
+    $services
         ->set('rekalogika.mapper.main_transformer', MainTransformer::class)
-            ->args([
-                '$transformersLocator' => tagged_locator('rekalogika.mapper.transformer'),
-                '$typeStringHelper' => service('rekalogika.mapper.type_string_helper'),
-                '$mappingFactory' => service('rekalogika.mapper.mapping_factory'),
-            ])
+        ->args([
+            '$transformersLocator' => tagged_locator('rekalogika.mapper.transformer'),
+            '$typeStringHelper' => service('rekalogika.mapper.type_string_helper'),
+            '$mappingFactory' => service('rekalogika.mapper.mapping_factory'),
+        ]);
 
+    $services
         ->set('rekalogika.mapper.mapper', Mapper::class)
-            ->args([service('rekalogika.mapper.main_transformer')])
+        ->args([service('rekalogika.mapper.main_transformer')]);
 
-        ->alias(MapperInterface::class, 'rekalogika.mapper.mapper')
+    $services
+        ->alias(MapperInterface::class, 'rekalogika.mapper.mapper');
 
     # console command
 
+    $services
         ->set('rekalogika.mapper.command.mapping', MappingCommand::class)
-            ->args([service('rekalogika.mapper.mapping_factory')])
-            ->tag('console.command')
+        ->args([service('rekalogika.mapper.mapping_factory')])
+        ->tag('console.command');
 
+    $services
         ->set('rekalogika.mapper.command.try', TryCommand::class)
-            ->args([
-                service('rekalogika.mapper.main_transformer'),
-                service('rekalogika.mapper.type_string_helper'),
-            ])
-            ->tag('console.command')
-    ;
+        ->args([
+            service('rekalogika.mapper.main_transformer'),
+            service('rekalogika.mapper.type_string_helper'),
+        ])
+        ->tag('console.command');
 };
