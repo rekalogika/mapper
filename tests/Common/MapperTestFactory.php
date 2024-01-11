@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Common;
 use Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\MapperFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
-use Rekalogika\Mapper\TypeStringHelper;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
 class MapperTestFactory extends MapperFactory
 {
@@ -25,9 +25,9 @@ class MapperTestFactory extends MapperFactory
         return parent::getTransformersIterator();
     }
 
-    public function getTypeStringHelper(): TypeStringHelper
+    public function getTypeResolver(): TypeResolverInterface
     {
-        return parent::getTypeStringHelper();
+        return parent::getTypeResolver();
     }
 
     public function getMainTransformer(): MainTransformer

@@ -68,7 +68,7 @@ class TestKernel extends Kernel
         yield 'rekalogika.mapper.transformer.array_to_object';
         yield 'rekalogika.mapper.transformer.object_to_object';
         yield 'rekalogika.mapper.transformer.null';
-        yield 'rekalogika.mapper.type_string_helper';
+        yield 'rekalogika.mapper.type_resolver';
         yield 'rekalogika.mapper.mapping_factory';
         yield 'rekalogika.mapper.main_transformer';
         yield 'rekalogika.mapper.mapper';

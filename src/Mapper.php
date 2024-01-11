@@ -52,7 +52,7 @@ final class Mapper implements MapperInterface
         } elseif (is_object($target)) {
             /** @var object $target */
             $targetClass = $target::class;
-            $targetType = TypeUtil::guessTypeFromVariable($target);
+            $targetType = null;
         } else {
             $targetClass = null;
             $targetType = TypeFactory::fromBuiltIn($target);
@@ -83,7 +83,7 @@ final class Mapper implements MapperInterface
             }
         }
 
-        if ($targetKeyType !== null || $targetValueType !== null) {
+        if ($targetType !== null && ($targetKeyType !== null || $targetValueType !== null)) {
             $targetType = new Type(
                 builtinType: $targetType->getBuiltinType(),
                 nullable: $targetType->isNullable(),
@@ -129,6 +129,6 @@ final class Mapper implements MapperInterface
             return $target;
         }
 
-        throw new UnexpectedValueException(sprintf('The transformer did not return the variable of expected type, expecting "%s", returned "%s".', TypeUtil::getTypeString($targetType), get_debug_type($target)));
+        throw new UnexpectedValueException(sprintf('The transformer did not return the variable of expected type, expecting "%s", returned "%s".', $targetType !== null ? TypeUtil::getTypeString($targetType) : 'unknown', get_debug_type($target)));
     }
 }

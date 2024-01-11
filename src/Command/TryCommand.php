@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Command;
 
 use Rekalogika\Mapper\MainTransformer;
-use Rekalogika\Mapper\TypeStringHelper;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -30,7 +30,7 @@ class TryCommand extends Command
 {
     public function __construct(
         private MainTransformer $mainTransformer,
-        private TypeStringHelper $typeStringHelper
+        private TypeResolverInterface $typeResolver
     ) {
         parent::__construct();
     }
@@ -55,7 +55,7 @@ class TryCommand extends Command
         /** @var string */
         $sourceTypeString = $input->getArgument('source');
         $sourceType = TypeFactory::fromString($sourceTypeString);
-        $sourceTypeStrings = $this->typeStringHelper
+        $sourceTypeStrings = $this->typeResolver
             ->getApplicableTypeStrings($sourceType);
 
         $rows[] = ['Source type', $sourceTypeString];
@@ -72,7 +72,7 @@ class TryCommand extends Command
         /** @var string */
         $targetTypeString = $input->getArgument('target');
         $targetType = TypeFactory::fromString($targetTypeString);
-        $targetTypeStrings = $this->typeStringHelper
+        $targetTypeStrings = $this->typeResolver
             ->getApplicableTypeStrings($targetType);
 
         $rows[] = new TableSeparator();

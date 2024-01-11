@@ -28,7 +28,7 @@ use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
-use Rekalogika\Mapper\TypeStringHelper;
+use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
@@ -120,6 +120,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$propertyInitializableExtractor' => service('rekalogika.mapper.property_info'),
             '$propertyAccessExtractor' => service('rekalogika.mapper.property_info'),
             '$propertyAccessor' => service('property_accessor'),
+            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -950]);
 
@@ -139,13 +140,13 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # other services
 
     $services
-        ->set('rekalogika.mapper.type_string_helper', TypeStringHelper::class);
+        ->set('rekalogika.mapper.type_resolver', TypeResolver::class);
 
     $services
         ->set('rekalogika.mapper.main_transformer', MainTransformer::class)
         ->args([
             '$transformersLocator' => tagged_locator('rekalogika.mapper.transformer'),
-            '$typeStringHelper' => service('rekalogika.mapper.type_string_helper'),
+            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$mappingFactory' => service('rekalogika.mapper.mapping_factory'),
         ]);
 
@@ -167,7 +168,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.command.try', TryCommand::class)
         ->args([
             service('rekalogika.mapper.main_transformer'),
-            service('rekalogika.mapper.type_string_helper'),
+            service('rekalogika.mapper.type_resolver'),
         ])
         ->tag('console.command');
 };

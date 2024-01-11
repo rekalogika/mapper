@@ -23,6 +23,7 @@ use Rekalogika\Mapper\Mapping\MappingEntry;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Model\MixedType;
 use Rekalogika\Mapper\Model\ObjectCache;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -32,7 +33,7 @@ class MainTransformer implements MainTransformerInterface
 
     public function __construct(
         private ContainerInterface $transformersLocator,
-        private TypeStringHelper $typeStringHelper,
+        private TypeResolverInterface $typeResolver,
         private MappingFactoryInterface $mappingFactory
     ) {
     }
@@ -69,7 +70,7 @@ class MainTransformer implements MainTransformerInterface
             if ($target === null) {
                 throw new LogicException('Either $target or $targetType must be provided');
             }
-            $targetType = TypeUtil::guessTypeFromVariable($target);
+            $targetType = $this->typeResolver->guessTypeFromVariable($target);
         }
 
         // get object cache
@@ -85,7 +86,7 @@ class MainTransformer implements MainTransformerInterface
         // init vars
 
         $targetType = TypeUtil::getSimpleTypes($targetType);
-        $sourceType = TypeUtil::guessTypeFromVariable($source);
+        $sourceType = $this->typeResolver->guessTypeFromVariable($source);
 
         foreach ($targetType as $singleTargetType) {
             $transformers = $this->getTransformers($sourceType, $singleTargetType);
@@ -131,10 +132,10 @@ class MainTransformer implements MainTransformerInterface
         Type|MixedType $sourceType,
         Type|MixedType $targetType,
     ): array {
-        $sourceTypeStrings = $this->typeStringHelper
+        $sourceTypeStrings = $this->typeResolver
             ->getApplicableTypeStrings($sourceType);
 
-        $targetTypeStrings = $this->typeStringHelper
+        $targetTypeStrings = $this->typeResolver
             ->getApplicableTypeStrings($targetType);
 
         return $this->mappingFactory->getMapping()

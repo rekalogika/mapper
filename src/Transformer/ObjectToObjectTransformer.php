@@ -21,9 +21,9 @@ use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\Model\ObjectCache;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
-use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
@@ -41,6 +41,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private PropertyAccessExtractorInterface $propertyAccessExtractor,
         private PropertyAccessorInterface $propertyAccessor,
+        private TypeResolverInterface $typeResolver,
     ) {
     }
 
@@ -74,7 +75,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new InvalidArgumentException(sprintf('The source must be an object, "%s" given.', get_debug_type($source)));
         }
 
-        $sourceType = TypeUtil::guessTypeFromVariable($source);
+        $sourceType = $this->typeResolver->guessTypeFromVariable($source);
 
         $targetClass = $targetType->getClassName();
 

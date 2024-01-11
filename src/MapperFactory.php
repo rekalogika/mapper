@@ -30,6 +30,8 @@ use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
+use Rekalogika\Mapper\TypeResolver\TypeResolver;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
@@ -71,7 +73,7 @@ class MapperFactory
     private ?TraversableToTraversableTransformer $traversableToTraversableTransformer = null;
 
     private ?PropertyTypeExtractorInterface $propertyTypeExtractor = null;
-    private ?TypeStringHelper $typeStringHelper = null;
+    private ?TypeResolverInterface $typeResolver = null;
     private ?MainTransformer $mainTransformer = null;
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
@@ -230,7 +232,8 @@ class MapperFactory
                 $this->getPropertyTypeExtractor(),
                 $this->getPropertyInitializableExtractor(),
                 $this->getPropertyAccessExtractor(),
-                $this->getPropertyAccessor()
+                $this->getPropertyAccessor(),
+                $this->getTypeResolver(),
             );
         }
 
@@ -317,13 +320,13 @@ class MapperFactory
     // other services
     //
 
-    protected function getTypeStringHelper(): TypeStringHelper
+    protected function getTypeResolver(): TypeResolverInterface
     {
-        if (null === $this->typeStringHelper) {
-            $this->typeStringHelper = new TypeStringHelper();
+        if (null === $this->typeResolver) {
+            $this->typeResolver = new TypeResolver();
         }
 
-        return $this->typeStringHelper;
+        return $this->typeResolver;
     }
 
     /**
@@ -365,7 +368,7 @@ class MapperFactory
         if (null === $this->mainTransformer) {
             $this->mainTransformer = new MainTransformer(
                 $this->getTransformersLocator(),
-                $this->getTypeStringHelper(),
+                $this->getTypeResolver(),
                 $this->getMappingFactory(),
             );
         }
@@ -404,7 +407,7 @@ class MapperFactory
         if (null === $this->tryCommand) {
             $this->tryCommand = new TryCommand(
                 $this->getMainTransformer(),
-                $this->getTypeStringHelper()
+                $this->getTypeResolver()
             );
         }
 

@@ -23,46 +23,6 @@ class TypeUtil
     {
     }
 
-    public static function guessTypeFromVariable(mixed $variable): Type
-    {
-        if (is_object($variable)) {
-            return TypeFactory::objectOfClass($variable::class);
-        }
-
-        if (is_null($variable)) {
-            return TypeFactory::null();
-        }
-
-        if (is_array($variable)) {
-            return TypeFactory::array();
-        }
-
-        if (is_bool($variable)) {
-            return TypeFactory::bool();
-        }
-
-        if (is_int($variable)) {
-            return TypeFactory::int();
-        }
-
-        if (is_float($variable)) {
-            return TypeFactory::float();
-        }
-
-        if (is_string($variable)) {
-            return TypeFactory::string();
-        }
-
-        if (is_resource($variable)) {
-            return TypeFactory::resource();
-        }
-
-        throw new InvalidArgumentException(sprintf(
-            'Cannot determine type of variable "%s"',
-            get_debug_type($variable),
-        ));
-    }
-
     /**
      * Simple Type is a type that is not nullable, and does not have more
      * than one key type or value type.
@@ -119,7 +79,7 @@ class TypeUtil
      * @param array<array-key,Type> $types
      * @return array<array-key,Type>
      */
-    public static function getTypePermutations(
+    private static function getTypePermutations(
         array $types,
         bool $withParents = false,
     ): array {
@@ -335,7 +295,7 @@ class TypeUtil
      * @param object|class-string $objectOrClass
      * @return array<int,class-string>
      */
-    public static function getAllClassesFromObject(
+    private static function getAllClassesFromObject(
         object|string $objectOrClass
     ): array {
         $classes = [];

@@ -11,14 +11,18 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper;
+namespace Rekalogika\Mapper\TypeResolver;
 
 use Rekalogika\Mapper\Model\MixedType;
-use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class TypeStringHelper
+interface TypeResolverInterface
 {
+    /**
+     * Guesses the type of the given variable.
+     */
+    public static function guessTypeFromVariable(mixed $variable): Type;
+
     /**
      * Example: If the variable type is
      * 'IteratorAggregate<int,IteratorAggregate<int,string>>', then this method
@@ -32,23 +36,5 @@ class TypeStringHelper
      * @param array<int,Type>|Type|MixedType $type
      * @return array<int,string>
      */
-    public function getApplicableTypeStrings(array|Type|MixedType $type): array
-    {
-        if ($type instanceof MixedType) {
-            $type = ['mixed'];
-            return $type;
-        }
-
-        if ($type instanceof Type) {
-            $type = [$type];
-        }
-
-        $typeStrings = [];
-
-        foreach ($type as $type) {
-            $typeStrings = array_merge($typeStrings, TypeUtil::getAllTypeStrings($type, true));
-        }
-
-        return $typeStrings;
-    }
+    public function getApplicableTypeStrings(array|Type|MixedType $type): array;
 }
