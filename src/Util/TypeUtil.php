@@ -13,8 +13,14 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Util;
 
+use DaveLiddament\PhpLanguageExtensions\Friend;
+use DaveLiddament\PhpLanguageExtensions\NamespaceVisibility;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Exception\MapperReturnsUnexpectedValueException;
 use Rekalogika\Mapper\Model\MixedType;
+use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtil2Test;
+use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtilTest;
+use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Symfony\Component\PropertyInfo\Type;
 
 class TypeUtil
@@ -218,10 +224,21 @@ class TypeUtil
         return $permutations;
     }
 
+    #[NamespaceVisibility(namespace: 'Rekalogika\Mapper\Exception')]
+    public static function getDebugType(Type $type): string
+    {
+        return TypeUtil::getTypeString($type);
+    }
+
     /**
      * @param Type|MixedType $type
      * @return string
      */
+    #[Friend(
+        TypeResolver::class,
+        MapperReturnsUnexpectedValueException::class,
+        TypeUtilTest::class
+    )]
     public static function getTypeString(Type|MixedType $type): string
     {
         if ($type instanceof MixedType) {
@@ -270,6 +287,7 @@ class TypeUtil
     /**
      * @return array<int,string>
      */
+    #[Friend(TypeResolver::class, TypeUtil2Test::class)]
     public static function getAllTypeStrings(
         Type $type,
         bool $withParents = false

@@ -61,6 +61,11 @@ class TypeResolver implements TypeResolverInterface
         ));
     }
 
+    public function getTypeString(Type|MixedType $type): string
+    {
+        return TypeUtil::getTypeString($type);
+    }
+
     public function getApplicableTypeStrings(array|Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {

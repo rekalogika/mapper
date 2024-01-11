@@ -21,10 +21,12 @@ use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Contracts\TypeMapping;
 use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Exception\InvalidTypeInArgumentException;
 use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
 use Rekalogika\Mapper\Exception\MissingMemberValueTypeException;
 use Rekalogika\Mapper\MainTransformer;
-use Rekalogika\Mapper\Model\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
@@ -32,6 +34,11 @@ use Symfony\Component\PropertyInfo\Type;
 final class TraversableToArrayAccessTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
+
+    public function __construct(
+        private ObjectCacheFactoryInterface $objectCacheFactory,
+    ) {
+    }
 
     public function transform(
         mixed $source,
@@ -43,7 +50,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // get object cache
 
         if (!isset($context[MainTransformer::OBJECT_CACHE])) {
-            $objectCache = new ObjectCache();
+            $objectCache = $this->objectCacheFactory->createObjectCache();
             $context[MainTransformer::OBJECT_CACHE] = $objectCache;
         } else {
             /** @var ObjectCache */
@@ -179,7 +186,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         $class = $targetType->getClassName();
 
         if ($class === null) {
-            throw new InvalidArgumentException(sprintf('Target must be an instance of "\ArrayAccess" or "array", "%s" given', TypeCheck::getDebugType($targetType)));
+            throw new InvalidTypeInArgumentException('Target must be an instance of "\ArrayAccess" or "array, "%s" given', $targetType);
         }
 
         if (!class_exists($class) && !\interface_exists($class)) {

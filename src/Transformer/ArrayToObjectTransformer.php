@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer;
 use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Contracts\TypeMapping;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Exception\InvalidTypeInArgumentException;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
@@ -46,7 +47,7 @@ final class ArrayToObjectTransformer implements TransformerInterface
         }
 
         if (!TypeCheck::isObject($targetType)) {
-            throw new InvalidArgumentException(sprintf('Target type must be an object, "%s" given', TypeCheck::getDebugType($targetType)));
+            throw new InvalidTypeInArgumentException('Target type must be an object, "%s" given', $targetType);
         }
 
         if ($target !== null) {

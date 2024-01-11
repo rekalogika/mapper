@@ -23,6 +23,8 @@ interface TypeResolverInterface
      */
     public static function guessTypeFromVariable(mixed $variable): Type;
 
+    public function getTypeString(Type|MixedType $type): string;
+
     /**
      * Example: If the variable type is
      * 'IteratorAggregate<int,IteratorAggregate<int,string>>', then this method

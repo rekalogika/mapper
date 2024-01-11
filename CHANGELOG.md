@@ -3,6 +3,8 @@
 ## 0.5.3
 
 * Use `MappingFactoryInterface` everywhere instead of `MappingFactory`
+* Move some `TypeUtil` methods to `TypeResolver` for optimization opportunities
+* use `ObjectCacheFactory` to generate `ObjectCache` instances
 
 ## 0.5.2
 

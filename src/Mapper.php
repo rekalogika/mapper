@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper;
 
 use Rekalogika\Mapper\Contracts\MainTransformerInterface;
+use Rekalogika\Mapper\Exception\MapperReturnsUnexpectedValueException;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Model\MixedType;
 use Rekalogika\Mapper\Util\TypeFactory;
-use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 final class Mapper implements MapperInterface
@@ -52,7 +52,7 @@ final class Mapper implements MapperInterface
         } elseif (is_object($target)) {
             /** @var object $target */
             $targetClass = $target::class;
-            $targetType = null;
+            $targetType = TypeFactory::objectOfClass($targetClass);
         } else {
             $targetClass = null;
             $targetType = TypeFactory::fromBuiltIn($target);
@@ -83,7 +83,7 @@ final class Mapper implements MapperInterface
             }
         }
 
-        if ($targetType !== null && ($targetKeyType !== null || $targetValueType !== null)) {
+        if ($targetKeyType !== null || $targetValueType !== null) {
             $targetType = new Type(
                 builtinType: $targetType->getBuiltinType(),
                 nullable: $targetType->isNullable(),
@@ -129,6 +129,6 @@ final class Mapper implements MapperInterface
             return $target;
         }
 
-        throw new UnexpectedValueException(sprintf('The transformer did not return the variable of expected type, expecting "%s", returned "%s".', $targetType !== null ? TypeUtil::getTypeString($targetType) : 'unknown', get_debug_type($target)));
+        throw new MapperReturnsUnexpectedValueException($targetType, $target);
     }
 }

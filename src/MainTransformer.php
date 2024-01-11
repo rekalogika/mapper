@@ -22,7 +22,8 @@ use Rekalogika\Mapper\Exception\UnableToFindSuitableTransformerException;
 use Rekalogika\Mapper\Mapping\MappingEntry;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Model\MixedType;
-use Rekalogika\Mapper\Model\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
@@ -34,7 +35,8 @@ class MainTransformer implements MainTransformerInterface
     public function __construct(
         private ContainerInterface $transformersLocator,
         private TypeResolverInterface $typeResolver,
-        private MappingFactoryInterface $mappingFactory
+        private MappingFactoryInterface $mappingFactory,
+        private ObjectCacheFactoryInterface $objectCacheFactory,
     ) {
     }
 
@@ -76,7 +78,7 @@ class MainTransformer implements MainTransformerInterface
         // get object cache
 
         if (!isset($context[self::OBJECT_CACHE])) {
-            $objectCache = new ObjectCache();
+            $objectCache = $this->objectCacheFactory->createObjectCache();
             $context[self::OBJECT_CACHE] = $objectCache;
         } else {
             /** @var ObjectCache */

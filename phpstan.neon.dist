@@ -14,3 +14,4 @@ includes:
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon
     - vendor/bnf/phpstan-psr-container/extension.neon
     - vendor/ekino/phpstan-banned-code/extension.neon
+    - vendor/dave-liddament/phpstan-php-language-extensions/extension.neon

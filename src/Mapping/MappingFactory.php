@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Mapping;
 
 use Rekalogika\Mapper\Contracts\TransformerInterface;
-use Rekalogika\Mapper\Util\TypeUtil;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
 /**
  * Initialize transformer mappings
@@ -26,14 +26,16 @@ final class MappingFactory implements MappingFactoryInterface
     /**
      * @param iterable<string,TransformerInterface> $transformers
      */
-    public function __construct(private iterable $transformers)
-    {
+    public function __construct(
+        private iterable $transformers,
+        private TypeResolverInterface $typeResolver
+    ) {
     }
 
     public function getMapping(): Mapping
     {
         if ($this->mapping === null) {
-            $this->mapping = self::createMapping($this->transformers);
+            $this->mapping = $this->createMapping($this->transformers);
         }
 
         return $this->mapping;
@@ -43,18 +45,18 @@ final class MappingFactory implements MappingFactoryInterface
      * @param iterable<string,TransformerInterface> $transformers
      * @return Mapping
      */
-    private static function createMapping(iterable $transformers): Mapping
+    private function createMapping(iterable $transformers): Mapping
     {
         $mapping = new Mapping();
 
         foreach ($transformers as $id => $transformer) {
-            self::addMapping($mapping, $id, $transformer);
+            $this->addMapping($mapping, $id, $transformer);
         }
 
         return $mapping;
     }
 
-    private static function addMapping(
+    private function addMapping(
         Mapping $mapping,
         string $id,
         TransformerInterface $transformer
@@ -65,8 +67,8 @@ final class MappingFactory implements MappingFactoryInterface
 
             foreach ($sourceTypes as $sourceType) {
                 foreach ($targetTypes as $targetType) {
-                    $sourceTypeString = TypeUtil::getTypeString($sourceType);
-                    $targetTypeString = TypeUtil::getTypeString($targetType);
+                    $sourceTypeString = $this->typeResolver->getTypeString($sourceType);
+                    $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
                     $mapping->addEntry(
                         id: $id,

@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
+use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
@@ -96,10 +97,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.transformer.traversable_to_arrayaccess', TraversableToArrayAccessTransformer::class)
+        ->args([
+            '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
+        ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -750]);
 
     $services
         ->set('rekalogika.mapper.transformer.traversable_to_traversable', TraversableToTraversableTransformer::class)
+        ->args([
+            '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
+        ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -800]);
 
     $services
@@ -121,6 +128,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$propertyAccessExtractor' => service('rekalogika.mapper.property_info'),
             '$propertyAccessor' => service('property_accessor'),
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
+            '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -950]);
 
@@ -132,12 +140,19 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.mapping_factory', MappingFactory::class)
-        ->args([tagged_iterator('rekalogika.mapper.transformer', 'key')]);
+        ->args([
+            tagged_iterator('rekalogika.mapper.transformer', 'key'),
+            service('rekalogika.mapper.type_resolver')
+        ]);
 
     $services
         ->alias(MappingFactoryInterface::class, 'rekalogika.mapper.mapping_factory');
 
     # other services
+
+    $services
+        ->set('rekalogika.mapper.object_cache_factory', ObjectCacheFactory::class)
+        ->args([service('rekalogika.mapper.type_resolver')]);
 
     $services
         ->set('rekalogika.mapper.type_resolver', TypeResolver::class);
@@ -148,6 +163,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$transformersLocator' => tagged_locator('rekalogika.mapper.transformer'),
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$mappingFactory' => service('rekalogika.mapper.mapping_factory'),
+            '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
         ]);
 
     $services

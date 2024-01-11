@@ -16,16 +16,16 @@ namespace Rekalogika\Mapper\Exception;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class CircularReferenceException extends \RuntimeException implements ExceptionInterface
+class MapperReturnsUnexpectedValueException extends UnexpectedValueException
 {
-    public function __construct(mixed $source, Type $targetType)
+    public function __construct(Type|null $type, mixed $target)
     {
-        parent::__construct(
-            sprintf(
-                'Circular reference detected when trying to get the object of type "%s" transformed to "%s"',
-                \get_debug_type($source),
-                TypeUtil::getDebugType($targetType)
-            )
+        $message = sprintf(
+            'Mapper returns unexpected value. Expected type "%s", but got "%s"',
+            $type === null ? 'unknown' : TypeUtil::getTypeString($type),
+            get_debug_type($target),
         );
+
+        parent::__construct($message);
     }
 }

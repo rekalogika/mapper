@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Exception;
 
-use Rekalogika\Mapper\Util\TypeCheck;
+use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 class UnableToFindSuitableTransformerException extends NotMappableValueException
@@ -25,11 +25,11 @@ class UnableToFindSuitableTransformerException extends NotMappableValueException
     public function __construct(Type $sourceType, Type|array $targetType)
     {
         if (is_array($targetType)) {
-            $targetType = implode(', ', array_map(fn (Type $type) => TypeCheck::getDebugType($type), $targetType));
+            $targetType = implode(', ', array_map(fn (Type $type) => TypeUtil::getDebugType($type), $targetType));
         } else {
-            $targetType = TypeCheck::getDebugType($targetType);
+            $targetType = TypeUtil::getDebugType($targetType);
         }
 
-        parent::__construct(sprintf('Unable to map the value "%s" to "%s"', TypeCheck::getDebugType($sourceType), $targetType));
+        parent::__construct(sprintf('Unable to map the value "%s" to "%s"', TypeUtil::getDebugType($sourceType), $targetType));
     }
 }

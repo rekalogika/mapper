@@ -20,6 +20,8 @@ use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Mapping\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Model\ServiceLocator;
+use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
+use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
@@ -77,6 +79,7 @@ class MapperFactory
     private ?MainTransformer $mainTransformer = null;
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
+    private ?ObjectCacheFactoryInterface $objectCacheFactory = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -234,6 +237,7 @@ class MapperFactory
                 $this->getPropertyAccessExtractor(),
                 $this->getPropertyAccessor(),
                 $this->getTypeResolver(),
+                $this->getObjectCacheFactory(),
             );
         }
 
@@ -301,7 +305,10 @@ class MapperFactory
     protected function getTraversableToArrayAccessTransformer(): TransformerInterface
     {
         if (null === $this->traversableToArrayAccessTransformer) {
-            $this->traversableToArrayAccessTransformer = new TraversableToArrayAccessTransformer();
+            $this->traversableToArrayAccessTransformer =
+                new TraversableToArrayAccessTransformer(
+                    $this->getObjectCacheFactory()
+                );
         }
 
         return $this->traversableToArrayAccessTransformer;
@@ -310,7 +317,10 @@ class MapperFactory
     protected function getTraversableToTraversableTransformer(): TransformerInterface
     {
         if (null === $this->traversableToTraversableTransformer) {
-            $this->traversableToTraversableTransformer = new TraversableToTraversableTransformer();
+            $this->traversableToTraversableTransformer =
+                new TraversableToTraversableTransformer(
+                    $this->getObjectCacheFactory()
+                );
         }
 
         return $this->traversableToTraversableTransformer;
@@ -370,6 +380,7 @@ class MapperFactory
                 $this->getTransformersLocator(),
                 $this->getTypeResolver(),
                 $this->getMappingFactory(),
+                $this->getObjectCacheFactory(),
             );
         }
 
@@ -380,11 +391,21 @@ class MapperFactory
     {
         if (null === $this->mappingFactory) {
             $this->mappingFactory = new MappingFactory(
-                $this->getTransformersIterator()
+                $this->getTransformersIterator(),
+                $this->getTypeResolver(),
             );
         }
 
         return $this->mappingFactory;
+    }
+
+    protected function getObjectCacheFactory(): ObjectCacheFactoryInterface
+    {
+        if (null === $this->objectCacheFactory) {
+            $this->objectCacheFactory = new ObjectCacheFactory($this->getTypeResolver());
+        }
+
+        return $this->objectCacheFactory;
     }
 
     //

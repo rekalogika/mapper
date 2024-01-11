@@ -20,7 +20,8 @@ use Rekalogika\Mapper\Contracts\TypeMapping;
 use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer;
-use Rekalogika\Mapper\Model\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -42,6 +43,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         private PropertyAccessExtractorInterface $propertyAccessExtractor,
         private PropertyAccessorInterface $propertyAccessor,
         private TypeResolverInterface $typeResolver,
+        private ObjectCacheFactoryInterface $objectCacheFactory,
     ) {
     }
 
@@ -55,7 +57,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // get object cache
 
         if (!isset($context[MainTransformer::OBJECT_CACHE])) {
-            $objectCache = new ObjectCache();
+            $objectCache = $this->objectCacheFactory->createObjectCache();
             $context[MainTransformer::OBJECT_CACHE] = $objectCache;
         } else {
             /** @var ObjectCache */

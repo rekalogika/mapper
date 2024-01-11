@@ -23,11 +23,6 @@ class TypeCheck
     {
     }
 
-    public static function getDebugType(Type $type): string
-    {
-        return TypeUtil::getTypeString($type);
-    }
-
     /**
      * Checks if the name is a valid class, interface, or enum
      *

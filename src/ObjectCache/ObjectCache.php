@@ -11,11 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Model;
+namespace Rekalogika\Mapper\ObjectCache;
 
 use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\CircularReferenceException;
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -31,8 +32,9 @@ final class ObjectCache
      */
     private \SplObjectStorage $preCache;
 
-    public function __construct()
-    {
+    public function __construct(
+        private TypeResolverInterface $typeResolver
+    ) {
         $this->cache = new \SplObjectStorage();
         $this->preCache = new \SplObjectStorage();
     }
@@ -66,7 +68,7 @@ final class ObjectCache
             throw new LogicException('Target type must be simple type');
         }
 
-        $targetTypeString = TypeUtil::getTypeString($targetType);
+        $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         if (!isset($this->preCache[$source])) {
             /** @var \ArrayObject<string,true> */
@@ -87,7 +89,7 @@ final class ObjectCache
             throw new LogicException('Target type must be simple type');
         }
 
-        $targetTypeString = TypeUtil::getTypeString($targetType);
+        $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         return isset($this->preCache[$source][$targetTypeString]);
     }
@@ -102,7 +104,7 @@ final class ObjectCache
             throw new LogicException('Target type must be simple type');
         }
 
-        $targetTypeString = TypeUtil::getTypeString($targetType);
+        $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         if (isset($this->preCache[$source][$targetTypeString])) {
             unset($this->preCache[$source][$targetTypeString]);
@@ -123,7 +125,7 @@ final class ObjectCache
             throw new LogicException('Target type must be simple type');
         }
 
-        $targetTypeString = TypeUtil::getTypeString($targetType);
+        $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         return isset($this->cache[$source][$targetTypeString]);
     }
@@ -146,7 +148,7 @@ final class ObjectCache
             throw new LogicException('Target type must be simple type');
         }
 
-        $targetTypeString = TypeUtil::getTypeString($targetType);
+        $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         /** @var object */
         return $this->cache[$source][$targetTypeString]
@@ -166,7 +168,7 @@ final class ObjectCache
             return;
         }
 
-        $targetTypeString = TypeUtil::getTypeString($targetType);
+        $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         if (isset($this->cache[$source][$targetTypeString])) {
             throw new LogicException(sprintf(

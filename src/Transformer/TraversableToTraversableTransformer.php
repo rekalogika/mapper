@@ -22,7 +22,8 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
 use Rekalogika\Mapper\Exception\MissingMemberValueTypeException;
 use Rekalogika\Mapper\MainTransformer;
-use Rekalogika\Mapper\Model\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
@@ -30,6 +31,11 @@ use Symfony\Component\PropertyInfo\Type;
 final class TraversableToTraversableTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
+
+    public function __construct(
+        private ObjectCacheFactoryInterface $objectCacheFactory,
+    ) {
+    }
 
     public function transform(
         mixed $source,
@@ -41,7 +47,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         // get object cache
 
         if (!isset($context[MainTransformer::OBJECT_CACHE])) {
-            $objectCache = new ObjectCache();
+            $objectCache = $this->objectCacheFactory->createObjectCache();
             $context[MainTransformer::OBJECT_CACHE] = $objectCache;
         } else {
             /** @var ObjectCache */

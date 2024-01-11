@@ -14,13 +14,16 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\UnitTest\Model;
 
 use PHPUnit\Framework\TestCase;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Rekalogika\Mapper\Util\TypeFactory;
 
 class ObjectCacheTest extends TestCase
 {
     public function testObjectCache(): void
     {
-        $objectCache = new \Rekalogika\Mapper\Model\ObjectCache();
+        $typeResolver = new TypeResolver();
+        $objectCache = new ObjectCache($typeResolver);
         $source = new \stdClass();
 
         $this->assertFalse($objectCache->containsTarget($source, TypeFactory::int()));
