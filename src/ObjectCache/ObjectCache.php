@@ -17,7 +17,6 @@ use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\CircularReferenceException;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
-use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 final class ObjectCache
@@ -64,7 +63,7 @@ final class ObjectCache
             return;
         }
 
-        if (!TypeUtil::isSimpleType($targetType)) {
+        if (!$this->typeResolver->isSimpleType($targetType)) {
             throw new LogicException('Target type must be simple type');
         }
 
@@ -85,7 +84,7 @@ final class ObjectCache
             return false;
         }
 
-        if (!TypeUtil::isSimpleType($targetType)) {
+        if (!$this->typeResolver->isSimpleType($targetType)) {
             throw new LogicException('Target type must be simple type');
         }
 
@@ -100,7 +99,7 @@ final class ObjectCache
             return;
         }
 
-        if (!TypeUtil::isSimpleType($targetType)) {
+        if (!$this->typeResolver->isSimpleType($targetType)) {
             throw new LogicException('Target type must be simple type');
         }
 
@@ -121,7 +120,7 @@ final class ObjectCache
             return false;
         }
 
-        if (!TypeUtil::isSimpleType($targetType)) {
+        if (!$this->typeResolver->isSimpleType($targetType)) {
             throw new LogicException('Target type must be simple type');
         }
 
@@ -144,7 +143,7 @@ final class ObjectCache
             throw new CachedTargetObjectNotFoundException();
         }
 
-        if (!TypeUtil::isSimpleType($targetType)) {
+        if (!$this->typeResolver->isSimpleType($targetType)) {
             throw new LogicException('Target type must be simple type');
         }
 

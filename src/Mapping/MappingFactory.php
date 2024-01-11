@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Mapping;
 
 use Rekalogika\Mapper\Contracts\TransformerInterface;
+use Rekalogika\Mapper\Model\MixedType;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
+use Symfony\Component\PropertyInfo\Type;
 
 /**
  * Initialize transformer mappings
@@ -62,8 +64,8 @@ final class MappingFactory implements MappingFactoryInterface
         TransformerInterface $transformer
     ): void {
         foreach ($transformer->getSupportedTransformation() as $typeMapping) {
-            $sourceTypes = $typeMapping->getSimpleSourceTypes();
-            $targetTypes = $typeMapping->getSimpleTargetTypes();
+            $sourceTypes = $this->getSimpleTypes($typeMapping->getSourceType());
+            $targetTypes = $this->getSimpleTypes($typeMapping->getTargetType());
 
             foreach ($sourceTypes as $sourceType) {
                 foreach ($targetTypes as $targetType) {
@@ -79,5 +81,17 @@ final class MappingFactory implements MappingFactoryInterface
                 }
             }
         }
+    }
+
+    /**
+     * @return array<array-key,Type|MixedType>
+     */
+    private function getSimpleTypes(Type|MixedType $type): array
+    {
+        if ($type instanceof MixedType) {
+            return [$type];
+        }
+
+        return $this->typeResolver->getSimpleTypes($type);
     }
 }

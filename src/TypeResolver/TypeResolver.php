@@ -21,7 +21,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 class TypeResolver implements TypeResolverInterface
 {
-    public static function guessTypeFromVariable(mixed $variable): Type
+    public function guessTypeFromVariable(mixed $variable): Type
     {
         if (is_object($variable)) {
             return TypeFactory::objectOfClass($variable::class);
@@ -64,6 +64,22 @@ class TypeResolver implements TypeResolverInterface
     public function getTypeString(Type|MixedType $type): string
     {
         return TypeUtil::getTypeString($type);
+    }
+
+    public function isSimpleType(Type $type): bool
+    {
+        return TypeUtil::isSimpleType($type);
+    }
+
+    /**
+     * Gets all the possible simple types from a Type
+     *
+     * @param Type|array<array-key,Type> $type
+     * @return array<array-key,Type>
+     */
+    public function getSimpleTypes(Type|array $type): array
+    {
+        return TypeUtil::getSimpleTypes($type);
     }
 
     public function getApplicableTypeStrings(array|Type|MixedType $type): array

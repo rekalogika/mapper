@@ -21,9 +21,23 @@ interface TypeResolverInterface
     /**
      * Guesses the type of the given variable.
      */
-    public static function guessTypeFromVariable(mixed $variable): Type;
+    public function guessTypeFromVariable(mixed $variable): Type;
 
     public function getTypeString(Type|MixedType $type): string;
+
+    /**
+     * Gets all the possible simple types from a Type
+     *
+     * @param Type|array<array-key,Type> $type
+     * @return array<array-key,Type>
+     */
+    public function getSimpleTypes(Type|array $type): array;
+
+    /**
+     * Simple Type is a type that is not nullable, and does not have more
+     * than one key type or value type.
+     */
+    public function isSimpleType(Type $type): bool;
 
     /**
      * Example: If the variable type is

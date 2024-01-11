@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Contracts;
 
 use Rekalogika\Mapper\Model\MixedType;
-use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 class TypeMapping
@@ -38,34 +37,10 @@ class TypeMapping
     }
 
     /**
-     * @return array<array-key,Type|MixedType>
-     */
-    public function getSimpleSourceTypes(): array
-    {
-        if ($this->sourceType instanceof MixedType) {
-            return [$this->sourceType];
-        }
-
-        return TypeUtil::getSimpleTypes($this->sourceType);
-    }
-
-    /**
      * @return Type|MixedType
      */
     public function getTargetType(): Type|MixedType
     {
         return $this->targetType;
-    }
-
-    /**
-     * @return array<array-key,Type|MixedType>
-     */
-    public function getSimpleTargetTypes(): array
-    {
-        if ($this->targetType instanceof MixedType) {
-            return [$this->targetType];
-        }
-
-        return TypeUtil::getSimpleTypes($this->targetType);
     }
 }

@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Util;
 
 use DaveLiddament\PhpLanguageExtensions\Friend;
 use DaveLiddament\PhpLanguageExtensions\NamespaceVisibility;
+use Rekalogika\Mapper\Contracts\TypeMapping;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\MapperReturnsUnexpectedValueException;
 use Rekalogika\Mapper\Model\MixedType;
@@ -33,6 +34,7 @@ class TypeUtil
      * Simple Type is a type that is not nullable, and does not have more
      * than one key type or value type.
      */
+    #[Friend(TypeResolver::class, TypeUtilTest::class)]
     public static function isSimpleType(Type $type): bool
     {
         if ($type->isNullable()) {
@@ -69,6 +71,7 @@ class TypeUtil
      * @param Type|array<array-key,Type> $type
      * @return array<array-key,Type>
      */
+    #[Friend(TypeResolver::class)]
     public static function getSimpleTypes(Type|array $type, bool $withParents = false): array
     {
         if (!is_array($type)) {

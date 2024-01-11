@@ -25,7 +25,6 @@ use Rekalogika\Mapper\Model\MixedType;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
-use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 class MainTransformer implements MainTransformerInterface
@@ -87,7 +86,7 @@ class MainTransformer implements MainTransformerInterface
 
         // init vars
 
-        $targetType = TypeUtil::getSimpleTypes($targetType);
+        $targetType = $this->typeResolver->getSimpleTypes($targetType);
         $sourceType = $this->typeResolver->guessTypeFromVariable($source);
 
         foreach ($targetType as $singleTargetType) {
