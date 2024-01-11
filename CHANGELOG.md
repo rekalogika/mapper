@@ -7,6 +7,7 @@
 * use `ObjectCacheFactory` to generate `ObjectCache` instances
 * Update `MapperFactory` to reflect framework usage
 * Use property info caching in non-framework usage
+* Add mapping caching
 
 ## 0.5.2
 

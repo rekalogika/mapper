@@ -16,6 +16,7 @@ use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
+use Rekalogika\Mapper\Mapping\CachingMappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
@@ -147,6 +148,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->alias(MappingFactoryInterface::class, 'rekalogika.mapper.mapping_factory');
+
+    $services
+        ->set('rekalogika.mapper.mapping_factory.caching', CachingMappingFactory::class)
+        ->decorate('rekalogika.mapper.mapping_factory')
+        ->args([
+            service('rekalogika.mapper.mapping_factory.caching.inner'),
+            service('kernel')
+        ])
+        ->tag('kernel.cache_warmer');
 
     # other services
 
