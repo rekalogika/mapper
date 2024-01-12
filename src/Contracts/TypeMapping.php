@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Contracts;
 
-use Rekalogika\Mapper\Model\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
 class TypeMapping

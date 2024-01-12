@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Mapping;
 
+use Rekalogika\Mapper\Contracts\MixedType;
 use Rekalogika\Mapper\Contracts\TransformerInterface;
-use Rekalogika\Mapper\Model\MixedType;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;
 

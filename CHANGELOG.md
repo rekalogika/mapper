@@ -7,6 +7,7 @@
   target type
 * feat: Constructor arguments
 * test: Custom transformer
+* refactor: Move `MixedType` to contracts
 
 ## 0.5.3
 

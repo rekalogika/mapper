@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper;
 
 use Rekalogika\Mapper\Contracts\MainTransformerInterface;
+use Rekalogika\Mapper\Contracts\MixedType;
 use Rekalogika\Mapper\Exception\MapperReturnsUnexpectedValueException;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
-use Rekalogika\Mapper\Model\MixedType;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
