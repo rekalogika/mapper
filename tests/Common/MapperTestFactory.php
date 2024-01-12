@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Common;
 
 use Rekalogika\Mapper\MainTransformer;
-use Rekalogika\Mapper\MapperFactory;
+use Rekalogika\Mapper\MapperFactory\MapperFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
