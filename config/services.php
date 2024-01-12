@@ -19,6 +19,8 @@ use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\CachingMappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
+use Rekalogika\Mapper\MethodMapper\ClassMethodTransformer;
+use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
@@ -84,14 +86,22 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.transformer.scalar_to_scalar', ScalarToScalarTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -500]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -450]);
 
     $services
         ->set('rekalogika.mapper.transformer.datetime', DateTimeTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -500]);
 
     $services
         ->set('rekalogika.mapper.transformer.string_to_backed_enum', StringToBackedEnumTransformer::class)
+        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+
+    $services
+        ->set('rekalogika.mapper.method_mapper.transformer', ClassMethodTransformer::class)
+        ->args([
+            service('rekalogika.mapper.method_mapper.sub_mapper'),
+            service('rekalogika.mapper.object_cache_factory'),
+        ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -600]);
 
     $services
@@ -174,6 +184,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.type_resolver')
         ->args([
             service('rekalogika.mapper.type_resolver.caching.inner'),
+        ]);
+
+    # method mapper
+
+    $services
+        ->set('rekalogika.mapper.method_mapper.sub_mapper', SubMapper::class)
+        ->args([
+            service('rekalogika.mapper.property_info'),
         ]);
 
     # other services

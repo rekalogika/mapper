@@ -13,8 +13,8 @@ other mapping purposes.
 * Constructor initialization.
 * Handles nested objects.
 * Handles recursion and circular references.
-* Reads the type from PHP type declaration and PHPDoc annotations, including
-  the type of the nested objects.
+* Reads the type from PHP type declaration and PHPDoc annotations, including the
+  type of the nested objects.
 * Handles `array`, `ArrayAccess` and `Traversable` objects, and the mapping
   between them
 * Lazy stream mapping if the target is type-hinted as `Traversable`. Consumes
@@ -23,6 +23,7 @@ other mapping purposes.
   then the target will also be a `Countable`. With an extra-lazy Doctrine
   Collection, the consumer will be able to count the target without causing a
   full hydration of the source.
+* Manual mapping using a class method.
 * Easy to extend by creating new transformers, or decorating the existing ones.
 * Console commands for debugging.
 

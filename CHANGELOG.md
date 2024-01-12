@@ -23,6 +23,7 @@
   `Countable` result.
 * docs: Improve documentation
 * fix: Change `ObjectCache` to use `WeakMap`. Should improve memory usage.
+* feat: Method mapper
 
 ## 0.5.3
 

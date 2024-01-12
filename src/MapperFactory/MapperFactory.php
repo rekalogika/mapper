@@ -23,6 +23,9 @@ use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
+use Rekalogika\Mapper\MethodMapper\ClassMethodTransformer;
+use Rekalogika\Mapper\MethodMapper\SubMapper;
+use Rekalogika\Mapper\MethodMapper\SubMapperInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
@@ -82,6 +85,7 @@ class MapperFactory
     private ?TraversableToArrayAccessTransformer $traversableToArrayAccessTransformer = null;
     private ?TraversableToTraversableTransformer $traversableToTraversableTransformer = null;
     private ?CopyTransformer $copyTransformer = null;
+    private ?ClassMethodTransformer $classMethodTransformer = null;
 
     private CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
@@ -90,6 +94,7 @@ class MapperFactory
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
     private ?ObjectCacheFactoryInterface $objectCacheFactory = null;
+    private ?SubMapper $subMapper = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -365,6 +370,18 @@ class MapperFactory
         return $this->copyTransformer;
     }
 
+    protected function getClassMethodTransformer(): ClassMethodTransformer
+    {
+        if (null === $this->classMethodTransformer) {
+            $this->classMethodTransformer = new ClassMethodTransformer(
+                $this->getSubMapper(),
+                $this->getObjectCacheFactory(),
+            );
+        }
+
+        return $this->classMethodTransformer;
+    }
+
     //
     // other services
     //
@@ -390,6 +407,8 @@ class MapperFactory
             => $this->getDateTimeTransformer();
         yield 'StringToBackedEnumTransformer'
             => $this->getStringToBackedEnumTransformer();
+        yield 'ClassMethodTransformer'
+            => $this->getClassMethodTransformer();
         yield 'ObjectToStringTransformer'
             => $this->getObjectToStringTransformer();
         yield 'TraversableToArrayAccessTransformer'
@@ -447,6 +466,17 @@ class MapperFactory
         }
 
         return $this->objectCacheFactory;
+    }
+
+    protected function getSubMapper(): SubMapper
+    {
+        if (null === $this->subMapper) {
+            $this->subMapper = new SubMapper(
+                $this->getPropertyInfoExtractor(),
+            );
+        }
+
+        return $this->subMapper;
     }
 
     //
