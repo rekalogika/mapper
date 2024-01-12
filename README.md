@@ -4,6 +4,34 @@ An object mapper (also called automapper) for PHP and Symfony. It maps an object
 to another object. Primarily used to map an entity to a DTO, but also useful for
 other mapping purposes.
 
+## Features
+
+* Automatically lists the properties of the source and target, detects their
+  types, and maps them accordingly.
+* By default, does not attempt to circumvent your class constraints. Reads from
+  and writes to public properties, getters, setters, and constructors.
+* Constructor initialization.
+* Handles nested objects.
+* Handles recursion and circular references.
+* Reads the type from PHP type declaration and PHPDoc annotations, including
+  the type of the nested objects.
+* Handles `array`, `ArrayAccess` and `Traversable` objects, and the mapping
+  between them
+* Lazy stream mapping if the target is type-hinted as `Traversable`. Consumes
+  less memory & avoids hydrating a Doctrine collection prematurely.
+* In addition, when the target is `Traversable` and the source is a `Countable`,
+  then the target will also be a `Countable`. With an extra-lazy Doctrine
+  Collection, the consumer will be able to count the target without causing a
+  full hydration of the source.
+* Easy to extend by creating new transformers, or decorating the existing ones.
+* Console commands for debugging.
+
+## Future Features
+
+* Mapping to interfaces and abstract classes.
+* Option to map to or from different property name? (seems to be a popular
+  feature, but I prefer the native OOP way of doing it)
+
 ## Installation
 
 ```bash

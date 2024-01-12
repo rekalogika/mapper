@@ -21,6 +21,7 @@
   if the source is `Countable`.
 * revert: Revert support for `Generator` target type. Impossible to have a
   `Countable` result.
+* docs: Improve documentation
 
 ## 0.5.3
 
