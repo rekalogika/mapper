@@ -11,12 +11,17 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures;
+namespace Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto;
 
-class ClassImplementingStringable implements \Stringable
+class ObjectWithArrayAccessPropertyWithoutTypeHintDto
 {
-    public function __toString(): string
+    /**
+     * @var \ArrayAccess<array-key,mixed>
+     */
+    public \ArrayAccess $property;
+
+    public function __construct()
     {
-        return 'foo';
+        $this->property = new \ArrayObject();
     }
 }

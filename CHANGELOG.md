@@ -8,6 +8,10 @@
 * feat: Constructor arguments
 * test: Custom transformer
 * refactor: Move `MixedType` to contracts
+* refactor: Move standalone `MapperFactory` under MapperFactory namespace
+* refactor: Simplify `MapperInterface`
+* test: Fix tests due to refactor
+* refactor: Move deprecated facade to Facade namespace
 
 ## 0.5.3
 

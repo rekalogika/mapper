@@ -14,33 +14,18 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
-use Rekalogika\Mapper\Tests\Fixtures\ClassImplementingStringable;
-use Rekalogika\Mapper\Tests\Fixtures\SomeBackedEnum;
-use Rekalogika\Mapper\Tests\Fixtures\SomeEnum;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithEnumStringableProperty;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithEnumStringablePropertyDto;
 
 class ObjectEnumStringMappingTest extends AbstractIntegrationTest
 {
-    public function testObjectToString(): void
+    public function testToString(): void
     {
-        $object = new ClassImplementingStringable();
-        $result = $this->mapper->map($object, 'string');
+        $object = new ObjectWithEnumStringableProperty();
+        $result = $this->mapper->map($object, ObjectWithEnumStringablePropertyDto::class);
 
-        $this->assertSame('foo', $result);
-    }
-
-    public function testBackedEnumToString(): void
-    {
-        $enum = SomeBackedEnum::Foo;
-        $result = $this->mapper->map($enum, 'string');
-
-        $this->assertSame('foo', $result);
-    }
-
-    public function testUnitEnumToString(): void
-    {
-        $enum = SomeEnum::Foo;
-        $result = $this->mapper->map($enum, 'string');
-
-        $this->assertSame('Foo', $result);
+        $this->assertEquals('foo', $result->stringable);
+        $this->assertEquals('foo', $result->backedEnum);
+        $this->assertEquals('Foo', $result->unitEnum);
     }
 }

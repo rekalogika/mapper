@@ -49,16 +49,21 @@ class TypeUtil
             $keyTypes = $type->getCollectionKeyTypes();
             $valueTypes = $type->getCollectionValueTypes();
 
-            if (count($keyTypes) != 1) {
+            if (count($keyTypes) > 1) {
                 return false;
             }
 
-            if (count($valueTypes) != 1) {
+            if (count($valueTypes) > 1) {
                 return false;
             }
 
-            return self::isSimpleType($keyTypes[0])
-                && self::isSimpleType($valueTypes[0]);
+            $keyTypeIsSimple = count($keyTypes) === 0
+                || self::isSimpleType($keyTypes[0]);
+
+            $valueTypeIsSimple = count($valueTypes) === 0
+                || self::isSimpleType($valueTypes[0]);
+
+            return $keyTypeIsSimple && $valueTypeIsSimple;
         }
 
         return true;

@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\UnitTest\Util;
 
 use PHPUnit\Framework\TestCase;
-use Rekalogika\Mapper\Tests\Fixtures\SomeBackedEnum;
-use Rekalogika\Mapper\Tests\Fixtures\SomeEnum;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 

@@ -11,10 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures;
+namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto;
 
-enum SomeBackedEnum: string
+class ObjectWithEnumStringablePropertyDto
 {
-    case Foo = 'foo';
-    case Bar = 'bar';
+    public ?string $stringable = null;
+    public ?string $backedEnum = null;
+    public ?string $unitEnum = null;
 }

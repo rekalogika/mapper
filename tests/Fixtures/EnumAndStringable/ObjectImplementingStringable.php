@@ -11,10 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures;
+namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable;
 
-enum SomeEnum
+class ObjectImplementingStringable implements \Stringable
 {
-    case Foo;
-    case Bar;
+    public function __toString(): string
+    {
+        return 'foo';
+    }
 }

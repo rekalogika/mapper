@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\ObjectCache;
 use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\CircularReferenceException;
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\Exception\NonSimpleTypeException;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -43,6 +44,13 @@ final class ObjectCache
         return $source instanceof \DateTimeInterface;
     }
 
+    private function assertSimpleType(Type $type): void
+    {
+        if (!$this->typeResolver->isSimpleType($type)) {
+            throw new NonSimpleTypeException($type);
+        }
+    }
+
     /**
      * Precaching indicates we want to cache the target, but haven't done so
      * yet. If the object is still in precached status, obtaining it from the
@@ -63,9 +71,7 @@ final class ObjectCache
             return;
         }
 
-        if (!$this->typeResolver->isSimpleType($targetType)) {
-            throw new LogicException('Target type must be simple type');
-        }
+        $this->assertSimpleType($targetType);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
@@ -84,9 +90,7 @@ final class ObjectCache
             return false;
         }
 
-        if (!$this->typeResolver->isSimpleType($targetType)) {
-            throw new LogicException('Target type must be simple type');
-        }
+        $this->assertSimpleType($targetType);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
@@ -99,9 +103,7 @@ final class ObjectCache
             return;
         }
 
-        if (!$this->typeResolver->isSimpleType($targetType)) {
-            throw new LogicException('Target type must be simple type');
-        }
+        $this->assertSimpleType($targetType);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
@@ -120,9 +122,7 @@ final class ObjectCache
             return false;
         }
 
-        if (!$this->typeResolver->isSimpleType($targetType)) {
-            throw new LogicException('Target type must be simple type');
-        }
+        $this->assertSimpleType($targetType);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
@@ -143,9 +143,7 @@ final class ObjectCache
             throw new CachedTargetObjectNotFoundException();
         }
 
-        if (!$this->typeResolver->isSimpleType($targetType)) {
-            throw new LogicException('Target type must be simple type');
-        }
+        $this->assertSimpleType($targetType);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 

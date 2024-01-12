@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\Exception\MissingMemberValueTypeException;
-use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayPropertyWithStringKey;
@@ -24,84 +23,38 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDtoWithIntKey;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithoutTypeHintDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
 
 class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
 {
+    /**
+     * @todo array with mixed target type means we should just copy the source
+     */
     public function testFailedArrayToArray(): void
     {
-        $source = [
-            'a' => 1,
-            'b' => "string",
-            'c' => true,
-            'd' => 1.1,
-        ];
+        $source = new ObjectWithArrayProperty();
 
         // target array does not have information about the type of its
         // elements
 
         $this->expectException(MissingMemberValueTypeException::class);
-        $result = $this->mapper->map($source, 'array');
+        $result = $this->mapper->map($source, ObjectWithArrayPropertyWithoutTypeHintDto::class);
     }
 
+    /**
+     * @todo array with mixed target type means we should just copy the source
+     */
     public function testFailedTraversableToArrayAccess(): void
     {
-        $source = [
-            'a' => 1,
-            'b' => "string",
-            'c' => true,
-            'd' => 1.1,
-        ];
+        $source = new ObjectWithTraversableProperties();
 
         // cannot do a direct mapping from array to \ArrayAccess because
         // it does not have information about the type of its elements
 
         $this->expectException(MissingMemberValueTypeException::class);
-
-        $result = $this->mapper->map(
-            $source,
-            \ArrayObject::class
-        );
-    }
-
-    public function testArrayOfArrayToArrayOfDto(): void
-    {
-        $source = [
-            [
-                'a' => 1,
-                'b' => "foo",
-                'c' => true,
-                'd' => 1.1,
-            ],
-            [
-                'a' => 2,
-                'b' => "bar",
-                'c' => false,
-                'd' => 0.1,
-            ],
-        ];
-
-        $result = $this->mapper->map($source, 'array', [
-            Mapper::TARGET_KEY_TYPE => 'string',
-            Mapper::TARGET_VALUE_TYPE => ObjectWithScalarPropertiesDto::class,
-        ]);
-
-        // @phpstan-ignore-next-line
-        $first = $result[0];
-        $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $first);
-        $this->assertSame(1, $first->a);
-        $this->assertSame("foo", $first->b);
-        $this->assertTrue($first->c);
-        $this->assertSame(1.1, $first->d);
-
-        // @phpstan-ignore-next-line
-        $second = $result[1];
-        $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $second);
-        $this->assertSame(2, $second->a);
-        $this->assertSame("bar", $second->b);
-        $this->assertFalse($second->c);
-        $this->assertSame(0.1, $second->d);
+        $this->mapper->map($source, ObjectWithArrayPropertyWithoutTypeHintDto::class);
     }
 
     //

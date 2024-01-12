@@ -11,15 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper;
+namespace Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto;
 
-interface MapperInterface
+class ObjectWithArrayPropertyWithoutTypeHintDto
 {
     /**
-     * @template T of object
-     * @param class-string<T>|T $target
-     * @param array<string,mixed> $context
-     * @return T
+     * @var array<array-key,mixed>
      */
-    public function map(mixed $source, object|string $target, array $context = []): mixed;
+    public array $property = [];
 }

@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
-use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
 
 class ArrayAndObjectMappingTest extends AbstractIntegrationTest
@@ -35,16 +34,16 @@ class ArrayAndObjectMappingTest extends AbstractIntegrationTest
         $this->assertEquals(1.1, $dto->d);
     }
 
-    public function testObjectToArray(): void
-    {
-        $class = new ObjectWithScalarProperties();
+    // public function testObjectToArray(): void
+    // {
+    //     $class = new ObjectWithScalarProperties();
 
-        $array = $this->mapper->map($class, 'array');
+    //     $array = $this->mapper->map($class, 'array');
 
-        $this->assertEquals(1, $array['a'] ?? null);
-        $this->assertEquals('string', $array['b'] ?? null);
-        $this->assertEquals(true, $array['c'] ?? null);
-        $this->assertEquals(1.1, $array['d'] ?? null);
-    }
+    //     $this->assertEquals(1, $array['a'] ?? null);
+    //     $this->assertEquals('string', $array['b'] ?? null);
+    //     $this->assertEquals(true, $array['c'] ?? null);
+    //     $this->assertEquals(1.1, $array['d'] ?? null);
+    // }
 
 }
