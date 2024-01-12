@@ -23,20 +23,22 @@ use Symfony\Component\PropertyInfo\Type;
 final class ObjectCache
 {
     /**
-     * @var \SplObjectStorage<object,\ArrayObject<string,object>>
+     * @var \WeakMap<object,\ArrayObject<string,object>>
      */
-    private \SplObjectStorage $cache;
+    private \WeakMap $cache;
 
     /**
-     * @var \SplObjectStorage<object,\ArrayObject<string,true>>
+     * @var \WeakMap<object,\ArrayObject<string,true>>
      */
-    private \SplObjectStorage $preCache;
+    private \WeakMap $preCache;
 
     public function __construct(
         private TypeResolverInterface $typeResolver
     ) {
-        $this->cache = new \SplObjectStorage();
-        $this->preCache = new \SplObjectStorage();
+        /** @psalm-suppress MixedPropertyTypeCoercion */
+        $this->cache = new \WeakMap();
+        /** @psalm-suppress MixedPropertyTypeCoercion */
+        $this->preCache = new \WeakMap();
     }
 
     private function isBlacklisted(mixed $source): bool
@@ -81,7 +83,7 @@ final class ObjectCache
             $this->preCache[$source] = $arrayObject;
         }
 
-        $this->preCache->offsetGet($source)->offsetSet($targetTypeString, true);
+        $this->preCache->offsetGet($source)?->offsetSet($targetTypeString, true);
     }
 
     private function isPreCached(mixed $source, Type $targetType): bool
@@ -181,7 +183,7 @@ final class ObjectCache
             $this->cache[$source] = $arrayObject;
         }
 
-        $this->cache->offsetGet($source)->offsetSet($targetTypeString, $target);
+        $this->cache->offsetGet($source)?->offsetSet($targetTypeString, $target);
         $this->removePrecache($source, $targetType);
     }
 }

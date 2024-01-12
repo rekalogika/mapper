@@ -22,6 +22,7 @@
 * revert: Revert support for `Generator` target type. Impossible to have a
   `Countable` result.
 * docs: Improve documentation
+* fix: Change `ObjectCache` to use `WeakMap`. Should improve memory usage.
 
 ## 0.5.3
 
