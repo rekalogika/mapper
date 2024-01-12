@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithTraversablePropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
@@ -63,5 +64,19 @@ class TraversableToTraversableMappingTest extends AbstractIntegrationTest
             $this->assertEquals(true, $item->c);
             $this->assertEquals(1.1, $item->d);
         }
+    }
+
+    public function testLazy(): void
+    {
+        $source = new ObjectWithLazyDoctrineCollectionProperty();
+
+        $result = $this->mapper->map($source, ObjectWithTraversablePropertyDto::class);
+
+        $this->assertInstanceOf(ObjectWithTraversablePropertyDto::class, $result);
+        $this->assertNotNull($result->property);
+        $this->assertInstanceOf(\Generator::class, $result->property);
+
+        $this->expectException(\LogicException::class);
+        foreach ($result->property as $item);
     }
 }
