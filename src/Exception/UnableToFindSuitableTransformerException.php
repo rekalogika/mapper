@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Exception;
 
+use Rekalogika\Mapper\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -20,12 +21,12 @@ class UnableToFindSuitableTransformerException extends NotMappableValueException
 {
     /**
      * @param Type $sourceType
-     * @param Type|array<array-key,Type> $targetType
+     * @param Type|array<array-key,Type|MixedType> $targetType
      */
-    public function __construct(Type $sourceType, Type|array $targetType)
+    public function __construct(Type $sourceType, Type|MixedType|array $targetType)
     {
         if (is_array($targetType)) {
-            $targetType = implode(', ', array_map(fn (Type $type) => TypeUtil::getDebugType($type), $targetType));
+            $targetType = implode(', ', array_map(fn (Type|MixedType $type) => TypeUtil::getDebugType($type), $targetType));
         } else {
             $targetType = TypeUtil::getDebugType($targetType);
         }

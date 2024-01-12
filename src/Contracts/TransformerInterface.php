@@ -35,7 +35,7 @@ interface TransformerInterface
         mixed $source,
         mixed $target,
         Type $sourceType,
-        Type $targetType,
+        ?Type $targetType,
         array $context
     ): mixed;
 

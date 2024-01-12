@@ -228,8 +228,12 @@ class TypeUtil
     }
 
     #[NamespaceVisibility(namespace: 'Rekalogika\Mapper\Exception')]
-    public static function getDebugType(Type $type): string
+    public static function getDebugType(null|Type|MixedType $type): string
     {
+        if ($type === null) {
+            return 'null';
+        }
+
         return TypeUtil::getTypeString($type);
     }
 

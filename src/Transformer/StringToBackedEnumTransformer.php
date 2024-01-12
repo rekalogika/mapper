@@ -25,14 +25,14 @@ final class StringToBackedEnumTransformer implements TransformerInterface
         mixed $source,
         mixed $target,
         Type $sourceType,
-        Type $targetType,
+        ?Type $targetType,
         array $context
     ): mixed {
         if (!is_string($source)) {
             throw new InvalidArgumentException(sprintf('Source must be string, "%s" given', get_debug_type($source)));
         }
 
-        $class = $targetType->getClassName();
+        $class = $targetType?->getClassName();
 
         if ($class === null || !\enum_exists($class)) {
             throw new InvalidArgumentException(sprintf('Target must be an enum class-string, "%s" given', get_debug_type($class)));

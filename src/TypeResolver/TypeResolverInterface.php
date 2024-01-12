@@ -34,10 +34,10 @@ interface TypeResolverInterface
     /**
      * Gets all the possible simple types from a Type
      *
-     * @param Type $type
-     * @return array<array-key,Type>
+     * @param Type|MixedType $type
+     * @return array<array-key,Type|MixedType>
      */
-    public function getSimpleTypes(Type $type): array;
+    public function getSimpleTypes(Type|MixedType $type): array;
 
     /**
      * Simple Type is a type that is not nullable, and does not have more

@@ -18,13 +18,13 @@ use Symfony\Component\PropertyInfo\Type;
 interface MainTransformerInterface
 {
     /**
-     * @param null|Type|array<array-key,Type> $targetType If provided, it will be used instead of guessing the type
+     * @param array<array-key,Type> $targetType If provided, it will be used instead of guessing the type
      * @param array<string,mixed> $context
      */
     public function transform(
         mixed $source,
         mixed $target,
-        null|Type|array $targetType,
+        array $targetType,
         array $context
     ): mixed;
 }

@@ -39,7 +39,7 @@ final class ArrayToObjectTransformer implements TransformerInterface
         mixed $source,
         mixed $target,
         Type $sourceType,
-        Type $targetType,
+        ?Type $targetType,
         array $context
     ): mixed {
         if (!is_array($source)) {
@@ -58,7 +58,7 @@ final class ArrayToObjectTransformer implements TransformerInterface
             $targetClass = $target::class;
             $context[AbstractNormalizer::OBJECT_TO_POPULATE] = $target;
         } else {
-            $targetClass = $targetType->getClassName() ?? \stdClass::class;
+            $targetClass = $targetType?->getClassName() ?? \stdClass::class;
         }
 
         return $this->denormalizer->denormalize(

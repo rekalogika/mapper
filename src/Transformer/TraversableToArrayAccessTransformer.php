@@ -23,7 +23,6 @@ use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\InvalidTypeInArgumentException;
 use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
-use Rekalogika\Mapper\Exception\MissingMemberValueTypeException;
 use Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
@@ -44,9 +43,13 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         mixed $source,
         mixed $target,
         Type $sourceType,
-        Type $targetType,
+        ?Type $targetType,
         array $context
     ): mixed {
+        if ($targetType === null) {
+            throw new InvalidArgumentException('Target type must not be null.');
+        }
+
         // get object cache
 
         if (!isset($context[MainTransformer::OBJECT_CACHE])) {
@@ -85,21 +88,13 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         $objectCache->saveTarget($source, $targetType, $target);
 
-        // We can't work if the target type doesn't contain the information
-        // about the type of its member objects
-
-        $targetMemberValueType = $targetType->getCollectionValueTypes();
-
-        if (count($targetMemberValueType) === 0) {
-            throw new MissingMemberValueTypeException($sourceType, $targetType);
-        }
-
         // Prepare variables for the output loop
 
         $targetMemberKeyType = $targetType->getCollectionKeyTypes();
         $targetMemberKeyTypeIsMissing = count($targetMemberKeyType) === 0;
         $targetMemberKeyTypeIsInt = count($targetMemberKeyType) === 1
             && TypeCheck::isInt($targetMemberKeyType[0]);
+        $targetMemberValueType = $targetType->getCollectionValueTypes();
 
         /** @var mixed $sourceMemberValue */
         foreach ($source as $sourceMemberKey => $sourceMemberValue) {

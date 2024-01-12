@@ -25,7 +25,7 @@ final class ObjectToStringTransformer implements TransformerInterface
         mixed $source,
         mixed $target,
         Type $sourceType,
-        Type $targetType,
+        ?Type $targetType,
         array $context
     ): mixed {
         if ($source instanceof \Stringable) {

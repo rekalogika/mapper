@@ -30,7 +30,7 @@ final class DateTimeTransformer implements TransformerInterface
         mixed $source,
         mixed $target,
         Type $sourceType,
-        Type $targetType,
+        ?Type $targetType,
         array $context
     ): mixed {
         if (is_string($source)) {

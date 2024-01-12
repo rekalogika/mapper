@@ -55,23 +55,23 @@ class MainTransformer implements MainTransformerInterface
             return $transformer->withMainTransformer($this);
         }
         return $transformer;
-
     }
 
     public function transform(
         mixed $source,
         mixed $target,
-        null|Type|array $targetType,
+        array $targetType,
         array $context
     ): mixed {
         // if targettype is not provided, guess it from target
-        // if the target is also missing then throw exception
+        // if the target is also missing then the target is mixed
 
-        if ($targetType === null) {
+        if (count($targetType) === 0) {
             if ($target === null) {
-                throw new LogicException('Either $target or $targetType must be provided');
+                $targetType = [MixedType::instance()];
+            } else {
+                $targetType = [$this->typeResolver->guessTypeFromVariable($target)];
             }
-            $targetType = $this->typeResolver->guessTypeFromVariable($target);
         }
 
         // get object cache
@@ -85,10 +85,6 @@ class MainTransformer implements MainTransformerInterface
         }
 
         // gets simple target types from the provided target type
-
-        if ($targetType instanceof Type) {
-            $targetType = [$targetType];
-        }
 
         $simpleTargetTypes = [];
 
@@ -113,7 +109,7 @@ class MainTransformer implements MainTransformerInterface
                     source: $source,
                     target: $target,
                     sourceType: $sourceType,
-                    targetType: $singleTargetType,
+                    targetType: $singleTargetType instanceof MixedType ? null : $singleTargetType,
                     context: $context
                 );
 

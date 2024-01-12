@@ -35,33 +35,37 @@ class TypeCheck
             || enum_exists($class);
     }
 
-    public static function isInt(Type $type): bool
+    public static function isInt(?Type $type): bool
     {
-        return $type->getBuiltinType() === Type::BUILTIN_TYPE_INT;
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_INT;
     }
 
-    public static function isFloat(Type $type): bool
+    public static function isFloat(?Type $type): bool
     {
-        return $type->getBuiltinType() === Type::BUILTIN_TYPE_FLOAT;
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_FLOAT;
     }
 
-    public static function isString(Type $type): bool
+    public static function isString(?Type $type): bool
     {
-        return $type->getBuiltinType() === Type::BUILTIN_TYPE_STRING;
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_STRING;
     }
 
-    public static function isBool(Type $type): bool
+    public static function isBool(?Type $type): bool
     {
-        return $type->getBuiltinType() === Type::BUILTIN_TYPE_BOOL;
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_BOOL;
     }
 
-    public static function isArray(Type $type): bool
+    public static function isArray(?Type $type): bool
     {
-        return $type->getBuiltinType() === Type::BUILTIN_TYPE_ARRAY;
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_ARRAY;
     }
 
-    public static function isObject(Type $type): bool
+    public static function isObject(?Type $type): bool
     {
+        if ($type === null) {
+            return false;
+        }
+
         if ($type->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
             return false;
         }
@@ -78,8 +82,12 @@ class TypeCheck
     /**
      * @param class-string $classes
      */
-    public static function isObjectOfType(Type $type, string ...$classes): bool
+    public static function isObjectOfType(?Type $type, string ...$classes): bool
     {
+        if ($type === null) {
+            return false;
+        }
+
         if (!self::isObject($type)) {
             return false;
         }
@@ -99,24 +107,27 @@ class TypeCheck
         return false;
     }
 
-    public static function isEnum(Type $type): bool
+    public static function isEnum(?Type $type): bool
     {
+        if ($type === null) {
+            return false;
+        }
         return $type->getBuiltinType() === Type::BUILTIN_TYPE_OBJECT
             && $type->getClassName() !== null
             && enum_exists($type->getClassName());
     }
 
-    public static function isResource(Type $type): bool
+    public static function isResource(?Type $type): bool
     {
-        return $type->getBuiltinType() === Type::BUILTIN_TYPE_RESOURCE;
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_RESOURCE;
     }
 
-    public static function isNull(Type $type): bool
+    public static function isNull(?Type $type): bool
     {
-        return $type->getBuiltinType() === Type::BUILTIN_TYPE_NULL;
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_NULL;
     }
 
-    public static function isScalar(Type $type): bool
+    public static function isScalar(?Type $type): bool
     {
         return self::isInt($type)
             || self::isFloat($type)
@@ -124,9 +135,9 @@ class TypeCheck
             || self::isBool($type);
     }
 
-    public static function isIterable(Type $type): bool
+    public static function isIterable(?Type $type): bool
     {
-        return $type->getBuiltinType() === Type::BUILTIN_TYPE_ITERABLE;
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_ITERABLE;
     }
 
     /**

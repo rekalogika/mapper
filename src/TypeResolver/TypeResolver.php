@@ -71,14 +71,12 @@ class TypeResolver implements TypeResolverInterface
         return TypeUtil::isSimpleType($type);
     }
 
-    /**
-     * Gets all the possible simple types from a Type
-     *
-     * @param Type $type
-     * @return array<array-key,Type>
-     */
-    public function getSimpleTypes(Type $type): array
+    public function getSimpleTypes(Type|MixedType $type): array
     {
+        if ($type instanceof MixedType) {
+            return [$type];
+        }
+
         return TypeUtil::getSimpleTypes($type);
     }
 

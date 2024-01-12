@@ -41,9 +41,12 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         mixed $source,
         mixed $target,
         Type $sourceType,
-        Type $targetType,
+        ?Type $targetType,
         array $context
     ): mixed {
+        if ($targetType === null) {
+            throw new InvalidArgumentException('Target type must not be null.');
+        }
         // get object cache
 
         if (!isset($context[MainTransformer::OBJECT_CACHE])) {

@@ -60,17 +60,22 @@ class CachingTypeResolver implements TypeResolverInterface
     // can be expensive in a loop. we cache using a weakmap
 
     /**
-     * @var \WeakMap<Type,array<array-key,Type>>
+     * @var \WeakMap<Type,array<array-key,MixedType|Type>>
      */
     private \WeakMap $simpleTypesCache;
 
-    public function getSimpleTypes(Type $type): array
+    public function getSimpleTypes(Type|MixedType $type): array
     {
+        if ($type instanceof MixedType) {
+            return [$type];
+        }
+
         if ($result = $this->simpleTypesCache[$type] ?? null) {
             return $result;
         }
 
         $simpleTypes = $this->decorated->getSimpleTypes($type);
+
         $this->simpleTypesCache->offsetSet($type, $simpleTypes);
 
         return $simpleTypes;

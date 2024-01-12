@@ -12,6 +12,11 @@
 * refactor: Simplify `MapperInterface`
 * test: Fix tests due to refactor
 * refactor: Move deprecated facade to Facade namespace
+* refactor: `MainTransformerInterface` now only accept array `$targetType`
+* refactor: `TransformerInterface` now accepts null `$targetType` to signify
+  mixed type.
+* refactor: Remove deprecated facade.
+* feat: Add `CopyTransformer` to handle mixed to mixed mapping.
 
 ## 0.5.3
 

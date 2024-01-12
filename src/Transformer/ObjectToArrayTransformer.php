@@ -36,7 +36,7 @@ final class ObjectToArrayTransformer implements TransformerInterface
         mixed $source,
         mixed $target,
         Type $sourceType,
-        Type $targetType,
+        ?Type $targetType,
         array $context
     ): mixed {
         if (!is_object($source)) {

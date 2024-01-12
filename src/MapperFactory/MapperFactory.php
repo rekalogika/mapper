@@ -26,6 +26,7 @@ use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
+use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
@@ -80,6 +81,7 @@ class MapperFactory
     private ?DateTimeTransformer $dateTimeTransformer = null;
     private ?TraversableToArrayAccessTransformer $traversableToArrayAccessTransformer = null;
     private ?TraversableToTraversableTransformer $traversableToTraversableTransformer = null;
+    private ?CopyTransformer $copyTransformer = null;
 
     private CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
@@ -354,6 +356,15 @@ class MapperFactory
         return $this->traversableToTraversableTransformer;
     }
 
+    protected function getCopyTransformer(): TransformerInterface
+    {
+        if (null === $this->copyTransformer) {
+            $this->copyTransformer = new CopyTransformer();
+        }
+
+        return $this->copyTransformer;
+    }
+
     //
     // other services
     //
@@ -393,6 +404,8 @@ class MapperFactory
             => $this->getObjectToObjectTransformer();
         yield 'NullTransformer'
             => $this->getNullTransformer();
+        yield 'CopyTransformer'
+            => $this->getCopyTransformer();
     }
 
     protected function getTransformersLocator(): ContainerInterface

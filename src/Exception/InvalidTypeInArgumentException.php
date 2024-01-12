@@ -18,7 +18,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 class InvalidTypeInArgumentException extends InvalidArgumentException
 {
-    public function __construct(string $printfMessage, Type $expectedType)
+    public function __construct(string $printfMessage, ?Type $expectedType)
     {
         parent::__construct(sprintf($printfMessage, TypeUtil::getDebugType($expectedType)));
     }
