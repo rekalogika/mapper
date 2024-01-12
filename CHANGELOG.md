@@ -4,6 +4,7 @@
 
 * Add a caching layer for `TypeResolver`
 * `TraversableToTraversableTransformer` now accepts `Generator` as a target type
+* Constructor arguments
 
 ## 0.5.3
 

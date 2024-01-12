@@ -18,13 +18,18 @@ use Rekalogika\Mapper\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Contracts\TypeMapping;
 use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
+use Rekalogika\Mapper\Exception\ClassNotInstantiableException;
+use Rekalogika\Mapper\Exception\IncompleteConstructorArgument;
+use Rekalogika\Mapper\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Exception\InvalidClassException;
 use Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
+use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
@@ -91,17 +96,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             return $source;
         }
 
-        // list properties
-
-        $sourceProperties = $this->listSourceAttributes($sourceType, $context);
-        $writableTargetProperties = $this
-            ->listTargetWritableAttributes($targetType, $context);
-
         // initialize target, add to cache after initialization
 
         if (null === $target) {
             $objectCache->preCache($source, $targetType);
-            $target = $this->initialize($targetType);
+            $target = $this->instantiateTarget($source, $targetType, $context);
         } else {
             if (!is_object($target)) {
                 throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)));
@@ -110,37 +109,74 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         $objectCache->saveTarget($source, $targetType, $target);
 
+        // list properties
+
+        $sourceProperties = $this->listSourceAttributes($sourceType, $context);
+        $writableTargetProperties = $this
+            ->listTargetWritableAttributes($targetType, $context);
+
         // calculate applicable properties
 
         $propertiesToMap = array_intersect($sourceProperties, $writableTargetProperties);
 
         // map properties
 
-        foreach ($propertiesToMap as $property) {
-            /** @var array<int,Type>|null */
-            $targetPropertyTypes = $this->propertyTypeExtractor->getTypes($targetClass, $property, $context);
-
-            if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
-                throw new InvalidArgumentException(sprintf('Cannot get type of target property "%s::$%s".', $targetClass, $property));
-            }
+        foreach ($propertiesToMap as $propertyName) {
+            assert(is_object($target));
 
             /** @var mixed */
-            $sourcePropertyValue = $this->propertyAccessor->getValue($source, $property);
-            /** @var mixed */
-            $targetPropertyValue = $this->propertyAccessor->getValue($target, $property);
-
-            /** @var mixed */
-            $targetPropertyValue = $this->mainTransformer?->transform(
-                source: $sourcePropertyValue,
-                target: $targetPropertyValue,
-                targetType: $targetPropertyTypes,
+            $targetPropertyValue = $this->resolveTargetPropertyValue(
+                source: $source,
+                target: $target,
+                propertyName: $propertyName,
+                targetClass: $targetClass,
                 context: $context
             );
 
-            $this->propertyAccessor->setValue($target, $property, $targetPropertyValue);
+            $this->propertyAccessor->setValue($target, $propertyName, $targetPropertyValue);
         }
 
         return $target;
+    }
+
+    /**
+     * @param class-string $targetClass
+     * @param array<string,mixed> $context
+     * @return mixed
+     */
+    private function resolveTargetPropertyValue(
+        object $source,
+        ?object $target,
+        string $propertyName,
+        string $targetClass,
+        array $context,
+    ): mixed {
+        /** @var array<int,Type>|null */
+        $targetPropertyTypes = $this->propertyTypeExtractor->getTypes($targetClass, $propertyName, $context);
+
+        if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
+            throw new InvalidArgumentException(sprintf('Cannot get type of target property "%s::$%s".', $targetClass, $propertyName));
+        }
+
+        /** @var mixed */
+        $sourcePropertyValue = $this->propertyAccessor->getValue($source, $propertyName);
+
+        if ($target !== null) {
+            /** @var mixed */
+            $targetPropertyValue = $this->propertyAccessor->getValue($target, $propertyName);
+        } else {
+            $targetPropertyValue = null;
+        }
+
+        /** @var mixed */
+        $targetPropertyValue = $this->mainTransformer?->transform(
+            source: $sourcePropertyValue,
+            target: $targetPropertyValue,
+            targetType: $targetPropertyTypes,
+            context: $context
+        );
+
+        return $targetPropertyValue;
     }
 
     public function getSupportedTransformation(): iterable
@@ -149,25 +185,54 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     }
 
     /**
+     * @param array<string,mixed> $context
      * @todo support constructor initialization
      */
-    protected function initialize(Type $targetType): object
-    {
-        $class = $targetType->getClassName();
+    protected function instantiateTarget(
+        object $source,
+        Type $targetType,
+        array $context
+    ): object {
+        $targetClass = $targetType->getClassName();
 
-        if (null === $class || !\class_exists($class)) {
-            throw new InvalidArgumentException('Cannot get class name from target type.');
+        if (null === $targetClass || !\class_exists($targetClass)) {
+            throw new InvalidClassException($targetType);
         }
 
-        // $initializableTargetProperties = $this->listTargetInitializableAttributes($targetClass);
+        $reflectionClass = new \ReflectionClass($targetClass);
 
-        // $writableAndNotInitializableTargetProperties = array_diff(
-        //     $writableTargetProperties,
-        //     $initializableTargetProperties
-        // );
+        if (!$reflectionClass->isInstantiable()) {
+            throw new ClassNotInstantiableException($targetClass);
+        }
 
-        return (new \ReflectionClass($class))
-            ->newInstanceWithoutConstructor();
+        $initializableTargetProperties = $this
+            ->listTargetInitializableAttributes($targetClass, $context);
+
+        $constructorArguments = [];
+
+        foreach ($initializableTargetProperties as $propertyName) {
+            try {
+                /** @var mixed */
+                $targetPropertyValue = $this->resolveTargetPropertyValue(
+                    source: $source,
+                    target: null,
+                    propertyName: $propertyName,
+                    targetClass: $targetClass,
+                    context: $context
+                );
+            } catch (NoSuchPropertyException $e) {
+                throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e);
+            }
+
+            /** @psalm-suppress MixedAssignment */
+            $constructorArguments[$propertyName] = $targetPropertyValue;
+        }
+
+        try {
+            return $reflectionClass->newInstanceArgs($constructorArguments);
+        } catch (\TypeError $e) {
+            throw new InstantiationFailureException($source, $targetClass, $constructorArguments, $e);
+        }
     }
 
     /**
