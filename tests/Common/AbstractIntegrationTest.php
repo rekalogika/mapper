@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Common;
 
 use PHPUnit\Framework\TestCase;
+use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\MapperInterface;
 
@@ -25,8 +26,18 @@ abstract class AbstractIntegrationTest extends TestCase
 
     public function setUp(): void
     {
-        $this->factory = new MapperTestFactory();
+        $this->factory = new MapperTestFactory(
+            additionalTransformers: $this->getAdditionalTransformers()
+        );
         $this->mapper = $this->factory->getMapper();
         $this->mainTransformer = $this->factory->getMainTransformer();
+    }
+
+    /**
+     * @return array<string,TransformerInterface>
+     */
+    protected function getAdditionalTransformers(): array
+    {
+        return [];
     }
 }
