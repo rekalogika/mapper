@@ -17,6 +17,10 @@
   mixed type.
 * refactor: Remove deprecated facade.
 * feat: Add `CopyTransformer` to handle mixed to mixed mapping.
+* feat: `TraversableToTraversableTransformer` now gives a `Countable` result
+  if the source is `Countable`.
+* revert: Revert support for `Generator` target type. Impossible to have a
+  `Countable` result.
 
 ## 0.5.3
 

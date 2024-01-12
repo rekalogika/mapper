@@ -22,6 +22,7 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
 use Rekalogika\Mapper\Exception\MissingMemberValueTypeException;
 use Rekalogika\Mapper\MainTransformer;
+use Rekalogika\Mapper\Model\TraversableCountableWrapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -158,6 +159,12 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
             }
         })();
 
+        if ($source instanceof \Countable) {
+            $target = new TraversableCountableWrapper($target, $source);
+        } elseif (is_array($source)) {
+            $target = new TraversableCountableWrapper($target, count($source));
+        }
+
         $objectCache->saveTarget($source, $targetType, $target);
 
         return $target;
@@ -171,7 +178,6 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         ];
 
         $targetTypes = [
-            TypeFactory::objectOfClass(\Generator::class),
             TypeFactory::objectOfClass(\Traversable::class),
         ];
 

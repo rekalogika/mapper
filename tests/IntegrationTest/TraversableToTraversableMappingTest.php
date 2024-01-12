@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use Rekalogika\Mapper\Model\TraversableCountableWrapper;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionProperty;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionWithPresetCountableProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithTraversablePropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
@@ -54,7 +56,7 @@ class TraversableToTraversableMappingTest extends AbstractIntegrationTest
 
         $this->assertInstanceOf(ObjectWithTraversablePropertyDto::class, $result);
         $this->assertNotNull($result->property);
-        $this->assertInstanceOf(\Generator::class, $result->property);
+        $this->assertInstanceOf(TraversableCountableWrapper::class, $result->property);
 
         foreach ($result->property as $item) {
             $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $item);
@@ -74,7 +76,23 @@ class TraversableToTraversableMappingTest extends AbstractIntegrationTest
 
         $this->assertInstanceOf(ObjectWithTraversablePropertyDto::class, $result);
         $this->assertNotNull($result->property);
-        $this->assertInstanceOf(\Generator::class, $result->property);
+        $this->assertInstanceOf(TraversableCountableWrapper::class, $result->property);
+
+        $this->expectException(\LogicException::class);
+        foreach ($result->property as $item);
+    }
+
+    public function testExtraLazy(): void
+    {
+        $source = new ObjectWithLazyDoctrineCollectionWithPresetCountableProperty();
+
+        $result = $this->mapper->map($source, ObjectWithTraversablePropertyDto::class);
+
+        $this->assertInstanceOf(ObjectWithTraversablePropertyDto::class, $result);
+        $this->assertNotNull($result->property);
+        $this->assertInstanceOf(TraversableCountableWrapper::class, $result->property);
+
+        $this->assertEquals(31337, $result->property->count());
 
         $this->expectException(\LogicException::class);
         foreach ($result->property as $item);
