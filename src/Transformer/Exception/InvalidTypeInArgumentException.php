@@ -11,8 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Exception;
+namespace Rekalogika\Mapper\Transformer\Exception;
 
+use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 

@@ -13,18 +13,18 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer;
 
-use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
-use Rekalogika\Mapper\Exception\ClassNotInstantiableException;
-use Rekalogika\Mapper\Exception\IncompleteConstructorArgument;
-use Rekalogika\Mapper\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\InvalidClassException;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
+use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
+use Rekalogika\Mapper\Transformer\Exception\IncompleteConstructorArgument;
+use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
+use Rekalogika\Mapper\Transformer\Exception\InvalidClassException;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;

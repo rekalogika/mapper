@@ -11,15 +11,16 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Exception;
+namespace Rekalogika\Mapper\ObjectCache\Exception;
 
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class InvalidClassException extends UnexpectedValueException
+class NonSimpleTypeException extends UnexpectedValueException
 {
     public function __construct(Type $type)
     {
-        parent::__construct(sprintf('Trying to map to class "%s", but this is not a valid class, interface, or enum.', TypeUtil::getDebugType($type)));
+        parent::__construct(sprintf('Expected a simple type, got non-simple type "%s".', TypeUtil::getDebugType($type)));
     }
 }

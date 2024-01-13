@@ -11,8 +11,8 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Exception;
+namespace Rekalogika\Mapper\Transformer\Exception;
 
-abstract class NotMappableValueException extends UnexpectedValueException
+abstract class MissingMemberTypeException extends NotMappableValueException
 {
 }

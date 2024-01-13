@@ -11,7 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Exception;
+namespace Rekalogika\Mapper\ObjectCache\Exception;
+
+use Rekalogika\Mapper\Exception\RuntimeException;
 
 class CachedTargetObjectNotFoundException extends RuntimeException
 {

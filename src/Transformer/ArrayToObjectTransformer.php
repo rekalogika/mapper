@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\InvalidTypeInArgumentException;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
+use Rekalogika\Mapper\Transformer\Exception\InvalidTypeInArgumentException;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;

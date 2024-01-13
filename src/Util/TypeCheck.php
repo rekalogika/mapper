@@ -112,9 +112,26 @@ class TypeCheck
         if ($type === null) {
             return false;
         }
+
+        $class = $type->getClassName();
+
         return $type->getBuiltinType() === Type::BUILTIN_TYPE_OBJECT
-            && $type->getClassName() !== null
-            && enum_exists($type->getClassName());
+            && $class !== null
+            && enum_exists($class);
+    }
+
+    public static function isBackedEnum(?Type $type): bool
+    {
+        if ($type === null) {
+            return false;
+        }
+
+        $class = $type->getClassName();
+
+        return $type->getBuiltinType() === Type::BUILTIN_TYPE_OBJECT
+            && $class !== null
+            && enum_exists($class)
+            && is_a($class, \BackedEnum::class, true);
     }
 
     public static function isResource(?Type $type): bool
@@ -212,8 +229,12 @@ class TypeCheck
     /**
      * @todo support generics
      */
-    public static function isVariableInstanceOf(mixed $variable, Type $type): bool
+    public static function isVariableInstanceOf(mixed $variable, Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return true;
+        }
+
         if (self::isObject($type)) {
             $class = $type->getClassName();
 

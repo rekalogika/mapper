@@ -34,7 +34,7 @@ class ObjectCacheTest extends TestCase
         $this->assertTrue($objectCache->containsTarget($source, TypeFactory::int()));
         $this->assertSame($target, $objectCache->getTarget($source, TypeFactory::int()));
 
-        $this->expectException(\Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException::class);
+        $this->expectException(\Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException::class);
         $objectCache->getTarget($source, TypeFactory::float());
     }
 }

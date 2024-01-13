@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Exception\ClassNotInstantiableException;
-use Rekalogika\Mapper\Exception\IncompleteConstructorArgument;
-use Rekalogika\Mapper\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndMoreArgumentDto;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndPropertiesDto;
@@ -23,6 +20,9 @@ use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithPrivateConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesAndAdditionalNullProperty;
+use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
+use Rekalogika\Mapper\Transformer\Exception\IncompleteConstructorArgument;
+use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 
 class ConstructorTest extends AbstractIntegrationTest
 {

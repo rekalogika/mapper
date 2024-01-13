@@ -15,16 +15,17 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\InvalidTypeInArgumentException;
-use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
+use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
+use Rekalogika\Mapper\Transformer\Exception\InvalidTypeInArgumentException;
+use Rekalogika\Mapper\Transformer\Exception\MissingMemberKeyTypeException;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
@@ -193,7 +194,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             try {
                 $result = $reflectionClass->newInstance();
             } catch (\ReflectionException) {
-                throw new InvalidArgumentException(sprintf('We do not know how to instantiate class "%s"', $class));
+                throw new ClassNotInstantiableException($class);
             }
 
             if (!$result instanceof \ArrayAccess) {

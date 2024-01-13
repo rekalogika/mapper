@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Contracts;
 
-use Rekalogika\Mapper\Exception\CircularReferenceException;
 use Rekalogika\Mapper\Exception\ExceptionInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException;
 use Symfony\Component\PropertyInfo\Type;
 
 interface TransformerInterface

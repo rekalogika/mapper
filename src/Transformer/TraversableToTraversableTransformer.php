@@ -13,16 +13,16 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer;
 
-use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
-use Rekalogika\Mapper\Exception\MissingMemberValueTypeException;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
+use Rekalogika\Mapper\Transformer\Exception\MissingMemberKeyTypeException;
+use Rekalogika\Mapper\Transformer\Exception\MissingMemberValueTypeException;
 use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;

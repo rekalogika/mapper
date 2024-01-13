@@ -7,6 +7,7 @@
 * refactor: Move transformer query logic to `TransformerRegistry`.
 * refactor: Mover more logic to `TransformerRegistry`.
 * refactor: Move `MainTransformer` to its own namespace.
+* refactor: Refactor exception.
 
 ## 0.5.4
 

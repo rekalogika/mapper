@@ -11,13 +11,13 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Exception;
+namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class MissingMemberValueTypeException extends MissingMemberTypeException
+class MissingMemberKeyTypeException extends MissingMemberTypeException
 {
     public function __construct(?Type $sourceType, Type $targetType)
     {
@@ -25,6 +25,6 @@ class MissingMemberValueTypeException extends MissingMemberTypeException
             $sourceType = MixedType::instance();
         }
 
-        parent::__construct(sprintf('Trying to map collection type "%s" to "%s", but the target does not have the type information about the value of its child members. Usually you can fix this by adding a PHPdoc to the property containing the collection type.', TypeUtil::getDebugType($sourceType), TypeUtil::getDebugType($targetType)));
+        parent::__construct(sprintf('Trying to map collection type "%s" to "%s", but the source member key is not the simple array-key type, and the target does not have the type information about the key of its child members. Usually you can fix this by adding a PHPdoc to the property containing the collection type.', TypeUtil::getDebugType($sourceType), TypeUtil::getDebugType($targetType)));
     }
 }

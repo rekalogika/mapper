@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Util;
 
 use DaveLiddament\PhpLanguageExtensions\Friend;
-use DaveLiddament\PhpLanguageExtensions\NamespaceVisibility;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\MapperReturnsUnexpectedValueException;
+use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtil2Test;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtilTest;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
@@ -231,7 +230,6 @@ class TypeUtil
      * @param null|Type|MixedType|array<array-key,Type|MixedType> $type
      * @return string
      */
-    #[NamespaceVisibility(namespace: 'Rekalogika\Mapper\Exception')]
     public static function getDebugType(null|Type|MixedType|array $type): string
     {
         if ($type === null) {
@@ -260,7 +258,7 @@ class TypeUtil
      */
     #[Friend(
         TypeResolver::class,
-        MapperReturnsUnexpectedValueException::class,
+        TransformerReturnsUnexpectedValueException::class,
         TypeUtilTest::class
     )]
     public static function getTypeString(Type|MixedType $type): string

@@ -11,18 +11,20 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Exception;
+namespace Rekalogika\Mapper\MainTransformer\Exception;
 
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class MapperReturnsUnexpectedValueException extends UnexpectedValueException
+class TransformerReturnsUnexpectedValueException extends UnexpectedValueException
 {
-    public function __construct(Type|null $type, mixed $target)
+    public function __construct(Type|MixedType $type, mixed $target)
     {
         $message = sprintf(
             'Mapper returns unexpected value. Expected type "%s", but got "%s"',
-            $type === null ? 'unknown' : TypeUtil::getTypeString($type),
+            TypeUtil::getTypeString($type),
             get_debug_type($target),
         );
 

@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\ObjectCache;
 
-use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
-use Rekalogika\Mapper\Exception\CircularReferenceException;
 use Rekalogika\Mapper\Exception\LogicException;
-use Rekalogika\Mapper\Exception\NonSimpleTypeException;
+use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
+use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException;
+use Rekalogika\Mapper\ObjectCache\Exception\NonSimpleTypeException;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;
 

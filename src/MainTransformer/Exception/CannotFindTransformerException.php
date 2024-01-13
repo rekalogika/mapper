@@ -11,13 +11,13 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Exception;
+namespace Rekalogika\Mapper\MainTransformer\Exception;
 
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class UnableToFindSuitableTransformerException extends NotMappableValueException
+class CannotFindTransformerException extends \RuntimeException
 {
     /**
      * @param array<int,Type|MixedType> $sourceTypes
@@ -28,6 +28,6 @@ class UnableToFindSuitableTransformerException extends NotMappableValueException
         $sourceTypes = TypeUtil::getDebugType($sourceTypes);
         $targetTypes = TypeUtil::getDebugType($targetTypes);
 
-        parent::__construct(sprintf('Unable to find a suitable transformer for mapping the source types "%s" to the target types "%s"', $sourceTypes, $sourceTypes));
+        parent::__construct(sprintf('Cannot find a matching transformer for mapping the source types "%s" to the target types "%s"', $sourceTypes, $sourceTypes));
     }
 }

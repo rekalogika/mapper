@@ -11,12 +11,14 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Exception;
+namespace Rekalogika\Mapper\ObjectCache\Exception;
 
+use Rekalogika\Mapper\Exception\ExceptionInterface;
+use Rekalogika\Mapper\Exception\RuntimeException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class CircularReferenceException extends \RuntimeException implements ExceptionInterface
+class CircularReferenceException extends RuntimeException implements ExceptionInterface
 {
     public function __construct(mixed $source, Type $targetType)
     {
