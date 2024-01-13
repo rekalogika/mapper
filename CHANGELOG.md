@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.5.8
+
+* fix: PropertyAccessor `UninitializedPropertyException` error now is regarded
+  as null.
+
 ## 0.5.7
 
 * fix: Improve exception message.

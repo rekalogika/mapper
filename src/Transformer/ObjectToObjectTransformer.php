@@ -33,6 +33,7 @@ use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
+use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
@@ -161,6 +162,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $sourcePropertyValue = $this->propertyAccessor->getValue($source, $propertyName);
         } catch (NoSuchPropertyException $e) {
             throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e);
+        } catch (UninitializedPropertyException $e) {
+            $sourcePropertyValue = null;
         } catch (AccessException | UnexpectedTypeException $e) {
             throw new UnableToReadException($source, $target, $source, $propertyName, $e);
         }
@@ -171,6 +174,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 $targetPropertyValue = $this->propertyAccessor->getValue($target, $propertyName);
             } catch (NoSuchPropertyException $e) {
                 throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e);
+            } catch (UninitializedPropertyException $e) {
+                $targetPropertyValue = null;
             } catch (AccessException | UnexpectedTypeException $e) {
                 throw new UnableToReadException($source, $target, $target, $propertyName, $e);
             }
