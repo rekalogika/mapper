@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer;
 
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
-use Rekalogika\Mapper\MainTransformer\Exception\ContextMemberNotFoundException;
+use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;

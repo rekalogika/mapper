@@ -11,10 +11,10 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\MainTransformer;
+namespace Rekalogika\Mapper\Context;
 
 use Rekalogika\Mapper\Exception\LogicException;
-use Rekalogika\Mapper\MainTransformer\Exception\ContextMemberNotFoundException;
+use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 
 /**
  * @immutable

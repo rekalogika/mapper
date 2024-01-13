@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MethodMapper;
 
-use Rekalogika\Mapper\MainTransformer\Context;
+use Rekalogika\Mapper\Context\Context;
 
 interface MapToObjectInterface
 {

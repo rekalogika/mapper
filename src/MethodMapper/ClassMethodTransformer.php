@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\MethodMapper;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\MainTransformer\Context;
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;

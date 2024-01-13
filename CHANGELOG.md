@@ -13,6 +13,7 @@
 * refactor: Remove `$context` from `MapperInterface`
 * chore: Fix static analysis issues.
 * refactor: Change context array to `Context` object.
+* refactor: Move `Context` to its own namespace.
 
 ## 0.5.4
 
