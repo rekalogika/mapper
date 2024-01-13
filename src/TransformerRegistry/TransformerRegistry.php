@@ -45,19 +45,31 @@ class TransformerRegistry implements TransformerRegistryInterface
         return $transformer;
     }
 
-    // public function findBySourceAndTargetTypes(
-    //     iterable $sourceTypes,
-    //     iterable $targetTypes,
-    // ): iterable {
-    //     foreach ($sourceTypes as $sourceType) {
-    //         foreach ($targetTypes as $targetType) {
-    //             yield from $this->findBySourceAndTargetType(
-    //                 $sourceType,
-    //                 $targetType
-    //             );
-    //         }
-    //     }
-    // }
+    public function findBySourceAndTargetTypes(
+        iterable $sourceTypes,
+        iterable $targetTypes,
+    ): SearchResult {
+        $result = (function () use ($sourceTypes, $targetTypes) {
+            foreach ($sourceTypes as $sourceType) {
+                foreach ($targetTypes as $targetType) {
+                    $transformers = $this->findBySourceAndTargetType(
+                        $sourceType,
+                        $targetType
+                    );
+
+                    foreach ($transformers as $transformer) {
+                        yield new SearchResultEntry(
+                            $sourceType,
+                            $targetType,
+                            $transformer
+                        );
+                    }
+                }
+            }
+        })();
+
+        return new SearchResult($result);
+    }
 
     public function findBySourceAndTargetType(
         Type|MixedType $sourceType,
@@ -67,7 +79,7 @@ class TransformerRegistry implements TransformerRegistryInterface
 
         foreach ($mapping as $item) {
             $id = $item->getId();
-            yield $this->get($id);
+            yield $id => $this->get($id);
         }
     }
 

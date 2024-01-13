@@ -40,7 +40,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
     public function transform(
         mixed $source,
         mixed $target,
-        Type $sourceType,
+        ?Type $sourceType,
         ?Type $targetType,
         array $context
     ): mixed {
@@ -132,7 +132,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                     $targetPropertyKey = $this->getMainTransformer()->transform(
                         source: $sourcePropertyKey,
                         target: null,
-                        targetType: $targetMemberKeyType,
+                        targetTypes: $targetMemberKeyType,
                         context: $context,
                     );
                 }
@@ -144,7 +144,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                 $targetPropertyValue = $this->getMainTransformer()->transform(
                     source: $sourcePropertyValue,
                     target: null,
-                    targetType: $targetMemberValueType,
+                    targetTypes: $targetMemberValueType,
                     context: $context,
                 );
 

@@ -20,17 +20,14 @@ use Symfony\Component\PropertyInfo\Type;
 class UnableToFindSuitableTransformerException extends NotMappableValueException
 {
     /**
-     * @param Type $sourceType
-     * @param Type|array<array-key,Type|MixedType> $targetType
+     * @param array<array-key,Type|MixedType> $sourceTypes
+     * @param array<array-key,Type|MixedType> $targetTypes
      */
-    public function __construct(Type $sourceType, Type|MixedType|array $targetType)
+    public function __construct(array $sourceTypes, array $targetTypes)
     {
-        if (is_array($targetType)) {
-            $targetType = implode(', ', array_map(fn (Type|MixedType $type) => TypeUtil::getDebugType($type), $targetType));
-        } else {
-            $targetType = TypeUtil::getDebugType($targetType);
-        }
+        $sourceTypes = TypeUtil::getDebugType($sourceTypes);
+        $targetTypes = TypeUtil::getDebugType($targetTypes);
 
-        parent::__construct(sprintf('Unable to map the value "%s" to "%s"', TypeUtil::getDebugType($sourceType), $targetType));
+        parent::__construct(sprintf('Unable to find a suitable transformer for mapping the source types "%s" to the target types "%s"', $sourceTypes, $sourceTypes));
     }
 }

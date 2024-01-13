@@ -25,7 +25,7 @@ final class NullTransformer implements TransformerInterface
     public function transform(
         mixed $source,
         mixed $target,
-        Type $sourceType,
+        ?Type $sourceType,
         ?Type $targetType,
         array $context
     ): mixed {

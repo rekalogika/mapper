@@ -54,7 +54,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     public function transform(
         mixed $source,
         mixed $target,
-        Type $sourceType,
+        ?Type $sourceType,
         ?Type $targetType,
         array $context
     ): mixed {
@@ -169,7 +169,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $targetPropertyValue = $this->mainTransformer?->transform(
             source: $sourcePropertyValue,
             target: $targetPropertyValue,
-            targetType: $targetPropertyTypes,
+            targetTypes: $targetPropertyTypes,
             context: $context
         );
 

@@ -13,13 +13,18 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Exception;
 
+use Rekalogika\Mapper\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 class MissingMemberValueTypeException extends MissingMemberTypeException
 {
-    public function __construct(Type $sourceType, Type $targetType)
+    public function __construct(?Type $sourceType, Type $targetType)
     {
+        if (null === $sourceType) {
+            $sourceType = MixedType::instance();
+        }
+
         parent::__construct(sprintf('Trying to map collection type "%s" to "%s", but the target does not have the type information about the value of its child members. Usually you can fix this by adding a PHPdoc to the property containing the collection type.', TypeUtil::getDebugType($sourceType), TypeUtil::getDebugType($targetType)));
     }
 }

@@ -74,17 +74,17 @@ class MainTransformer implements MainTransformerInterface
     public function transform(
         mixed $source,
         mixed $target,
-        array $targetType,
+        array $targetTypes,
         array $context
     ): mixed {
         // if targettype is not provided, guess it from target
         // if the target is also missing then the target is mixed
 
-        if (count($targetType) === 0) {
+        if (count($targetTypes) === 0) {
             if ($target === null) {
-                $targetType = [MixedType::instance()];
+                $targetTypes = [MixedType::instance()];
             } else {
-                $targetType = [$this->typeResolver->guessTypeFromVariable($target)];
+                $targetTypes = [$this->typeResolver->guessTypeFromVariable($target)];
             }
         }
 
@@ -99,8 +99,8 @@ class MainTransformer implements MainTransformerInterface
 
         $simpleTargetTypes = [];
 
-        foreach ($targetType as $singleTargetType) {
-            foreach ($this->typeResolver->getSimpleTypes($singleTargetType) as $simpleType) {
+        foreach ($targetTypes as $targetType) {
+            foreach ($this->typeResolver->getSimpleTypes($targetType) as $simpleType) {
                 $simpleTargetTypes[] = $simpleType;
             }
         }
@@ -111,26 +111,33 @@ class MainTransformer implements MainTransformerInterface
 
         // iterate simple target types and find the suitable transformer
 
-        foreach ($simpleTargetTypes as $singleTargetType) {
-            $transformers = $this->transformerRegistry
-                ->findBySourceAndTargetType($sourceType, $singleTargetType);
+        $searchResult = $this->transformerRegistry
+            ->findBySourceAndTargetTypes(
+                [$sourceType],
+                $simpleTargetTypes
+            );
 
-            foreach ($transformers as $transformer) {
-                $transformer = $this->processTransformer($transformer);
+        foreach ($searchResult as $searchEntry) {
+            $transformer = $this->processTransformer($searchEntry->getTransformer());
 
-                /** @var mixed */
-                $result = $transformer->transform(
-                    source: $source,
-                    target: $target,
-                    sourceType: $sourceType,
-                    targetType: $singleTargetType instanceof MixedType ? null : $singleTargetType,
-                    context: $context
-                );
+            $sourceType = $searchEntry->getSourceType();
+            $sourceTypeForTransformer = $sourceType instanceof MixedType ? null : $sourceType;
 
-                return $result;
-            }
+            $targetTypes = $searchEntry->getTargetType();
+            $targetTypeForTransformer = $targetTypes instanceof MixedType ? null : $targetTypes;
+
+            /** @var mixed */
+            $result = $transformer->transform(
+                source: $source,
+                target: $target,
+                sourceType: $sourceTypeForTransformer,
+                targetType: $targetTypeForTransformer,
+                context: $context
+            );
+
+            return $result;
         }
 
-        throw new UnableToFindSuitableTransformerException($sourceType, $targetType);
+        throw new UnableToFindSuitableTransformerException([$sourceType], $simpleTargetTypes);
     }
 }

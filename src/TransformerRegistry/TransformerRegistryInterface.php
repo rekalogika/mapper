@@ -22,20 +22,20 @@ interface TransformerRegistryInterface
 {
     public function get(string $id): TransformerInterface;
 
-    // /**
-    //  * @param iterable<int,Type|MixedType> $sourceTypes
-    //  * @param iterable<int,Type|MixedType> $targetTypes
-    //  * @return iterable<int,TransformerInterface>
-    //  */
-    // public function findBySourceAndTargetTypes(
-    //     iterable $sourceTypes,
-    //     iterable $targetTypes,
-    // ): iterable;
+    /**
+     * @param iterable<int,Type|MixedType> $sourceTypes
+     * @param iterable<int,Type|MixedType> $targetTypes
+     * @return SearchResult
+     */
+    public function findBySourceAndTargetTypes(
+        iterable $sourceTypes,
+        iterable $targetTypes,
+    ): SearchResult;
 
     /**
      * @param Type|MixedType $sourceType
      * @param Type|MixedType $targetType
-     * @return iterable<int,TransformerInterface>
+     * @return iterable<string,TransformerInterface>
      */
     public function findBySourceAndTargetType(
         Type|MixedType $sourceType,

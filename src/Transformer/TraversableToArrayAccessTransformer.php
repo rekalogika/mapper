@@ -41,7 +41,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     public function transform(
         mixed $source,
         mixed $target,
-        Type $sourceType,
+        ?Type $sourceType,
         ?Type $targetType,
         array $context
     ): mixed {
@@ -121,7 +121,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 $targetMemberKey = $this->getMainTransformer()->transform(
                     source: $sourceMemberKey,
                     target: null,
-                    targetType: $targetMemberKeyType,
+                    targetTypes: $targetMemberKeyType,
                     context: $context,
                 );
             }
@@ -145,7 +145,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             $targetMemberValue = $this->getMainTransformer()->transform(
                 source: $sourceMemberValue,
                 target: $targetMemberValue,
-                targetType: $targetMemberValueType,
+                targetTypes: $targetMemberValueType,
                 context: $context,
             );
 

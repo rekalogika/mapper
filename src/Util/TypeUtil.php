@@ -227,11 +227,28 @@ class TypeUtil
         return $permutations;
     }
 
+    /**
+     * @param null|Type|MixedType|array<array-key,Type|MixedType> $type
+     * @return string
+     */
     #[NamespaceVisibility(namespace: 'Rekalogika\Mapper\Exception')]
-    public static function getDebugType(null|Type|MixedType $type): string
+    public static function getDebugType(null|Type|MixedType|array $type): string
     {
         if ($type === null) {
             return 'null';
+        }
+
+        if (is_array($type)) {
+            if (count($type) === 0) {
+                return 'mixed';
+            }
+
+            $typeStrings = [];
+            foreach ($type as $t) {
+                $typeStrings[] = TypeUtil::getTypeString($t);
+            }
+
+            return implode('|', $typeStrings);
         }
 
         return TypeUtil::getTypeString($type);
