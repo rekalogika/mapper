@@ -22,6 +22,7 @@ use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
+use Symfony\Component\PropertyInfo\Type;
 
 class MainTransformer implements MainTransformerInterface
 {
@@ -70,6 +71,24 @@ class MainTransformer implements MainTransformerInterface
         return $objectCache;
     }
 
+    /**
+     * @param array<array-key,Type|MixedType> $types
+     * @return array<int,Type|MixedType>
+     */
+    private function getSimpleTypes(
+        array $types
+    ): array {
+        $simpleTypes = [];
+
+        foreach ($types as $type) {
+            foreach ($this->typeResolver->getSimpleTypes($type) as $simpleType) {
+                $simpleTypes[] = $simpleType;
+            }
+        }
+
+        return $simpleTypes;
+    }
+
     public function transform(
         mixed $source,
         mixed $target,
@@ -96,25 +115,22 @@ class MainTransformer implements MainTransformerInterface
 
         // gets simple target types from the provided target type
 
-        $simpleTargetTypes = [];
-
-        foreach ($targetTypes as $targetType) {
-            foreach ($this->typeResolver->getSimpleTypes($targetType) as $simpleType) {
-                $simpleTargetTypes[] = $simpleType;
-            }
-        }
+        $targetTypes = $this->getSimpleTypes($targetTypes);
 
         // guess the source type
 
-        $sourceType = $this->typeResolver->guessTypeFromVariable($source);
+        $sourceTypes = [$this->typeResolver->guessTypeFromVariable($source)];
 
-        // iterate simple target types and find the suitable transformer
+        // search for the matching transformers according to the source and
+        // target types
 
         $searchResult = $this->transformerRegistry
             ->findBySourceAndTargetTypes(
-                [$sourceType],
-                $simpleTargetTypes
+                $sourceTypes,
+                $targetTypes
             );
+
+        // loop over the result and transform the source to the target
 
         foreach ($searchResult as $searchEntry) {
             $transformer = $this->processTransformer($searchEntry->getTransformer());
@@ -122,8 +138,8 @@ class MainTransformer implements MainTransformerInterface
             $sourceType = $searchEntry->getSourceType();
             $sourceTypeForTransformer = $sourceType instanceof MixedType ? null : $sourceType;
 
-            $targetTypes = $searchEntry->getTargetType();
-            $targetTypeForTransformer = $targetTypes instanceof MixedType ? null : $targetTypes;
+            $targetType = $searchEntry->getTargetType();
+            $targetTypeForTransformer = $targetType instanceof MixedType ? null : $targetType;
 
             /** @var mixed */
             $result = $transformer->transform(
@@ -137,6 +153,6 @@ class MainTransformer implements MainTransformerInterface
             return $result;
         }
 
-        throw new UnableToFindSuitableTransformerException([$sourceType], $simpleTargetTypes);
+        throw new UnableToFindSuitableTransformerException($sourceTypes, $targetTypes);
     }
 }

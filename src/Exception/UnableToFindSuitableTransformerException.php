@@ -20,8 +20,8 @@ use Symfony\Component\PropertyInfo\Type;
 class UnableToFindSuitableTransformerException extends NotMappableValueException
 {
     /**
-     * @param array<array-key,Type|MixedType> $sourceTypes
-     * @param array<array-key,Type|MixedType> $targetTypes
+     * @param array<int,Type|MixedType> $sourceTypes
+     * @param array<int,Type|MixedType> $targetTypes
      */
     public function __construct(array $sourceTypes, array $targetTypes)
     {
