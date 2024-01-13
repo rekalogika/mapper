@@ -274,7 +274,6 @@ class MapperFactory
                 $this->getPropertyAccessExtractor(),
                 $this->getPropertyAccessor(),
                 $this->getTypeResolver(),
-                $this->getObjectCacheFactory(),
             );
         }
 
@@ -343,9 +342,7 @@ class MapperFactory
     {
         if (null === $this->traversableToArrayAccessTransformer) {
             $this->traversableToArrayAccessTransformer =
-                new TraversableToArrayAccessTransformer(
-                    $this->getObjectCacheFactory()
-                );
+                new TraversableToArrayAccessTransformer();
         }
 
         return $this->traversableToArrayAccessTransformer;
@@ -355,9 +352,7 @@ class MapperFactory
     {
         if (null === $this->traversableToTraversableTransformer) {
             $this->traversableToTraversableTransformer =
-                new TraversableToTraversableTransformer(
-                    $this->getObjectCacheFactory()
-                );
+                new TraversableToTraversableTransformer();
         }
 
         return $this->traversableToTraversableTransformer;
@@ -377,7 +372,6 @@ class MapperFactory
         if (null === $this->classMethodTransformer) {
             $this->classMethodTransformer = new ClassMethodTransformer(
                 $this->getSubMapper(),
-                $this->getObjectCacheFactory(),
             );
         }
 

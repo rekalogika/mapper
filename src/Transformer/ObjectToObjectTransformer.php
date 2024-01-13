@@ -15,8 +15,6 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
-use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
-use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -47,7 +45,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         private PropertyAccessExtractorInterface $propertyAccessExtractor,
         private PropertyAccessorInterface $propertyAccessor,
         private TypeResolverInterface $typeResolver,
-        private ObjectCacheFactoryInterface $objectCacheFactory,
     ) {
     }
 
@@ -60,17 +57,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     ): mixed {
         if ($targetType === null) {
             throw new InvalidArgumentException('Target type must not be null.');
-        }
-
-        // get object cache
-
-        $objectCache = MainTransformer::getObjectCache($context, $this->objectCacheFactory);
-
-        // return from cache if already exists
-
-        try {
-            return $objectCache->getTarget($source, $targetType);
-        } catch (CachedTargetObjectNotFoundException) {
         }
 
         // get source object & class
@@ -93,10 +79,9 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             return $source;
         }
 
-        // initialize target, add to cache after initialization
+        // initialize target
 
         if (null === $target) {
-            $objectCache->preCache($source, $targetType);
             $target = $this->instantiateTarget($source, $targetType, $context);
         } else {
             if (!is_object($target)) {
@@ -104,6 +89,9 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             }
         }
 
+        // save object to cache
+
+        $objectCache = MainTransformer::getObjectCache($context);
         $objectCache->saveTarget($source, $targetType, $target);
 
         // list properties

@@ -17,8 +17,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
-use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
-use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -34,11 +32,6 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 {
     use MainTransformerAwareTrait;
 
-    public function __construct(
-        private ObjectCacheFactoryInterface $objectCacheFactory,
-    ) {
-    }
-
     public function transform(
         mixed $source,
         mixed $target,
@@ -52,14 +45,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // get object cache
 
-        $objectCache = MainTransformer::getObjectCache($context, $this->objectCacheFactory);
-
-        // return from cache if already exists
-
-        try {
-            return $objectCache->getTarget($source, $targetType);
-        } catch (CachedTargetObjectNotFoundException) {
-        }
+        $objectCache = MainTransformer::getObjectCache($context);
 
         // The source must be a Traversable or an array (a.k.a. iterable).
 
@@ -76,7 +62,6 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // If the target is not provided, instantiate it, and add to cache.
 
         if ($target === null) {
-            $objectCache->preCache($source, $targetType);
             $target = $this->instantiateArrayAccessOrArray($targetType);
         }
 

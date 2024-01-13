@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\MethodMapper;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
-use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -31,7 +30,6 @@ final class ClassMethodTransformer implements
 
     public function __construct(
         private SubMapper $subMapper,
-        private ObjectCacheFactoryInterface $objectCacheFactory,
     ) {
     }
 
@@ -88,7 +86,7 @@ final class ClassMethodTransformer implements
 
         // get object cache
 
-        $objectCache = MainTransformer::getObjectCache($context, $this->objectCacheFactory);
+        $objectCache = MainTransformer::getObjectCache($context);
 
         // save to object cache
 

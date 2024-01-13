@@ -101,7 +101,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.method_mapper.transformer', ClassMethodTransformer::class)
         ->args([
             service('rekalogika.mapper.method_mapper.sub_mapper'),
-            service('rekalogika.mapper.object_cache_factory'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -600]);
 
@@ -111,16 +110,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.transformer.traversable_to_arrayaccess', TraversableToArrayAccessTransformer::class)
-        ->args([
-            '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
-        ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -700]);
 
     $services
         ->set('rekalogika.mapper.transformer.traversable_to_traversable', TraversableToTraversableTransformer::class)
-        ->args([
-            '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
-        ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -750]);
 
     $services
@@ -142,7 +135,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$propertyAccessExtractor' => service('rekalogika.mapper.property_info'),
             '$propertyAccessor' => service('property_accessor'),
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
-            '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -900]);
 

@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
+use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
@@ -52,9 +53,13 @@ class MainTransformer implements MainTransformerInterface
      */
     public static function getObjectCache(
         array &$context,
-        ObjectCacheFactoryInterface $objectCacheFactory
+        null|ObjectCacheFactoryInterface $objectCacheFactory = null,
     ): ObjectCache {
         if (!isset($context[self::OBJECT_CACHE])) {
+            if ($objectCacheFactory === null) {
+                throw new LogicException('Object cache factory must not be null.');
+            }
+
             $objectCache = $objectCacheFactory->createObjectCache();
             $context[self::OBJECT_CACHE] = $objectCache;
         } else {
@@ -135,13 +140,30 @@ class MainTransformer implements MainTransformerInterface
         // loop over the result and transform the source to the target
 
         foreach ($searchResult as $searchEntry) {
+            // inject the main transformer to the transformer if it is
+            // MainTransformerAwareInterface
             $transformer = $this->processTransformer($searchEntry->getTransformer());
+
+            // TransformerInterface doesn't accept MixedType, so we need to
+            // convert it to null
 
             $sourceType = $searchEntry->getSourceType();
             $sourceTypeForTransformer = $sourceType instanceof MixedType ? null : $sourceType;
 
             $targetType = $searchEntry->getTargetType();
             $targetTypeForTransformer = $targetType instanceof MixedType ? null : $targetType;
+
+            // if the target type is cached, return it. otherwise, pre-cache it
+
+            if ($targetTypeForTransformer !== null) {
+                try {
+                    return $objectCache->getTarget($source, $targetTypeForTransformer);
+                } catch (CachedTargetObjectNotFoundException) {
+                    $objectCache->preCache($source, $targetTypeForTransformer);
+                }
+            }
+
+            // transform the source to the target
 
             /** @var mixed */
             $result = $transformer->transform(
