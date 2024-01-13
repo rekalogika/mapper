@@ -27,10 +27,9 @@ final class Mapper implements MapperInterface
     /**
      * @template T of object
      * @param class-string<T>|T $target
-     * @param array<string,mixed> $context
      * @return T
      */
-    public function map(mixed $source, object|string $target, array $context = []): object
+    public function map(mixed $source, object|string $target): object
     {
         if (is_string($target)) {
             $targetClass = $target;
@@ -53,7 +52,7 @@ final class Mapper implements MapperInterface
             source: $source,
             target: $target,
             targetTypes: [$targetType],
-            context: $context
+            context: []
         );
 
         if ($target === null) {

@@ -18,8 +18,7 @@ interface MapperInterface
     /**
      * @template T of object
      * @param class-string<T>|T $target
-     * @param array<string,mixed> $context
      * @return T
      */
-    public function map(mixed $source, object|string $target, array $context = []): mixed;
+    public function map(mixed $source, object|string $target): mixed;
 }
