@@ -89,10 +89,6 @@ final class ClassMethodTransformer implements
 
         $objectCache = $context->get(ObjectCache::class);
 
-        // save to object cache
-
-        $objectCache->saveTarget($source, $targetType, $target);
-
         return $result;
     }
 

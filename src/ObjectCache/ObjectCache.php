@@ -23,22 +23,22 @@ use Symfony\Component\PropertyInfo\Type;
 final class ObjectCache
 {
     /**
-     * @var \WeakMap<object,\ArrayObject<string,object>>
+     * @var \SplObjectStorage<object,\ArrayObject<string,object>>
      */
-    private \WeakMap $cache;
+    private \SplObjectStorage $cache;
 
     /**
-     * @var \WeakMap<object,\ArrayObject<string,true>>
+     * @var \SplObjectStorage<object,\ArrayObject<string,true>>
      */
-    private \WeakMap $preCache;
+    private \SplObjectStorage $preCache;
 
     public function __construct(
         private TypeResolverInterface $typeResolver
     ) {
         /** @psalm-suppress MixedPropertyTypeCoercion */
-        $this->cache = new \WeakMap();
+        $this->cache = new \SplObjectStorage();
         /** @psalm-suppress MixedPropertyTypeCoercion */
-        $this->preCache = new \WeakMap();
+        $this->preCache = new \SplObjectStorage();
     }
 
     private function isBlacklisted(mixed $source): bool
@@ -83,7 +83,7 @@ final class ObjectCache
             $this->preCache[$source] = $arrayObject;
         }
 
-        $this->preCache->offsetGet($source)?->offsetSet($targetTypeString, true);
+        $this->preCache->offsetGet($source)->offsetSet($targetTypeString, true);
     }
 
     private function isPreCached(mixed $source, Type $targetType): bool
@@ -157,7 +157,8 @@ final class ObjectCache
     public function saveTarget(
         mixed $source,
         Type $targetType,
-        mixed $target
+        mixed $target,
+        bool $addIfAlreadyExists = false
     ): void {
         if (!is_object($source) || !is_object($target)) {
             return;
@@ -169,7 +170,7 @@ final class ObjectCache
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
-        if (isset($this->cache[$source][$targetTypeString])) {
+        if ($addIfAlreadyExists === false && $this->containsTarget($source, $targetType)) {
             throw new LogicException(sprintf(
                 'Target object for source object "%s" and target type "%s" already exists',
                 get_class($source),
@@ -183,7 +184,7 @@ final class ObjectCache
             $this->cache[$source] = $arrayObject;
         }
 
-        $this->cache->offsetGet($source)?->offsetSet($targetTypeString, $target);
+        $this->cache->offsetGet($source)->offsetSet($targetTypeString, $target);
         $this->removePrecache($source, $targetType);
     }
 }

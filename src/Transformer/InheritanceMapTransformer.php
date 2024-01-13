@@ -17,7 +17,6 @@ use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
-use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -110,12 +109,6 @@ final class InheritanceMapTransformer implements
                 \sprintf('Expecting an instance of "%s", "%s" given.', $targetClassInMap, \get_debug_type($result))
             );
         }
-
-        # cache the result. we cache the abstract class/interface as the key.
-        # the concrete should be cached by whatever transformer that handles it.
-
-        $context->get(ObjectCache::class)
-            ->saveTarget($source, $targetType, $result);
 
         return $result;
     }

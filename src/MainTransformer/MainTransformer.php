@@ -151,6 +151,12 @@ class MainTransformer implements MainTransformerInterface
                 throw new TransformerReturnsUnexpectedValueException($targetType, $result);
             }
 
+            // if the target type is not null, cache it
+
+            if ($targetTypeForTransformer !== null) {
+                $objectCache->saveTarget($source, $targetTypeForTransformer, $result, true);
+            }
+
             return $result;
         }
 
