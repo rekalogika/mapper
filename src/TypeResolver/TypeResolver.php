@@ -87,6 +87,9 @@ class TypeResolver implements TypeResolverInterface
             return $type;
         }
 
-        return TypeUtil::getAllTypeStrings($type, true);
+        return array_merge(
+            TypeUtil::getAllTypeStrings($type, true),
+            TypeUtil::getAttributesTypeStrings($type)
+        );
     }
 }

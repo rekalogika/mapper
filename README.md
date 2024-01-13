@@ -28,6 +28,8 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
   full hydration of the source.
 * Manual mapping using a class method.
 * Easy to extend by creating new transformers, or decorating the existing ones.
+* Match classes using attributes in your transformers, in addition to using
+  class names.
 * Console commands for debugging.
 
 ## Future Features

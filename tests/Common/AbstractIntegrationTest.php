@@ -14,15 +14,17 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Common;
 
 use PHPUnit\Framework\TestCase;
-use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
 abstract class AbstractIntegrationTest extends TestCase
 {
     protected MapperTestFactory $factory;
     protected MapperInterface $mapper;
-    protected MainTransformer $mainTransformer;
+    protected MainTransformerInterface $mainTransformer;
+    protected TypeResolverInterface $typeResolver;
 
     public function setUp(): void
     {
@@ -31,6 +33,7 @@ abstract class AbstractIntegrationTest extends TestCase
         );
         $this->mapper = $this->factory->getMapper();
         $this->mainTransformer = $this->factory->getMainTransformer();
+        $this->typeResolver = $this->factory->getTypeResolver();
     }
 
     /**

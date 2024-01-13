@@ -166,7 +166,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         }
 
         /** @var mixed */
-        $targetPropertyValue = $this->mainTransformer?->transform(
+        $targetPropertyValue = $this->getMainTransformer()->transform(
             source: $sourcePropertyValue,
             target: $targetPropertyValue,
             targetTypes: $targetPropertyTypes,

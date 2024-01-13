@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Util;
 
 use DaveLiddament\PhpLanguageExtensions\Friend;
+use Rekalogika\Mapper\Attribute\MapperAttributeInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtil2Test;
@@ -352,5 +353,60 @@ class TypeUtil
         }
 
         return $classes;
+    }
+
+    /**
+     * @param Type|MixedType $type
+     * @return array<int,Type>
+     */
+    private static function getAttributesFromType(
+        Type|MixedType $type
+    ): array {
+        if ($type instanceof MixedType) {
+            return [];
+        }
+
+        $class = $type->getClassName();
+
+        if ($class === null) {
+            return [];
+        }
+
+        if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
+            return [];
+        }
+
+        $attributes = (new \ReflectionClass($class))
+            ->getAttributes(
+                MapperAttributeInterface::class,
+                \ReflectionAttribute::IS_INSTANCEOF
+            );
+
+        $attributeTypes = [];
+
+        foreach ($attributes as $attribute) {
+            $attributeTypes[] = TypeFactory::objectOfClass($attribute->getName());
+        }
+
+        return $attributeTypes;
+    }
+
+    /**
+     * @param Type $type
+     * @return array<int,string>
+     */
+    #[Friend(TypeResolver::class)]
+    public static function getAttributesTypeStrings(
+        Type|MixedType $type
+    ): array {
+        $attributes = self::getAttributesFromType($type);
+
+        $attributeTypeStrings = [];
+
+        foreach ($attributes as $attribute) {
+            $attributeTypeStrings[] = self::getTypeString($attribute);
+        }
+
+        return $attributeTypeStrings;
     }
 }
