@@ -33,6 +33,7 @@ final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
 
         $result = new self();
 
+        /** @var array<int,ObjectWithScalarPropertiesDto>|null $property */
         $property = $mapper->mapForProperty(
             $source->property,
             ObjectWithArrayPropertyDto::class,
@@ -40,9 +41,6 @@ final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
             $context
         );
 
-        assert(is_array($property));
-
-        /** @psalm-suppress MixedPropertyTypeCoercion */
         $result->property = $property;
 
         return $result;

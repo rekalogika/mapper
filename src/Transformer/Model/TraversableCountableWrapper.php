@@ -34,12 +34,21 @@ final class TraversableCountableWrapper implements \IteratorAggregate, \Countabl
         return $this->traversable;
     }
 
+    /**
+     * @return int<0,max>
+     */
     public function count(): int
     {
         if (is_int($this->countable)) {
-            return $this->countable;
+            $result = $this->countable;
+        } else {
+            $result = $this->countable->count();
         }
 
-        return $this->countable->count();
+        if ($result < 0) {
+            throw new \LogicException('Countable must return positive integer.');
+        }
+
+        return $result;
     }
 }

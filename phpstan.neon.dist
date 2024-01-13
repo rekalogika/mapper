@@ -8,6 +8,9 @@ parameters:
     checkFunctionNameCase: true
     checkInternalClassCaseSensitivity: true
     reportMaybesInPropertyPhpDocTypes: true
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        - '#with type mixed is not subtype of native type mixed#'
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
@@ -15,3 +18,4 @@ includes:
     - vendor/bnf/phpstan-psr-container/extension.neon
     - vendor/ekino/phpstan-banned-code/extension.neon
     - vendor/dave-liddament/phpstan-php-language-extensions/extension.neon
+    - phar://phpstan.phar/conf/bleedingEdge.neon

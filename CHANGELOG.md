@@ -10,6 +10,8 @@
 * refactor: Refactor exception.
 * feat: Add attribute matching.
 * refactor: Simplify object caching.
+* refactor: Remove `$context` from `MapperInterface`
+* chore: Fix static analysis issues.
 
 ## 0.5.4
 
