@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Context;
 
 use Rekalogika\Mapper\Exception\LogicException;
-use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 
 /**
  * @immutable
@@ -42,7 +41,7 @@ class Context
         return new self($context);
     }
 
-    public function add(object $value): self
+    public function with(object $value): self
     {
         $class = get_class($value);
 
@@ -56,7 +55,7 @@ class Context
         return self::createFrom($context);
     }
 
-    public function remove(object|string $value): self
+    public function without(object|string $value): self
     {
         $class = is_string($value) ? $value : get_class($value);
 

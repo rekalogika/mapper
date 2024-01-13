@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MethodMapper;
 
-use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Util\TypeFactory;

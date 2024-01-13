@@ -14,6 +14,7 @@
 * chore: Fix static analysis issues.
 * refactor: Change context array to `Context` object.
 * refactor: Move `Context` to its own namespace.
+* style(Context): Rename `set` to `with` and `remove` to `without`.
 
 ## 0.5.4
 
