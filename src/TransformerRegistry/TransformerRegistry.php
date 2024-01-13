@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\TransformerRegistry;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\Mapping\MappingEntry;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -49,38 +50,46 @@ class TransformerRegistry implements TransformerRegistryInterface
         iterable $sourceTypes,
         iterable $targetTypes,
     ): SearchResult {
-        $result = (function () use ($sourceTypes, $targetTypes) {
-            foreach ($sourceTypes as $sourceType) {
-                foreach ($targetTypes as $targetType) {
-                    $transformers = $this->findBySourceAndTargetType(
-                        $sourceType,
-                        $targetType
-                    );
+        /** @var array<int,array{0:Type|MixedType,1:Type|MixedType,2:MappingEntry}> */
+        $mappingEntries = [];
 
-                    foreach ($transformers as $transformer) {
-                        yield new SearchResultEntry(
-                            $sourceType,
-                            $targetType,
-                            $transformer
-                        );
-                    }
+        foreach ($sourceTypes as $sourceType) {
+            foreach ($targetTypes as $targetType) {
+                $mapping = $this->getMappingBySourceAndTargetType(
+                    $sourceType,
+                    $targetType
+                );
+
+                foreach ($mapping as $mappingEntry) {
+                    $mappingEntries[] = [
+                        $sourceType,
+                        $targetType,
+                        $mappingEntry,
+                    ];
                 }
             }
-        })();
+        }
+
+        usort(
+            $mappingEntries,
+            fn (array $a, array $b)
+            =>
+            /** @psalm-suppress MixedMethodCall */
+            $a[2]->getOrder() <=> $b[2]->getOrder()
+        );
+
+        $result = [];
+
+        foreach ($mappingEntries as $mappingEntry) {
+            $result[]  = new SearchResultEntry(
+                $mappingEntry[2]->getOrder(),
+                $mappingEntry[0],
+                $mappingEntry[1],
+                $this->get($mappingEntry[2]->getId()),
+            );
+        }
 
         return new SearchResult($result);
-    }
-
-    public function findBySourceAndTargetType(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
-    ): iterable {
-        $mapping = $this->getMappingBySourceAndTargetType($sourceType, $targetType);
-
-        foreach ($mapping as $item) {
-            $id = $item->getId();
-            yield $id => $this->get($id);
-        }
     }
 
     public function getMappingBySourceAndTargetType(

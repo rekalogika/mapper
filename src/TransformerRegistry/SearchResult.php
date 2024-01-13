@@ -19,15 +19,15 @@ namespace Rekalogika\Mapper\TransformerRegistry;
 class SearchResult implements \IteratorAggregate
 {
     /**
-     * @param \Traversable<int,SearchResultEntry> $entries
+     * @param iterable<int,SearchResultEntry> $entries
      */
     public function __construct(
-        private \Traversable $entries
+        private iterable $entries
     ) {
     }
 
     public function getIterator(): \Traversable
     {
-        return $this->entries;
+        yield from $this->entries;
     }
 }

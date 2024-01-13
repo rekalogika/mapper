@@ -20,6 +20,7 @@ use Symfony\Component\PropertyInfo\Type;
 class SearchResultEntry
 {
     public function __construct(
+        private int $mappingOrder,
         private Type|MixedType $sourceType,
         private Type|MixedType $targetType,
         private TransformerInterface $transformer,
@@ -39,5 +40,10 @@ class SearchResultEntry
     public function getTransformer(): TransformerInterface
     {
         return $this->transformer;
+    }
+
+    public function getMappingOrder(): int
+    {
+        return $this->mappingOrder;
     }
 }
