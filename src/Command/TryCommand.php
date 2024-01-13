@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Command;
 
-use Rekalogika\Mapper\MainTransformer;
+use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -29,7 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class TryCommand extends Command
 {
     public function __construct(
-        private MainTransformer $mainTransformer,
+        private TransformerRegistryInterface $transformerRegistry,
         private TypeResolverInterface $typeResolver
     ) {
         parent::__construct();
@@ -100,10 +100,11 @@ class TryCommand extends Command
 
         $rows = [];
 
-        $transformers = $this->mainTransformer->getTransformerMapping(
-            $sourceType,
-            $targetType
-        );
+        $transformers = $this->transformerRegistry
+            ->getMappingBySourceAndTargetType(
+                $sourceType,
+                $targetType
+            );
 
         foreach ($transformers as $entry) {
             $rows[] = [

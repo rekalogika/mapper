@@ -4,6 +4,7 @@
 
 * docs: Add link to documentation website.
 * refactor: Consolidate boilerplate code for getting the `ObjectCache`.
+* refactor: Move transformer query logic to `TransformerRegistry`.
 
 ## 0.5.4
 

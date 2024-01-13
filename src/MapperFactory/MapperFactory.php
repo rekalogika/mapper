@@ -38,6 +38,8 @@ use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
+use Rekalogika\Mapper\TransformerRegistry\TransformerRegistry;
+use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -94,6 +96,7 @@ class MapperFactory
     private ?MappingFactoryInterface $mappingFactory = null;
     private ?ObjectCacheFactoryInterface $objectCacheFactory = null;
     private ?SubMapper $subMapper = null;
+    private ?TransformerRegistryInterface $transformerRegistry = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -436,10 +439,9 @@ class MapperFactory
     {
         if (null === $this->mainTransformer) {
             $this->mainTransformer = new MainTransformer(
-                $this->getTransformersLocator(),
-                $this->getTypeResolver(),
-                $this->getMappingFactory(),
                 $this->getObjectCacheFactory(),
+                $this->getTransformerRegistry(),
+                $this->getTypeResolver(),
             );
         }
 
@@ -478,6 +480,19 @@ class MapperFactory
         return $this->subMapper;
     }
 
+    protected function getTransformerRegistry(): TransformerRegistryInterface
+    {
+        if (null === $this->transformerRegistry) {
+            $this->transformerRegistry = new TransformerRegistry(
+                $this->getTransformersLocator(),
+                $this->getTypeResolver(),
+                $this->getMappingFactory(),
+            );
+        }
+
+        return $this->transformerRegistry;
+    }
+
     //
     // command
     //
@@ -497,7 +512,7 @@ class MapperFactory
     {
         if (null === $this->tryCommand) {
             $this->tryCommand = new TryCommand(
-                $this->getMainTransformer(),
+                $this->getTransformerRegistry(),
                 $this->getTypeResolver()
             );
         }

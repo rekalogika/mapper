@@ -13,47 +13,35 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper;
 
-use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Contracts\MainTransformerInterface;
 use Rekalogika\Mapper\Contracts\MixedType;
 use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Exception\UnableToFindSuitableTransformerException;
-use Rekalogika\Mapper\Mapping\MappingEntry;
-use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
+use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
-use Symfony\Component\PropertyInfo\Type;
 
 class MainTransformer implements MainTransformerInterface
 {
     public const OBJECT_CACHE = 'object_cache';
 
     public function __construct(
-        private ContainerInterface $transformersLocator,
-        private TypeResolverInterface $typeResolver,
-        private MappingFactoryInterface $mappingFactory,
         private ObjectCacheFactoryInterface $objectCacheFactory,
+        private TransformerRegistryInterface $transformerRegistry,
+        private TypeResolverInterface $typeResolver,
     ) {
     }
 
-    private function getTransformer(string $id): TransformerInterface
-    {
-        $transformer = $this->transformersLocator->get($id);
-
-        if (!$transformer instanceof TransformerInterface) {
-            throw new LogicException(sprintf(
-                'Transformer with id "%s" must implement %s',
-                $id,
-                TransformerInterface::class
-            ));
-        }
-
+    private function processTransformer(
+        TransformerInterface $transformer
+    ): TransformerInterface {
         if ($transformer instanceof MainTransformerAwareInterface) {
             return $transformer->withMainTransformer($this);
         }
+
         return $transformer;
     }
 
@@ -124,9 +112,12 @@ class MainTransformer implements MainTransformerInterface
         // iterate simple target types and find the suitable transformer
 
         foreach ($simpleTargetTypes as $singleTargetType) {
-            $transformers = $this->getTransformers($sourceType, $singleTargetType);
+            $transformers = $this->transformerRegistry
+                ->findBySourceAndTargetType($sourceType, $singleTargetType);
 
             foreach ($transformers as $transformer) {
+                $transformer = $this->processTransformer($transformer);
+
                 /** @var mixed */
                 $result = $transformer->transform(
                     source: $source,
@@ -141,39 +132,5 @@ class MainTransformer implements MainTransformerInterface
         }
 
         throw new UnableToFindSuitableTransformerException($sourceType, $targetType);
-    }
-
-    /**
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
-     * @return iterable<int,TransformerInterface>
-     */
-    private function getTransformers(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
-    ): iterable {
-        foreach ($this->getTransformerMapping($sourceType, $targetType) as $item) {
-            $id = $item->getId();
-            yield $this->getTransformer($id);
-        }
-    }
-
-    /**
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
-     * @return array<int,MappingEntry>
-     */
-    public function getTransformerMapping(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
-    ): array {
-        $sourceTypeStrings = $this->typeResolver
-            ->getApplicableTypeStrings($sourceType);
-
-        $targetTypeStrings = $this->typeResolver
-            ->getApplicableTypeStrings($targetType);
-
-        return $this->mappingFactory->getMapping()
-            ->getMappingBySourceAndTarget($sourceTypeStrings, $targetTypeStrings);
     }
 }

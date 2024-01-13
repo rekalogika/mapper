@@ -33,6 +33,7 @@ use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
+use Rekalogika\Mapper\TransformerRegistry\TransformerRegistry;
 use Rekalogika\Mapper\TypeResolver\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -186,6 +187,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.type_resolver.caching.inner'),
         ]);
 
+    # transformer registry
+
+    $services
+        ->set('rekalogika.mapper.transformer_registry', TransformerRegistry::class)
+        ->args([
+            '$transformersLocator' => tagged_locator('rekalogika.mapper.transformer'),
+            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
+            '$mappingFactory' => service('rekalogika.mapper.mapping_factory'),
+        ]);
+
     # method mapper
 
     $services
@@ -203,10 +214,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set('rekalogika.mapper.main_transformer', MainTransformer::class)
         ->args([
-            '$transformersLocator' => tagged_locator('rekalogika.mapper.transformer'),
-            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
-            '$mappingFactory' => service('rekalogika.mapper.mapping_factory'),
             '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
+            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
+            '$transformerRegistry' => service('rekalogika.mapper.transformer_registry'),
         ]);
 
     $services
@@ -226,7 +236,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set('rekalogika.mapper.command.try', TryCommand::class)
         ->args([
-            service('rekalogika.mapper.main_transformer'),
+            service('rekalogika.mapper.transformer_registry'),
             service('rekalogika.mapper.type_resolver'),
         ])
         ->tag('console.command');
