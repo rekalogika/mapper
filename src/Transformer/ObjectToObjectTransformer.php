@@ -25,10 +25,13 @@ use Rekalogika\Mapper\Transformer\Exception\IncompleteConstructorArgument;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\InvalidClassException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
+use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
+use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
+use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
@@ -124,7 +127,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 context: $context
             );
 
-            $this->propertyAccessor->setValue($target, $propertyName, $targetPropertyValue);
+            try {
+                $this->propertyAccessor->setValue($target, $propertyName, $targetPropertyValue);
+            } catch (AccessException | UnexpectedTypeException $e) {
+                throw new UnableToWriteException($source, $target, $target, $propertyName, $e);
+            }
         }
 
         return $target;

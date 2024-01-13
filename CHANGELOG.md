@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.6
+
+* fix: Improve exception message.
+
 ## 0.5.5
 
 * docs: Add link to documentation website.
