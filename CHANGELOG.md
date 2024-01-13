@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.5.6
+## 0.5.7
 
 * fix: Improve exception message.
 

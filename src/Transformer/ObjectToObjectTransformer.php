@@ -25,6 +25,7 @@ use Rekalogika\Mapper\Transformer\Exception\IncompleteConstructorArgument;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\InvalidClassException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
+use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -155,12 +156,24 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new InvalidArgumentException(sprintf('Cannot get type of target property "%s::$%s".', $targetClass, $propertyName));
         }
 
-        /** @var mixed */
-        $sourcePropertyValue = $this->propertyAccessor->getValue($source, $propertyName);
+        try {
+            /** @var mixed */
+            $sourcePropertyValue = $this->propertyAccessor->getValue($source, $propertyName);
+        } catch (NoSuchPropertyException $e) {
+            throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e);
+        } catch (AccessException | UnexpectedTypeException $e) {
+            throw new UnableToReadException($source, $target, $source, $propertyName, $e);
+        }
 
         if ($target !== null) {
-            /** @var mixed */
-            $targetPropertyValue = $this->propertyAccessor->getValue($target, $propertyName);
+            try {
+                /** @var mixed */
+                $targetPropertyValue = $this->propertyAccessor->getValue($target, $propertyName);
+            } catch (NoSuchPropertyException $e) {
+                throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e);
+            } catch (AccessException | UnexpectedTypeException $e) {
+                throw new UnableToReadException($source, $target, $target, $propertyName, $e);
+            }
         } else {
             $targetPropertyValue = null;
         }
@@ -204,18 +217,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $constructorArguments = [];
 
         foreach ($initializableTargetProperties as $propertyName) {
-            try {
-                /** @var mixed */
-                $targetPropertyValue = $this->resolveTargetPropertyValue(
-                    source: $source,
-                    target: null,
-                    propertyName: $propertyName,
-                    targetClass: $targetClass,
-                    context: $context
-                );
-            } catch (NoSuchPropertyException $e) {
-                throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e);
-            }
+            /** @var mixed */
+            $targetPropertyValue = $this->resolveTargetPropertyValue(
+                source: $source,
+                target: null,
+                propertyName: $propertyName,
+                targetClass: $targetClass,
+                context: $context
+            );
 
             /** @psalm-suppress MixedAssignment */
             $constructorArguments[$propertyName] = $targetPropertyValue;
