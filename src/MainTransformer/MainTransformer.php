@@ -11,10 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper;
+namespace Rekalogika\Mapper\MainTransformer;
 
 use Rekalogika\Mapper\Contracts\MainTransformerAwareInterface;
-use Rekalogika\Mapper\Contracts\MainTransformerInterface;
 use Rekalogika\Mapper\Contracts\MixedType;
 use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Exception\LogicException;

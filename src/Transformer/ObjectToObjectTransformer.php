@@ -23,7 +23,7 @@ use Rekalogika\Mapper\Exception\IncompleteConstructorArgument;
 use Rekalogika\Mapper\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\InvalidClassException;
-use Rekalogika\Mapper\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;

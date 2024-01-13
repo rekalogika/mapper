@@ -18,7 +18,7 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Contracts\TransformerInterface;
-use Rekalogika\Mapper\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\MappingFactory;

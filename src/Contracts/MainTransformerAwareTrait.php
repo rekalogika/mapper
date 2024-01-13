@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Contracts;
 
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 
 trait MainTransformerAwareTrait
 {

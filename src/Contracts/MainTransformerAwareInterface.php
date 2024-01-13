@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Contracts;
 
+use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
+
 interface MainTransformerAwareInterface
 {
     public function withMainTransformer(MainTransformerInterface $mainTransformer): static;

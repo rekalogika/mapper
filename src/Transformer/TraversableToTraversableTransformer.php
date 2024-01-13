@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
 use Rekalogika\Mapper\Exception\MissingMemberValueTypeException;
-use Rekalogika\Mapper\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Model\TraversableCountableWrapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;

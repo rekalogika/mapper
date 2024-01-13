@@ -23,7 +23,7 @@ use Rekalogika\Mapper\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\InvalidTypeInArgumentException;
 use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
-use Rekalogika\Mapper\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;

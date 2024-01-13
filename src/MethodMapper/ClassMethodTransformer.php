@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Contracts\TypeMapping;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
