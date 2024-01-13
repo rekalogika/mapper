@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer;
 
-use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
+use Rekalogika\Mapper\MainTransformer\Exception\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -49,36 +49,6 @@ class MainTransformer implements MainTransformerInterface
     }
 
     /**
-     * @param array<string,mixed> $context
-     */
-    public static function getObjectCache(
-        array &$context,
-        null|ObjectCacheFactoryInterface $objectCacheFactory = null,
-    ): ObjectCache {
-        if (!isset($context[self::OBJECT_CACHE])) {
-            if ($objectCacheFactory === null) {
-                throw new LogicException('Object cache factory must not be null.');
-            }
-
-            $objectCache = $objectCacheFactory->createObjectCache();
-            $context[self::OBJECT_CACHE] = $objectCache;
-        } else {
-            /** @var mixed */
-            $objectCache = $context[self::OBJECT_CACHE];
-
-            if (!$objectCache instanceof ObjectCache) {
-                throw new LogicException(sprintf(
-                    'Object cache must be an instance of %s, %s given.',
-                    ObjectCache::class,
-                    get_debug_type($objectCache)
-                ));
-            }
-        }
-
-        return $objectCache;
-    }
-
-    /**
      * @param array<array-key,Type|MixedType> $types
      * @return array<int,Type|MixedType>
      */
@@ -100,7 +70,7 @@ class MainTransformer implements MainTransformerInterface
         mixed $source,
         mixed $target,
         array $targetTypes,
-        array $context
+        Context $context
     ): mixed {
         // if targettype is not provided, guess it from target
         // if the target is also missing then the target is mixed
@@ -113,12 +83,14 @@ class MainTransformer implements MainTransformerInterface
             }
         }
 
-        // get object cache
+        // get or create object cache
 
-        $objectCache = self::getObjectCache(
-            $context,
-            $this->objectCacheFactory
-        );
+        try {
+            $objectCache = $context->get(ObjectCache::class);
+        } catch (ContextMemberNotFoundException) {
+            $objectCache = $this->objectCacheFactory->createObjectCache();
+            $context = $context->add($objectCache);
+        }
 
         // gets simple target types from the provided target type
 

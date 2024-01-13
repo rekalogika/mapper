@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\MainTransformer\Context;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -37,7 +38,7 @@ final class ObjectToArrayTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        array $context
+        Context $context
     ): mixed {
         if (!is_object($source)) {
             throw new InvalidArgumentException(sprintf('Source must be object, "%s" given', get_debug_type($source)));
@@ -46,7 +47,6 @@ final class ObjectToArrayTransformer implements TransformerInterface
         return $this->normalizer->normalize(
             $source,
             $this->normalizerFormat,
-            $context
         );
     }
 

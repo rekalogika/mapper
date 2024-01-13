@@ -13,14 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MethodMapper;
 
+use Rekalogika\Mapper\MainTransformer\Context;
+
 interface MapFromObjectInterface
 {
-    /**
-     * @param array<string,mixed> $context
-     */
     public static function mapFromObject(
         object $source,
         SubMapperInterface $mapper,
-        array $context = []
+        Context $context,
     ): static;
 }

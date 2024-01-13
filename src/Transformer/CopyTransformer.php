@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer;
 
+use Rekalogika\Mapper\MainTransformer\Context;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
@@ -25,7 +26,7 @@ final class CopyTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        array $context
+        Context $context
     ): mixed {
         if (!is_object($source)) {
             return $source;

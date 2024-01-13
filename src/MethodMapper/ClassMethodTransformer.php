@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\MethodMapper;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\Context;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -38,7 +39,7 @@ final class ClassMethodTransformer implements
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        array $context
+        Context $context
     ): mixed {
         // target type must not be null
 
@@ -86,7 +87,7 @@ final class ClassMethodTransformer implements
 
         // get object cache
 
-        $objectCache = MainTransformer::getObjectCache($context);
+        $objectCache = $context->get(ObjectCache::class);
 
         // save to object cache
 

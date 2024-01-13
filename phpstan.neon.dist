@@ -9,8 +9,6 @@ parameters:
     checkInternalClassCaseSensitivity: true
     reportMaybesInPropertyPhpDocTypes: true
     treatPhpDocTypesAsCertain: false
-    ignoreErrors:
-        - '#with type mixed is not subtype of native type mixed#'
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon

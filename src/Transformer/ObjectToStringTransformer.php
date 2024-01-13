@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\MainTransformer\Context;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -26,7 +27,7 @@ final class ObjectToStringTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        array $context
+        Context $context
     ): mixed {
         if ($source instanceof \Stringable) {
             return (string) $source;

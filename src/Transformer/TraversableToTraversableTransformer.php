@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\Context;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -35,14 +36,14 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        array $context
+        Context $context
     ): mixed {
         if ($targetType === null) {
             throw new InvalidArgumentException('Target type must not be null.');
         }
         // get object cache
 
-        $objectCache = MainTransformer::getObjectCache($context);
+        $objectCache = $context->get(ObjectCache::class);
 
         // The source must be a Traversable or an array (a.k.a. iterable).
 

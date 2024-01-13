@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\MainTransformer\Context;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\InvalidTypeInArgumentException;
@@ -40,7 +41,7 @@ final class ArrayToObjectTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        array $context
+        Context $context
     ): mixed {
         if (!is_array($source)) {
             throw new InvalidArgumentException(sprintf('Source must be array, "%s" given', get_debug_type($source)));
@@ -50,13 +51,15 @@ final class ArrayToObjectTransformer implements TransformerInterface
             throw new InvalidTypeInArgumentException('Target type must be an object, "%s" given', $targetType);
         }
 
+        $normalizerContext = [];
+
         if ($target !== null) {
             if (!is_object($target)) {
                 throw new InvalidArgumentException(sprintf('Target must be an object, "%s" given', get_debug_type($target)));
             }
 
             $targetClass = $target::class;
-            $context[AbstractNormalizer::OBJECT_TO_POPULATE] = $target;
+            $normalizerContext[AbstractNormalizer::OBJECT_TO_POPULATE] = $target;
         } else {
             $targetClass = $targetType?->getClassName() ?? \stdClass::class;
         }
@@ -65,7 +68,7 @@ final class ArrayToObjectTransformer implements TransformerInterface
             $source,
             $targetClass,
             $this->denormalizerFormat,
-            $context
+            $normalizerContext
         );
     }
 

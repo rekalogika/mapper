@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\MethodMapper;
 
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
+use Rekalogika\Mapper\MainTransformer\Context;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -35,7 +36,7 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
     public function map(
         object $source,
         object|string $target,
-        array $context = []
+        Context $context,
     ): object {
         if (is_object($target)) {
             $targetClass = $target::class;
@@ -70,13 +71,12 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
         object $source,
         string $class,
         string $property,
-        array $context = []
+        Context $context,
     ): mixed {
         /** @var array<int,Type>|null */
         $targetPropertyTypes = $this->propertyTypeExtractor->getTypes(
             $class,
             $property,
-            $context
         );
 
         /** @var mixed */

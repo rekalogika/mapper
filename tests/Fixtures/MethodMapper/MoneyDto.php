@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Fixtures\MethodMapper;
 
 use Brick\Money\Money;
+use Rekalogika\Mapper\MainTransformer\Context;
 use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
 use Rekalogika\Mapper\MethodMapper\MapToObjectInterface;
 use Rekalogika\Mapper\MethodMapper\SubMapperInterface;
@@ -39,7 +40,7 @@ final class MoneyDto implements MapToObjectInterface, MapFromObjectInterface
     public function mapToObject(
         object|string $target,
         SubMapperInterface $mapper,
-        array $context = []
+        Context $context,
     ): object {
         return Money::of($this->amount, $this->currency);
     }
@@ -47,7 +48,7 @@ final class MoneyDto implements MapToObjectInterface, MapFromObjectInterface
     public static function mapFromObject(
         object $source,
         SubMapperInterface $mapper,
-        array $context = []
+        Context $context
     ): static {
         if (!$source instanceof Money) {
             throw new \InvalidArgumentException('Source must be instance of ' . Money::class);

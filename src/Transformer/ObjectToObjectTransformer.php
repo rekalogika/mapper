@@ -14,7 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\Context;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -53,7 +54,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        array $context
+        Context $context
     ): mixed {
         if ($targetType === null) {
             throw new InvalidArgumentException('Target type must not be null.');
@@ -91,7 +92,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // save object to cache
 
-        $objectCache = MainTransformer::getObjectCache($context);
+        $objectCache = $context->get(ObjectCache::class);
         $objectCache->saveTarget($source, $targetType, $target);
 
         // list properties
@@ -126,7 +127,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
     /**
      * @param class-string $targetClass
-     * @param array<string,mixed> $context
      * @return mixed
      */
     private function resolveTargetPropertyValue(
@@ -134,10 +134,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         ?object $target,
         string $propertyName,
         string $targetClass,
-        array $context,
+        Context $context,
     ): mixed {
         /** @var array<int,Type>|null */
-        $targetPropertyTypes = $this->propertyTypeExtractor->getTypes($targetClass, $propertyName, $context);
+        $targetPropertyTypes = $this->propertyTypeExtractor->getTypes($targetClass, $propertyName);
 
         if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
             throw new InvalidArgumentException(sprintf('Cannot get type of target property "%s::$%s".', $targetClass, $propertyName));
@@ -169,14 +169,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         yield new TypeMapping(TypeFactory::object(), TypeFactory::object());
     }
 
-    /**
-     * @param array<string,mixed> $context
-     * @todo support constructor initialization
-     */
     protected function instantiateTarget(
         object $source,
         Type $targetType,
-        array $context
+        Context $context
     ): object {
         $targetClass = $targetType->getClassName();
 
@@ -221,13 +217,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     }
 
     /**
-     * @param array<string,mixed> $context
      * @return array<int,string>
      * @todo cache result
      */
     protected function listSourceAttributes(
         Type $sourceType,
-        array $context
+        Context $context
     ): array {
         $class = $sourceType->getClassName();
 
@@ -235,7 +230,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new InvalidArgumentException('Cannot get class name from source type.');
         }
 
-        $attributes = $this->propertyListExtractor->getProperties($class, $context);
+        $attributes = $this->propertyListExtractor->getProperties($class);
 
         if (null === $attributes) {
             throw new InvalidArgumentException(sprintf('Cannot get properties from source class "%s".', $class));
@@ -244,7 +239,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $readableAttributes = [];
 
         foreach ($attributes as $attribute) {
-            if ($this->propertyAccessExtractor->isReadable($class, $attribute, $context)) {
+            if ($this->propertyAccessExtractor->isReadable($class, $attribute)) {
                 $readableAttributes[] = $attribute;
             }
         }
@@ -253,13 +248,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     }
 
     /**
-     * @param array<string,mixed> $context
      * @return array<int,string>
      * @todo cache result
      */
     protected function listTargetWritableAttributes(
         Type $targetType,
-        array $context
+        Context $context
     ): array {
         $class = $targetType->getClassName();
 
@@ -267,7 +261,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new InvalidArgumentException('Cannot get class name from source type.');
         }
 
-        $attributes = $this->propertyListExtractor->getProperties($class, $context);
+        $attributes = $this->propertyListExtractor->getProperties($class);
 
         if (null === $attributes) {
             throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class));
@@ -276,7 +270,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $writableAttributes = [];
 
         foreach ($attributes as $attribute) {
-            if ($this->propertyAccessExtractor->isWritable($class, $attribute, $context)) {
+            if ($this->propertyAccessExtractor->isWritable($class, $attribute)) {
                 $writableAttributes[] = $attribute;
             }
         }
@@ -286,13 +280,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
     /**
      * @param class-string $class
-     * @param array<string,mixed> $context
      * @return array<int,string>
      * @todo cache result
      */
-    protected function listTargetInitializableAttributes(string $class, array $context): array
-    {
-        $attributes = $this->propertyListExtractor->getProperties($class, $context);
+    protected function listTargetInitializableAttributes(
+        string $class,
+        Context $context
+    ): array {
+        $attributes = $this->propertyListExtractor->getProperties($class);
 
         if (null === $attributes) {
             throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class));
@@ -301,7 +296,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $initializableAttributes = [];
 
         foreach ($attributes as $attribute) {
-            if ($this->propertyInitializableExtractor->isInitializable($class, $attribute, $context)) {
+            if ($this->propertyInitializableExtractor->isInitializable($class, $attribute)) {
                 $initializableAttributes[] = $attribute;
             }
         }

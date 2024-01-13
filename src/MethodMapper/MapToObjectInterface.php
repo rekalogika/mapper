@@ -13,14 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MethodMapper;
 
+use Rekalogika\Mapper\MainTransformer\Context;
+
 interface MapToObjectInterface
 {
-    /**
-     * @param array<string,mixed> $context
-     */
     public function mapToObject(
         object|string $target,
         SubMapperInterface $mapper,
-        array $context = []
+        Context $context
     ): object;
 }

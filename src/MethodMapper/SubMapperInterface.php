@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MethodMapper;
 
+use Rekalogika\Mapper\MainTransformer\Context;
+
 interface SubMapperInterface
 {
     /**
@@ -20,25 +22,23 @@ interface SubMapperInterface
      *
      * @template T of object
      * @param class-string<T>|T $target
-     * @param array<string,mixed> $context
      * @return T
      */
     public function map(
         object $source,
         object|string $target,
-        array $context = []
+        Context $context
     ): object;
 
     /**
      * Maps a source to the type of the specified class & property
      *
      * @param class-string $class
-     * @param array<string,mixed> $context
      */
     public function mapForProperty(
         object $source,
         string $class,
         string $property,
-        array $context = []
+        Context $context
     ): mixed;
 }

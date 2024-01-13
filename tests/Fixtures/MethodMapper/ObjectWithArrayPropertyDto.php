@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\MethodMapper;
 
+use Rekalogika\Mapper\MainTransformer\Context;
 use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
 use Rekalogika\Mapper\MethodMapper\SubMapperInterface;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
@@ -27,7 +28,7 @@ final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
     public static function mapFromObject(
         object $source,
         SubMapperInterface $mapper,
-        array $context = []
+        Context $context
     ): static {
         assert($source instanceof ObjectWithCollectionProperty);
 
