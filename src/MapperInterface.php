@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper;
 
+use Rekalogika\Mapper\Context\Context;
+
 interface MapperInterface
 {
     /**
@@ -20,5 +22,5 @@ interface MapperInterface
      * @param class-string<T>|T $target
      * @return T
      */
-    public function map(mixed $source, object|string $target): mixed;
+    public function map(mixed $source, object|string $target, ?Context $context = null): mixed;
 }

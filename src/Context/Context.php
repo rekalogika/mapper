@@ -28,9 +28,19 @@ class Context
     ) {
     }
 
-    public static function create(): self
+    /**
+     * @param array<int,object> $context
+     * @return self
+     */
+    public static function create(array $context = []): self
     {
-        return new self();
+        $self = new self();
+
+        foreach($context as $value) {
+            $self = $self->with($value);
+        }
+
+        return $self;
     }
 
     /**
