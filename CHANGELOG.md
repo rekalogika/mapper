@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.5
+
+* docs: Add link to documentation website.
+
 ## 0.5.4
 
 * perf: Add a caching layer for `TypeResolver`
