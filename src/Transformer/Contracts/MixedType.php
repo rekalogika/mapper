@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Contracts;
+namespace Rekalogika\Mapper\Transformer\Contracts;
 
 /**
  * Sentinel class to indicate mixed type

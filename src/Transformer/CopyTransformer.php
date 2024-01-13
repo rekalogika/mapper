@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer;
 
-use Rekalogika\Mapper\Contracts\MixedType;
-use Rekalogika\Mapper\Contracts\TransformerInterface;
-use Rekalogika\Mapper\Contracts\TypeMapping;
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
+use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Symfony\Component\PropertyInfo\Type;
 
 final class CopyTransformer implements TransformerInterface

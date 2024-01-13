@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MethodMapper;
 
-use Rekalogika\Mapper\Contracts\MainTransformerAwareInterface;
-use Rekalogika\Mapper\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
+use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
+use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;

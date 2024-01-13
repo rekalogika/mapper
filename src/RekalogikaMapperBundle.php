@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper;
 
-use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
+use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;

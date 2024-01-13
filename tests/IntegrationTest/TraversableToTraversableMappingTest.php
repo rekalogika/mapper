@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Model\TraversableCountableWrapper;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionProperty;
@@ -21,6 +20,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionW
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithTraversablePropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
 
 class TraversableToTraversableMappingTest extends AbstractIntegrationTest
 {

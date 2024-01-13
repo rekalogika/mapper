@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Common;
 
 use PHPUnit\Framework\TestCase;
-use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\MapperInterface;
+use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 
 abstract class AbstractIntegrationTest extends TestCase
 {

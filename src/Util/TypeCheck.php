@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Util;
 
-use Rekalogika\Mapper\Contracts\MixedType;
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
 class TypeCheck

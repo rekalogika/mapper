@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TypeResolver;
 
-use Rekalogika\Mapper\Contracts\MixedType;
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
 class CachingTypeResolver implements TypeResolverInterface

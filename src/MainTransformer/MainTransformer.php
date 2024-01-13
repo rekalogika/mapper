@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer;
 
-use Rekalogika\Mapper\Contracts\MainTransformerAwareInterface;
-use Rekalogika\Mapper\Contracts\MixedType;
-use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Exception\UnableToFindSuitableTransformerException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
+use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
+use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;

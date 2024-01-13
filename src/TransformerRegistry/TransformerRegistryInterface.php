@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TransformerRegistry;
 
-use Rekalogika\Mapper\Contracts\MixedType;
-use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Mapping\MappingEntry;
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
+use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 interface TransformerRegistryInterface
