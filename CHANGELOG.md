@@ -5,6 +5,7 @@
 * fix: PropertyAccessor `UninitializedPropertyException` error now is regarded
   as null.
 * fix: Transformer `SearchResult` was not properly ordered.
+* feat: `TryProperty` command, or `rekalogika:mapper:tryproperty` in console.
 
 ## 0.5.7
 

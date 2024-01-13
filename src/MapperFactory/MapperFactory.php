@@ -17,6 +17,7 @@ use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
+use Rekalogika\Mapper\Command\TryPropertyCommand;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
@@ -102,6 +103,7 @@ class MapperFactory
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
+    private ?TryPropertyCommand $tryPropertyCommand = null;
     private ?Application $application = null;
 
     /**
@@ -527,12 +529,26 @@ class MapperFactory
         return $this->tryCommand;
     }
 
+    protected function getTryPropertyCommand(): TryPropertyCommand
+    {
+        if (null === $this->tryPropertyCommand) {
+            $this->tryPropertyCommand = new TryPropertyCommand(
+                $this->getTransformerRegistry(),
+                $this->getTypeResolver(),
+                $this->getPropertyInfoExtractor(),
+            );
+        }
+
+        return $this->tryPropertyCommand;
+    }
+
     public function getApplication(): Application
     {
         if (null === $this->application) {
             $this->application = new Application();
             $this->application->add($this->getMappingCommand());
             $this->application->add($this->getTryCommand());
+            $this->application->add($this->getTryPropertyCommand());
         }
 
         return $this->application;
