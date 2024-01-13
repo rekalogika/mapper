@@ -16,6 +16,7 @@
 * refactor: Move `Context` to its own namespace.
 * style(Context): Rename `set` to `with` and `remove` to `without`.
 * refactor: Reintroduce `Context` to `MapperInterface`.
+* feat: Inheritance support.
 
 ## 0.5.4
 

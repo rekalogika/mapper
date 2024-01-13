@@ -24,6 +24,7 @@ use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\IncompleteConstructorArgument;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\InvalidClassException;
+use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -70,8 +71,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         $targetClass = $targetType->getClassName();
 
-        if (null === $targetClass || !\class_exists($targetClass)) {
-            throw new InvalidArgumentException('Cannot get class name from target type.');
+        if (null === $targetClass) {
+            throw new InvalidArgumentException("Cannot get the class name for the target type.");
+        }
+
+        if (!\class_exists($targetClass)) {
+            throw new NotAClassException($targetClass);
         }
 
         // if sourceType and targetType are the same, just return the source

@@ -25,6 +25,7 @@ use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
+use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
@@ -87,25 +88,29 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.transformer.scalar_to_scalar', ScalarToScalarTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -450]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -400]);
 
     $services
         ->set('rekalogika.mapper.transformer.datetime', DateTimeTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -500]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -450]);
 
     $services
         ->set('rekalogika.mapper.transformer.string_to_backed_enum', StringToBackedEnumTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -500]);
 
     $services
         ->set('rekalogika.mapper.method_mapper.transformer', ClassMethodTransformer::class)
         ->args([
             service('rekalogika.mapper.method_mapper.sub_mapper'),
         ])
-        ->tag('rekalogika.mapper.transformer', ['priority' => -600]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
 
     $services
         ->set('rekalogika.mapper.transformer.object_to_string', ObjectToStringTransformer::class)
+        ->tag('rekalogika.mapper.transformer', ['priority' => -600]);
+
+    $services
+        ->set('rekalogika.mapper.transformer.inheritance_map', InheritanceMapTransformer::class)
         ->tag('rekalogika.mapper.transformer', ['priority' => -650]);
 
     $services
@@ -145,6 +150,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set('rekalogika.mapper.transformer.null', CopyTransformer::class)
         ->tag('rekalogika.mapper.transformer', ['priority' => -1000]);
+
 
     # mappingfactory
 

@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\LogicException;
 /**
  * @immutable
  */
-class Context
+final readonly class Context
 {
     /**
      * @param array<class-string,object> $context
