@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.9
+
+* fix: Service definition for `TryPropertyCommand`.
+
 ## 0.5.8
 
 * fix: PropertyAccessor `UninitializedPropertyException` error now is regarded

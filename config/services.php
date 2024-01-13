@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
+use Rekalogika\Mapper\Command\TryPropertyCommand;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
@@ -236,6 +237,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('rekalogika.mapper.transformer_registry'),
             service('rekalogika.mapper.type_resolver'),
+        ])
+        ->tag('console.command');
+
+    $services
+        ->set('rekalogika.mapper.command.try_property', TryPropertyCommand::class)
+        ->args([
+            service('rekalogika.mapper.transformer_registry'),
+            service('rekalogika.mapper.type_resolver'),
+            service('rekalogika.mapper.property_info'),
         ])
         ->tag('console.command');
 };
