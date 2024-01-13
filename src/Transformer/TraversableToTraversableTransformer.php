@@ -23,7 +23,6 @@ use Rekalogika\Mapper\Exception\MissingMemberKeyTypeException;
 use Rekalogika\Mapper\Exception\MissingMemberValueTypeException;
 use Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\Model\TraversableCountableWrapper;
-use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -50,13 +49,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         }
         // get object cache
 
-        if (!isset($context[MainTransformer::OBJECT_CACHE])) {
-            $objectCache = $this->objectCacheFactory->createObjectCache();
-            $context[MainTransformer::OBJECT_CACHE] = $objectCache;
-        } else {
-            /** @var ObjectCache */
-            $objectCache = $context[MainTransformer::OBJECT_CACHE];
-        }
+        $objectCache = MainTransformer::getObjectCache($context, $this->objectCacheFactory);
 
         // return from cache if already exists
 

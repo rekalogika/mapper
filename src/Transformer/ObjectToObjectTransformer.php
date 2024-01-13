@@ -24,7 +24,6 @@ use Rekalogika\Mapper\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\InvalidClassException;
 use Rekalogika\Mapper\MainTransformer;
-use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -65,13 +64,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // get object cache
 
-        if (!isset($context[MainTransformer::OBJECT_CACHE])) {
-            $objectCache = $this->objectCacheFactory->createObjectCache();
-            $context[MainTransformer::OBJECT_CACHE] = $objectCache;
-        } else {
-            /** @var ObjectCache */
-            $objectCache = $context[MainTransformer::OBJECT_CACHE];
-        }
+        $objectCache = MainTransformer::getObjectCache($context, $this->objectCacheFactory);
 
         // return from cache if already exists
 

@@ -25,7 +25,6 @@ use Rekalogika\Mapper\Mapping\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\MethodMapper\ClassMethodTransformer;
 use Rekalogika\Mapper\MethodMapper\SubMapper;
-use Rekalogika\Mapper\MethodMapper\SubMapperInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;

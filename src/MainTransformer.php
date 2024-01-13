@@ -57,6 +57,32 @@ class MainTransformer implements MainTransformerInterface
         return $transformer;
     }
 
+    /**
+     * @param array<string,mixed> $context
+     */
+    public static function getObjectCache(
+        array &$context,
+        ObjectCacheFactoryInterface $objectCacheFactory
+    ): ObjectCache {
+        if (!isset($context[self::OBJECT_CACHE])) {
+            $objectCache = $objectCacheFactory->createObjectCache();
+            $context[self::OBJECT_CACHE] = $objectCache;
+        } else {
+            /** @var mixed */
+            $objectCache = $context[self::OBJECT_CACHE];
+
+            if (!$objectCache instanceof ObjectCache) {
+                throw new LogicException(sprintf(
+                    'Object cache must be an instance of %s, %s given.',
+                    ObjectCache::class,
+                    get_debug_type($objectCache)
+                ));
+            }
+        }
+
+        return $objectCache;
+    }
+
     public function transform(
         mixed $source,
         mixed $target,
@@ -76,13 +102,10 @@ class MainTransformer implements MainTransformerInterface
 
         // get object cache
 
-        if (!isset($context[self::OBJECT_CACHE])) {
-            $objectCache = $this->objectCacheFactory->createObjectCache();
-            $context[self::OBJECT_CACHE] = $objectCache;
-        } else {
-            /** @var ObjectCache */
-            $objectCache = $context[self::OBJECT_CACHE];
-        }
+        $objectCache = self::getObjectCache(
+            $context,
+            $this->objectCacheFactory
+        );
 
         // gets simple target types from the provided target type
 

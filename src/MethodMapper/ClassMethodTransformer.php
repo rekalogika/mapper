@@ -19,7 +19,6 @@ use Rekalogika\Mapper\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Contracts\TypeMapping;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer;
-use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
@@ -89,13 +88,7 @@ final class ClassMethodTransformer implements
 
         // get object cache
 
-        if (!isset($context[MainTransformer::OBJECT_CACHE])) {
-            $objectCache = $this->objectCacheFactory->createObjectCache();
-            $context[MainTransformer::OBJECT_CACHE] = $objectCache;
-        } else {
-            /** @var ObjectCache */
-            $objectCache = $context[MainTransformer::OBJECT_CACHE];
-        }
+        $objectCache = MainTransformer::getObjectCache($context, $this->objectCacheFactory);
 
         // save to object cache
 
