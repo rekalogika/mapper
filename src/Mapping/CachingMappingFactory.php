@@ -47,6 +47,10 @@ final class CachingMappingFactory implements
             return $this->mapping;
         }
 
+        if ($this->kernel->isDebug()) {
+            return $this->mapping = $this->warmUpAndGetMapping();
+        }
+
         if (!file_exists($this->getCacheFilePath())) {
             return $this->mapping = $this->warmUpAndGetMapping();
         }

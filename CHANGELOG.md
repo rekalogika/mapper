@@ -17,6 +17,7 @@
 * fix: Remove cache file & regenerate it if it is corrupt.
 * fix: `NullTransformer` bug.
 * fix(`CachingMappingFactory`): Cache result in memory.
+* fix(`CachingMappingFactory`): Skip the cache if in debug mode.
 
 ## 0.5.8
 
