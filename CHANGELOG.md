@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.5.10
+
+* fix: `NullTransformer` bug.
+* fix(`CachingMappingFactory`): Cache result in memory.
+* fix(`CachingMappingFactory`): Skip the cache if in debug mode.
+
 ## 0.5.9
 
 * fix: Service definition for `TryPropertyCommand`.
@@ -15,9 +21,6 @@
 * feat: Transformers now have the option to have an invariant target type.
 * fix: Wrong service id for `CopyTransformer`.
 * fix: Remove cache file & regenerate it if it is corrupt.
-* fix: `NullTransformer` bug.
-* fix(`CachingMappingFactory`): Cache result in memory.
-* fix(`CachingMappingFactory`): Skip the cache if in debug mode.
 
 ## 0.5.8
 
