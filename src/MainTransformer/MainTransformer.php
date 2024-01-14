@@ -173,7 +173,7 @@ class MainTransformer implements MainTransformerInterface
             );
 
             if (!TypeCheck::isVariableInstanceOf($result, $targetType)) {
-                throw new TransformerReturnsUnexpectedValueException($targetType, $result);
+                throw new TransformerReturnsUnexpectedValueException($targetType, $result, context: $context);
             }
 
             // if the target type is not null, cache it
@@ -191,6 +191,6 @@ class MainTransformer implements MainTransformerInterface
             return $result;
         }
 
-        throw new CannotFindTransformerException($sourceTypes, $targetTypes);
+        throw new CannotFindTransformerException($sourceTypes, $targetTypes, context: $context);
     }
 }

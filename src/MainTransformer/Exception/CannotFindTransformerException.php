@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer\Exception;
 
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
@@ -24,11 +25,14 @@ class CannotFindTransformerException extends UnexpectedValueException
      * @param array<int,Type|MixedType> $sourceTypes
      * @param array<int,Type|MixedType> $targetTypes
      */
-    public function __construct(array $sourceTypes, array $targetTypes)
+    public function __construct(array $sourceTypes, array $targetTypes, Context $context)
     {
         $sourceTypes = TypeUtil::getDebugType($sourceTypes);
         $targetTypes = TypeUtil::getDebugType($targetTypes);
 
-        parent::__construct(sprintf('Cannot find a matching transformer for mapping the source types "%s" to the target types "%s"', $sourceTypes, $sourceTypes));
+        parent::__construct(
+            sprintf('Cannot find a matching transformer for mapping the source types "%s" to the target types "%s"', $sourceTypes, $sourceTypes),
+            context: $context
+        );
     }
 }

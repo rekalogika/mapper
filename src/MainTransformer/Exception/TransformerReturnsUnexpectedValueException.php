@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer\Exception;
 
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
@@ -20,7 +21,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 class TransformerReturnsUnexpectedValueException extends UnexpectedValueException
 {
-    public function __construct(Type|MixedType $type, mixed $target)
+    public function __construct(Type|MixedType $type, mixed $target, Context $context)
     {
         $message = sprintf(
             'Mapper returns unexpected value. Expected type "%s", but got "%s"',
@@ -28,6 +29,6 @@ class TransformerReturnsUnexpectedValueException extends UnexpectedValueExceptio
             get_debug_type($target),
         );
 
-        parent::__construct($message);
+        parent::__construct($message, context: $context);
     }
 }

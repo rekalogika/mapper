@@ -7,6 +7,7 @@
   error messages.
 * feat: Context methods now accept `$context` variable, and pass it to
   exceptions.
+* feat: Main transformer's exception now accepts `$context` variable.
 
 ## 0.5.8
 
