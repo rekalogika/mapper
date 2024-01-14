@@ -13,6 +13,7 @@
   will try the next suitable transformer.
 * style: Remove unused vars.
 * feat: Transformers now have the option to have an invariant target type.
+* fix: Wrong service id for `CopyTransformer`.
 
 ## 0.5.8
 

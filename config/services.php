@@ -149,7 +149,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('rekalogika.mapper.transformer', ['priority' => -950]);
 
     $services
-        ->set('rekalogika.mapper.transformer.null', CopyTransformer::class)
+        ->set('rekalogika.mapper.transformer.copy', CopyTransformer::class)
         ->tag('rekalogika.mapper.transformer', ['priority' => -1000]);
 
 
