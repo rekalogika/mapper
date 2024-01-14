@@ -16,6 +16,7 @@
 * fix: Wrong service id for `CopyTransformer`.
 * fix: Remove cache file & regenerate it if it is corrupt.
 * fix: `NullTransformer` bug.
+* fix(`CachingMappingFactory`): Cache result in memory.
 
 ## 0.5.8
 

@@ -21,7 +21,7 @@ final class CachingMappingFactory implements
     MappingFactoryInterface,
     CacheWarmerInterface
 {
-    private ?Mapping $innerMappingCache = null;
+    private ?Mapping $mapping = null;
 
     public function __construct(
         private MappingFactoryInterface $realMappingFactory,
@@ -31,11 +31,7 @@ final class CachingMappingFactory implements
 
     private function getMappingFromInnerFactory(): Mapping
     {
-        if ($this->innerMappingCache === null) {
-            $this->innerMappingCache = $this->realMappingFactory->getMapping();
-        }
-
-        return $this->innerMappingCache;
+        return $this->realMappingFactory->getMapping();
     }
 
     private function warmUpAndGetMapping(): Mapping
@@ -47,8 +43,12 @@ final class CachingMappingFactory implements
 
     public function getMapping(): Mapping
     {
+        if ($this->mapping !== null) {
+            return $this->mapping;
+        }
+
         if (!file_exists($this->getCacheFilePath())) {
-            return $this->warmUpAndGetMapping();
+            return $this->mapping = $this->warmUpAndGetMapping();
         }
 
         try {
@@ -57,16 +57,16 @@ final class CachingMappingFactory implements
         } catch (\Throwable) {
             unlink($this->getCacheFilePath());
 
-            return $this->warmUpAndGetMapping();
+            return $this->mapping = $this->warmUpAndGetMapping();
         }
 
         if (!$result instanceof Mapping) {
             unlink($this->getCacheFilePath());
 
-            return $this->warmUpAndGetMapping();
+            return $this->mapping = $this->warmUpAndGetMapping();
         }
 
-        return $result;
+        return $this->mapping = $result;
     }
 
     public function isOptional(): bool
