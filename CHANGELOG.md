@@ -8,6 +8,7 @@
 * feat: Context methods now accept `$context` variable, and pass it to
   exceptions.
 * feat: Main transformer's exception now accepts `$context` variable.
+* feat: More useful `TransformerReturnsUnexpectedValueException` exception message.
 
 ## 0.5.8
 

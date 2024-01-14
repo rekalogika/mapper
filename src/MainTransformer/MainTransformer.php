@@ -172,8 +172,13 @@ class MainTransformer implements MainTransformerInterface
                 context: $context
             );
 
-            if (!TypeCheck::isVariableInstanceOf($result, $targetType)) {
-                throw new TransformerReturnsUnexpectedValueException($targetType, $result, context: $context);
+            // check the result type
+
+            if (
+                !TypeCheck::isVariableInstanceOf($result, $targetType)
+                && $result !== null
+            ) {
+                throw new TransformerReturnsUnexpectedValueException($source, $targetType, $result, $transformer, $context);
             }
 
             // if the target type is not null, cache it
