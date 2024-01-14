@@ -15,6 +15,7 @@
 * feat: Transformers now have the option to have an invariant target type.
 * fix: Wrong service id for `CopyTransformer`.
 * fix: Remove cache file & regenerate it if it is corrupt.
+* fix: `NullTransformer` bug.
 
 ## 0.5.8
 
