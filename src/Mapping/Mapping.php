@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Mapping;
 
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
+use Symfony\Component\PropertyInfo\Type;
+
 /**
  * @implements \IteratorAggregate<int,MappingEntry>
  */
@@ -36,18 +39,24 @@ final class Mapping implements \IteratorAggregate
     public function addEntry(
         string $id,
         string $class,
-        string $sourceType,
-        string $targetType
+        Type|MixedType $sourceType,
+        Type|MixedType $targetType,
+        string $sourceTypeString,
+        string $targetTypeString,
+        bool $variantTargetType,
     ): void {
         $entry = new MappingEntry(
             id: $id,
             class: $class,
             sourceType: $sourceType,
-            targetType: $targetType
+            targetType: $targetType,
+            sourceTypeString: $sourceTypeString,
+            targetTypeString: $targetTypeString,
+            variantTargetType: $variantTargetType,
         );
 
         $this->entries[$entry->getOrder()] = $entry;
-        $this->mappingBySourceAndTarget[$sourceType][$targetType][] = $entry;
+        $this->mappingBySourceAndTarget[$sourceTypeString][$targetTypeString][] = $entry;
     }
 
     /**
@@ -70,15 +79,6 @@ final class Mapping implements \IteratorAggregate
                 }
             }
         }
-
-        // sort by order
-
-        usort(
-            $result,
-            fn (MappingEntry $a, MappingEntry $b)
-            =>
-            $a->getOrder() <=> $b->getOrder()
-        );
 
         return $result;
     }

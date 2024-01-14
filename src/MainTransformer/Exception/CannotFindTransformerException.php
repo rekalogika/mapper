@@ -31,7 +31,7 @@ class CannotFindTransformerException extends UnexpectedValueException
         $targetTypes = TypeUtil::getDebugType($targetTypes);
 
         parent::__construct(
-            sprintf('Cannot find a matching transformer for mapping the source types "%s" to the target types "%s".', $sourceTypes, $sourceTypes),
+            sprintf('Cannot find a matching transformer for mapping the source types "%s" to the target types "%s".', $sourceTypes, $targetTypes),
             context: $context
         );
     }

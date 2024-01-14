@@ -82,9 +82,9 @@ class TypeCheck
     /**
      * @param class-string $classes
      */
-    public static function isObjectOfType(?Type $type, string ...$classes): bool
+    public static function isObjectOfType(null|Type|MixedType $type, string ...$classes): bool
     {
-        if ($type === null) {
+        if ($type === null || $type instanceof MixedType) {
             return false;
         }
 
@@ -159,13 +159,15 @@ class TypeCheck
 
     /**
      * Check for identity between Types, disregarding collection types
-     *
-     * @param Type $type1
-     * @param Type $type2
-     * @return boolean
      */
-    public static function isSomewhatIdentical(Type $type1, Type $type2): bool
+    public static function isSomewhatIdentical(Type|MixedType $type1, Type|MixedType $type2): bool
     {
+        if ($type1 instanceof MixedType && $type2 instanceof MixedType) {
+            return true;
+        } elseif ($type1 instanceof MixedType || $type2 instanceof MixedType) {
+            return false;
+        }
+
         return $type1->getBuiltinType() === $type2->getBuiltinType()
             && $type1->getClassName() === $type2->getClassName()
             && $type1->isNullable() === $type2->isNullable();

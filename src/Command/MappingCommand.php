@@ -57,13 +57,14 @@ class MappingCommand extends Command
 
         foreach ($mapping as $entry) {
             $order = $entry->getOrder();
-            $sourceType = $entry->getSourceType();
-            $targetType = $entry->getTargetType();
+            $sourceType = $entry->getSourceTypeString();
+            $targetType = $entry->getTargetTypeString();
             $class = $entry->getClass();
             $id = $entry->getId();
+            $variantTargetType = $entry->isVariantTargetType();
 
             if ($sourceOption) {
-                if (preg_match('/' . preg_quote($sourceOption) . '/i', $entry->getSourceType()) === 0) {
+                if (preg_match('/' . preg_quote($sourceOption) . '/i', $entry->getSourceTypeString()) === 0) {
                     continue;
                 }
 
@@ -71,7 +72,7 @@ class MappingCommand extends Command
             }
 
             if ($targetOption) {
-                if (preg_match('/' . preg_quote($targetOption) . '/i', $entry->getTargetType()) === 0) {
+                if (preg_match('/' . preg_quote($targetOption) . '/i', $entry->getTargetTypeString()) === 0) {
                     continue;
                 }
 
@@ -94,6 +95,7 @@ class MappingCommand extends Command
                 $order,
                 $sourceType,
                 $targetType,
+                $variantTargetType ? 'variant' : 'invariant',
                 $id,
                 $class,
             ];
@@ -101,7 +103,7 @@ class MappingCommand extends Command
 
         $io->section($title);
         $table = new Table($output);
-        $table->setHeaders(['Order', 'Source Type', 'Target Type', 'Service ID', 'Class']);
+        $table->setHeaders(['Ordering', 'Source Type', 'Target Type', 'Target Variance', 'Service ID', 'Class']);
         $table->setStyle('box');
         $table->setRows($rows);
         $table->render();

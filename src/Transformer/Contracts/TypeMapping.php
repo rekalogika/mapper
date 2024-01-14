@@ -24,6 +24,7 @@ class TypeMapping
     public function __construct(
         private Type|MixedType $sourceType,
         private Type|MixedType $targetType,
+        private bool $variantTargetType = false,
     ) {
     }
 
@@ -41,5 +42,10 @@ class TypeMapping
     public function getTargetType(): Type|MixedType
     {
         return $this->targetType;
+    }
+
+    public function isVariantTargetType(): bool
+    {
+        return $this->variantTargetType;
     }
 }

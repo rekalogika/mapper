@@ -199,7 +199,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
     public function getSupportedTransformation(): iterable
     {
-        yield new TypeMapping(TypeFactory::object(), TypeFactory::object());
+        yield new TypeMapping(TypeFactory::object(), TypeFactory::object(), true);
     }
 
     protected function instantiateTarget(
@@ -216,7 +216,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $reflectionClass = new \ReflectionClass($targetClass);
 
         if (!$reflectionClass->isInstantiable()) {
-            throw new ClassNotInstantiableException($targetClass);
+            throw new ClassNotInstantiableException($targetClass, context: $context);
         }
 
         $initializableTargetProperties = $this

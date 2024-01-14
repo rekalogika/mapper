@@ -107,7 +107,7 @@ class CachingTypeResolver implements TypeResolverInterface
      */
     private array $applicableTypeStringsCache = [];
 
-    public function getApplicableTypeStrings(Type|MixedType $type): array
+    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array
     {
         $typeString = $this->getTypeString($type);
 
@@ -115,9 +115,14 @@ class CachingTypeResolver implements TypeResolverInterface
             return $this->applicableTypeStringsCache[$typeString];
         }
 
-        $applicableTypeStrings = $this->decorated->getApplicableTypeStrings($type);
+        $applicableTypeStrings = $this->decorated->getAcceptedTransformerInputTypeStrings($type);
         $this->applicableTypeStringsCache[$typeString] = $applicableTypeStrings;
 
         return $applicableTypeStrings;
+    }
+
+    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array
+    {
+        return $this->decorated->getAcceptedTransformerOutputTypeStrings($type);
     }
 }

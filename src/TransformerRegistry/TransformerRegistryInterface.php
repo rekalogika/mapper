@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TransformerRegistry;
 
-use Rekalogika\Mapper\Mapping\MappingEntry;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
@@ -31,14 +30,4 @@ interface TransformerRegistryInterface
         iterable $sourceTypes,
         iterable $targetTypes,
     ): SearchResult;
-
-    /**
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
-     * @return array<int,MappingEntry>
-     */
-    public function getMappingBySourceAndTargetType(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
-    ): array;
 }

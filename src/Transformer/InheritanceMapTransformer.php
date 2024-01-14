@@ -121,7 +121,8 @@ final class InheritanceMapTransformer implements
     {
         yield new TypeMapping(
             TypeFactory::object(),
-            TypeFactory::objectOfClass(InheritanceMap::class)
+            TypeFactory::objectOfClass(InheritanceMap::class),
+            true
         );
     }
 }

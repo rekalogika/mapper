@@ -225,6 +225,8 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         ];
 
         $targetTypes = [
+            TypeFactory::objectOfClass(Collection::class),
+            TypeFactory::objectOfClass(\ArrayObject::class),
             TypeFactory::objectOfClass(\ArrayAccess::class),
             TypeFactory::array(),
         ];

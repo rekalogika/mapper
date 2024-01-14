@@ -32,7 +32,11 @@ trait ContextAwareExceptionTrait
         }
 
         if ($path !== null) {
-            parent::__construct(sprintf('%s Mapping path: "%s"', $message, (string) $path), $code, $previous);
+            $path = (string) $path;
+            if ($path === '') {
+                $path = '(root)';
+            }
+            parent::__construct(sprintf('%s Mapping path: "%s".', $message, $path), $code, $previous);
         } else {
             parent::__construct($message, $code, $previous);
         }

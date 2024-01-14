@@ -58,5 +58,20 @@ interface TypeResolverInterface
      * @param Type|MixedType $type
      * @return array<int,string>
      */
-    public function getApplicableTypeStrings(Type|MixedType $type): array;
+    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array;
+
+    /**
+     * Example: If the variable type is
+     * 'IteratorAggregate<int,IteratorAggregate<int,string>>', then this method
+     * will return ['IteratorAggregate<int,IteratorAggregate<int,string>>',
+     * 'IteratorAggregate<int,Traversable<int,string>>',
+     * 'Traversable<int,IteratorAggregate<int,string>>',
+     * 'Traversable<int,Traversable<int,string>>']
+     *
+     * Note: IteratorAggregate extends Traversable
+     *
+     * @param Type|MixedType $type
+     * @return array<int,string>
+     */
+    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array;
 }

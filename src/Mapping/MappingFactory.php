@@ -66,6 +66,7 @@ final class MappingFactory implements MappingFactoryInterface
         foreach ($transformer->getSupportedTransformation() as $typeMapping) {
             $sourceTypes = $this->getSimpleTypes($typeMapping->getSourceType());
             $targetTypes = $this->getSimpleTypes($typeMapping->getTargetType());
+            $isVariantTargetType = $typeMapping->isVariantTargetType();
 
             foreach ($sourceTypes as $sourceType) {
                 foreach ($targetTypes as $targetType) {
@@ -75,8 +76,11 @@ final class MappingFactory implements MappingFactoryInterface
                     $mapping->addEntry(
                         id: $id,
                         class: get_class($transformer),
-                        sourceType: $sourceTypeString,
-                        targetType: $targetTypeString
+                        sourceType: $sourceType,
+                        targetType: $targetType,
+                        sourceTypeString: $sourceTypeString,
+                        targetTypeString: $targetTypeString,
+                        variantTargetType: $isVariantTargetType,
                     );
                 }
             }

@@ -74,6 +74,6 @@ final class ArrayToObjectTransformer implements TransformerInterface
 
     public function getSupportedTransformation(): iterable
     {
-        yield new TypeMapping(TypeFactory::array(), TypeFactory::object());
+        yield new TypeMapping(TypeFactory::array(), TypeFactory::object(), true);
     }
 }

@@ -25,7 +25,7 @@ class AttributeTest extends AbstractIntegrationTest
         $class = ObjectWithAttribute::class;
         $type = TypeFactory::objectOfClass($class);
 
-        $typeStrings = $this->typeResolver->getApplicableTypeStrings($type);
+        $typeStrings = $this->typeResolver->getAcceptedTransformerInputTypeStrings($type);
 
         $this->assertContainsEquals(SomeAttribute::class, $typeStrings);
     }

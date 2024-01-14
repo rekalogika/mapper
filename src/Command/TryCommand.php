@@ -56,7 +56,7 @@ class TryCommand extends Command
         $sourceTypeString = $input->getArgument('source');
         $sourceType = TypeFactory::fromString($sourceTypeString);
         $sourceTypeStrings = $this->typeResolver
-            ->getApplicableTypeStrings($sourceType);
+            ->getAcceptedTransformerInputTypeStrings($sourceType);
 
         $rows[] = ['Source type', $sourceTypeString];
         $rows[] = new TableSeparator();
@@ -73,7 +73,7 @@ class TryCommand extends Command
         $targetTypeString = $input->getArgument('target');
         $targetType = TypeFactory::fromString($targetTypeString);
         $targetTypeStrings = $this->typeResolver
-            ->getApplicableTypeStrings($targetType);
+            ->getAcceptedTransformerOutputTypeStrings($targetType);
 
         $rows[] = new TableSeparator();
         $rows[] = ['Target type', $targetTypeString];
@@ -100,19 +100,17 @@ class TryCommand extends Command
 
         $rows = [];
 
-        $transformers = $this->transformerRegistry
-            ->getMappingBySourceAndTargetType(
-                $sourceType,
-                $targetType
-            );
+        $searchResult = $this->transformerRegistry
+            ->findBySourceAndTargetTypes([$sourceType], [$targetType]);
 
-        foreach ($transformers as $entry) {
+        foreach ($searchResult as $entry) {
             $rows[] = [
-                $entry->getOrder(),
-                $entry->getId(),
-                $entry->getClass(),
-                $entry->getSourceType(),
-                $entry->getTargetType()
+                $entry->getMappingOrder(),
+                $entry->getTransformerServiceId(),
+                $entry->getTransformer()::class,
+                $this->typeResolver->getTypeString($entry->getSourceType()),
+                $this->typeResolver->getTypeString($entry->getTargetType()),
+                $entry->isVariantTargetType() ? 'variant' : 'invariant',
             ];
             $rows[] = new TableSeparator();
         }
@@ -133,8 +131,9 @@ class TryCommand extends Command
         }
 
         $table = new Table($output);
-        $table->setHeaders(['Order', 'Service ID', 'Class', 'Source Type', 'Target Type']);
+        $table->setHeaders(['Ordering', 'Service ID', 'Class', 'Source Type', 'Target Type', 'Variance']);
         $table->setStyle('box');
+        $table->setVertical();
         $table->setRows($rows);
         $table->render();
 

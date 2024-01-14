@@ -93,11 +93,13 @@ final class ClassMethodTransformer implements
         yield new TypeMapping(
             TypeFactory::objectOfClass(MapToObjectInterface::class),
             TypeFactory::object(),
+            true,
         );
 
         yield new TypeMapping(
             TypeFactory::object(),
             TypeFactory::objectOfClass(MapFromObjectInterface::class),
+            true,
         );
     }
 }

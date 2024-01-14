@@ -12,11 +12,12 @@
 * feat: If a transformer throws `RefuseToHandleException`, the `MainTransformer`
   will try the next suitable transformer.
 * style: Remove unused vars.
+* feat: Transformers now have the option to have an invariant target type.
 
 ## 0.5.8
 
 * fix: PropertyAccessor `UninitializedPropertyException` error now is regarded
-  as null.
+  as null.****
 * fix: Transformer `SearchResult` was not properly ordered.
 * feat: `TryProperty` command, or `rekalogika:mapper:tryproperty` in console.
 

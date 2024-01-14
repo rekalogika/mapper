@@ -18,6 +18,8 @@ class ObjectWithEnumStringableProperty
     public ObjectImplementingStringable $stringable;
     public SomeBackedEnum $backedEnum = SomeBackedEnum::Foo;
     public SomeEnum $unitEnum = SomeEnum::Foo;
+    public string $stringBackedEnum = 'foo';
+    // public string $stringUnitEnum = 'Foo';
 
     public function __construct()
     {

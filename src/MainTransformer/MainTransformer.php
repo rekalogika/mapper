@@ -111,13 +111,13 @@ class MainTransformer implements MainTransformerInterface
             $context = $context->with($pathContext->append($path));
         }
 
-        // gets simple target types from the provided target type
-
-        $targetTypes = $this->getSimpleTypes($targetTypes);
-
         // guess the source type
 
         $sourceTypes = [$this->typeResolver->guessTypeFromVariable($source)];
+
+        // gets simple target types from the provided target type
+
+        $targetTypes = $this->getSimpleTypes($targetTypes);
 
         // search for the matching transformers according to the source and
         // target types

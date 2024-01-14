@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Mapping;
 
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
+use Symfony\Component\PropertyInfo\Type;
+
 final class MappingEntry
 {
     private static int $counter = 0;
@@ -21,8 +24,11 @@ final class MappingEntry
     public function __construct(
         private string $id,
         private string $class,
-        private string $sourceType,
-        private string $targetType,
+        private Type|MixedType $sourceType,
+        private Type|MixedType $targetType,
+        private string $sourceTypeString,
+        private string $targetTypeString,
+        private bool $variantTargetType,
     ) {
         $this->order = ++self::$counter;
     }
@@ -42,13 +48,28 @@ final class MappingEntry
         return $this->class;
     }
 
-    public function getSourceType(): string
+    public function isVariantTargetType(): bool
+    {
+        return $this->variantTargetType;
+    }
+
+    public function getSourceType(): Type|MixedType
     {
         return $this->sourceType;
     }
 
-    public function getTargetType(): string
+    public function getTargetType(): Type|MixedType
     {
         return $this->targetType;
+    }
+
+    public function getSourceTypeString(): string
+    {
+        return $this->sourceTypeString;
+    }
+
+    public function getTargetTypeString(): string
+    {
+        return $this->targetTypeString;
     }
 }

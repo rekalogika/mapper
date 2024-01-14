@@ -13,9 +13,14 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto;
 
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
+
 class ObjectWithEnumStringablePropertyDto
 {
     public ?string $stringable = null;
     public ?string $backedEnum = null;
     public ?string $unitEnum = null;
+    public ?SomeBackedEnum $stringBackedEnum = null;
+    // public ?SomeEnum $stringUnitEnum = null;
 }

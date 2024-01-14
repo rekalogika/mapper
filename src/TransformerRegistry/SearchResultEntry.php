@@ -24,6 +24,8 @@ class SearchResultEntry
         private Type|MixedType $sourceType,
         private Type|MixedType $targetType,
         private TransformerInterface $transformer,
+        private string $transformerServiceId,
+        private bool $variantTargetType,
     ) {
     }
 
@@ -45,5 +47,15 @@ class SearchResultEntry
     public function getMappingOrder(): int
     {
         return $this->mappingOrder;
+    }
+
+    public function isVariantTargetType(): bool
+    {
+        return $this->variantTargetType;
+    }
+
+    public function getTransformerServiceId(): string
+    {
+        return $this->transformerServiceId;
     }
 }

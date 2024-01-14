@@ -54,6 +54,7 @@ final class StringToBackedEnumTransformer implements TransformerInterface
         yield new TypeMapping(
             TypeFactory::string(),
             TypeFactory::objectOfClass(\BackedEnum::class),
+            true,
         );
     }
 }

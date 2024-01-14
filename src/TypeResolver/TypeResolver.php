@@ -80,7 +80,7 @@ class TypeResolver implements TypeResolverInterface
         return TypeUtil::getSimpleTypes($type);
     }
 
-    public function getApplicableTypeStrings(Type|MixedType $type): array
+    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {
             $type = ['mixed'];
@@ -91,5 +91,11 @@ class TypeResolver implements TypeResolverInterface
             TypeUtil::getAllTypeStrings($type, true),
             TypeUtil::getAttributesTypeStrings($type)
         );
+    }
+
+
+    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array
+    {
+        return $this->getAcceptedTransformerInputTypeStrings($type);
     }
 }

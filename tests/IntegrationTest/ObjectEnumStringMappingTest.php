@@ -15,6 +15,8 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithEnumStringableProperty;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithEnumStringablePropertyDto;
 
 class ObjectEnumStringMappingTest extends AbstractIntegrationTest
@@ -27,5 +29,7 @@ class ObjectEnumStringMappingTest extends AbstractIntegrationTest
         $this->assertEquals('foo', $result->stringable);
         $this->assertEquals('foo', $result->backedEnum);
         $this->assertEquals('Foo', $result->unitEnum);
+        $this->assertEquals(SomeBackedEnum::Foo, $result->stringBackedEnum);
+        // $this->assertEquals(SomeEnum::Foo, $result->stringUnitEnum);
     }
 }

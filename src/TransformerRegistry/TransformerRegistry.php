@@ -20,6 +20,7 @@ use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
+use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 
 class TransformerRegistry implements TransformerRegistryInterface
@@ -61,11 +62,26 @@ class TransformerRegistry implements TransformerRegistryInterface
                 );
 
                 foreach ($mapping as $mappingEntry) {
-                    $mappingEntries[] = [
-                        $sourceType,
-                        $targetType,
-                        $mappingEntry,
-                    ];
+                    if ($mappingEntry->isVariantTargetType()) {
+                        $mappingEntries[] = [
+                            $sourceType,
+                            $targetType,
+                            $mappingEntry,
+                        ];
+                    } else {
+                        if (
+                            TypeCheck::isSomewhatIdentical(
+                                $targetType,
+                                $mappingEntry->getTargetType()
+                            )
+                        ) {
+                            $mappingEntries[] = [
+                                $sourceType,
+                                $targetType,
+                                $mappingEntry,
+                            ];
+                        }
+                    }
                 }
             }
         }
@@ -86,21 +102,28 @@ class TransformerRegistry implements TransformerRegistryInterface
                 $mappingEntry[0],
                 $mappingEntry[1],
                 $this->get($mappingEntry[2]->getId()),
+                $mappingEntry[2]->getId(),
+                $mappingEntry[2]->isVariantTargetType()
             );
         }
 
         return new SearchResult($result);
     }
 
-    public function getMappingBySourceAndTargetType(
+    /**
+     * @param Type|MixedType $sourceType
+     * @param Type|MixedType $targetType
+     * @return array<int,MappingEntry>
+     */
+    private function getMappingBySourceAndTargetType(
         Type|MixedType $sourceType,
         Type|MixedType $targetType,
     ): array {
         $sourceTypeStrings = $this->typeResolver
-            ->getApplicableTypeStrings($sourceType);
+            ->getAcceptedTransformerInputTypeStrings($sourceType);
 
         $targetTypeStrings = $this->typeResolver
-            ->getApplicableTypeStrings($targetType);
+            ->getAcceptedTransformerOutputTypeStrings($targetType);
 
         return $this->mappingFactory->getMapping()
             ->getMappingBySourceAndTarget($sourceTypeStrings, $targetTypeStrings);
