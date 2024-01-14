@@ -26,5 +26,6 @@ interface MainTransformerInterface
         mixed $target,
         array $targetTypes,
         Context $context,
+        string $path = null,
     ): mixed;
 }

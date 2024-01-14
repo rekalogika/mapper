@@ -13,11 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer\Exception;
 
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class CannotFindTransformerException extends \RuntimeException
+class CannotFindTransformerException extends UnexpectedValueException
 {
     /**
      * @param array<int,Type|MixedType> $sourceTypes

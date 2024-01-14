@@ -37,7 +37,7 @@ final class ObjectToStringTransformer implements TransformerInterface
             return $source->name;
         }
 
-        throw new InvalidArgumentException(sprintf('Source must be instance of "\Stringable" or "\UnitEnum", "%s" given', get_debug_type($source)));
+        throw new InvalidArgumentException(sprintf('Source must be instance of "\Stringable" or "\UnitEnum", "%s" given', get_debug_type($source)), context: $context);
     }
 
     public function getSupportedTransformation(): iterable

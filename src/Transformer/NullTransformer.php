@@ -54,7 +54,7 @@ final class NullTransformer implements TransformerInterface
             return [];
         }
 
-        throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given', get_debug_type($targetType)));
+        throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given', get_debug_type($targetType)), context: $context);
     }
 
     public function getSupportedTransformation(): iterable

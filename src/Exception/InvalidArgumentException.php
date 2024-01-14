@@ -15,4 +15,5 @@ namespace Rekalogika\Mapper\Exception;
 
 class InvalidArgumentException extends \InvalidArgumentException implements ExceptionInterface
 {
+    use ContextAwareExceptionTrait;
 }

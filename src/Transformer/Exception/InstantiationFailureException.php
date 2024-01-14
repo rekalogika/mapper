@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Exception;
 
+use Rekalogika\Mapper\Context\Context;
+
 class InstantiationFailureException extends NotMappableValueException
 {
     /**
@@ -22,23 +24,31 @@ class InstantiationFailureException extends NotMappableValueException
         object $source,
         string $targetClass,
         array $constructorArguments,
-        \Throwable $previous
+        \Throwable $previous,
+        Context $context,
     ) {
         if (count($constructorArguments) === 0) {
-            parent::__construct(sprintf(
-                'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
-                \get_debug_type($source),
-                $targetClass,
-            ), 0, $previous);
+            parent::__construct(
+                message: sprintf(
+                    'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
+                    \get_debug_type($source),
+                    $targetClass,
+                ),
+                previous: $previous,
+                context: $context,
+            );
         } else {
-            parent::__construct(sprintf(
-                'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" using constructor arguments: %s.',
-                \get_debug_type($source),
-                $targetClass,
-                self::formatConstructorArguments($constructorArguments)
-            ), 0, $previous);
+            parent::__construct(
+                message: sprintf(
+                    'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" using constructor arguments: %s.',
+                    \get_debug_type($source),
+                    $targetClass,
+                    self::formatConstructorArguments($constructorArguments)
+                ),
+                previous: $previous,
+                context: $context,
+            );
         }
-
     }
 
     /**

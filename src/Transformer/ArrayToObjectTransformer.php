@@ -44,18 +44,18 @@ final class ArrayToObjectTransformer implements TransformerInterface
         Context $context
     ): mixed {
         if (!is_array($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be array, "%s" given', get_debug_type($source)));
+            throw new InvalidArgumentException(sprintf('Source must be array, "%s" given', get_debug_type($source)), context: $context);
         }
 
         if (!TypeCheck::isObject($targetType)) {
-            throw new InvalidTypeInArgumentException('Target type must be an object, "%s" given', $targetType);
+            throw new InvalidTypeInArgumentException('Target type must be an object, "%s" given', $targetType, context: $context);
         }
 
         $normalizerContext = [];
 
         if ($target !== null) {
             if (!is_object($target)) {
-                throw new InvalidArgumentException(sprintf('Target must be an object, "%s" given', get_debug_type($target)));
+                throw new InvalidArgumentException(sprintf('Target must be an object, "%s" given', get_debug_type($target)), context: $context);
             }
 
             $targetClass = $target::class;

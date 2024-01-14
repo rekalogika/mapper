@@ -15,4 +15,5 @@ namespace Rekalogika\Mapper\Exception;
 
 class LogicException extends \LogicException implements ExceptionInterface
 {
+    use ContextAwareExceptionTrait;
 }

@@ -63,13 +63,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         Context $context
     ): mixed {
         if ($targetType === null) {
-            throw new InvalidArgumentException('Target type must not be null.');
+            throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
         // get source object & class
 
         if (!is_object($source)) {
-            throw new InvalidArgumentException(sprintf('The source must be an object, "%s" given.', get_debug_type($source)));
+            throw new InvalidArgumentException(sprintf('The source must be an object, "%s" given.', get_debug_type($source)), context: $context);
         }
 
         $sourceType = $this->typeResolver->guessTypeFromVariable($source);
@@ -77,11 +77,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $targetClass = $targetType->getClassName();
 
         if (null === $targetClass) {
-            throw new InvalidArgumentException("Cannot get the class name for the target type.");
+            throw new InvalidArgumentException("Cannot get the class name for the target type.", context: $context);
         }
 
         if (!\class_exists($targetClass)) {
-            throw new NotAClassException($targetClass);
+            throw new NotAClassException($targetClass, context: $context);
         }
 
         // if sourceType and targetType are the same, just return the source
@@ -96,7 +96,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $target = $this->instantiateTarget($source, $targetType, $context);
         } else {
             if (!is_object($target)) {
-                throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)));
+                throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
             }
         }
 
@@ -126,7 +126,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 target: $target,
                 propertyName: $propertyName,
                 targetClass: $targetClass,
-                context: $context
+                context: $context,
+                path: $propertyName,
             );
 
             try {
@@ -149,6 +150,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         string $propertyName,
         string $targetClass,
         Context $context,
+        string $path,
     ): mixed {
         /** @var array<int,Type>|null */
         $targetPropertyTypes = $this->propertyTypeExtractor->getTypes($targetClass, $propertyName);
@@ -161,11 +163,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             /** @var mixed */
             $sourcePropertyValue = $this->propertyAccessor->getValue($source, $propertyName);
         } catch (NoSuchPropertyException $e) {
-            throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e);
+            throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e, context: $context);
         } catch (UninitializedPropertyException $e) {
             $sourcePropertyValue = null;
         } catch (AccessException | UnexpectedTypeException $e) {
-            throw new UnableToReadException($source, $target, $source, $propertyName, $e);
+            throw new UnableToReadException($source, $target, $source, $propertyName, $e, context: $context);
         }
 
         if ($target !== null) {
@@ -173,11 +175,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 /** @var mixed */
                 $targetPropertyValue = $this->propertyAccessor->getValue($target, $propertyName);
             } catch (NoSuchPropertyException $e) {
-                throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e);
+                throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e, context: $context);
             } catch (UninitializedPropertyException $e) {
                 $targetPropertyValue = null;
             } catch (AccessException | UnexpectedTypeException $e) {
-                throw new UnableToReadException($source, $target, $target, $propertyName, $e);
+                throw new UnableToReadException($source, $target, $target, $propertyName, $e, context: $context);
             }
         } else {
             $targetPropertyValue = null;
@@ -188,7 +190,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             source: $sourcePropertyValue,
             target: $targetPropertyValue,
             targetTypes: $targetPropertyTypes,
-            context: $context
+            context: $context,
+            path: $path,
         );
 
         return $targetPropertyValue;
@@ -207,7 +210,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $targetClass = $targetType->getClassName();
 
         if (null === $targetClass || !\class_exists($targetClass)) {
-            throw new InvalidClassException($targetType);
+            throw new InvalidClassException($targetType, context: $context);
         }
 
         $reflectionClass = new \ReflectionClass($targetClass);
@@ -228,7 +231,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 target: null,
                 propertyName: $propertyName,
                 targetClass: $targetClass,
-                context: $context
+                context: $context,
+                path: $propertyName,
             );
 
             /** @psalm-suppress MixedAssignment */
@@ -238,7 +242,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         try {
             return $reflectionClass->newInstanceArgs($constructorArguments);
         } catch (\TypeError $e) {
-            throw new InstantiationFailureException($source, $targetClass, $constructorArguments, $e);
+            throw new InstantiationFailureException($source, $targetClass, $constructorArguments, $e, context: $context);
         }
     }
 
@@ -253,13 +257,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $class = $sourceType->getClassName();
 
         if (null === $class) {
-            throw new InvalidArgumentException('Cannot get class name from source type.');
+            throw new InvalidArgumentException('Cannot get class name from source type.', context: $context);
         }
 
         $attributes = $this->propertyListExtractor->getProperties($class);
 
         if (null === $attributes) {
-            throw new InvalidArgumentException(sprintf('Cannot get properties from source class "%s".', $class));
+            throw new InvalidArgumentException(sprintf('Cannot get properties from source class "%s".', $class), context: $context);
         }
 
         $readableAttributes = [];
@@ -284,13 +288,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $class = $targetType->getClassName();
 
         if (null === $class) {
-            throw new InvalidArgumentException('Cannot get class name from source type.');
+            throw new InvalidArgumentException('Cannot get class name from source type.', context: $context);
         }
 
         $attributes = $this->propertyListExtractor->getProperties($class);
 
         if (null === $attributes) {
-            throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class));
+            throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class), context: $context);
         }
 
         $writableAttributes = [];
@@ -316,7 +320,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $attributes = $this->propertyListExtractor->getProperties($class);
 
         if (null === $attributes) {
-            throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class));
+            throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class), context: $context);
         }
 
         $initializableAttributes = [];

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Exception;
 
+use Rekalogika\Mapper\Context\Context;
+
 class UnableToReadException extends NotMappableValueException
 {
     public function __construct(
@@ -20,18 +22,19 @@ class UnableToReadException extends NotMappableValueException
         mixed $target,
         mixed $object,
         string $propertyName,
-        \Throwable $previous = null
+        \Throwable $previous = null,
+        Context $context = null,
     ) {
         parent::__construct(
-            sprintf(
+            message: sprintf(
                 'Trying to map source type "%s" to target type "%s", but encountered an error when trying to read from the property "%s" on object type "%s".',
                 \get_debug_type($source),
                 \get_debug_type($target),
                 $propertyName,
                 \get_debug_type($object)
             ),
-            0,
-            $previous
+            previous: $previous,
+            context: $context,
         );
     }
 }

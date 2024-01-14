@@ -3,6 +3,8 @@
 ## 0.5.9
 
 * fix: Service definition for `TryPropertyCommand`.
+* feat: All exceptions now accept `$context` variable for more useful
+  error messages.
 
 ## 0.5.8
 

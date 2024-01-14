@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Exception;
 
+use Rekalogika\Mapper\Context\Context;
+
 class IncompleteConstructorArgument extends NotMappableValueException
 {
     /**
@@ -22,8 +24,13 @@ class IncompleteConstructorArgument extends NotMappableValueException
         object $source,
         string $targetClass,
         string $property,
-        \Throwable $previous = null
+        \Throwable $previous = null,
+        Context $context = null,
     ) {
-        parent::__construct(sprintf('Trying to instantiate target class "%s", but its constructor requires the property "%s", which is missing from the source "%s".', $targetClass, $property, \get_debug_type($source)), 0, $previous);
+        parent::__construct(
+            message: sprintf('Trying to instantiate target class "%s", but its constructor requires the property "%s", which is missing from the source "%s".', $targetClass, $property, \get_debug_type($source)),
+            previous: $previous,
+            context: $context
+        );
     }
 }

@@ -39,7 +39,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         Context $context
     ): mixed {
         if ($targetType === null) {
-            throw new InvalidArgumentException('Target type must not be null.');
+            throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
         // get object cache
 
@@ -48,13 +48,13 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         // The source must be a Traversable or an array (a.k.a. iterable).
 
         if (!$source instanceof \Traversable && !is_array($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)));
+            throw new InvalidArgumentException(sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)), context: $context);
         }
 
         // We cannot work with an existing Traversable value
 
         if ($target !== null) {
-            throw new InvalidArgumentException(sprintf('This transformer does not support existing value, "%s" found.', get_debug_type($target)));
+            throw new InvalidArgumentException(sprintf('This transformer does not support existing value, "%s" found.', get_debug_type($target)), context: $context);
         }
 
         // We can't work if the target type doesn't contain the information
@@ -63,7 +63,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         $targetMemberValueType = $targetType->getCollectionValueTypes();
 
         if (count($targetMemberValueType) === 0) {
-            throw new MissingMemberValueTypeException($sourceType, $targetType);
+            throw new MissingMemberValueTypeException($sourceType, $targetType, context: $context);
         }
 
         // Prepare variables for the output loop
@@ -85,6 +85,8 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
             $targetMemberValueType,
             $context
         ): \Traversable {
+            $i = 0;
+
             /** @var mixed $sourcePropertyValue */
             foreach ($source as $sourcePropertyKey => $sourcePropertyValue) {
                 /** @var mixed $sourcePropertyKey */
@@ -97,8 +99,10 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                         // we discard the source key & use null (i.e. $target[] = $value)
 
                         $targetPropertyKey = null;
+                        $path = sprintf('[%d]', $i);
                     } else {
                         $targetPropertyKey = $sourcePropertyKey;
+                        $path = sprintf('[%s]', $sourcePropertyKey);
                     }
                 } else {
                     // If the type of the key is a complex type (not int or string).
@@ -107,7 +111,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                     // Refuse to continue if the target key type is not provided
 
                     if ($targetMemberKeyTypeIsMissing) {
-                        throw new MissingMemberKeyTypeException($sourceType, $targetType);
+                        throw new MissingMemberKeyTypeException($sourceType, $targetType, context: $context);
                     }
 
                     // If provided, we transform the source key to the key type of
@@ -120,6 +124,12 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                         targetTypes: $targetMemberKeyType,
                         context: $context,
                     );
+
+                    if ($targetPropertyKey instanceof \Stringable) {
+                        $path = sprintf('[%s]', $targetPropertyKey);
+                    } else {
+                        $path = sprintf('[%s]', get_debug_type($targetPropertyKey));
+                    }
                 }
 
                 // now transform the source member value to the type of the target
@@ -131,9 +141,12 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                     target: null,
                     targetTypes: $targetMemberValueType,
                     context: $context,
+                    path: $path,
                 );
 
                 yield $targetPropertyKey => $targetPropertyValue;
+
+                $i++;
             }
         })();
 

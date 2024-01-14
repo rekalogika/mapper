@@ -41,7 +41,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         Context $context
     ): mixed {
         if ($targetType === null) {
-            throw new InvalidArgumentException('Target type must not be null.');
+            throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
         // get object cache
@@ -51,19 +51,19 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // The source must be a Traversable or an array (a.k.a. iterable).
 
         if (!$source instanceof \Traversable && !is_array($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)));
+            throw new InvalidArgumentException(sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)), context: $context);
         }
 
         // If the target is provided, make sure it is an array|ArrayAccess
 
         if ($target !== null && !$target instanceof \ArrayAccess && !is_array($target)) {
-            throw new InvalidArgumentException(sprintf('If target is provided, it must be an instance of "\ArrayAccess" or "array", "%s" given', get_debug_type($target)));
+            throw new InvalidArgumentException(sprintf('If target is provided, it must be an instance of "\ArrayAccess" or "array", "%s" given', get_debug_type($target)), context: $context);
         }
 
         // If the target is not provided, instantiate it, and add to cache.
 
         if ($target === null) {
-            $target = $this->instantiateArrayAccessOrArray($targetType);
+            $target = $this->instantiateArrayAccessOrArray($targetType, $context);
         }
 
         $objectCache->saveTarget($source, $targetType, $target);
@@ -75,6 +75,8 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         $targetMemberKeyTypeIsInt = count($targetMemberKeyType) === 1
             && TypeCheck::isInt($targetMemberKeyType[0]);
         $targetMemberValueType = $targetType->getCollectionValueTypes();
+
+        $i = 0;
 
         /** @var mixed $sourceMemberValue */
         foreach ($source as $sourceMemberKey => $sourceMemberValue) {
@@ -88,8 +90,10 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                     // we discard the source key & use null (i.e. $target[] = $value)
 
                     $targetMemberKey = null;
+                    $path = sprintf('[%d]', $i);
                 } else {
                     $targetMemberKey = $sourceMemberKey;
+                    $path = sprintf('[%s]', $sourceMemberKey);
                 }
             } else {
                 // If the type of the key is a complex type (not int or string).
@@ -98,7 +102,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 // Refuse to continue if the target key type is not provided
 
                 if ($targetMemberKeyTypeIsMissing) {
-                    throw new MissingMemberKeyTypeException($sourceType, $targetType);
+                    throw new MissingMemberKeyTypeException($sourceType, $targetType, context: $context);
                 }
 
                 // If provided, we transform the source key to the key type of
@@ -111,6 +115,12 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                     targetTypes: $targetMemberKeyType,
                     context: $context,
                 );
+
+                if ($targetMemberKey instanceof \Stringable) {
+                    $path = sprintf('[%s]', $targetMemberKey);
+                } else {
+                    $path = sprintf('[%s]', get_debug_type($targetMemberKey));
+                }
             }
 
             // Get the existing member value from the target
@@ -134,6 +144,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 target: $targetMemberValue,
                 targetTypes: $targetMemberValueType,
                 context: $context,
+                path: $path,
             );
 
             if ($targetMemberKey === null) {
@@ -141,6 +152,8 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             } else {
                 $target[$targetMemberKey] = $targetMemberValue;
             }
+
+            $i++;
         }
 
         return $target;
@@ -151,6 +164,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
      */
     private function instantiateArrayAccessOrArray(
         Type $targetType,
+        Context $context,
     ): \ArrayAccess|array {
         // if it wants an array, just return it. easy.
 
@@ -161,17 +175,17 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         $class = $targetType->getClassName();
 
         if ($class === null) {
-            throw new InvalidTypeInArgumentException('Target must be an instance of "\ArrayAccess" or "array, "%s" given', $targetType);
+            throw new InvalidTypeInArgumentException('Target must be an instance of "\ArrayAccess" or "array, "%s" given', $targetType, context: $context);
         }
 
         if (!class_exists($class) && !\interface_exists($class)) {
-            throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $class));
+            throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $class), context: $context);
         }
 
         $reflectionClass = new \ReflectionClass($class);
 
         if (!$reflectionClass->implementsInterface(\ArrayAccess::class)) {
-            throw new InvalidArgumentException(sprintf('Target class "%s" must implement "\ArrayAccess"', $class));
+            throw new InvalidArgumentException(sprintf('Target class "%s" must implement "\ArrayAccess"', $class), context: $context);
         }
 
         // if instantiable, instantiate
@@ -180,11 +194,11 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             try {
                 $result = $reflectionClass->newInstance();
             } catch (\ReflectionException) {
-                throw new ClassNotInstantiableException($class);
+                throw new ClassNotInstantiableException($class, context: $context);
             }
 
             if (!$result instanceof \ArrayAccess) {
-                throw new InvalidArgumentException(sprintf('Instantiated class "%s" does not implement "\ArrayAccess"', $class));
+                throw new InvalidArgumentException(sprintf('Instantiated class "%s" does not implement "\ArrayAccess"', $class), context: $context);
             }
 
             return $result;

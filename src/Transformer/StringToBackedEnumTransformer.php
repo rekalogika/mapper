@@ -31,13 +31,13 @@ final class StringToBackedEnumTransformer implements TransformerInterface
         Context $context
     ): mixed {
         if (!is_string($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be string, "%s" given', get_debug_type($source)));
+            throw new InvalidArgumentException(sprintf('Source must be string, "%s" given', get_debug_type($source)), context: $context);
         }
 
         $class = $targetType?->getClassName();
 
         if ($class === null || !\enum_exists($class)) {
-            throw new InvalidTypeInArgumentException('Target must be an enum class-string, "%s" given', $targetType);
+            throw new InvalidTypeInArgumentException('Target must be an enum class-string, "%s" given', $targetType, context: $context);
         }
 
         // @todo maybe add option to handle values not in the enum
@@ -46,7 +46,7 @@ final class StringToBackedEnumTransformer implements TransformerInterface
             return $class::from($source);
         }
 
-        throw new InvalidArgumentException(sprintf('Target must be an enum class-string, "%s" given', get_debug_type($target)));
+        throw new InvalidArgumentException(sprintf('Target must be an enum class-string, "%s" given', get_debug_type($target)), context: $context);
     }
 
     public function getSupportedTransformation(): iterable

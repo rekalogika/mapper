@@ -64,7 +64,7 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
             return $result;
         }
 
-        throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
+        throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)), context: $context);
     }
 
     public function mapForProperty(

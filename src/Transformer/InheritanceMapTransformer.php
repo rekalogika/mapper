@@ -43,14 +43,15 @@ final class InheritanceMapTransformer implements
 
         if (!is_object($source)) {
             throw new InvalidArgumentException(
-                \sprintf('Source must be an object, "%s" given.', \get_debug_type($source))
+                \sprintf('Source must be an object, "%s" given.', \get_debug_type($source)),
+                context: $context
             );
         }
 
         # target type must exist
 
         if ($targetType === null) {
-            throw new InvalidArgumentException('Target type must be specified.');
+            throw new InvalidArgumentException('Target type must be specified.', context: $context);
         }
 
         # target must be an interface or class
@@ -65,7 +66,8 @@ final class InheritanceMapTransformer implements
             )
         ) {
             throw new InvalidArgumentException(
-                \sprintf('Target class "%s" does not exist.', $targetClass ?? 'null')
+                \sprintf('Target class "%s" does not exist.', $targetClass ?? 'null'),
+                context: $context
             );
         }
 
@@ -76,7 +78,8 @@ final class InheritanceMapTransformer implements
 
         if (\count($attributes) === 0) {
             throw new InvalidArgumentException(
-                \sprintf('Target class "%s" must have inheritance map.', $targetClass)
+                \sprintf('Target class "%s" must have inheritance map.', $targetClass),
+                context: $context
             );
         }
 
@@ -106,7 +109,8 @@ final class InheritanceMapTransformer implements
 
         if (!is_object($result) || !is_a($result, $targetClassInMap)) {
             throw new UnexpectedValueException(
-                \sprintf('Expecting an instance of "%s", "%s" given.', $targetClassInMap, \get_debug_type($result))
+                \sprintf('Expecting an instance of "%s", "%s" given.', $targetClassInMap, \get_debug_type($result)),
+                context: $context
             );
         }
 

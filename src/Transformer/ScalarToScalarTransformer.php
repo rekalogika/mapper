@@ -31,7 +31,7 @@ final class ScalarToScalarTransformer implements TransformerInterface
         Context $context
     ): mixed {
         if (!is_scalar($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be scalar, "%s" given', get_debug_type($source)));
+            throw new InvalidArgumentException(sprintf('Source must be scalar, "%s" given', get_debug_type($source)), context: $context);
         }
 
         if (TypeCheck::isInt($targetType)) {
@@ -50,7 +50,7 @@ final class ScalarToScalarTransformer implements TransformerInterface
             return (bool) $source;
         }
 
-        throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given', get_debug_type($targetType)));
+        throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given', get_debug_type($targetType)), context: $context);
     }
 
     public function getSupportedTransformation(): iterable

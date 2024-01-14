@@ -14,33 +14,45 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Attribute\InheritanceMap;
+use Rekalogika\Mapper\Context\Context;
 
 class NotAClassException extends NotMappableValueException
 {
-    public function __construct(string $class)
-    {
+    public function __construct(
+        string $class,
+        Context $context = null,
+    ) {
         /** @var class-string $class */
 
         try {
             $reflectionClass = new \ReflectionClass($class);
 
             if ($reflectionClass->isInterface()) {
-                parent::__construct(sprintf(
-                    'Trying to map to "%s", but it is an interface, not a class. If you want to map to an interface, you need to add the attribute "%s" to the interface."',
-                    $class,
-                    InheritanceMap::class
-                ));
+                parent::__construct(
+                    message: sprintf(
+                        'Trying to map to "%s", but it is an interface, not a class. If you want to map to an interface, you need to add the attribute "%s" to the interface."',
+                        $class,
+                        InheritanceMap::class
+                    ),
+                    context: $context,
+                );
             } else {
-                parent::__construct(sprintf(
-                    'Trying to map to "%s", but it is not a class.',
-                    $class,
-                ));
+                parent::__construct(
+                    message: sprintf(
+                        'Trying to map to "%s", but it is not a class.',
+                        $class,
+                    ),
+                    context: $context,
+                );
             }
         } catch (\ReflectionException) {
-            parent::__construct(sprintf(
-                'The name "%s" is not a valid class.',
-                $class
-            ));
+            parent::__construct(
+                message: sprintf(
+                    'The name "%s" is not a valid class.',
+                    $class
+                ),
+                context: $context,
+            );
         }
     }
 }

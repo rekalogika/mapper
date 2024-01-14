@@ -39,7 +39,7 @@ final class DateTimeTransformer implements TransformerInterface
         }
 
         if (!$source instanceof \DateTimeInterface) {
-            throw new InvalidArgumentException(sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)));
+            throw new InvalidArgumentException(sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)), context: $context);
         }
 
         // if target is mutable, just set directly on the instance and return it
@@ -50,7 +50,7 @@ final class DateTimeTransformer implements TransformerInterface
         }
 
         if ($target !== null) {
-            throw new InvalidArgumentException(sprintf('Target must be null unless it is a DateTime, "%s" given', get_debug_type($target)));
+            throw new InvalidArgumentException(sprintf('Target must be null unless it is a DateTime, "%s" given', get_debug_type($target)), context: $context);
         }
 
         if (TypeCheck::isObjectOfType($targetType, \DateTime::class)) {
@@ -74,7 +74,7 @@ final class DateTimeTransformer implements TransformerInterface
             return $source->format(\DateTimeInterface::ATOM);
         }
 
-        throw new InvalidArgumentException(sprintf('Target must be DateTime, DateTimeImmutable, or DatePoint, "%s" given', get_debug_type($targetType)));
+        throw new InvalidArgumentException(sprintf('Target must be DateTime, DateTimeImmutable, or DatePoint, "%s" given', get_debug_type($targetType)), context: $context);
     }
 
     public function getSupportedTransformation(): iterable

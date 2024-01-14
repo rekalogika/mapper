@@ -13,14 +13,21 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Exception;
 
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 class InvalidTypeInArgumentException extends InvalidArgumentException
 {
-    public function __construct(string $printfMessage, ?Type $expectedType)
-    {
-        parent::__construct(sprintf($printfMessage, TypeUtil::getDebugType($expectedType)));
+    public function __construct(
+        string $printfMessage,
+        ?Type $expectedType,
+        Context $context = null,
+    ) {
+        parent::__construct(
+            message: sprintf($printfMessage, TypeUtil::getDebugType($expectedType)),
+            context: $context,
+        );
     }
 }

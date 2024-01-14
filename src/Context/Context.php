@@ -29,6 +29,16 @@ final readonly class Context
     }
 
     /**
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
+    public function __invoke(string $class): object
+    {
+        return $this->get($class);
+    }
+
+    /**
      * @param array<int,object> $context
      * @return self
      */
@@ -54,11 +64,6 @@ final readonly class Context
     public function with(object $value): self
     {
         $class = get_class($value);
-
-        if (isset($this->context[$class])) {
-            throw new LogicException(sprintf('Object "%s" already in context.', $class));
-        }
-
         $context = $this->context;
         $context[$class] = $value;
 
@@ -83,6 +88,7 @@ final readonly class Context
      * @template T of object
      * @param class-string<T> $class
      * @return T
+     * @throws ContextMemberNotFoundException
      */
     public function get(string $class): object
     {

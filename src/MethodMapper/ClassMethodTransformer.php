@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\MethodMapper;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -44,7 +44,7 @@ final class ClassMethodTransformer implements
         // target type must not be null
 
         if ($targetType === null) {
-            throw new InvalidArgumentException('Target type must not be null.');
+            throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
         // prepare subMapper
@@ -59,7 +59,7 @@ final class ClassMethodTransformer implements
             !is_string($targetClass)
             || !\class_exists($targetClass)
         ) {
-            throw new InvalidArgumentException(sprintf('Target class "%s" is not a valid class.', (string) $targetClass));
+            throw new InvalidArgumentException(sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
         }
 
 
@@ -68,7 +68,7 @@ final class ClassMethodTransformer implements
             // map from object to self path
 
             if (!is_object($source)) {
-                throw new InvalidArgumentException(sprintf('Source must be object, "%s" given', get_debug_type($source)));
+                throw new InvalidArgumentException(sprintf('Source must be object, "%s" given', get_debug_type($source)), context: $context);
             }
 
             $result = $targetClass::mapFromObject($source, $subMapper, $context);
@@ -82,12 +82,8 @@ final class ClassMethodTransformer implements
 
             $result = $source->mapToObject($target, $subMapper, $context);
         } else {
-            throw new \LogicException('Should not reach here');
+            throw new LogicException('Should not reach here', context: $context);
         }
-
-        // get object cache
-
-        $objectCache = $context->get(ObjectCache::class);
 
         return $result;
     }

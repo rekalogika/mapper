@@ -15,4 +15,5 @@ namespace Rekalogika\Mapper\Exception;
 
 class UnexpectedValueException extends \UnexpectedValueException implements ExceptionInterface
 {
+    use ContextAwareExceptionTrait;
 }

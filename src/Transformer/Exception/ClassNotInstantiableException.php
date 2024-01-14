@@ -13,13 +13,18 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Exception;
 
+use Rekalogika\Mapper\Context\Context;
+
 class ClassNotInstantiableException extends NotMappableValueException
 {
     /**
      * @param class-string $class
      */
-    public function __construct(string $class)
+    public function __construct(string $class, Context $context = null)
     {
-        parent::__construct(sprintf('Trying to instantiate class "%s", but this class is not instantiable.', $class));
+        parent::__construct(
+            message: sprintf('Trying to instantiate class "%s", but this class is not instantiable.', $class),
+            context: $context
+        );
     }
 }

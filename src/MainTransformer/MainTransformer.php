@@ -17,6 +17,7 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
+use Rekalogika\Mapper\MainTransformer\Model\Path;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
@@ -71,7 +72,8 @@ class MainTransformer implements MainTransformerInterface
         mixed $source,
         mixed $target,
         array $targetTypes,
-        Context $context
+        Context $context,
+        string $path = null,
     ): mixed {
         // if targettype is not provided, guess it from target
         // if the target is also missing then the target is mixed
@@ -87,10 +89,25 @@ class MainTransformer implements MainTransformerInterface
         // get or create object cache
 
         try {
-            $objectCache = $context->get(ObjectCache::class);
+            $objectCache = $context(ObjectCache::class);
         } catch (ContextMemberNotFoundException) {
             $objectCache = $this->objectCacheFactory->createObjectCache();
             $context = $context->with($objectCache);
+        }
+
+        // initialize path it it doesn't exist
+
+        try {
+            $pathContext = $context(Path::class);
+        } catch (ContextMemberNotFoundException) {
+            $pathContext = Path::create();
+            $context = $context->with($pathContext);
+        }
+
+        // append path if provided
+
+        if ($path !== null) {
+            $context = $context->with($pathContext->append($path));
         }
 
         // gets simple target types from the provided target type

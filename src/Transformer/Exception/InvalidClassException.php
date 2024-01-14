@@ -13,14 +13,20 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Exception;
 
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 class InvalidClassException extends UnexpectedValueException
 {
-    public function __construct(Type $type)
-    {
-        parent::__construct(sprintf('Trying to map to class "%s", but this is not a valid class, interface, or enum.', TypeUtil::getDebugType($type)));
+    public function __construct(
+        Type $type,
+        Context $context,
+    ) {
+        parent::__construct(
+            message: sprintf('Trying to map to class "%s", but this is not a valid class, interface, or enum.', TypeUtil::getDebugType($type)),
+            context: $context,
+        );
     }
 }
