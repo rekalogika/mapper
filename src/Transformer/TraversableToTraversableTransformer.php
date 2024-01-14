@@ -156,7 +156,8 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
             $target = new TraversableCountableWrapper($target, count($source));
         }
 
-        $objectCache->saveTarget($source, $targetType, $target);
+        $context(ObjectCache::class)
+            ->saveTarget($source, $targetType, $target, $context);
 
         return $target;
     }

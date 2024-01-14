@@ -66,7 +66,8 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             $target = $this->instantiateArrayAccessOrArray($targetType, $context);
         }
 
-        $objectCache->saveTarget($source, $targetType, $target);
+        $context(ObjectCache::class)
+            ->saveTarget($source, $targetType, $target, $context);
 
         // Prepare variables for the output loop
 

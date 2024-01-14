@@ -147,9 +147,17 @@ class MainTransformer implements MainTransformerInterface
 
             if ($targetTypeForTransformer !== null) {
                 try {
-                    return $objectCache->getTarget($source, $targetTypeForTransformer);
+                    return $objectCache->getTarget(
+                        $source,
+                        $targetTypeForTransformer,
+                        $context
+                    );
                 } catch (CachedTargetObjectNotFoundException) {
-                    $objectCache->preCache($source, $targetTypeForTransformer);
+                    $objectCache->preCache(
+                        $source,
+                        $targetTypeForTransformer,
+                        $context
+                    );
                 }
             }
 
@@ -171,7 +179,13 @@ class MainTransformer implements MainTransformerInterface
             // if the target type is not null, cache it
 
             if ($targetTypeForTransformer !== null) {
-                $objectCache->saveTarget($source, $targetTypeForTransformer, $result, true);
+                $objectCache->saveTarget(
+                    $source,
+                    $targetTypeForTransformer,
+                    $result,
+                    $context,
+                    true,
+                );
             }
 
             return $result;

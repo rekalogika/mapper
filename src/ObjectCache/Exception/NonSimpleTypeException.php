@@ -13,14 +13,15 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\ObjectCache\Exception;
 
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 class NonSimpleTypeException extends UnexpectedValueException
 {
-    public function __construct(Type $type)
+    public function __construct(Type $type, ?Context $context = null)
     {
-        parent::__construct(sprintf('Expected a simple type, got non-simple type "%s".', TypeUtil::getDebugType($type)));
+        parent::__construct(sprintf('Expected a simple type, got non-simple type "%s".', TypeUtil::getDebugType($type)), context: $context);
     }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\ObjectCache;
 
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException;
@@ -46,10 +47,10 @@ final class ObjectCache
         return $source instanceof \DateTimeInterface;
     }
 
-    private function assertSimpleType(Type $type): void
+    private function assertSimpleType(Type $type, Context $context): void
     {
         if (!$this->typeResolver->isSimpleType($type)) {
-            throw new NonSimpleTypeException($type);
+            throw new NonSimpleTypeException($type, context: $context);
         }
     }
 
@@ -63,7 +64,7 @@ final class ObjectCache
      * @param Type $targetType
      * @return void
      */
-    public function preCache(mixed $source, Type $targetType): void
+    public function preCache(mixed $source, Type $targetType, Context $context): void
     {
         if (!is_object($source)) {
             return;
@@ -73,7 +74,7 @@ final class ObjectCache
             return;
         }
 
-        $this->assertSimpleType($targetType);
+        $this->assertSimpleType($targetType, $context);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
@@ -86,26 +87,26 @@ final class ObjectCache
         $this->preCache->offsetGet($source)->offsetSet($targetTypeString, true);
     }
 
-    private function isPreCached(mixed $source, Type $targetType): bool
+    private function isPreCached(mixed $source, Type $targetType, Context $context): bool
     {
         if (!is_object($source)) {
             return false;
         }
 
-        $this->assertSimpleType($targetType);
+        $this->assertSimpleType($targetType, $context);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         return isset($this->preCache[$source][$targetTypeString]);
     }
 
-    private function removePrecache(mixed $source, Type $targetType): void
+    private function removePrecache(mixed $source, Type $targetType, Context $context): void
     {
         if (!is_object($source)) {
             return;
         }
 
-        $this->assertSimpleType($targetType);
+        $this->assertSimpleType($targetType, $context);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
@@ -114,7 +115,7 @@ final class ObjectCache
         }
     }
 
-    public function containsTarget(mixed $source, Type $targetType): bool
+    public function containsTarget(mixed $source, Type $targetType, Context $context): bool
     {
         if (!is_object($source)) {
             return false;
@@ -124,28 +125,28 @@ final class ObjectCache
             return false;
         }
 
-        $this->assertSimpleType($targetType);
+        $this->assertSimpleType($targetType, $context);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         return isset($this->cache[$source][$targetTypeString]);
     }
 
-    public function getTarget(mixed $source, Type $targetType): mixed
+    public function getTarget(mixed $source, Type $targetType, Context $context): mixed
     {
-        if ($this->isPreCached($source, $targetType)) {
-            throw new CircularReferenceException($source, $targetType);
+        if ($this->isPreCached($source, $targetType, $context)) {
+            throw new CircularReferenceException($source, $targetType, context: $context);
         }
 
         if ($this->isBlacklisted($source)) {
-            throw new CachedTargetObjectNotFoundException();
+            throw new CachedTargetObjectNotFoundException(context: $context);
         }
 
         if (!is_object($source)) {
-            throw new CachedTargetObjectNotFoundException();
+            throw new CachedTargetObjectNotFoundException(context: $context);
         }
 
-        $this->assertSimpleType($targetType);
+        $this->assertSimpleType($targetType, $context);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
@@ -158,7 +159,8 @@ final class ObjectCache
         mixed $source,
         Type $targetType,
         mixed $target,
-        bool $addIfAlreadyExists = false
+        Context $context,
+        bool $addIfAlreadyExists = false,
     ): void {
         if (!is_object($source) || !is_object($target)) {
             return;
@@ -170,7 +172,10 @@ final class ObjectCache
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
-        if ($addIfAlreadyExists === false && $this->containsTarget($source, $targetType)) {
+        if (
+            $addIfAlreadyExists === false
+            && $this->containsTarget($source, $targetType, $context)
+        ) {
             throw new LogicException(sprintf(
                 'Target object for source object "%s" and target type "%s" already exists',
                 get_class($source),
@@ -185,6 +190,6 @@ final class ObjectCache
         }
 
         $this->cache->offsetGet($source)->offsetSet($targetTypeString, $target);
-        $this->removePrecache($source, $targetType);
+        $this->removePrecache($source, $targetType, $context);
     }
 }
