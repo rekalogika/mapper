@@ -51,8 +51,14 @@ final class CachingMappingFactory implements
             return $this->warmUpAndGetMapping();
         }
 
-        /** @psalm-suppress UnresolvableInclude */
-        $result = require $this->getCacheFilePath();
+        try {
+            /** @psalm-suppress UnresolvableInclude */
+            $result = require $this->getCacheFilePath();
+        } catch (\Throwable) {
+            unlink($this->getCacheFilePath());
+
+            return $this->warmUpAndGetMapping();
+        }
 
         if (!$result instanceof Mapping) {
             unlink($this->getCacheFilePath());
