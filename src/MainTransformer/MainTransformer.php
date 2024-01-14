@@ -24,6 +24,7 @@ use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\Transformer\Exception\RefuseToHandleException;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -163,20 +164,23 @@ class MainTransformer implements MainTransformerInterface
 
             // transform the source to the target
 
-            /** @var mixed */
-            $result = $transformer->transform(
-                source: $source,
-                target: $target,
-                sourceType: $sourceTypeForTransformer,
-                targetType: $targetTypeForTransformer,
-                context: $context
-            );
+            try {
+                /** @var mixed */
+                $result = $transformer->transform(
+                    source: $source,
+                    target: $target,
+                    sourceType: $sourceTypeForTransformer,
+                    targetType: $targetTypeForTransformer,
+                    context: $context
+                );
+            } catch (RefuseToHandleException) {
+                continue;
+            }
 
             // check the result type
 
             if (
                 !TypeCheck::isVariableInstanceOf($result, $targetType)
-                && $result !== null
             ) {
                 throw new TransformerReturnsUnexpectedValueException($source, $targetType, $result, $transformer, $context);
             }
