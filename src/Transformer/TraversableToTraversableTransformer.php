@@ -41,9 +41,6 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         if ($targetType === null) {
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
-        // get object cache
-
-        $objectCache = $context->get(ObjectCache::class);
 
         // The source must be a Traversable or an array (a.k.a. iterable).
 

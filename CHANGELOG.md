@@ -11,6 +11,7 @@
 * feat: More useful `TransformerReturnsUnexpectedValueException` exception message.
 * feat: If a transformer throws `RefuseToHandleException`, the `MainTransformer`
   will try the next suitable transformer.
+* style: Remove unused vars.
 
 ## 0.5.8
 
