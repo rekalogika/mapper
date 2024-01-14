@@ -95,10 +95,10 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                         // if target has int key type but the source has string key type,
                         // we discard the source key & use null (i.e. $target[] = $value)
 
-                        $targetPropertyKey = null;
+                        $targetMemberKey = null;
                         $path = sprintf('[%d]', $i);
                     } else {
-                        $targetPropertyKey = $sourcePropertyKey;
+                        $targetMemberKey = $sourcePropertyKey;
                         $path = sprintf('[%s]', $sourcePropertyKey);
                     }
                 } else {
@@ -115,17 +115,17 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                     // the target
 
                     /** @var mixed */
-                    $targetPropertyKey = $this->getMainTransformer()->transform(
+                    $targetMemberKey = $this->getMainTransformer()->transform(
                         source: $sourcePropertyKey,
                         target: null,
                         targetTypes: $targetMemberKeyType,
                         context: $context,
                     );
 
-                    if ($targetPropertyKey instanceof \Stringable) {
-                        $path = sprintf('[%s]', $targetPropertyKey);
+                    if ($targetMemberKey instanceof \Stringable) {
+                        $path = sprintf('[%s]', $targetMemberKey);
                     } else {
-                        $path = sprintf('[%s]', get_debug_type($targetPropertyKey));
+                        $path = sprintf('[%s]', get_debug_type($targetMemberKey));
                     }
                 }
 
@@ -133,7 +133,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                 // member value
 
                 /** @var mixed */
-                $targetPropertyValue = $this->getMainTransformer()->transform(
+                $targetMemberValue = $this->getMainTransformer()->transform(
                     source: $sourcePropertyValue,
                     target: null,
                     targetTypes: $targetMemberValueType,
@@ -141,7 +141,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
                     path: $path,
                 );
 
-                yield $targetPropertyKey => $targetPropertyValue;
+                yield $targetMemberKey => $targetMemberValue;
 
                 $i++;
             }
