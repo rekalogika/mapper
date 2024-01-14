@@ -24,7 +24,7 @@ class TransformerReturnsUnexpectedValueException extends UnexpectedValueExceptio
     public function __construct(Type|MixedType $type, mixed $target, Context $context)
     {
         $message = sprintf(
-            'Mapper returns unexpected value. Expected type "%s", but got "%s"',
+            'Mapper returns unexpected value. Expected type "%s", but got "%s".',
             TypeUtil::getTypeString($type),
             get_debug_type($target),
         );

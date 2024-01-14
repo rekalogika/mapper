@@ -29,7 +29,7 @@ class SourceClassNotInInheritanceMapException extends NotMappableValueException
     ) {
         parent::__construct(
             message: sprintf(
-                'Trying to map to a class with an inheritance map, but source class "%s" is not found in the "%s" attribute of the target class "%s"',
+                'Trying to map to a class with an inheritance map, but source class "%s" is not found in the "%s" attribute of the target class "%s".',
                 $sourceClass,
                 InheritanceMap::class,
                 $targetClass

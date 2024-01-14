@@ -25,7 +25,7 @@ class CircularReferenceException extends RuntimeException implements ExceptionIn
     {
         parent::__construct(
             sprintf(
-                'Circular reference detected when trying to get the object of type "%s" transformed to "%s"',
+                'Circular reference detected when trying to get the object of type "%s" transformed to "%s".',
                 \get_debug_type($source),
                 TypeUtil::getDebugType($targetType)
             ),
