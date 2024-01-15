@@ -1,10 +1,15 @@
 # CHANGELOG
 
+## 0.5.11
+
+* feat: Make the fourth argument optional in `TryPropertyCommand`.
+
 ## 0.5.10
 
 * fix: `NullTransformer` bug.
 * fix(`CachingMappingFactory`): Cache result in memory.
 * fix(`CachingMappingFactory`): Skip the cache if in debug mode.
+* fix(`TransformerRegistry`): Non-object target type is always invariant.
 
 ## 0.5.9
 

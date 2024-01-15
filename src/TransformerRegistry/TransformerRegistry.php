@@ -62,7 +62,7 @@ class TransformerRegistry implements TransformerRegistryInterface
                 );
 
                 foreach ($mapping as $mappingEntry) {
-                    if ($mappingEntry->isVariantTargetType()) {
+                    if ($mappingEntry->isVariantTargetType() || !TypeCheck::isObject($targetType)) {
                         $mappingEntries[] = [
                             $sourceType,
                             $targetType,
