@@ -3,6 +3,7 @@
 ## 0.5.12
 
 * test: Reorganize test namespaces.
+* fix: Fix path forming.
 
 ## 0.5.11
 
