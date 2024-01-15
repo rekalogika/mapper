@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use ArrayObject;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
@@ -243,5 +244,28 @@ class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
         $this->assertArrayHasKey(0, $result->property);
         $this->assertArrayHasKey(1, $result->property);
         $this->assertArrayHasKey(2, $result->property);
+    }
+
+    //
+    // target existing object
+    //
+
+    public function testTraversableToExistingArrayAccessDto(): void
+    {
+        $source = new ObjectWithTraversableProperties();
+        $target = new ObjectWithArrayAccessPropertyDto();
+
+        /** @var \ArrayObject<int,ObjectWithScalarPropertiesDto> */
+        $arrayObject = new \ArrayObject();
+        $target->property = $arrayObject;
+
+        $result = $this->mapper->map($source, $target);
+
+        $this->assertInstanceOf(ObjectWithArrayAccessPropertyDto::class, $result);
+        $this->assertInstanceOf(\ArrayAccess::class, $result->property);
+        $this->assertEquals(1, $result->property[1]?->a);
+        $this->assertEquals("string", $result->property[1]?->b);
+        $this->assertEquals(true, $result->property[1]?->c);
+        $this->assertEquals(1.1, $result->property[1]?->d);
     }
 }

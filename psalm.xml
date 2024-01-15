@@ -31,5 +31,10 @@
                 <file name="src/Transformer/TraversableToArrayAccessTransformer.php" />
             </errorLevel>
         </MixedAssignment>
+        <PossiblyInvalidArgument>
+            <errorLevel type="suppress">
+                <file name="tests/IntegrationTest/MappingTest.php" />
+            </errorLevel>
+        </PossiblyInvalidArgument>
     </issueHandlers>
 </psalm>
