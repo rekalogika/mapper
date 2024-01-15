@@ -35,33 +35,57 @@ class TypeCheck
             || enum_exists($class);
     }
 
-    public static function isInt(?Type $type): bool
+    public static function isInt(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_INT;
     }
 
-    public static function isFloat(?Type $type): bool
+    public static function isFloat(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_FLOAT;
     }
 
-    public static function isString(?Type $type): bool
+    public static function isString(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_STRING;
     }
 
-    public static function isBool(?Type $type): bool
+    public static function isBool(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_BOOL;
     }
 
-    public static function isArray(?Type $type): bool
+    public static function isArray(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_ARRAY;
     }
 
-    public static function isObject(?Type $type): bool
+    public static function isObject(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         if ($type === null) {
             return false;
         }
@@ -107,8 +131,12 @@ class TypeCheck
         return false;
     }
 
-    public static function isEnum(?Type $type): bool
+    public static function isEnum(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         if ($type === null) {
             return false;
         }
@@ -120,8 +148,12 @@ class TypeCheck
             && enum_exists($class);
     }
 
-    public static function isBackedEnum(?Type $type): bool
+    public static function isBackedEnum(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         if ($type === null) {
             return false;
         }
@@ -134,26 +166,42 @@ class TypeCheck
             && is_a($class, \BackedEnum::class, true);
     }
 
-    public static function isResource(?Type $type): bool
+    public static function isResource(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_RESOURCE;
     }
 
-    public static function isNull(?Type $type): bool
+    public static function isNull(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_NULL;
     }
 
-    public static function isScalar(?Type $type): bool
+    public static function isScalar(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return self::isInt($type)
             || self::isFloat($type)
             || self::isString($type)
             || self::isBool($type);
     }
 
-    public static function isIterable(?Type $type): bool
+    public static function isIterable(null|Type|MixedType $type): bool
     {
+        if ($type instanceof MixedType) {
+            return false;
+        }
+
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_ITERABLE;
     }
 

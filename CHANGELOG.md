@@ -6,6 +6,7 @@
 * fix(`TransformerRegistry`): Non-object target type is always invariant.
 * dx(`SearchResult`): Now an `ArrayAccess`.
 * feat(`TryPropertyCommand`): Improve output.
+* dx(`TypeCheck`): Now accept `MixedType` as an argument.
 
 ## 0.5.10
 
