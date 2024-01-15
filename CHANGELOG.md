@@ -7,6 +7,7 @@
 * dx(`SearchResult`): Now an `ArrayAccess`.
 * feat(`TryPropertyCommand`): Improve output.
 * dx(`TypeCheck`): Now accept `MixedType` as an argument.
+* test: Mapping test first version.
 
 ## 0.5.10
 
