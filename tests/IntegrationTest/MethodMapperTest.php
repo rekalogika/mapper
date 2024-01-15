@@ -20,7 +20,7 @@ use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithArrayPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithCollectionProperty;
 use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarPropertiesDto;
-use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 class MethodMapperTest extends AbstractIntegrationTest
 {

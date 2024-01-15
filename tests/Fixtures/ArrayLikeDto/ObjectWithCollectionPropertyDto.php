@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto;
 
 use Doctrine\Common\Collections\Collection;
-use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 class ObjectWithCollectionPropertyDto
 {

@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MethodMapper;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
 use Rekalogika\Mapper\MethodMapper\SubMapperInterface;
-use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
 {

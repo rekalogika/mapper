@@ -11,12 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\Scalar;
+namespace Rekalogika\Mapper\Tests\Fixtures\ScalarDto;
 
-class ObjectWithFloatPropertiesDto
+class ObjectWithIntPropertiesDto
 {
-    public ?float $a = null;
-    public ?float $b = null;
-    public ?float $c = null;
-    public ?float $d = null;
+    public ?int $a = null;
+    public ?int $b = null;
+    public ?int $c = null;
+    public ?int $d = null;
 }

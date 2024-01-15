@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use ArrayObject;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
@@ -26,7 +25,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDtoWith
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithoutTypeHintDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
-use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
 {

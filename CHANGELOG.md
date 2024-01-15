@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.12
+
+* test: Reorganize test namespaces.
+
 ## 0.5.11
 
 * feat: Make the fourth argument optional in `TryPropertyCommand`.

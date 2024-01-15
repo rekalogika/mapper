@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectImplementingStringable;
@@ -25,12 +27,10 @@ use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
+use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\Type;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 
 class MappingTest extends AbstractIntegrationTest
 {

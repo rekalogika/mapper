@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Brick\Money\Money;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyDto;
-use Rekalogika\Mapper\Tests\Fixtures\Transformer\MoneyToMoneyDtoTransformer;
+use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyToMoneyDtoTransformer;
 
 class CustomTransformerTest extends AbstractIntegrationTest
 {

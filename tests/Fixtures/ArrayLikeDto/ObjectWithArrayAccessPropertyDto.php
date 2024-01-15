@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto;
 
-use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 class ObjectWithArrayAccessPropertyDto
 {

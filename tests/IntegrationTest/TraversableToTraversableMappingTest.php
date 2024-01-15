@@ -19,7 +19,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionP
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionWithPresetCountableProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithTraversablePropertyDto;
-use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
 
 class TraversableToTraversableMappingTest extends AbstractIntegrationTest
