@@ -13,6 +13,7 @@
 * fix(`MainTransformer`): Fix possible bug involving an existing target.
 * fix(`MainTransformer`): Make sure the target has the same type as the target
   type.
+* feat(`TraversableToArrayAccessTransformer`): Now supports `ArrayCollection` & `ArrayIterator`.
 
 ## 0.5.10
 
