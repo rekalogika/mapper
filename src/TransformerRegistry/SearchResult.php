@@ -15,15 +15,45 @@ namespace Rekalogika\Mapper\TransformerRegistry;
 
 /**
  * @implements \IteratorAggregate<int,SearchResultEntry>
+ * @implements \ArrayAccess<int,SearchResultEntry>
  */
-class SearchResult implements \IteratorAggregate
+class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
 {
     /**
-     * @param iterable<int,SearchResultEntry> $entries
+     * @param array<int,SearchResultEntry> $entries
      */
     public function __construct(
-        private iterable $entries
+        private array $entries
     ) {
+    }
+
+    public function count(): int
+    {
+        return count($this->entries);
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->entries[$offset]);
+    }
+
+    public function offsetGet(mixed $offset): mixed
+    {
+        return $this->entries[$offset];
+    }
+
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        if ($offset === null) {
+            $this->entries[] = $value;
+        } else {
+            $this->entries[$offset] = $value;
+        }
+    }
+
+    public function offsetUnset(mixed $offset): void
+    {
+        unset($this->entries[$offset]);
     }
 
     public function getIterator(): \Traversable

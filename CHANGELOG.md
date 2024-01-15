@@ -10,7 +10,7 @@
 * fix(`CachingMappingFactory`): Cache result in memory.
 * fix(`CachingMappingFactory`): Skip the cache if in debug mode.
 * fix(`TransformerRegistry`): Non-object target type is always invariant.
-
+* dx(`SearchResult`): Now an `ArrayAccess`.
 ## 0.5.9
 
 * fix: Service definition for `TryPropertyCommand`.
