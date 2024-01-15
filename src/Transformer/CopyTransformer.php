@@ -30,6 +30,10 @@ final class CopyTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context
     ): mixed {
+        if ($targetType !== null && !TypeCheck::isVariableInstanceOf($source, $targetType)) {
+            throw new RefuseToTransformException();
+        }
+
         if (!is_object($source)) {
             return $source;
         }
@@ -41,10 +45,6 @@ final class CopyTransformer implements TransformerInterface
         }
 
         $result = clone $source;
-
-        if ($targetType !== null && !TypeCheck::isVariableInstanceOf($result, $targetType)) {
-            throw new RefuseToTransformException();
-        }
 
         return $result;
     }

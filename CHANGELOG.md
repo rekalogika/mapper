@@ -9,6 +9,7 @@
 * dx(`TypeCheck`): Now accept `MixedType` as an argument.
 * test: Mapping test first version.
 * refactor: rename `RefuseToHandleException` to `RefuseToTransformException`.
+* perf(`CopyTransformer`): Move identity check to the beginning.
 
 ## 0.5.10
 
