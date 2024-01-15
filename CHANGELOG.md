@@ -10,6 +10,7 @@
 * test: Mapping test first version.
 * refactor: rename `RefuseToHandleException` to `RefuseToTransformException`.
 * perf(`CopyTransformer`): Move identity check to the beginning.
+* fix(`MainTransformer`): Fix possible bug involving an existing target.
 
 ## 0.5.10
 

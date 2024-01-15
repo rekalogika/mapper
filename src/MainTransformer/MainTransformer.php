@@ -76,13 +76,16 @@ class MainTransformer implements MainTransformerInterface
         Context $context,
         string $path = null,
     ): mixed {
-        // if targettype is not provided, guess it from target
-        // if the target is also missing then the target is mixed
+        // if target is provided, guess the type from it.
+        // if target is not provided, use the provided target type. if it is
+        // also not provided, then the target type is mixed.
 
-        if (count($targetTypes) === 0) {
-            if ($target === null) {
+        if ($target === null) {
+            if (count($targetTypes) === 0) {
                 $targetTypes = [MixedType::instance()];
-            } else {
+            }
+        } else {
+            if (count($targetTypes) === 0) {
                 $targetTypes = [$this->typeResolver->guessTypeFromVariable($target)];
             }
         }
