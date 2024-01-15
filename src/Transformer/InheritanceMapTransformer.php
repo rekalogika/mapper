@@ -21,7 +21,8 @@ use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
-use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
+use Rekalogika\Mapper\Transformer\Exception\ClassNotInInheritanceMapException;
+use Rekalogika\Mapper\Util\AttributeUtil;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -54,9 +55,23 @@ final class InheritanceMapTransformer implements
             throw new InvalidArgumentException('Target type must be specified.', context: $context);
         }
 
-        # target must be an interface or class
+        # source and target must be an interface or class
 
+        $sourceClass = $targetType->getClassName();
         $targetClass = $targetType->getClassName();
+
+        if (
+            $sourceClass === null
+            || (
+                !\class_exists($sourceClass)
+                && !\interface_exists($sourceClass)
+            )
+        ) {
+            throw new InvalidArgumentException(
+                \sprintf('Source class "%s" does not exist.', $sourceClass ?? 'null'),
+                context: $context
+            );
+        }
 
         if (
             $targetClass === null
@@ -73,25 +88,29 @@ final class InheritanceMapTransformer implements
 
         # gets the inheritance map
 
-        $attributes = (new \ReflectionClass($targetClass))
-            ->getAttributes(InheritanceMap::class);
+        $inheritanceMap = $this->getMapFromTargetClass($targetClass);
 
-        if (\count($attributes) === 0) {
-            throw new InvalidArgumentException(
-                \sprintf('Target class "%s" must have inheritance map.', $targetClass),
-                context: $context
-            );
+
+        if ($inheritanceMap === null) {
+            $inheritanceMap = $this->getMapFromSourceClass($sourceClass);
+
+            if ($inheritanceMap === null) {
+                throw new InvalidArgumentException(
+                    \sprintf('Either source class "%s" or target class "%s" must have inheritance map.', $sourceClass, $targetClass),
+                    context: $context
+                );
+            }
+
+            $inheritanceMap = \array_flip($inheritanceMap);
         }
-
-        $inheritanceMap = $attributes[0]->newInstance();
 
         # gets the target class from the inheritance map
 
         $sourceClass = \get_class($source);
-        $targetClassInMap = $inheritanceMap->getTargetClassFromSourceClass($sourceClass);
+        $targetClassInMap = $inheritanceMap[$sourceClass] ?? null;
 
         if ($targetClassInMap === null) {
-            throw new SourceClassNotInInheritanceMapException($sourceClass, $targetClass);
+            throw new ClassNotInInheritanceMapException($sourceClass, $targetClass);
         }
 
         # pass the transformation back to the main transformer
@@ -117,11 +136,61 @@ final class InheritanceMapTransformer implements
         return $result;
     }
 
+    /**
+     * @param class-string $class
+     * @return null|array<class-string,class-string>
+     */
+    private function getMapFromTargetClass(string $class): array|null
+    {
+        $attributes = AttributeUtil::getAttributes(new \ReflectionClass($class));
+
+        foreach ($attributes as $attribute) {
+            if ($attribute->getName() !== InheritanceMap::class) {
+                continue;
+            }
+
+            /** @var InheritanceMap $inheritanceMap */
+            $inheritanceMap = $attribute->newInstance();
+
+            return $inheritanceMap->getMap();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param class-string $class
+     * @return null|array<class-string,class-string>
+     */
+    private function getMapFromSourceClass(string $class): array|null
+    {
+        $attributes = AttributeUtil::getAttributesIncludingParents(new \ReflectionClass($class));
+
+        foreach ($attributes as $attribute) {
+            if ($attribute->getName() !== InheritanceMap::class) {
+                continue;
+            }
+
+            /** @var InheritanceMap $inheritanceMap */
+            $inheritanceMap = $attribute->newInstance();
+
+            return array_flip($inheritanceMap->getMap());
+        }
+
+        return null;
+    }
+
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(
             TypeFactory::object(),
             TypeFactory::objectOfClass(InheritanceMap::class),
+            true
+        );
+
+        yield new TypeMapping(
+            TypeFactory::objectOfClass(InheritanceMap::class),
+            TypeFactory::object(),
             true
         );
     }

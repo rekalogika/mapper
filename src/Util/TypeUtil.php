@@ -376,17 +376,14 @@ class TypeUtil
             return [];
         }
 
-        $attributes = (new \ReflectionClass($class))
-            ->getAttributes(
-                MapperAttributeInterface::class,
-                \ReflectionAttribute::IS_INSTANCEOF
-            );
+        $reflectionClass = new \ReflectionClass($class);
+        $attributes = AttributeUtil::getAttributesIncludingParents($reflectionClass);
 
-        $attributeTypes = [];
-
-        foreach ($attributes as $attribute) {
-            $attributeTypes[] = TypeFactory::objectOfClass($attribute->getName());
-        }
+        $attributeTypes = array_map(
+            fn (\ReflectionAttribute $attribute)
+            => TypeFactory::objectOfClass($attribute->getName()),
+            $attributes
+        );
 
         return $attributeTypes;
     }

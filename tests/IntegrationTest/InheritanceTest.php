@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Fixtures\Inheritance\AbstractClass;
 use Rekalogika\Mapper\Tests\Fixtures\Inheritance\ConcreteClassA;
 use Rekalogika\Mapper\Tests\Fixtures\Inheritance\ConcreteClassC;
 use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\AbstractClassDto;
@@ -22,9 +23,9 @@ use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\ConcreteClassADto;
 use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\ImplementationADto;
 use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\InterfaceDto;
 use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\InterfaceWithoutMapDto;
+use Rekalogika\Mapper\Transformer\Exception\ClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
-use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 
 class InheritanceTest extends AbstractIntegrationTest
 {
@@ -36,6 +37,13 @@ class InheritanceTest extends AbstractIntegrationTest
         /** @var ConcreteClassADto $result */
 
         $this->assertInstanceOf(ConcreteClassADto::class, $result);
+        $this->assertSame('propertyInA', $result->propertyInA);
+        $this->assertSame('propertyInParent', $result->propertyInParent);
+
+        // map back
+
+        $result = $this->mapper->map($result, AbstractClass::class);
+        $this->assertInstanceOf(ConcreteClassA::class, $result);
         $this->assertSame('propertyInA', $result->propertyInA);
         $this->assertSame('propertyInParent', $result->propertyInParent);
     }
@@ -50,7 +58,7 @@ class InheritanceTest extends AbstractIntegrationTest
     public function testMapToAbstractClassWithMissingSourceClassInMap(): void
     {
         $concreteClassC = new ConcreteClassC();
-        $this->expectException(SourceClassNotInInheritanceMapException::class);
+        $this->expectException(ClassNotInInheritanceMapException::class);
         $result = $this->mapper->map($concreteClassC, AbstractClassDto::class);
     }
 
@@ -75,7 +83,7 @@ class InheritanceTest extends AbstractIntegrationTest
     public function testMapToInterfaceWithMissingSourceClassInMap(): void
     {
         $concreteClassC = new ConcreteClassC();
-        $this->expectException(SourceClassNotInInheritanceMapException::class);
+        $this->expectException(ClassNotInInheritanceMapException::class);
         $result = $this->mapper->map($concreteClassC, InterfaceDto::class);
     }
 }

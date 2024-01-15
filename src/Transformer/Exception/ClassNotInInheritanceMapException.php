@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Exception;
 
-use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Context\Context;
 
-class SourceClassNotInInheritanceMapException extends NotMappableValueException
+class ClassNotInInheritanceMapException extends NotMappableValueException
 {
     /**
      * @param class-string $sourceClass
@@ -29,9 +28,9 @@ class SourceClassNotInInheritanceMapException extends NotMappableValueException
     ) {
         parent::__construct(
             message: sprintf(
-                'Trying to map to a class with an inheritance map, but source class "%s" is not found in the "%s" attribute of the target class "%s".',
+                'Trying to map source class "%s" to target class "%s" using an inheritance map, but the target class "%s" is missing from the inheritance map.',
                 $sourceClass,
-                InheritanceMap::class,
+                $targetClass,
                 $targetClass
             ),
             context: $context,

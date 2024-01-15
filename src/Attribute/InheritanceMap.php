@@ -31,13 +31,4 @@ final readonly class InheritanceMap implements MapperAttributeInterface
     {
         return $this->map;
     }
-
-    /**
-     * @param class-string $sourceClass
-     * @return class-string|null
-     */
-    public function getTargetClassFromSourceClass(string $sourceClass): ?string
-    {
-        return $this->map[$sourceClass] ?? null;
-    }
 }
