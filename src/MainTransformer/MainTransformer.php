@@ -134,6 +134,17 @@ class MainTransformer implements MainTransformerInterface
         // loop over the result and transform the source to the target
 
         foreach ($searchResult as $searchEntry) {
+            // if the target exists, we make sure it is of the same type as
+            // the target type of the search entry
+
+            if ($target !== null) {
+                if (
+                    !TypeCheck::isVariableInstanceOf($target, $searchEntry->getTargetType())
+                ) {
+                    continue;
+                }
+            }
+
             // inject the main transformer to the transformer if it is
             // MainTransformerAwareInterface
             $transformer = $this->processTransformer($searchEntry->getTransformer());

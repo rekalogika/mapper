@@ -11,6 +11,8 @@
 * refactor: rename `RefuseToHandleException` to `RefuseToTransformException`.
 * perf(`CopyTransformer`): Move identity check to the beginning.
 * fix(`MainTransformer`): Fix possible bug involving an existing target.
+* fix(`MainTransformer`): Make sure the target has the same type as the target
+  type.
 
 ## 0.5.10
 
