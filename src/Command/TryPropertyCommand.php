@@ -42,7 +42,7 @@ class TryPropertyCommand extends Command
             ->addArgument('sourceClass', InputArgument::REQUIRED, 'The source class')
             ->addArgument('sourceProperty', InputArgument::REQUIRED, 'The source property')
             ->addArgument('targetClass', InputArgument::REQUIRED, 'The target class')
-            ->addArgument('targetProperty', InputArgument::REQUIRED, 'The target property')
+            ->addArgument('targetProperty', InputArgument::OPTIONAL, 'The target property, if omitted, it will be the same as the source property')
             ->setHelp("The <info>%command.name%</info> displays the mapping result by providing the class and property name of the source and target.");
     }
 
@@ -62,7 +62,7 @@ class TryPropertyCommand extends Command
         /** @var string */
         $targetClass = $input->getArgument('targetClass');
         /** @var string */
-        $targetProperty = $input->getArgument('targetProperty');
+        $targetProperty = $input->getArgument('targetProperty') ?? $sourceProperty;
 
         $sourceTypes = $this->propertyInfoExtractor
             ->getTypes($sourceClass, $sourceProperty);
@@ -78,6 +78,29 @@ class TryPropertyCommand extends Command
             $targetTypes = [MixedType::instance()];
         }
 
+        $rows[] = [
+            'Source Type',
+            implode('|', array_map(
+                fn ($type) => $this->typeResolver->getTypeString($type),
+                $sourceTypes,
+            )),
+        ];
+
+        $rows[] = [
+            'Target Type',
+            implode('|', array_map(
+                fn ($type) => $this->typeResolver->getTypeString($type),
+                $targetTypes,
+            )),
+        ];
+
+        $table = new Table($output);
+        $table->setHeaders(['Item', 'Value']);
+        $table->setStyle('box');
+        $table->setRows($rows);
+        $table->render();
+
+        $rows = [];
 
         $results = $this->transformerRegistry
             ->findBySourceAndTargetTypes($sourceTypes, $targetTypes);
