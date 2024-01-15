@@ -24,7 +24,7 @@ use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
-use Rekalogika\Mapper\Transformer\Exception\RefuseToHandleException;
+use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -173,7 +173,7 @@ class MainTransformer implements MainTransformerInterface
                     targetType: $targetTypeForTransformer,
                     context: $context
                 );
-            } catch (RefuseToHandleException) {
+            } catch (RefuseToTransformException) {
                 continue;
             }
 

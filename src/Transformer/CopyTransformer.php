@@ -17,7 +17,7 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
-use Rekalogika\Mapper\Transformer\Exception\RefuseToHandleException;
+use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -43,7 +43,7 @@ final class CopyTransformer implements TransformerInterface
         $result = clone $source;
 
         if ($targetType !== null && !TypeCheck::isVariableInstanceOf($result, $targetType)) {
-            throw new RefuseToHandleException();
+            throw new RefuseToTransformException();
         }
 
         return $result;

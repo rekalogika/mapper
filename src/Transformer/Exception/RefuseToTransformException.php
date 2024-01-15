@@ -20,6 +20,6 @@ use Rekalogika\Mapper\Exception\RuntimeException;
  * able to handle the given source type in an ad-hoc basis. The main transformer
  * will try the next transformer for the task.
  */
-class RefuseToHandleException extends RuntimeException
+class RefuseToTransformException extends RuntimeException
 {
 }

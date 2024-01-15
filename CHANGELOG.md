@@ -8,6 +8,7 @@
 * feat(`TryPropertyCommand`): Improve output.
 * dx(`TypeCheck`): Now accept `MixedType` as an argument.
 * test: Mapping test first version.
+* refactor: rename `RefuseToHandleException` to `RefuseToTransformException`.
 
 ## 0.5.10
 
