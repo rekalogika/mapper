@@ -19,6 +19,8 @@
   type.
 * feat(`TraversableToArrayAccessTransformer`): Now supports `ArrayCollection` & `ArrayIterator`.
 * test: Assorted tests.
+* fix: Remove iterating object key because not supported in PHP.
+* test: Assorted tests.
 
 ## 0.5.10
 

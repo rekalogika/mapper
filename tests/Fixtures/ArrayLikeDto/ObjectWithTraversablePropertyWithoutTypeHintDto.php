@@ -13,13 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto;
 
-class ObjectWithArrayAccessPropertyWithoutTypeHintDto
+class ObjectWithTraversablePropertyWithoutTypeHintDto
 {
     // @phpstan-ignore-next-line
-    public \ArrayAccess $property;
-
-    public function __construct()
-    {
-        $this->property = new \ArrayObject();
-    }
+    public ?\Traversable $property = null;
 }

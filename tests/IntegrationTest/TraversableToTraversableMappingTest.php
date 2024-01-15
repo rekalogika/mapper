@@ -19,6 +19,8 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionP
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionWithPresetCountableProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithTraversablePropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithTraversablePropertyWithoutTypeHintDto;
+use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
 
@@ -96,5 +98,27 @@ class TraversableToTraversableMappingTest extends AbstractIntegrationTest
 
         $this->expectException(\LogicException::class);
         foreach ($result->property as $item);
+    }
+
+    //
+    // without type hint
+    //
+
+    public function testArrayToTraversableWithoutTypehint(): void
+    {
+        $source = new ObjectWithArrayProperty();
+        $result = $this->mapper->map($source, ObjectWithTraversablePropertyWithoutTypeHintDto::class);
+
+        $this->assertInstanceOf(\Traversable::class, $result->property);
+        $this->assertInstanceOf(\Countable::class, $result->property);
+
+        foreach ($result->property as $item) {
+            $this->assertInstanceOf(ObjectWithScalarProperties::class, $item);
+
+            $this->assertEquals(1, $item->a);
+            $this->assertEquals("string", $item->b);
+            $this->assertEquals(true, $item->c);
+            $this->assertEquals(1.1, $item->d);
+        }
     }
 }

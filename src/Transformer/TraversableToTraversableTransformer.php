@@ -20,8 +20,6 @@ use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
-use Rekalogika\Mapper\Transformer\Exception\MissingMemberKeyTypeException;
-use Rekalogika\Mapper\Transformer\Exception\MissingMemberValueTypeException;
 use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -57,28 +55,16 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         // We can't work if the target type doesn't contain the information
         // about the type of its member objects
 
-        $targetMemberValueType = $targetType->getCollectionValueTypes();
-
-        if (count($targetMemberValueType) === 0) {
-            throw new MissingMemberValueTypeException($sourceType, $targetType, context: $context);
-        }
-
-        // Prepare variables for the output loop
-
         $targetMemberKeyType = $targetType->getCollectionKeyTypes();
-        $targetMemberKeyTypeIsMissing = count($targetMemberKeyType) === 0;
         $targetMemberKeyTypeIsInt = count($targetMemberKeyType) === 1
             && TypeCheck::isInt($targetMemberKeyType[0]);
+        $targetMemberValueType = $targetType->getCollectionValueTypes();
 
         // create generator
 
         $target = (function () use (
             $source,
             $targetMemberKeyTypeIsInt,
-            $targetMemberKeyTypeIsMissing,
-            $sourceType,
-            $targetType,
-            $targetMemberKeyType,
             $targetMemberValueType,
             $context
         ): \Traversable {
@@ -86,47 +72,15 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
             /** @var mixed $sourcePropertyValue */
             foreach ($source as $sourcePropertyKey => $sourcePropertyValue) {
-                /** @var mixed $sourcePropertyKey */
+                // if target has int key type but the source has string key type,
+                // we discard the source key & use null (i.e. $target[] = $value)
 
-                if (is_string($sourcePropertyKey) || is_int($sourcePropertyKey)) {
-                    // if the key is a simple type: int|string
-
-                    if ($targetMemberKeyTypeIsInt && is_string($sourcePropertyKey)) {
-                        // if target has int key type but the source has string key type,
-                        // we discard the source key & use null (i.e. $target[] = $value)
-
-                        $targetMemberKey = null;
-                        $path = sprintf('[%d]', $i);
-                    } else {
-                        $targetMemberKey = $sourcePropertyKey;
-                        $path = sprintf('[%s]', $sourcePropertyKey);
-                    }
+                if ($targetMemberKeyTypeIsInt && is_string($sourcePropertyKey)) {
+                    $targetMemberKey = null;
+                    $path = sprintf('[%d]', $i);
                 } else {
-                    // If the type of the key is a complex type (not int or string).
-                    // i.e. an ArrayObject can have an object as its key.
-
-                    // Refuse to continue if the target key type is not provided
-
-                    if ($targetMemberKeyTypeIsMissing) {
-                        throw new MissingMemberKeyTypeException($sourceType, $targetType, context: $context);
-                    }
-
-                    // If provided, we transform the source key to the key type of
-                    // the target
-
-                    /** @var mixed */
-                    $targetMemberKey = $this->getMainTransformer()->transform(
-                        source: $sourcePropertyKey,
-                        target: null,
-                        targetTypes: $targetMemberKeyType,
-                        context: $context,
-                    );
-
-                    if ($targetMemberKey instanceof \Stringable) {
-                        $path = sprintf('[%s]', $targetMemberKey);
-                    } else {
-                        $path = sprintf('[%s]', get_debug_type($targetMemberKey));
-                    }
+                    $targetMemberKey = $sourcePropertyKey;
+                    $path = sprintf('[%s]', $sourcePropertyKey);
                 }
 
                 // now transform the source member value to the type of the target

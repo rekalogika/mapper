@@ -24,7 +24,6 @@ use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\InvalidTypeInArgumentException;
-use Rekalogika\Mapper\Transformer\Exception\MissingMemberKeyTypeException;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
@@ -68,7 +67,6 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // Prepare variables for the output loop
 
         $targetMemberKeyType = $targetType->getCollectionKeyTypes();
-        $targetMemberKeyTypeIsMissing = count($targetMemberKeyType) === 0;
         $targetMemberKeyTypeIsInt = count($targetMemberKeyType) === 1
             && TypeCheck::isInt($targetMemberKeyType[0]);
         $targetMemberValueType = $targetType->getCollectionValueTypes();
@@ -77,47 +75,15 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         /** @var mixed $sourceMemberValue */
         foreach ($source as $sourceMemberKey => $sourceMemberValue) {
-            /** @var mixed $sourceMemberKey */
+            // if target has int key type but the source has string key type,
+            // we discard the source key & use null (i.e. $target[] = $value)
 
-            if (is_string($sourceMemberKey) || is_int($sourceMemberKey)) {
-                // if the key is a simple type: int|string
-
-                if ($targetMemberKeyTypeIsInt && is_string($sourceMemberKey)) {
-                    // if target has int key type but the source has string key type,
-                    // we discard the source key & use null (i.e. $target[] = $value)
-
-                    $targetMemberKey = null;
-                    $path = sprintf('[%d]', $i);
-                } else {
-                    $targetMemberKey = $sourceMemberKey;
-                    $path = sprintf('[%s]', $sourceMemberKey);
-                }
+            if ($targetMemberKeyTypeIsInt && is_string($sourceMemberKey)) {
+                $targetMemberKey = null;
+                $path = sprintf('[%d]', $i);
             } else {
-                // If the type of the key is a complex type (not int or string).
-                // i.e. an ArrayObject can have an object as its key.
-
-                // Refuse to continue if the target key type is not provided
-
-                if ($targetMemberKeyTypeIsMissing) {
-                    throw new MissingMemberKeyTypeException($sourceType, $targetType, context: $context);
-                }
-
-                // If provided, we transform the source key to the key type of
-                // the target
-
-                /** @var mixed */
-                $targetMemberKey = $this->getMainTransformer()->transform(
-                    source: $sourceMemberKey,
-                    target: null,
-                    targetTypes: $targetMemberKeyType,
-                    context: $context,
-                );
-
-                if ($targetMemberKey instanceof \Stringable) {
-                    $path = sprintf('[%s]', $targetMemberKey);
-                } else {
-                    $path = sprintf('[%s]', get_debug_type($targetMemberKey));
-                }
+                $targetMemberKey = $sourceMemberKey;
+                $path = sprintf('[%s]', $sourceMemberKey);
             }
 
             // Get the existing member value from the target

@@ -29,7 +29,11 @@ use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
 {
-    public function testFailedArrayToArray(): void
+    //
+    // without typehint
+    //
+
+    public function testArrayToArrayWithoutTypehint(): void
     {
         $source = new ObjectWithArrayProperty();
         $result = $this->mapper->map($source, ObjectWithArrayPropertyWithoutTypeHintDto::class);
@@ -44,7 +48,7 @@ class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
         $this->assertInstanceOf(ObjectWithScalarProperties::class, $result->property[2]);
     }
 
-    public function testFailedTraversableToArrayAccess(): void
+    public function testTraversableToArrayAccessWithoutTypehint(): void
     {
         $source = new ObjectWithTraversableProperties();
         $result = $this->mapper->map($source, ObjectWithArrayPropertyWithoutTypeHintDto::class);

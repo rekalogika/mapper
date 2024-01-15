@@ -15,8 +15,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto;
 
 class ObjectWithArrayPropertyWithoutTypeHintDto
 {
-    /**
-     * @var array<array-key,mixed>
-     */
+    // @phpstan-ignore-next-line
     public array $property = [];
 }
