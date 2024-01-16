@@ -5,6 +5,7 @@
 * docs: Add rationale.
 * fix: Add variance safeguard.
 * dx: Clarity.
+* style: Exception messages.
 
 ## 0.5.12
 
