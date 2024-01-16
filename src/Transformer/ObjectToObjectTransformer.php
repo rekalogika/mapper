@@ -27,6 +27,7 @@ use Rekalogika\Mapper\Transformer\Exception\InvalidClassException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
+use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -35,7 +36,6 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -49,9 +49,9 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
-        private PropertyAccessExtractorInterface $propertyAccessExtractor,
         private PropertyAccessorInterface $propertyAccessor,
         private TypeResolverInterface $typeResolver,
+        private ObjectMappingResolverInterface $objectMappingResolver,
     ) {
     }
 
@@ -105,35 +105,35 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $context(ObjectCache::class)
             ->saveTarget($source, $targetType, $target, $context);
 
-        // list properties
+        // resolve object mapping
 
-        $sourceProperties = $this->listSourceAttributes($sourceType, $context);
-        $writableTargetProperties = $this
-            ->listTargetWritableAttributes($targetType, $context);
-
-        // calculate applicable properties
-
-        $propertiesToMap = array_intersect($sourceProperties, $writableTargetProperties);
+        $objectMapping = $this->objectMappingResolver
+            ->resolveObjectMapping($sourceType, $targetType, $context);
 
         // map properties
 
-        foreach ($propertiesToMap as $propertyName) {
+        foreach ($objectMapping->getPropertyMapping() as $propertyMapping) {
             assert(is_object($target));
+
+            $sourcePropertyName = $propertyMapping->getSourcePath();
+            $targetPropertyName = $propertyMapping->getTargetPath();
 
             /** @var mixed */
             $targetPropertyValue = $this->resolveTargetPropertyValue(
                 source: $source,
                 target: $target,
-                propertyName: $propertyName,
+                sourcePropertyName: $sourcePropertyName,
+                targetPropertyName: $targetPropertyName,
                 targetClass: $targetClass,
                 context: $context,
-                path: $propertyName,
+                path: $propertyMapping->getTargetPath(),
             );
 
             try {
-                $this->propertyAccessor->setValue($target, $propertyName, $targetPropertyValue);
+                $this->propertyAccessor
+                    ->setValue($target, $targetPropertyName, $targetPropertyValue);
             } catch (AccessException | UnexpectedTypeException $e) {
-                throw new UnableToWriteException($source, $target, $target, $propertyName, $e);
+                throw new UnableToWriteException($source, $target, $target, $targetPropertyName, $e, context: $context);
             }
         }
 
@@ -147,39 +147,42 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     private function resolveTargetPropertyValue(
         object $source,
         ?object $target,
-        string $propertyName,
+        string $sourcePropertyName,
+        string $targetPropertyName,
         string $targetClass,
         Context $context,
         string $path,
     ): mixed {
         /** @var array<int,Type>|null */
-        $targetPropertyTypes = $this->propertyTypeExtractor->getTypes($targetClass, $propertyName);
+        $targetPropertyTypes = $this->propertyTypeExtractor->getTypes($targetClass, $targetPropertyName);
 
         if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
-            throw new InvalidArgumentException(sprintf('Cannot get type of target property "%s::$%s".', $targetClass, $propertyName));
+            throw new InvalidArgumentException(sprintf('Cannot get type of target property "%s::$%s".', $targetClass, $targetPropertyName), context: $context);
         }
 
         try {
             /** @var mixed */
-            $sourcePropertyValue = $this->propertyAccessor->getValue($source, $propertyName);
+            $sourcePropertyValue = $this->propertyAccessor
+                ->getValue($source, $sourcePropertyName);
         } catch (NoSuchPropertyException $e) {
-            throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e, context: $context);
+            throw new IncompleteConstructorArgument($source, $targetClass, $sourcePropertyName, $e, context: $context);
         } catch (UninitializedPropertyException $e) {
             $sourcePropertyValue = null;
         } catch (AccessException | UnexpectedTypeException $e) {
-            throw new UnableToReadException($source, $target, $source, $propertyName, $e, context: $context);
+            throw new UnableToReadException($source, $target, $source, $sourcePropertyName, $e, context: $context);
         }
 
         if ($target !== null) {
             try {
                 /** @var mixed */
-                $targetPropertyValue = $this->propertyAccessor->getValue($target, $propertyName);
+                $targetPropertyValue = $this->propertyAccessor
+                    ->getValue($target, $targetPropertyName);
             } catch (NoSuchPropertyException $e) {
-                throw new IncompleteConstructorArgument($source, $targetClass, $propertyName, $e, context: $context);
+                throw new IncompleteConstructorArgument($source, $targetClass, $targetPropertyName, $e, context: $context);
             } catch (UninitializedPropertyException $e) {
                 $targetPropertyValue = null;
             } catch (AccessException | UnexpectedTypeException $e) {
-                throw new UnableToReadException($source, $target, $target, $propertyName, $e, context: $context);
+                throw new UnableToReadException($source, $target, $target, $targetPropertyName, $e, context: $context);
             }
         } else {
             $targetPropertyValue = null;
@@ -229,7 +232,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $targetPropertyValue = $this->resolveTargetPropertyValue(
                 source: $source,
                 target: null,
-                propertyName: $propertyName,
+                sourcePropertyName: $propertyName,
+                targetPropertyName: $propertyName,
                 targetClass: $targetClass,
                 context: $context,
                 path: $propertyName,
@@ -244,68 +248,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         } catch (\TypeError $e) {
             throw new InstantiationFailureException($source, $targetClass, $constructorArguments, $e, context: $context);
         }
-    }
-
-    /**
-     * @return array<int,string>
-     * @todo cache result
-     */
-    protected function listSourceAttributes(
-        Type $sourceType,
-        Context $context
-    ): array {
-        $class = $sourceType->getClassName();
-
-        if (null === $class) {
-            throw new InvalidArgumentException('Cannot get class name from source type.', context: $context);
-        }
-
-        $attributes = $this->propertyListExtractor->getProperties($class);
-
-        if (null === $attributes) {
-            throw new InvalidArgumentException(sprintf('Cannot get properties from source class "%s".', $class), context: $context);
-        }
-
-        $readableAttributes = [];
-
-        foreach ($attributes as $attribute) {
-            if ($this->propertyAccessExtractor->isReadable($class, $attribute)) {
-                $readableAttributes[] = $attribute;
-            }
-        }
-
-        return $readableAttributes;
-    }
-
-    /**
-     * @return array<int,string>
-     * @todo cache result
-     */
-    protected function listTargetWritableAttributes(
-        Type $targetType,
-        Context $context
-    ): array {
-        $class = $targetType->getClassName();
-
-        if (null === $class) {
-            throw new InvalidArgumentException('Cannot get class name from source type.', context: $context);
-        }
-
-        $attributes = $this->propertyListExtractor->getProperties($class);
-
-        if (null === $attributes) {
-            throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class), context: $context);
-        }
-
-        $writableAttributes = [];
-
-        foreach ($attributes as $attribute) {
-            if ($this->propertyAccessExtractor->isWritable($class, $attribute)) {
-                $writableAttributes[] = $attribute;
-            }
-        }
-
-        return $writableAttributes;
     }
 
     /**

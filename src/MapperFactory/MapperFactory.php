@@ -33,6 +33,8 @@ use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
+use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
+use Rekalogika\Mapper\Transformer\ObjectMappingResolver\ObjectMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
@@ -94,6 +96,7 @@ class MapperFactory
     private CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
     private ?TypeResolverInterface $typeResolver = null;
+    private ?ObjectMappingResolverInterface $objectMappingResolver = null;
     private ?MainTransformer $mainTransformer = null;
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
@@ -275,9 +278,9 @@ class MapperFactory
                 $this->getPropertyListExtractor(),
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInitializableExtractor(),
-                $this->getPropertyAccessExtractor(),
                 $this->getPropertyAccessor(),
                 $this->getTypeResolver(),
+                $this->getObjectMappingResolver(),
             );
         }
 
@@ -403,6 +406,19 @@ class MapperFactory
 
         return $this->typeResolver;
     }
+
+    protected function getObjectMappingResolver(): ObjectMappingResolverInterface
+    {
+        if (null === $this->objectMappingResolver) {
+            $this->objectMappingResolver = new ObjectMappingResolver(
+                $this->getPropertyAccessExtractor(),
+                $this->getPropertyListExtractor(),
+            );
+        }
+
+        return $this->objectMappingResolver;
+    }
+
 
     /**
      * @return iterable<string,TransformerInterface>

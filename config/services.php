@@ -28,6 +28,7 @@ use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
+use Rekalogika\Mapper\Transformer\ObjectMappingResolver\ObjectMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
@@ -138,9 +139,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$propertyListExtractor' => service('rekalogika.mapper.property_info'),
             '$propertyTypeExtractor' => service('rekalogika.mapper.property_info'),
             '$propertyInitializableExtractor' => service('rekalogika.mapper.property_info'),
-            '$propertyAccessExtractor' => service('rekalogika.mapper.property_info'),
             '$propertyAccessor' => service('property_accessor'),
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
+            '$objectMappingResolver' => service('rekalogika.mapper.object_mapping_resolver'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -900]);
 
@@ -184,6 +185,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.type_resolver')
         ->args([
             service('rekalogika.mapper.type_resolver.caching.inner'),
+        ]);
+
+    # object mapping resolver
+
+    $services
+        ->set('rekalogika.mapper.object_mapping_resolver', ObjectMappingResolver::class)
+        ->args([
+            service('rekalogika.mapper.property_info'),
+            service('rekalogika.mapper.property_info'),
         ]);
 
     # transformer registry
