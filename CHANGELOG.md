@@ -10,6 +10,7 @@
 * refactor: Move mapping logic in `ObjectToObjectTransformer` to its own
   service.
 * refactor: Move more mapping logic to `ObjectMappingResolver`.
+* perf: Add caching for `ObjectMappingResolver`.
 
 ## 0.5.12
 

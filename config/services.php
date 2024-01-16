@@ -28,6 +28,7 @@ use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
+use Rekalogika\Mapper\Transformer\ObjectMappingResolver\CachingObjectMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectMappingResolver\ObjectMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
@@ -193,6 +194,19 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
+        ]);
+
+    $services
+        ->set('rekalogika.mapper.cache.object_mapping_resolver')
+        ->parent('cache.system')
+        ->tag('cache.pool');
+
+    $services
+        ->set('rekalogika.mapper.object_mapping_resolver.cache', CachingObjectMappingResolver::class)
+        ->decorate('rekalogika.mapper.object_mapping_resolver')
+        ->args([
+            service('.inner'),
+            service('rekalogika.mapper.cache.object_mapping_resolver')
         ]);
 
     # transformer registry
