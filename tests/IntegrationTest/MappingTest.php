@@ -53,9 +53,16 @@ class MappingTest extends AbstractIntegrationTest
 
         $this->assertNotEmpty($searchResult);
 
+        $first = $searchResult[0] ?? null;
+        $this->assertNotNull($first);
+
+        $transformer = $this->transformerRegistry->get(
+            $first->getTransformerServiceId()
+        );
+
         $this->assertInstanceOf(
             $transformerClass,
-            $searchResult[0]?->getTransformer()
+            $transformer,
         );
     }
 

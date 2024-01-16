@@ -106,11 +106,13 @@ class TryPropertyCommand extends Command
             ->findBySourceAndTargetTypes($sourceTypes, $targetTypes);
 
         foreach ($results as $result) {
+            $transformer = $this->transformerRegistry->get($result->getTransformerServiceId());
+
             $rows[] = [
                 $result->getMappingOrder(),
                 $this->typeResolver->getTypeString($result->getSourceType()),
                 $this->typeResolver->getTypeString($result->getTargetType()),
-                $result->getTransformer()::class,
+                $transformer::class,
             ];
         }
 

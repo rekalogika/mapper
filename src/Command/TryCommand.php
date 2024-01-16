@@ -104,10 +104,12 @@ class TryCommand extends Command
             ->findBySourceAndTargetTypes([$sourceType], [$targetType]);
 
         foreach ($searchResult as $entry) {
+            $transformer = $this->transformerRegistry->get($entry->getTransformerServiceId());
+
             $rows[] = [
                 $entry->getMappingOrder(),
                 $entry->getTransformerServiceId(),
-                $entry->getTransformer()::class,
+                $transformer::class,
                 $this->typeResolver->getTypeString($entry->getSourceType()),
                 $this->typeResolver->getTypeString($entry->getTargetType()),
                 $entry->isVariantTargetType() ? 'variant' : 'invariant',

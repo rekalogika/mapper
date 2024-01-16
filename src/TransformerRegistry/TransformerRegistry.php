@@ -64,7 +64,6 @@ class TransformerRegistry implements TransformerRegistryInterface
                     mappingOrder: $mappingEntry->getOrder(),
                     sourceType: $sourceType,
                     targetType: $targetType,
-                    transformer: $this->get($mappingEntry->getId()),
                     transformerServiceId: $mappingEntry->getId(),
                     variantTargetType: $mappingEntry->isVariantTargetType()
                 );
@@ -81,7 +80,6 @@ class TransformerRegistry implements TransformerRegistryInterface
                         mappingOrder: $mappingEntry->getOrder(),
                         sourceType: $sourceType,
                         targetType: $targetType,
-                        transformer: $this->get($mappingEntry->getId()),
                         transformerServiceId: $mappingEntry->getId(),
                         variantTargetType: $mappingEntry->isVariantTargetType()
                     );

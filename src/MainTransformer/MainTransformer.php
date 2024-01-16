@@ -148,10 +148,6 @@ class MainTransformer implements MainTransformerInterface
                 }
             }
 
-            // inject the main transformer to the transformer if it is
-            // MainTransformerAwareInterface
-            $transformer = $this->processTransformer($searchEntry->getTransformer());
-
             // TransformerInterface doesn't accept MixedType, so we need to
             // convert it to null
 
@@ -178,6 +174,13 @@ class MainTransformer implements MainTransformerInterface
                     );
                 }
             }
+
+            // get and prepare transformer
+            $transformer = $this->processTransformer(
+                $this->transformerRegistry->get(
+                    $searchEntry->getTransformerServiceId()
+                )
+            );
 
             // transform the source to the target
 

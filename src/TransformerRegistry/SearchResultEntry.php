@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\TransformerRegistry;
 
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 class SearchResultEntry
@@ -23,7 +22,6 @@ class SearchResultEntry
         private int $mappingOrder,
         private Type|MixedType $sourceType,
         private Type|MixedType $targetType,
-        private TransformerInterface $transformer,
         private string $transformerServiceId,
         private bool $variantTargetType,
     ) {
@@ -37,11 +35,6 @@ class SearchResultEntry
     public function getTargetType(): Type|MixedType
     {
         return $this->targetType;
-    }
-
-    public function getTransformer(): TransformerInterface
-    {
-        return $this->transformer;
     }
 
     public function getMappingOrder(): int
