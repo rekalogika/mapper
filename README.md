@@ -93,34 +93,33 @@ a custom property accessor, and it was possible to resolve this issue by
 creating an adapter that uses Symfony PropertyAccess component.
 
 With AutoMapper-Plus, users are expected to create a mapping configuration for
-each mapping pair. It has an automatic creation of mappings, but it seems to
-only work for simple mapping. Also, all of our entities and DTOs are typed, but
-we need to create a mapping for every non-trivial pair, despite the type
-information is already there in the involved classes. Custom mapper is
-available, but it does not let us access the main mapper. If a mapping pair uses
-a custom mapper, we are responsible for mapping everything, including the nested
-objects ourselves because the option to delegate to the main mapper is not
-available. There was another case that was simply not possible to accomplish, I
-don't remember what it was, but it forced us to switch to another mapper
-overnight.
+each mapping pair. It has an automatic creation of mappings for simple mapping.
+All of our entities and DTOs are typed, but we need to create a mapping for
+every non-trivial pair, despite the type information is already there in the
+involved classes. Custom mapper is available, but it does not let us access the
+main mapper. If a mapping pair uses a custom mapper, we are responsible for
+mapping everything, including nested objects, because the option to delegate to
+the main mapper is not available. There was another case that was simply not
+possible to accomplish, I don't remember what it was, but it forced us to switch
+to another mapper overnight.
 
 Our next mapper was [Jolicode
 Automapper](https://github.com/jolicode/automapper), formerly known as [Jane
 Automapper](https://github.com/janephp/automapper). It behaved as expected,
 there were no big surprises, and there was very little to complain about its
-behavior. It should also be very fast, as it compiles its mapping code to PHP
-files. The problem was error handling. When an error occurred in the compiled
-mappers, it was usually a `TypeError`. It was difficult to debug, and even more
-difficult to resolve the problem, addressing the problem requires the skill of
-working with AST. We found that the problems were usually deployment errors
-(usually forgetting to clear the cache), some edge cases (easy to work around),
-or bugs in the mapper. It was rare to get an error, but when it happened, it was
+behavior. It is very fast as it compiles its mapping code to PHP files. The
+problem was error handling. When an error occurred in the compiled mappers, it
+was usually a `TypeError`. It was difficult to debug, and even more difficult to
+resolve the problem. Addressing the problem requires the skill of working with
+AST. We found that the problems were usually deployment errors (usually
+forgetting to clear the cache), some edge cases (easy to work around), or bugs
+in the mapper. It was rare to get an error, but when it happened, it was
 difficult and time-consuming to resolve. We did contribute some fixes back to
 the project.
 
 The second problem was that the mapper was difficult to extend. Adding a new
-transformer requires the skill of working with AST, and there was no option to
-do a mapping using plain old PHP code that you write yourself. We hit a brick
+transformer requires the knowledge of working with AST, and there was no option
+to do a mapping using plain old PHP code that you write yourself. We hit a brick
 wall when a new requirement surfaced that requires the mapper to target an
 abstract class, a feature that was not supported by the mapper. We figured it
 would be easier for us to spend a week creating our own mapper from scratch
