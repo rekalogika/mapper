@@ -47,67 +47,76 @@ class TransformerRegistry implements TransformerRegistryInterface
         return $transformer;
     }
 
+    public function findBySourceAndTargetType(
+        Type|MixedType $sourceType,
+        Type|MixedType $targetType,
+    ): SearchResult {
+        $mapping = $this->getMappingBySourceAndTargetType(
+            $sourceType,
+            $targetType
+        );
+
+        $searchResultEntries = [];
+
+        foreach ($mapping as $mappingEntry) {
+            if ($mappingEntry->isVariantTargetType() || !TypeCheck::isObject($targetType)) {
+                $searchResultEntry = new SearchResultEntry(
+                    mappingOrder: $mappingEntry->getOrder(),
+                    sourceType: $sourceType,
+                    targetType: $targetType,
+                    transformer: $this->get($mappingEntry->getId()),
+                    transformerServiceId: $mappingEntry->getId(),
+                    variantTargetType: $mappingEntry->isVariantTargetType()
+                );
+
+                $searchResultEntries[] = $searchResultEntry;
+            } else {
+                if (
+                    TypeCheck::isSomewhatIdentical(
+                        $targetType,
+                        $mappingEntry->getTargetType()
+                    )
+                ) {
+                    $searchResultEntry = new SearchResultEntry(
+                        mappingOrder: $mappingEntry->getOrder(),
+                        sourceType: $sourceType,
+                        targetType: $targetType,
+                        transformer: $this->get($mappingEntry->getId()),
+                        transformerServiceId: $mappingEntry->getId(),
+                        variantTargetType: $mappingEntry->isVariantTargetType()
+                    );
+
+                    $searchResultEntries[] = $searchResultEntry;
+                }
+            }
+        }
+
+        return new SearchResult($searchResultEntries);
+    }
+
     public function findBySourceAndTargetTypes(
         iterable $sourceTypes,
         iterable $targetTypes,
     ): SearchResult {
-        /** @var array<int,array{0:Type|MixedType,1:Type|MixedType,2:MappingEntry}> */
-        $mappingEntries = [];
+        /** @var array<int,SearchResultEntry> */
+        $searchResultEntries = [];
 
         foreach ($sourceTypes as $sourceType) {
             foreach ($targetTypes as $targetType) {
-                $mapping = $this->getMappingBySourceAndTargetType(
-                    $sourceType,
-                    $targetType
-                );
-
-                foreach ($mapping as $mappingEntry) {
-                    if ($mappingEntry->isVariantTargetType() || !TypeCheck::isObject($targetType)) {
-                        $mappingEntries[] = [
-                            $sourceType,
-                            $targetType,
-                            $mappingEntry,
-                        ];
-                    } else {
-                        if (
-                            TypeCheck::isSomewhatIdentical(
-                                $targetType,
-                                $mappingEntry->getTargetType()
-                            )
-                        ) {
-                            $mappingEntries[] = [
-                                $sourceType,
-                                $targetType,
-                                $mappingEntry,
-                            ];
-                        }
-                    }
+                $result = $this->findBySourceAndTargetType($sourceType, $targetType);
+                foreach ($result as $searchResultEntry) {
+                    $searchResultEntries[] = $searchResultEntry;
                 }
             }
         }
 
         usort(
-            $mappingEntries,
-            fn (array $a, array $b)
-            =>
-            /** @psalm-suppress MixedMethodCall */
-            $a[2]->getOrder() <=> $b[2]->getOrder()
+            $searchResultEntries,
+            fn (SearchResultEntry $a, SearchResultEntry $b)
+            => $a->getMappingOrder() <=> $b->getMappingOrder()
         );
 
-        $result = [];
-
-        foreach ($mappingEntries as $mappingEntry) {
-            $result[]  = new SearchResultEntry(
-                $mappingEntry[2]->getOrder(),
-                $mappingEntry[0],
-                $mappingEntry[1],
-                $this->get($mappingEntry[2]->getId()),
-                $mappingEntry[2]->getId(),
-                $mappingEntry[2]->isVariantTargetType()
-            );
-        }
-
-        return new SearchResult($result);
+        return new SearchResult($searchResultEntries);
     }
 
     /**

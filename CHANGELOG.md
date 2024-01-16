@@ -5,6 +5,7 @@
 * test: Reorganize test namespaces.
 * fix: Fix path forming.
 * fix: Add type checking for variance in `TypeMapping` and `MappingEntry`.
+* refactor: Refactor `Transformer` for clarity.
 
 ## 0.5.11
 
