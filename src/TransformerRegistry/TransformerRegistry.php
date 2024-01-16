@@ -47,7 +47,27 @@ class TransformerRegistry implements TransformerRegistryInterface
         return $transformer;
     }
 
-    public function findBySourceAndTargetType(
+    /**
+     * @todo cache this
+     * @param Type|MixedType $sourceType
+     * @param Type|MixedType $targetType
+     * @return array<int,MappingEntry>
+     */
+    private function getMappingBySourceAndTargetType(
+        Type|MixedType $sourceType,
+        Type|MixedType $targetType,
+    ): array {
+        $sourceTypeStrings = $this->typeResolver
+            ->getAcceptedTransformerInputTypeStrings($sourceType);
+
+        $targetTypeStrings = $this->typeResolver
+            ->getAcceptedTransformerOutputTypeStrings($targetType);
+
+        return $this->mappingFactory->getMapping()
+            ->getMappingBySourceAndTarget($sourceTypeStrings, $targetTypeStrings);
+    }
+
+    private function findBySourceAndTargetType(
         Type|MixedType $sourceType,
         Type|MixedType $targetType,
     ): SearchResult {
@@ -59,7 +79,9 @@ class TransformerRegistry implements TransformerRegistryInterface
         $searchResultEntries = [];
 
         foreach ($mapping as $mappingEntry) {
-            if ($mappingEntry->isVariantTargetType() || !TypeCheck::isObject($targetType)) {
+            if ($mappingEntry->isVariantTargetType()) {
+                // if variant
+
                 $searchResultEntry = new SearchResultEntry(
                     mappingOrder: $mappingEntry->getOrder(),
                     sourceType: $sourceType,
@@ -70,6 +92,8 @@ class TransformerRegistry implements TransformerRegistryInterface
 
                 $searchResultEntries[] = $searchResultEntry;
             } else {
+                // if invariant, check if target type is somewhat identical
+
                 if (
                     TypeCheck::isSomewhatIdentical(
                         $targetType,
@@ -115,24 +139,5 @@ class TransformerRegistry implements TransformerRegistryInterface
         );
 
         return new SearchResult($searchResultEntries);
-    }
-
-    /**
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
-     * @return array<int,MappingEntry>
-     */
-    private function getMappingBySourceAndTargetType(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
-    ): array {
-        $sourceTypeStrings = $this->typeResolver
-            ->getAcceptedTransformerInputTypeStrings($sourceType);
-
-        $targetTypeStrings = $this->typeResolver
-            ->getAcceptedTransformerOutputTypeStrings($targetType);
-
-        return $this->mappingFactory->getMapping()
-            ->getMappingBySourceAndTarget($sourceTypeStrings, $targetTypeStrings);
     }
 }

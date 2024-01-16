@@ -4,6 +4,7 @@
 
 * docs: Add rationale.
 * fix: Add variance safeguard.
+* dx: Clarity.
 
 ## 0.5.12
 
