@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.14
+
+* fix: Add missing deps to `composer.json`
+
 ## 0.5.13
 
 * docs: Add rationale.
