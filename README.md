@@ -128,16 +128,15 @@ Other mappers that were considered:
 
 [MicroMapper](https://github.com/SymfonyCasts/micro-mapper/) is a mapper that
 requires you to write the mapping code yourself. It is all manual work, but
-still working under the mapping framwork, and should be suitable for our
+still working within the mapping framework, and should be suitable for our
 purpose, as long as we are willing to write the mapping code ourselves. The
 mapping code also supports delegating to the main mapper, unlike
-AutoMapper-Plus. However, we were way past of contemplating whether to do it
-manually, so we did not consider it further.
+AutoMapper-Plus. However, at this point, we were way past of contemplating
+whether to do it manually, so we did not consider it further.
 
 [Pull request for a future Symfony Mapper](https://github.com/symfony/symfony/pull/51741).
 In the form that I saw it, it was too simplistic, and does not provide any
 extension points. I (@priyadi) did provide some feedback in the pull request.
-
 ## License
 
 MIT

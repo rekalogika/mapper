@@ -6,6 +6,7 @@
 * fix: Add variance safeguard.
 * dx: Clarity.
 * style: Exception messages.
+* feat: Uses transformer class names as service IDs for easier decoration.
 
 ## 0.5.12
 

@@ -13,7 +13,21 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Common;
 
+use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
+use Rekalogika\Mapper\MethodMapper\ClassMethodTransformer;
 use Rekalogika\Mapper\RekalogikaMapperBundle;
+use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
+use Rekalogika\Mapper\Transformer\CopyTransformer;
+use Rekalogika\Mapper\Transformer\DateTimeTransformer;
+use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
+use Rekalogika\Mapper\Transformer\NullTransformer;
+use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
+use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
+use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
+use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
+use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
+use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
+use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -58,21 +72,32 @@ class TestKernel extends Kernel
         yield 'rekalogika.mapper.property_info';
         yield 'rekalogika.mapper.cache.property_info';
         yield 'rekalogika.mapper.property_info.cache';
-        yield 'rekalogika.mapper.transformer.scalar_to_scalar';
-        yield 'rekalogika.mapper.transformer.datetime';
-        yield 'rekalogika.mapper.transformer.string_to_backed_enum';
-        yield 'rekalogika.mapper.transformer.object_to_string';
-        yield 'rekalogika.mapper.transformer.traversable_to_arrayaccess';
-        yield 'rekalogika.mapper.transformer.traversable_to_traversable';
-        yield 'rekalogika.mapper.transformer.object_to_array';
-        yield 'rekalogika.mapper.transformer.array_to_object';
-        yield 'rekalogika.mapper.transformer.object_to_object';
-        yield 'rekalogika.mapper.transformer.null';
-        yield 'rekalogika.mapper.type_resolver';
+
+        yield ScalarToScalarTransformer::class;
+        yield DateTimeTransformer::class;
+        yield StringToBackedEnumTransformer::class;
+        yield ClassMethodTransformer::class;
+        yield ObjectToStringTransformer::class;
+        yield InheritanceMapTransformer::class;
+        yield TraversableToArrayAccessTransformer::class;
+        yield TraversableToTraversableTransformer::class;
+        yield ObjectToArrayTransformer::class;
+        yield ArrayToObjectTransformer::class;
+        yield ObjectToObjectTransformer::class;
+        yield NullTransformer::class;
+        yield CopyTransformer::class;
+
         yield 'rekalogika.mapper.mapping_factory';
-        yield 'rekalogika.mapper.main_transformer';
+        yield MappingFactoryInterface::class;
+        yield 'rekalogika.mapper.mapping_factory.caching';
+        yield 'rekalogika.mapper.type_resolver';
+        yield 'rekalogika.mapper.type_resolver.caching';
+        yield 'rekalogika.mapper.transformer_registry';
+        yield 'rekalogika.mapper.method_mapper.sub_mapper';
+        yield 'rekalogika.mapper.object_cache_factory';
         yield 'rekalogika.mapper.mapper';
         yield 'rekalogika.mapper.command.mapping';
         yield 'rekalogika.mapper.command.try';
+        yield 'rekalogika.mapper.command.try_property';
     }
 }
