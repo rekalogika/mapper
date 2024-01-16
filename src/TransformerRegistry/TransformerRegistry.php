@@ -117,8 +117,8 @@ class TransformerRegistry implements TransformerRegistryInterface
     }
 
     public function findBySourceAndTargetTypes(
-        iterable $sourceTypes,
-        iterable $targetTypes,
+        array $sourceTypes,
+        array $targetTypes,
     ): SearchResult {
         /** @var array<int,SearchResultEntry> */
         $searchResultEntries = [];

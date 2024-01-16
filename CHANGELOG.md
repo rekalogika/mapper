@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.15
+
+* perf: Add caching for `TransformerRegistry`.
+
 ## 0.5.14
 
 * fix: Add missing deps to `composer.json`

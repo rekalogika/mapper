@@ -37,6 +37,7 @@ use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
+use Rekalogika\Mapper\TransformerRegistry\CachingTransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistry;
 use Rekalogika\Mapper\TypeResolver\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolver;
@@ -217,6 +218,19 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$transformersLocator' => tagged_locator('rekalogika.mapper.transformer'),
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$mappingFactory' => service('rekalogika.mapper.mapping_factory'),
+        ]);
+
+    $services
+        ->set('rekalogika.mapper.cache.transformer_registry')
+        ->parent('cache.system')
+        ->tag('cache.pool');
+
+    $services
+        ->set('rekalogika.mapper.transformer_registry.cache', CachingTransformerRegistry::class)
+        ->decorate('rekalogika.mapper.transformer_registry')
+        ->args([
+            service('.inner'),
+            service('rekalogika.mapper.cache.transformer_registry')
         ]);
 
     # method mapper
