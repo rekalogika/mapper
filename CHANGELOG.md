@@ -3,6 +3,7 @@
 ## 0.5.13
 
 * docs: Add rationale.
+* fix: Add variance safeguard.
 
 ## 0.5.12
 

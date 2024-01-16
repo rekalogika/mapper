@@ -66,6 +66,14 @@ final class MappingEntry
 
     public function isVariantTargetType(): bool
     {
+        if ($this->targetType instanceof MixedType) {
+            return true;
+        }
+
+        if ($this->targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+            return false;
+        }
+
         return $this->variantTargetType;
     }
 
