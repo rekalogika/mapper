@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Mapping;
 
+use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -31,6 +32,21 @@ final class MappingEntry
         private bool $variantTargetType,
     ) {
         $this->order = ++self::$counter;
+
+        if ($variantTargetType === true) {
+            if ($targetType instanceof MixedType) {
+                throw new InvalidArgumentException(
+                    'Variant target type cannot be MixedType',
+                );
+            }
+
+            if ($targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+                throw new InvalidArgumentException(sprintf(
+                    'Variant target type must be object, %s given',
+                    $targetType->getBuiltinType()
+                ));
+            }
+        }
     }
 
     public function getOrder(): int

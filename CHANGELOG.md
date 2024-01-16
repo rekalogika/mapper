@@ -4,6 +4,7 @@
 
 * test: Reorganize test namespaces.
 * fix: Fix path forming.
+* fix: Add type checking for variance in `TypeMapping` and `MappingEntry`.
 
 ## 0.5.11
 
@@ -18,7 +19,8 @@
 * fix(`MainTransformer`): Fix possible bug involving an existing target.
 * fix(`MainTransformer`): Make sure the target has the same type as the target
   type.
-* feat(`TraversableToArrayAccessTransformer`): Now supports `ArrayCollection` & `ArrayIterator`.
+* feat(`TraversableToArrayAccessTransformer`): Now supports `ArrayCollection` &
+  `ArrayIterator`.
 * test: Assorted tests.
 * fix: Remove iterating object key because not supported in PHP.
 * test: Assorted tests.

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Contracts;
 
+use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyInfo\Type;
 
 class TypeMapping
@@ -26,6 +27,20 @@ class TypeMapping
         private Type|MixedType $targetType,
         private bool $variantTargetType = false,
     ) {
+        if ($variantTargetType === true) {
+            if ($targetType instanceof MixedType) {
+                throw new InvalidArgumentException(
+                    'Variant target type cannot be MixedType',
+                );
+            }
+
+            if ($targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+                throw new InvalidArgumentException(sprintf(
+                    'Variant target type must be object, %s given',
+                    $targetType->getBuiltinType()
+                ));
+            }
+        }
     }
 
     /**
