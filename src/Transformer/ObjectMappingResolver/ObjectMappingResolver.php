@@ -15,107 +15,176 @@ namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ConstructorMapping;
 use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMapping;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingEntry;
 use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
+use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\PropertyMapping;
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 
 final class ObjectMappingResolver implements ObjectMappingResolverInterface
 {
     public function __construct(
         private PropertyAccessExtractorInterface $propertyAccessExtractor,
         private PropertyListExtractorInterface $propertyListExtractor,
+        private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
+        private PropertyTypeExtractorInterface $propertyTypeExtractor,
     ) {
     }
 
     public function resolveObjectMapping(
-        Type $sourceType,
-        Type $targetType,
+        string $sourceClass,
+        string $targetClass,
         Context $context
     ): ObjectMapping {
-        $sourceProperties = $this->listSourceAttributes($sourceType, $context);
+
+        // queries
+
+        $readableSourceProperties = $this
+            ->listReadableSourceProperties($sourceClass, $context);
         $writableTargetProperties = $this
-            ->listTargetWritableAttributes($targetType, $context);
+            ->listTargetWritableProperties($targetClass, $context);
+        $initializableTargetProperties = $this
+            ->listTargetInitializableProperties($targetClass, $context);
 
-        $propertiesToMap = array_intersect($sourceProperties, $writableTargetProperties);
+        // process properties mapping
 
-        $results = [];
+        $propertiesToMap = array_intersect($readableSourceProperties, $writableTargetProperties);
+
+        $propertyResults = [];
 
         foreach ($propertiesToMap as $property) {
-            $results[] = new ObjectMappingEntry(
-                $property,
-                $property,
+            $sourceProperty = $property;
+            $targetProperty = $property;
+
+            ///
+
+            $targetPropertyTypes = $this->propertyTypeExtractor
+                ->getTypes($targetClass, $targetProperty);
+
+            if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Cannot get type of target property "%s::$%s".',
+                        $targetClass,
+                        $targetProperty
+                    ),
+                    context: $context
+                );
+            }
+
+            $propertyResults[] = new PropertyMapping(
+                $sourceProperty,
+                $targetProperty,
+                $targetPropertyTypes,
+            );
+        }
+
+        // process source properties to target constructor mapping
+
+        $initializableResults = [];
+
+        foreach ($initializableTargetProperties as $property) {
+            $sourceProperty = $property;
+            $targetProperty = $property;
+
+            ///
+
+            if (!in_array($property, $readableSourceProperties)) {
+                $sourceProperty = null;
+            }
+
+            $targetPropertyTypes = $this->propertyTypeExtractor
+                ->getTypes($targetClass, $targetProperty);
+
+            if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Cannot get type of target property "%s::$%s".',
+                        $targetClass,
+                        $targetProperty
+                    ),
+                    context: $context
+                );
+            }
+
+            $initializableResults[] = new ConstructorMapping(
+                $sourceProperty,
+                $targetProperty,
+                $targetPropertyTypes,
             );
         }
 
         return new ObjectMapping(
-            $sourceType,
-            $targetType,
-            $results,
+            $sourceClass,
+            $targetClass,
+            $propertyResults,
+            $initializableResults,
         );
     }
 
     /**
+     * @param class-string $class
      * @return array<int,string>
-     * @todo cache result
      */
-    protected function listSourceAttributes(
-        Type $sourceType,
+    private function listReadableSourceProperties(
+        string $class,
         Context $context
     ): array {
-        $class = $sourceType->getClassName();
+        $properties = $this->propertyListExtractor->getProperties($class) ?? [];
 
-        if (null === $class) {
-            throw new InvalidArgumentException('Cannot get class name from source type.', context: $context);
-        }
+        $readableProperties = [];
 
-        $attributes = $this->propertyListExtractor->getProperties($class);
-
-        if (null === $attributes) {
-            throw new InvalidArgumentException(sprintf('Cannot get properties from source class "%s".', $class), context: $context);
-        }
-
-        $readableAttributes = [];
-
-        foreach ($attributes as $attribute) {
-            if ($this->propertyAccessExtractor->isReadable($class, $attribute)) {
-                $readableAttributes[] = $attribute;
+        foreach ($properties as $property) {
+            if ($this->propertyAccessExtractor->isReadable($class, $property)) {
+                $readableProperties[] = $property;
             }
         }
 
-        return $readableAttributes;
+        return $readableProperties;
     }
 
     /**
+     * @param class-string $class
      * @return array<int,string>
-     * @todo cache result
      */
-    protected function listTargetWritableAttributes(
-        Type $targetType,
+    private function listTargetWritableProperties(
+        string $class,
         Context $context
     ): array {
-        $class = $targetType->getClassName();
+        $properties = $this->propertyListExtractor->getProperties($class) ?? [];
 
-        if (null === $class) {
-            throw new InvalidArgumentException('Cannot get class name from source type.', context: $context);
-        }
+        $writableProperties = [];
 
-        $attributes = $this->propertyListExtractor->getProperties($class);
-
-        if (null === $attributes) {
-            throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class), context: $context);
-        }
-
-        $writableAttributes = [];
-
-        foreach ($attributes as $attribute) {
-            if ($this->propertyAccessExtractor->isWritable($class, $attribute)) {
-                $writableAttributes[] = $attribute;
+        foreach ($properties as $property) {
+            if ($this->propertyAccessExtractor->isWritable($class, $property)) {
+                $writableProperties[] = $property;
             }
         }
 
-        return $writableAttributes;
+        return $writableProperties;
+    }
+
+    /**
+     * @param class-string $class
+     * @return array<int,string>
+     */
+    private function listTargetInitializableProperties(
+        string $class,
+        Context $context
+    ): array {
+        $properties = $this->propertyListExtractor->getProperties($class) ?? [];
+
+        $initializableProperties = [];
+
+        foreach ($properties as $property) {
+            if ($this->propertyInitializableExtractor->isInitializable($class, $property)) {
+                $initializableProperties[] = $property;
+            }
+        }
+
+        return $initializableProperties;
     }
 }

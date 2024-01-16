@@ -27,6 +27,7 @@ use Rekalogika\Mapper\Transformer\Exception\InvalidClassException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
+use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMapping;
 use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -36,9 +37,6 @@ use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 final class ObjectToObjectTransformer implements TransformerInterface, MainTransformerAwareInterface
@@ -46,9 +44,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     use MainTransformerAwareTrait;
 
     public function __construct(
-        private PropertyListExtractorInterface $propertyListExtractor,
-        private PropertyTypeExtractorInterface $propertyTypeExtractor,
-        private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private PropertyAccessorInterface $propertyAccessor,
         private TypeResolverInterface $typeResolver,
         private ObjectMappingResolverInterface $objectMappingResolver,
@@ -66,13 +61,20 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
-        // get source object & class
+        // verify source
 
         if (!is_object($source)) {
             throw new InvalidArgumentException(sprintf('The source must be an object, "%s" given.', get_debug_type($source)), context: $context);
         }
 
         $sourceType = $this->typeResolver->guessTypeFromVariable($source);
+        $sourceClass = $sourceType->getClassName();
+
+        if (null === $sourceClass || !\class_exists($sourceClass)) {
+            throw new InvalidArgumentException("Cannot get the class name for the source type.", context: $context);
+        }
+
+        // verify target
 
         $targetClass = $targetType->getClassName();
 
@@ -90,10 +92,15 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             return $source;
         }
 
+        // resolve object mapping
+
+        $objectMapping = $this->objectMappingResolver
+            ->resolveObjectMapping($sourceClass, $targetClass, $context);
+
         // initialize target
 
         if (null === $target) {
-            $target = $this->instantiateTarget($source, $targetType, $context);
+            $target = $this->instantiateTarget($source, $targetType, $objectMapping, $context);
         } else {
             if (!is_object($target)) {
                 throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
@@ -105,111 +112,76 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $context(ObjectCache::class)
             ->saveTarget($source, $targetType, $target, $context);
 
-        // resolve object mapping
-
-        $objectMapping = $this->objectMappingResolver
-            ->resolveObjectMapping($sourceType, $targetType, $context);
-
         // map properties
 
         foreach ($objectMapping->getPropertyMapping() as $propertyMapping) {
-            assert(is_object($target));
+            $sourcePropertyName = $propertyMapping->getSourceProperty();
+            $targetPropertyName = $propertyMapping->getTargetProperty();
+            $targetTypes = $propertyMapping->getTargetTypes();
 
-            $sourcePropertyName = $propertyMapping->getSourcePath();
-            $targetPropertyName = $propertyMapping->getTargetPath();
+            // get the value of the source property
+
+            try {
+                /** @var mixed */
+                $sourcePropertyValue = $this->propertyAccessor
+                    ->getValue($source, $sourcePropertyName);
+            } catch (NoSuchPropertyException $e) {
+                $sourcePropertyValue = null;
+            } catch (UninitializedPropertyException $e) {
+                continue;
+            } catch (AccessException | UnexpectedTypeException $e) {
+                $sourcePropertyValue = null;
+            }
+
+            // get the value of the target property
+
+            try {
+                /** @var mixed */
+                $targetPropertyValue = $this->propertyAccessor
+                    ->getValue($target, $targetPropertyName);
+            } catch (UninitializedPropertyException $e) {
+                $targetPropertyValue = null;
+            } catch (NoSuchPropertyException | AccessException | UnexpectedTypeException $e) {
+                $targetPropertyValue = null;
+            }
+
+            // transform the value
 
             /** @var mixed */
-            $targetPropertyValue = $this->resolveTargetPropertyValue(
-                source: $source,
-                target: $target,
-                sourcePropertyName: $sourcePropertyName,
-                targetPropertyName: $targetPropertyName,
-                targetClass: $targetClass,
+            $targetPropertyValue = $this->getMainTransformer()->transform(
+                source: $sourcePropertyValue,
+                target: $targetPropertyValue,
+                targetTypes: $targetTypes,
                 context: $context,
-                path: $propertyMapping->getTargetPath(),
+                path: $targetPropertyName,
             );
 
             try {
                 $this->propertyAccessor
                     ->setValue($target, $targetPropertyName, $targetPropertyValue);
             } catch (AccessException | UnexpectedTypeException $e) {
-                throw new UnableToWriteException($source, $target, $target, $targetPropertyName, $e, context: $context);
+                throw new UnableToWriteException(
+                    $source,
+                    $target,
+                    $target,
+                    $targetPropertyName,
+                    $e,
+                    context: $context
+                );
             }
         }
 
         return $target;
     }
 
-    /**
-     * @param class-string $targetClass
-     * @return mixed
-     */
-    private function resolveTargetPropertyValue(
-        object $source,
-        ?object $target,
-        string $sourcePropertyName,
-        string $targetPropertyName,
-        string $targetClass,
-        Context $context,
-        string $path,
-    ): mixed {
-        /** @var array<int,Type>|null */
-        $targetPropertyTypes = $this->propertyTypeExtractor->getTypes($targetClass, $targetPropertyName);
-
-        if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
-            throw new InvalidArgumentException(sprintf('Cannot get type of target property "%s::$%s".', $targetClass, $targetPropertyName), context: $context);
-        }
-
-        try {
-            /** @var mixed */
-            $sourcePropertyValue = $this->propertyAccessor
-                ->getValue($source, $sourcePropertyName);
-        } catch (NoSuchPropertyException $e) {
-            throw new IncompleteConstructorArgument($source, $targetClass, $sourcePropertyName, $e, context: $context);
-        } catch (UninitializedPropertyException $e) {
-            $sourcePropertyValue = null;
-        } catch (AccessException | UnexpectedTypeException $e) {
-            throw new UnableToReadException($source, $target, $source, $sourcePropertyName, $e, context: $context);
-        }
-
-        if ($target !== null) {
-            try {
-                /** @var mixed */
-                $targetPropertyValue = $this->propertyAccessor
-                    ->getValue($target, $targetPropertyName);
-            } catch (NoSuchPropertyException $e) {
-                throw new IncompleteConstructorArgument($source, $targetClass, $targetPropertyName, $e, context: $context);
-            } catch (UninitializedPropertyException $e) {
-                $targetPropertyValue = null;
-            } catch (AccessException | UnexpectedTypeException $e) {
-                throw new UnableToReadException($source, $target, $target, $targetPropertyName, $e, context: $context);
-            }
-        } else {
-            $targetPropertyValue = null;
-        }
-
-        /** @var mixed */
-        $targetPropertyValue = $this->getMainTransformer()->transform(
-            source: $sourcePropertyValue,
-            target: $targetPropertyValue,
-            targetTypes: $targetPropertyTypes,
-            context: $context,
-            path: $path,
-        );
-
-        return $targetPropertyValue;
-    }
-
-    public function getSupportedTransformation(): iterable
-    {
-        yield new TypeMapping(TypeFactory::object(), TypeFactory::object(), true);
-    }
-
     protected function instantiateTarget(
         object $source,
         Type $targetType,
+        ObjectMapping $objectMapping,
         Context $context
     ): object {
+        // check if class is valid & instantiable
+
         $targetClass = $targetType->getClassName();
 
         if (null === $targetClass || !\class_exists($targetClass)) {
@@ -222,25 +194,51 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new ClassNotInstantiableException($targetClass, context: $context);
         }
 
-        $initializableTargetProperties = $this
-            ->listTargetInitializableAttributes($targetClass, $context);
+        // gets the mapping and loop over the mapping
+
+        $initializableMappings = $objectMapping->getConstructorMapping();
 
         $constructorArguments = [];
 
-        foreach ($initializableTargetProperties as $propertyName) {
+        foreach ($initializableMappings as $mapping) {
+            $sourcePropertyName = $mapping->getSourceProperty();
+            $targetPropertyName = $mapping->getTargetProperty();
+            $targetTypes = $mapping->getTargetTypes();
+
+            if ($sourcePropertyName === null) {
+                throw new IncompleteConstructorArgument($source, $targetClass, $targetPropertyName, context: $context);
+            }
+
+            // get the value of the source property
+
+            try {
+                /** @var mixed */
+                $sourcePropertyValue = $this->propertyAccessor
+                    ->getValue($source, $sourcePropertyName);
+            } catch (NoSuchPropertyException $e) {
+                // if source property is not found, then it is an error
+                throw new IncompleteConstructorArgument($source, $targetClass, $sourcePropertyName, $e, context: $context);
+            } catch (UninitializedPropertyException $e) {
+                // if source property is unset, we skip it
+                continue;
+            } catch (AccessException | UnexpectedTypeException $e) {
+                // otherwise, it is an error
+                throw new UnableToReadException($source, null, $source, $sourcePropertyName, $e, context: $context);
+            }
+
+            // transform the value
+
             /** @var mixed */
-            $targetPropertyValue = $this->resolveTargetPropertyValue(
-                source: $source,
+            $targetPropertyValue = $this->getMainTransformer()->transform(
+                source: $sourcePropertyValue,
                 target: null,
-                sourcePropertyName: $propertyName,
-                targetPropertyName: $propertyName,
-                targetClass: $targetClass,
+                targetTypes: $targetTypes,
                 context: $context,
-                path: $propertyName,
+                path: $targetPropertyName,
             );
 
             /** @psalm-suppress MixedAssignment */
-            $constructorArguments[$propertyName] = $targetPropertyValue;
+            $constructorArguments[$targetPropertyName] = $targetPropertyValue;
         }
 
         try {
@@ -250,29 +248,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         }
     }
 
-    /**
-     * @param class-string $class
-     * @return array<int,string>
-     * @todo cache result
-     */
-    protected function listTargetInitializableAttributes(
-        string $class,
-        Context $context
-    ): array {
-        $attributes = $this->propertyListExtractor->getProperties($class);
-
-        if (null === $attributes) {
-            throw new InvalidArgumentException(sprintf('Cannot get properties from target class "%s".', $class), context: $context);
-        }
-
-        $initializableAttributes = [];
-
-        foreach ($attributes as $attribute) {
-            if ($this->propertyInitializableExtractor->isInitializable($class, $attribute)) {
-                $initializableAttributes[] = $attribute;
-            }
-        }
-
-        return $initializableAttributes;
+    public function getSupportedTransformation(): iterable
+    {
+        yield new TypeMapping(TypeFactory::object(), TypeFactory::object(), true);
     }
 }

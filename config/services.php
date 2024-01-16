@@ -136,9 +136,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set(ObjectToObjectTransformer::class)
         ->args([
-            '$propertyListExtractor' => service('rekalogika.mapper.property_info'),
-            '$propertyTypeExtractor' => service('rekalogika.mapper.property_info'),
-            '$propertyInitializableExtractor' => service('rekalogika.mapper.property_info'),
             '$propertyAccessor' => service('property_accessor'),
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$objectMappingResolver' => service('rekalogika.mapper.object_mapping_resolver'),
@@ -192,6 +189,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set('rekalogika.mapper.object_mapping_resolver', ObjectMappingResolver::class)
         ->args([
+            service('rekalogika.mapper.property_info'),
+            service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
         ]);

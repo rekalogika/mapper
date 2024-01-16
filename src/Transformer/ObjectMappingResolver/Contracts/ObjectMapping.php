@@ -13,35 +13,45 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts;
 
-use Symfony\Component\PropertyInfo\Type;
-
 final class ObjectMapping
 {
     /**
-     * @param array<int,ObjectMappingEntry> $propertyMapping
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     * @param array<int,PropertyMapping> $propertyMapping
+     * @param array<int,ConstructorMapping> $constructorMapping
      */
     public function __construct(
-        private Type $sourceType,
-        private Type $targetType,
+        private string $sourceClass,
+        private string $targetClass,
         private array $propertyMapping,
+        private array $constructorMapping,
     ) {
     }
 
-    public function getSourceType(): Type
+    /**
+     * @return array<int,PropertyMapping>
+     */
+    public function getPropertyMapping(): array
     {
-        return $this->sourceType;
-    }
-
-    public function getTargetType(): Type
-    {
-        return $this->targetType;
+        return $this->propertyMapping;
     }
 
     /**
-     * @return \Traversable<int,ObjectMappingEntry>
+     * @return array<int,ConstructorMapping>
      */
-    public function getPropertyMapping(): \Traversable
+    public function getConstructorMapping(): array
     {
-        yield from $this->propertyMapping;
+        return $this->constructorMapping;
+    }
+
+    public function getSourceClass(): string
+    {
+        return $this->sourceClass;
+    }
+
+    public function getTargetClass(): string
+    {
+        return $this->targetClass;
     }
 }

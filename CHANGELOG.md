@@ -9,6 +9,7 @@
 * feat: Uses transformer class names as service IDs for easier decoration.
 * refactor: Move mapping logic in `ObjectToObjectTransformer` to its own
   service.
+* refactor: Move more mapping logic to `ObjectMappingResolver`.
 
 ## 0.5.12
 

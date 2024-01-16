@@ -14,13 +14,16 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts;
 
 use Rekalogika\Mapper\Context\Context;
-use Symfony\Component\PropertyInfo\Type;
 
 interface ObjectMappingResolverInterface
 {
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     */
     public function resolveObjectMapping(
-        Type $sourceType,
-        Type $targetType,
+        string $sourceClass,
+        string $targetClass,
         Context $context
     ): ObjectMapping;
 }

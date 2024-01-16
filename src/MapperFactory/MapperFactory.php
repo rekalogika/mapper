@@ -54,12 +54,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
-use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
@@ -183,21 +181,6 @@ class MapperFactory
         return $this->propertyInfoExtractor;
     }
 
-    private function getPropertyInitializableExtractor(): PropertyInitializableExtractorInterface
-    {
-        return $this->getPropertyInfoExtractor();
-    }
-
-    private function getPropertyAccessExtractor(): PropertyAccessExtractorInterface
-    {
-        return $this->getPropertyInfoExtractor();
-    }
-
-    private function getPropertyListExtractor(): PropertyListExtractorInterface
-    {
-        return $this->getPropertyInfoExtractor();
-    }
-
     //
     // concrete services
     //
@@ -275,9 +258,6 @@ class MapperFactory
     {
         if (null === $this->objectToObjectTransformer) {
             $this->objectToObjectTransformer = new ObjectToObjectTransformer(
-                $this->getPropertyListExtractor(),
-                $this->getPropertyInfoExtractor(),
-                $this->getPropertyInitializableExtractor(),
                 $this->getPropertyAccessor(),
                 $this->getTypeResolver(),
                 $this->getObjectMappingResolver(),
@@ -411,8 +391,10 @@ class MapperFactory
     {
         if (null === $this->objectMappingResolver) {
             $this->objectMappingResolver = new ObjectMappingResolver(
-                $this->getPropertyAccessExtractor(),
-                $this->getPropertyListExtractor(),
+                $this->getPropertyInfoExtractor(),
+                $this->getPropertyInfoExtractor(),
+                $this->getPropertyInfoExtractor(),
+                $this->getPropertyInfoExtractor(),
             );
         }
 
