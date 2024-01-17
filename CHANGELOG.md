@@ -5,6 +5,7 @@
 * perf: Add caching for `TransformerRegistry`.
 * perf: Optimize `guessTypeFromVariable`
 * perf: Optimize `Context` & `ObjectCache`
+* perf: Change 'simpletypes' cache to array.
 
 ## 0.5.14
 

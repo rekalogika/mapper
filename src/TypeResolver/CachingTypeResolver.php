@@ -25,9 +25,6 @@ class CachingTypeResolver implements TypeResolverInterface
         $this->typeStringCache = new \WeakMap();
 
         /** @psalm-suppress PropertyTypeCoercion */
-        $this->simpleTypesCache = new \WeakMap();
-
-        /** @psalm-suppress PropertyTypeCoercion */
         $this->isSimpleTypeCache = new \WeakMap();
     }
 
@@ -60,9 +57,9 @@ class CachingTypeResolver implements TypeResolverInterface
     // can be expensive in a loop. we cache using a weakmap
 
     /**
-     * @var \WeakMap<Type,array<array-key,MixedType|Type>>
+     * @var array<string,array<array-key,MixedType|Type>>
      */
-    private \WeakMap $simpleTypesCache;
+    private array $simpleTypesCache = [];
 
     public function getSimpleTypes(Type|MixedType $type): array
     {
@@ -70,13 +67,15 @@ class CachingTypeResolver implements TypeResolverInterface
             return [$type];
         }
 
-        if ($result = $this->simpleTypesCache[$type] ?? null) {
+        $key = md5(serialize($type));
+
+        if ($result = $this->simpleTypesCache[$key] ?? null) {
             return $result;
         }
 
         $simpleTypes = $this->decorated->getSimpleTypes($type);
 
-        $this->simpleTypesCache->offsetSet($type, $simpleTypes);
+        $this->simpleTypesCache[$key] = $simpleTypes;
 
         return $simpleTypes;
     }
