@@ -45,11 +45,14 @@ final class CachingObjectMappingResolver implements ObjectMappingResolverInterfa
         $cacheItem = $this->cacheItemPool->getItem($cacheKey);
 
         if ($cacheItem->isHit()) {
-            /** @var mixed */
-            $cached = $cacheItem->get();
+            try {
+                /** @var mixed */
+                $cached = $cacheItem->get();
 
-            if ($cached instanceof ObjectMapping) {
-                return $this->cache[$cacheKey] = $cached;
+                if ($cached instanceof ObjectMapping) {
+                    return $this->cache[$cacheKey] = $cached;
+                }
+            } catch (\Throwable) {
             }
 
             unset($this->cache[$cacheKey]);
