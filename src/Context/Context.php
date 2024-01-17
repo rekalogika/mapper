@@ -92,16 +92,7 @@ final readonly class Context
      */
     public function get(string $class): object
     {
-        if (!isset($this->context[$class])) {
-            throw new ContextMemberNotFoundException($class);
-        }
-
-        $result = $this->context[$class];
-
-        if (!is_a($result, $class)) {
-            throw new LogicException(sprintf('Object found, but not the requested type "%s".', $class));
-        }
-
-        return $result;
+        // @phpstan-ignore-next-line
+        return $this->context[$class] ?? throw new ContextMemberNotFoundException($class);
     }
 }

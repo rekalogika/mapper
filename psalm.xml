@@ -36,5 +36,15 @@
                 <file name="tests/IntegrationTest/MappingTest.php" />
             </errorLevel>
         </PossiblyInvalidArgument>
+        <InvalidReturnStatement>
+            <errorLevel type="suppress">
+                <file name="src/Context/Context.php" />
+            </errorLevel>
+        </InvalidReturnStatement>
+        <InvalidReturnType>
+            <errorLevel type="suppress">
+                <file name="src/Context/Context.php" />
+            </errorLevel>
+        </InvalidReturnType>
     </issueHandlers>
 </psalm>

@@ -17,7 +17,6 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException;
-use Rekalogika\Mapper\ObjectCache\Exception\NonSimpleTypeException;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -47,13 +46,6 @@ final class ObjectCache
         return $source instanceof \DateTimeInterface;
     }
 
-    private function assertSimpleType(Type $type, Context $context): void
-    {
-        if (!$this->typeResolver->isSimpleType($type)) {
-            throw new NonSimpleTypeException($type, context: $context);
-        }
-    }
-
     /**
      * Precaching indicates we want to cache the target, but haven't done so
      * yet. If the object is still in precached status, obtaining it from the
@@ -74,8 +66,6 @@ final class ObjectCache
             return;
         }
 
-        $this->assertSimpleType($targetType, $context);
-
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         if (!isset($this->preCache[$source])) {
@@ -93,8 +83,6 @@ final class ObjectCache
             return false;
         }
 
-        $this->assertSimpleType($targetType, $context);
-
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         return isset($this->preCache[$source][$targetTypeString]);
@@ -105,8 +93,6 @@ final class ObjectCache
         if (!is_object($source)) {
             return;
         }
-
-        $this->assertSimpleType($targetType, $context);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
@@ -125,8 +111,6 @@ final class ObjectCache
             return false;
         }
 
-        $this->assertSimpleType($targetType, $context);
-
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         return isset($this->cache[$source][$targetTypeString]);
@@ -139,14 +123,12 @@ final class ObjectCache
         }
 
         if ($this->isBlacklisted($source)) {
-            throw new CachedTargetObjectNotFoundException(context: $context);
+            throw new CachedTargetObjectNotFoundException();
         }
 
         if (!is_object($source)) {
-            throw new CachedTargetObjectNotFoundException(context: $context);
+            throw new CachedTargetObjectNotFoundException();
         }
-
-        $this->assertSimpleType($targetType, $context);
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
