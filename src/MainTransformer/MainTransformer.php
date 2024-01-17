@@ -136,13 +136,14 @@ class MainTransformer implements MainTransformerInterface
 
         // loop over the result and transform the source to the target
 
-        foreach ($searchResult as $searchEntry) {
+        foreach ($searchResult as $searchResultEntry) {
             // if the target exists, we make sure it is of the same type as
-            // the target type of the search entry
+            // the target type of the search entry, if not continue to the next
+            // search entry
 
             if ($target !== null) {
                 if (
-                    !TypeCheck::isVariableInstanceOf($target, $searchEntry->getTargetType())
+                    !TypeCheck::isVariableInstanceOf($target, $searchResultEntry->getTargetType())
                 ) {
                     continue;
                 }
@@ -151,10 +152,10 @@ class MainTransformer implements MainTransformerInterface
             // TransformerInterface doesn't accept MixedType, so we need to
             // convert it to null
 
-            $sourceType = $searchEntry->getSourceType();
+            $sourceType = $searchResultEntry->getSourceType();
             $sourceTypeForTransformer = $sourceType instanceof MixedType ? null : $sourceType;
 
-            $targetType = $searchEntry->getTargetType();
+            $targetType = $searchResultEntry->getTargetType();
             $targetTypeForTransformer = $targetType instanceof MixedType ? null : $targetType;
 
             // if the target type is cached, return it. otherwise, pre-cache it
@@ -178,7 +179,7 @@ class MainTransformer implements MainTransformerInterface
             // get and prepare transformer
             $transformer = $this->processTransformer(
                 $this->transformerRegistry->get(
-                    $searchEntry->getTransformerServiceId()
+                    $searchResultEntry->getTransformerServiceId()
                 )
             );
 
