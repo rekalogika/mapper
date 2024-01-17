@@ -285,49 +285,39 @@ class TypeCheck
             return true;
         }
 
-        if (self::isObject($type)) {
-            $class = $type->getClassName();
+        $builtinType = $type->getBuiltinType();
 
-            if ($class !== null) {
-                return self::nameExists($class)
-                    && $variable instanceof $class;
-            }
+        switch ($builtinType) {
+            case Type::BUILTIN_TYPE_INT:
+                return is_int($variable);
+            case Type::BUILTIN_TYPE_FLOAT:
+                return is_float($variable);
+            case Type::BUILTIN_TYPE_STRING:
+                return is_string($variable);
+            case Type::BUILTIN_TYPE_BOOL:
+                return is_bool($variable);
+            case Type::BUILTIN_TYPE_ARRAY:
+                return is_array($variable);
+            case Type::BUILTIN_TYPE_RESOURCE:
+                return is_resource($variable);
+            case Type::BUILTIN_TYPE_NULL:
+                return is_null($variable);
+            case Type::BUILTIN_TYPE_ITERABLE:
+                return is_iterable($variable);
+            case Type::BUILTIN_TYPE_OBJECT:
+                $class = $type->getClassName();
 
-            return true;
+                if ($class === null) {
+                    return true;
+                }
+
+                if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
+                    return false;
+                }
+
+                return $variable instanceof $class;
+            default:
+                throw new LogicException(sprintf('Unknown builtin type "%s"', $builtinType));
         }
-
-        if (self::isInt($type)) {
-            return is_int($variable);
-        }
-
-        if (self::isFloat($type)) {
-            return is_float($variable);
-        }
-
-        if (self::isString($type)) {
-            return is_string($variable);
-        }
-
-        if (self::isBool($type)) {
-            return is_bool($variable);
-        }
-
-        if (self::isArray($type)) {
-            return is_array($variable);
-        }
-
-        if (self::isResource($type)) {
-            return is_resource($variable);
-        }
-
-        if (self::isNull($type)) {
-            return is_null($variable);
-        }
-
-        if (self::isIterable($type)) {
-            return is_iterable($variable);
-        }
-
-        return false;
     }
 }

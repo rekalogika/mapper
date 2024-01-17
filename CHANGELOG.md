@@ -9,6 +9,7 @@
 * perf: Use our `PropertyAccessLite` instead of Symfony's.
 * fix(`CachingObjectMappingResolver`): Safeguard
 * perf: Use flyweight pattern for `TypeFactory`
+* perf(`TypeCheck`): Improve `isVariableInstanceOf`.
 
 ## 0.5.14
 
