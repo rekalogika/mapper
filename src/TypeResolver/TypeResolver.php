@@ -23,35 +23,20 @@ class TypeResolver implements TypeResolverInterface
 {
     public function guessTypeFromVariable(mixed $variable): Type
     {
-        if (is_object($variable)) {
-            return TypeFactory::objectOfClass($variable::class);
+        $type = get_debug_type($variable);
+
+        if (in_array($type, ['array', 'bool', 'int', 'float', 'string', 'null'])) {
+            return new Type($type);
         }
 
-        if (is_null($variable)) {
-            return TypeFactory::null();
+        if (class_exists($type) || interface_exists($type) || \enum_exists($type)) {
+            return new Type(
+                builtinType: 'object',
+                class: $type,
+            );
         }
 
-        if (is_array($variable)) {
-            return TypeFactory::array();
-        }
-
-        if (is_bool($variable)) {
-            return TypeFactory::bool();
-        }
-
-        if (is_int($variable)) {
-            return TypeFactory::int();
-        }
-
-        if (is_float($variable)) {
-            return TypeFactory::float();
-        }
-
-        if (is_string($variable)) {
-            return TypeFactory::string();
-        }
-
-        if (is_resource($variable)) {
+        if (\str_starts_with($type, 'resource')) {
             return TypeFactory::resource();
         }
 

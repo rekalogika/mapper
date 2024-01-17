@@ -3,6 +3,7 @@
 ## 0.5.15
 
 * perf: Add caching for `TransformerRegistry`.
+* perf: Optimize `guessTypeFromVariable`
 
 ## 0.5.14
 
