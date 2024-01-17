@@ -6,6 +6,7 @@
 * perf: Optimize `guessTypeFromVariable`
 * perf: Optimize `Context` & `ObjectCache`
 * perf: Change 'simpletypes' cache to array.
+* perf: Use our `PropertyAccessLite` instead of Symfony's.
 
 ## 0.5.14
 

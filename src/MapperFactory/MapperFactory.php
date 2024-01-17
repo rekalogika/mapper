@@ -27,6 +27,7 @@ use Rekalogika\Mapper\MethodMapper\ClassMethodTransformer;
 use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
+use Rekalogika\Mapper\PropertyAccessLite\PropertyAccessLite;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
@@ -49,8 +50,6 @@ use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Console\Application;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -58,7 +57,9 @@ use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
@@ -114,7 +115,7 @@ class MapperFactory
         private array $additionalTransformers = [],
         private ?ReflectionExtractor $reflectionExtractor = null,
         private ?PhpStanExtractor $phpStanExtractor = null,
-        private ?PropertyAccessor $propertyAccessor = null,
+        private ?PropertyAccessorInterface $propertyAccessor = null,
         private ?NormalizerInterface $normalizer = null,
         private ?DenormalizerInterface $denormalizer = null,
         ?CacheItemPoolInterface $propertyInfoExtractorCache = null,
@@ -188,7 +189,7 @@ class MapperFactory
     private function getConcretePropertyAccessor(): PropertyAccessorInterface
     {
         if (null === $this->propertyAccessor) {
-            $this->propertyAccessor = PropertyAccess::createPropertyAccessor();
+            $this->propertyAccessor = new PropertyAccessLite();
         }
 
         return $this->propertyAccessor;
@@ -258,9 +259,9 @@ class MapperFactory
     {
         if (null === $this->objectToObjectTransformer) {
             $this->objectToObjectTransformer = new ObjectToObjectTransformer(
-                $this->getPropertyAccessor(),
-                $this->getTypeResolver(),
-                $this->getObjectMappingResolver(),
+                propertyAccessor: $this->getPropertyAccessor(),
+                typeResolver: $this->getTypeResolver(),
+                objectMappingResolver: $this->getObjectMappingResolver(),
             );
         }
 

@@ -46,5 +46,10 @@
                 <file name="src/Context/Context.php" />
             </errorLevel>
         </InvalidReturnType>
+        <MissingConstructor>
+            <errorLevel type="suppress">
+                <file name="tests/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php" />
+            </errorLevel>
+        </MissingConstructor>
     </issueHandlers>
 </psalm>

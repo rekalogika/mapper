@@ -23,6 +23,7 @@ use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\MethodMapper\ClassMethodTransformer;
 use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
+use Rekalogika\Mapper\PropertyAccessLite\PropertyAccessLite;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
@@ -138,7 +139,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set(ObjectToObjectTransformer::class)
         ->args([
-            '$propertyAccessor' => service('property_accessor'),
+            '$propertyAccessor' => service('rekalogika.mapper.property_access_lite'),
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$objectMappingResolver' => service('rekalogika.mapper.object_mapping_resolver'),
         ])
@@ -173,6 +174,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('kernel')
         ])
         ->tag('kernel.cache_warmer');
+
+    # propertyaccess lite
+
+    $services
+        ->set('rekalogika.mapper.property_access_lite', PropertyAccessLite::class);
 
     # type resolver
 
