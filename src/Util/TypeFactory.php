@@ -68,104 +68,163 @@ class TypeFactory
         return self::objectOfClass($string);
     }
 
-    public static function fromBuiltIn(string $builtIn): Type
-    {
-        return new Type(
-            builtinType: $builtIn
-        );
-    }
-
     public static function mixed(): MixedType
     {
         return MixedType::instance();
     }
 
+    private static ?Type $nullInstance = null;
+
     public static function null(): Type
     {
-        return new Type(
-            builtinType: 'null'
-        );
+        if (self::$nullInstance === null) {
+            self::$nullInstance = new Type(
+                builtinType: 'null'
+            );
+        }
+
+        return self::$nullInstance;
     }
 
     public static function scalar(string $type): Type
     {
-        if (!in_array($type, ['string', 'int', 'float', 'bool'], true)) {
-            throw new InvalidArgumentException(sprintf('"%s" is not a valid scalar type.', $type));
-        }
-
-        return new Type(
-            builtinType: $type
-        );
+        return match ($type) {
+            'string' => self::string(),
+            'int' => self::int(),
+            'float' => self::float(),
+            'bool' => self::bool(),
+            default => throw new InvalidArgumentException(sprintf('"%s" is not a valid scalar type.', $type)),
+        };
     }
+
+    private static ?Type $stringInstance = null;
 
     public static function string(): Type
     {
-        return new Type(
-            builtinType: 'string'
-        );
+        if (self::$stringInstance === null) {
+            self::$stringInstance = new Type(
+                builtinType: 'string'
+            );
+        }
+
+        return self::$stringInstance;
     }
+
+    private static ?Type $intInstance = null;
 
     public static function int(): Type
     {
-        return new Type(
-            builtinType: 'int'
-        );
+        if (self::$intInstance === null) {
+            self::$intInstance = new Type(
+                builtinType: 'int'
+            );
+        }
+
+        return self::$intInstance;
     }
+
+    private static ?Type $floatInstance = null;
 
     public static function float(): Type
     {
-        return new Type(
-            builtinType: 'float'
-        );
+        if (self::$floatInstance === null) {
+            self::$floatInstance = new Type(
+                builtinType: 'float'
+            );
+        }
+
+        return self::$floatInstance;
     }
+
+    private static ?Type $boolInstance = null;
 
     public static function bool(): Type
     {
-        return new Type(
-            builtinType: 'bool'
-        );
+        if (self::$boolInstance === null) {
+            self::$boolInstance = new Type(
+                builtinType: 'bool'
+            );
+        }
+
+        return self::$boolInstance;
     }
+
+    private static ?Type $resourceInstance = null;
 
     public static function resource(): Type
     {
-        return new Type(
-            builtinType: 'resource'
-        );
+        if (self::$resourceInstance === null) {
+            self::$resourceInstance = new Type(
+                builtinType: 'resource'
+            );
+        }
+
+        return self::$resourceInstance;
     }
+
+    private static ?Type $trueInstance = null;
 
     public static function true(): Type
     {
-        return new Type(
-            builtinType: 'true'
-        );
+        if (self::$trueInstance === null) {
+            self::$trueInstance = new Type(
+                builtinType: 'true'
+            );
+        }
+
+        return self::$trueInstance;
     }
+
+    private static ?Type $falseInstance = null;
 
     public static function false(): Type
     {
-        return new Type(
-            builtinType: 'false'
-        );
+        if (self::$falseInstance === null) {
+            self::$falseInstance = new Type(
+                builtinType: 'false'
+            );
+        }
+
+        return self::$falseInstance;
     }
+
+    private static ?Type $callableInstance = null;
 
     public static function callable(): Type
     {
-        return new Type(
-            builtinType: 'callable'
-        );
+        if (self::$callableInstance === null) {
+            self::$callableInstance = new Type(
+                builtinType: 'callable'
+            );
+        }
+
+        return self::$callableInstance;
     }
+
+    private static ?Type $arrayInstance = null;
 
     public static function array(): Type
     {
-        return new Type(
-            builtinType: 'array',
-        );
+        if (self::$arrayInstance === null) {
+            self::$arrayInstance = new Type(
+                builtinType: 'array'
+            );
+        }
+
+        return self::$arrayInstance;
     }
+
+    private static ?Type $iterableInstance = null;
 
     public static function iterable(): Type
     {
-        return new Type(
-            builtinType: 'iterable',
-        );
+        if (self::$iterableInstance === null) {
+            self::$iterableInstance = new Type(
+                builtinType: 'iterable'
+            );
+        }
+
+        return self::$iterableInstance;
     }
 
     public static function arrayWithKeyValue(
@@ -180,33 +239,60 @@ class TypeFactory
         );
     }
 
+    /**
+     * @var array<class-string,Type>
+     */
+    private static array $instancesOfArrayOfObject = [];
+
+    /**
+     * @param class-string $class
+     */
     public static function arrayOfObject(string $class): Type
     {
+        if (isset(self::$instancesOfArrayOfObject[$class])) {
+            return self::$instancesOfArrayOfObject[$class];
+        }
+
         if (!TypeCheck::nameExists($class)) {
             throw new InvalidArgumentException(sprintf('"%s" is not a valid class.', $class));
         }
 
-        return new Type(
+        return self::$instancesOfArrayOfObject[$class] = new Type(
             builtinType: 'array',
             collection: true,
             collectionValueType: self::objectOfClass($class)
         );
     }
 
+    private static ?Type $objectInstance = null;
+
     public static function object(): Type
     {
-        return new Type(
-            builtinType: 'object',
-        );
+        if (self::$objectInstance === null) {
+            self::$objectInstance = new Type(
+                builtinType: 'object'
+            );
+        }
+
+        return self::$objectInstance;
     }
+
+    /**
+     * @var array<class-string,Type>
+     */
+    private static array $instancesOfObjectOfClass = [];
 
     public static function objectOfClass(string $class): Type
     {
-        if (!TypeCheck::nameExists($class)) {
+        if (isset(self::$instancesOfObjectOfClass[$class])) {
+            return self::$instancesOfObjectOfClass[$class];
+        }
+
+        if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
             throw new InvalidArgumentException(sprintf('"%s" is not a valid class.', $class));
         }
 
-        return new Type(
+        return self::$instancesOfObjectOfClass[$class] = new Type(
             builtinType: 'object',
             class: $class
         );

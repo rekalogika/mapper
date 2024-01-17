@@ -25,15 +25,22 @@ class TypeResolver implements TypeResolverInterface
     {
         $type = get_debug_type($variable);
 
-        if (in_array($type, ['array', 'bool', 'int', 'float', 'string', 'null'])) {
-            return new Type($type);
+        if ($type === 'array') {
+            return TypeFactory::array();
+        } elseif ($type === 'bool') {
+            return TypeFactory::bool();
+        } elseif ($type === 'int') {
+            return TypeFactory::int();
+        } elseif ($type === 'float') {
+            return TypeFactory::float();
+        } elseif ($type === 'string') {
+            return TypeFactory::string();
+        } elseif ($type === 'null') {
+            return TypeFactory::null();
         }
 
         if (class_exists($type) || interface_exists($type) || \enum_exists($type)) {
-            return new Type(
-                builtinType: 'object',
-                class: $type,
-            );
+            return TypeFactory::objectOfClass($type);
         }
 
         if (\str_starts_with($type, 'resource')) {
