@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts;
 
+use Symfony\Component\PropertyInfo\PropertyReadInfo;
+use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\Type;
 
 final class PropertyMapping
@@ -29,6 +31,9 @@ final class PropertyMapping
         private string $sourceProperty,
         private string $targetProperty,
         array $targetTypes,
+        private PropertyReadInfo $sourcePropertyReadInfo,
+        private PropertyReadInfo $targetPropertyReadInfo,
+        private PropertyWriteInfo $targetPropertyWriteInfo,
     ) {
         $this->targetTypes = array_values($targetTypes);
     }
@@ -49,5 +54,20 @@ final class PropertyMapping
     public function getTargetTypes(): array
     {
         return $this->targetTypes;
+    }
+
+    public function getSourcePropertyReadInfo(): PropertyReadInfo
+    {
+        return $this->sourcePropertyReadInfo;
+    }
+
+    public function getTargetPropertyReadInfo(): PropertyReadInfo
+    {
+        return $this->targetPropertyReadInfo;
+    }
+
+    public function getTargetPropertyWriteInfo(): PropertyWriteInfo
+    {
+        return $this->targetPropertyWriteInfo;
     }
 }

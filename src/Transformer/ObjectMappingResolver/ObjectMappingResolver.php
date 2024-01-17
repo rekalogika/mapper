@@ -22,7 +22,9 @@ use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\PropertyMappin
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 
 final class ObjectMappingResolver implements ObjectMappingResolverInterface
 {
@@ -31,6 +33,8 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
+        private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
     ) {
     }
 
@@ -75,10 +79,55 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
                 );
             }
 
+            $sourcePropertyReadInfo = $this->propertyReadInfoExtractor
+                ->getReadInfo($sourceClass, $sourceProperty);
+
+            if (null === $sourcePropertyReadInfo) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Cannot get read info of source property "%s::$%s".',
+                        $sourceClass,
+                        $sourceProperty
+                    ),
+                    context: $context
+                );
+            }
+
+            $targetPropertyReadInfo = $this->propertyReadInfoExtractor
+                ->getReadInfo($targetClass, $targetProperty);
+
+            if (null === $targetPropertyReadInfo) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Cannot get read info of target property "%s::$%s".',
+                        $targetClass,
+                        $targetProperty
+                    ),
+                    context: $context
+                );
+            }
+
+            $targetPropertyWriteInfo = $this->propertyWriteInfoExtractor
+                ->getWriteInfo($targetClass, $targetProperty);
+
+            if (null === $targetPropertyWriteInfo) {
+                throw new InvalidArgumentException(
+                    sprintf(
+                        'Cannot get write info of target property "%s::$%s".',
+                        $targetClass,
+                        $targetProperty
+                    ),
+                    context: $context
+                );
+            }
+
             $propertyResults[] = new PropertyMapping(
-                $sourceProperty,
-                $targetProperty,
-                $targetPropertyTypes,
+                sourceProperty: $sourceProperty,
+                targetProperty: $targetProperty,
+                targetTypes: $targetPropertyTypes,
+                sourcePropertyReadInfo: $sourcePropertyReadInfo,
+                targetPropertyReadInfo: $targetPropertyReadInfo,
+                targetPropertyWriteInfo: $targetPropertyWriteInfo,
             );
         }
 

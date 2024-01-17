@@ -154,6 +154,16 @@ class MapperFactory
         return $this->phpStanExtractor;
     }
 
+    private function getPropertyReadInfoExtractor(): PropertyReadInfoExtractorInterface
+    {
+        return $this->getReflectionExtractor();
+    }
+
+    private function getPropertyWriteInfoExtractor(): PropertyWriteInfoExtractorInterface
+    {
+        return $this->getReflectionExtractor();
+    }
+
     private function getPropertyInfoExtractor(): PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface
     {
         if ($this->propertyInfoExtractor === null) {
@@ -396,6 +406,8 @@ class MapperFactory
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
+                $this->getPropertyReadInfoExtractor(),
+                $this->getPropertyWriteInfoExtractor(),
             );
         }
 

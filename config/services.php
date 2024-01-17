@@ -201,6 +201,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
+            service('property_info.reflection_extractor'),
+            service('property_info.reflection_extractor'),
         ]);
 
     $services
