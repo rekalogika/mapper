@@ -17,7 +17,6 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
-use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -34,20 +33,17 @@ final class ScalarToScalarTransformer implements TransformerInterface
             throw new InvalidArgumentException(sprintf('Source must be scalar, "%s" given.', get_debug_type($source)), context: $context);
         }
 
-        if (TypeCheck::isInt($targetType)) {
-            return (int) $source;
-        }
+        $targetTypeBuiltIn = $targetType?->getBuiltinType();
 
-        if (TypeCheck::isFloat($targetType)) {
-            return (float) $source;
-        }
-
-        if (TypeCheck::isString($targetType)) {
-            return (string) $source;
-        }
-
-        if (TypeCheck::isBool($targetType)) {
-            return (bool) $source;
+        switch ($targetTypeBuiltIn) {
+            case Type::BUILTIN_TYPE_INT:
+                return (int) $source;
+            case Type::BUILTIN_TYPE_FLOAT:
+                return (float) $source;
+            case Type::BUILTIN_TYPE_STRING:
+                return (string) $source;
+            case Type::BUILTIN_TYPE_BOOL:
+                return (bool) $source;
         }
 
         throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given.', get_debug_type($targetType)), context: $context);

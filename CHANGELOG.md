@@ -10,6 +10,7 @@
 * fix(`CachingObjectMappingResolver`): Safeguard
 * perf: Use flyweight pattern for `TypeFactory`
 * perf(`TypeCheck`): Improve `isVariableInstanceOf`.
+* perf(`ScalarToScalarTransformer`): Optimize.
 
 ## 0.5.14
 
