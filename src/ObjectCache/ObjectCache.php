@@ -23,22 +23,18 @@ use Symfony\Component\PropertyInfo\Type;
 final class ObjectCache
 {
     /**
-     * @var \SplObjectStorage<object,\ArrayObject<string,object>>
+     * @var array<int,array<string,object>>
      */
-    private \SplObjectStorage $cache;
+    private array $cache = [];
 
     /**
-     * @var \SplObjectStorage<object,\ArrayObject<string,true>>
+     * @var array<int,array<string,true>>
      */
-    private \SplObjectStorage $preCache;
+    private array $preCache = [];
 
     public function __construct(
         private TypeResolverInterface $typeResolver
     ) {
-        /** @psalm-suppress MixedPropertyTypeCoercion */
-        $this->cache = new \SplObjectStorage();
-        /** @psalm-suppress MixedPropertyTypeCoercion */
-        $this->preCache = new \SplObjectStorage();
     }
 
     private function isBlacklisted(mixed $source): bool
@@ -67,14 +63,13 @@ final class ObjectCache
         }
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
+        $key = spl_object_id($source);
 
-        if (!isset($this->preCache[$source])) {
-            /** @var \ArrayObject<string,true> */
-            $arrayObject = new \ArrayObject();
-            $this->preCache[$source] = $arrayObject;
+        if (!isset($this->preCache[$key])) {
+            $this->preCache[$key] = [];
         }
 
-        $this->preCache->offsetGet($source)->offsetSet($targetTypeString, true);
+        $this->preCache[$key][$targetTypeString] = true;
     }
 
     private function isPreCached(mixed $source, Type $targetType, Context $context): bool
@@ -84,8 +79,9 @@ final class ObjectCache
         }
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
+        $key = spl_object_id($source);
 
-        return isset($this->preCache[$source][$targetTypeString]);
+        return isset($this->preCache[$key][$targetTypeString]);
     }
 
     private function removePrecache(mixed $source, Type $targetType, Context $context): void
@@ -95,9 +91,10 @@ final class ObjectCache
         }
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
+        $key = spl_object_id($source);
 
-        if (isset($this->preCache[$source][$targetTypeString])) {
-            unset($this->preCache[$source][$targetTypeString]);
+        if (isset($this->preCache[$key][$targetTypeString])) {
+            unset($this->preCache[$key][$targetTypeString]);
         }
     }
 
@@ -112,8 +109,9 @@ final class ObjectCache
         }
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
+        $key = spl_object_id($source);
 
-        return isset($this->cache[$source][$targetTypeString]);
+        return isset($this->cache[$key][$targetTypeString]);
     }
 
     public function getTarget(mixed $source, Type $targetType, Context $context): mixed
@@ -131,9 +129,10 @@ final class ObjectCache
         }
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
+        $key = spl_object_id($source);
 
         /** @var object */
-        return $this->cache[$source][$targetTypeString]
+        return $this->cache[$key][$targetTypeString]
             ?? throw new CachedTargetObjectNotFoundException();
     }
 
@@ -153,6 +152,7 @@ final class ObjectCache
         }
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
+        $key = spl_object_id($source);
 
         if (
             $addIfAlreadyExists === false
@@ -165,13 +165,11 @@ final class ObjectCache
             ));
         }
 
-        if (!isset($this->cache[$source])) {
-            /** @var \ArrayObject<string,object> */
-            $arrayObject = new \ArrayObject();
-            $this->cache[$source] = $arrayObject;
+        if (!isset($this->cache[$key])) {
+            $this->cache[$key] = [];
         }
 
-        $this->cache->offsetGet($source)->offsetSet($targetTypeString, $target);
+        $this->cache[$key][$targetTypeString] = $target;
         $this->removePrecache($source, $targetType, $context);
     }
 }

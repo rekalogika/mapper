@@ -12,6 +12,7 @@
 * perf(`TypeCheck`): Improve `isVariableInstanceOf`.
 * perf(`ScalarToScalarTransformer`): Optimize.
 * perf: Remove type guesser from `TypeResolver`.
+* perf(`ObjectCache`): Optimize using plain arrays.
 
 ## 0.5.14
 
