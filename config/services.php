@@ -140,7 +140,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set(ObjectToObjectTransformer::class)
         ->args([
             '$propertyAccessor' => service('rekalogika.mapper.property_access_lite'),
-            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$objectMappingResolver' => service('rekalogika.mapper.object_mapping_resolver'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -900]);

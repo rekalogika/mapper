@@ -28,6 +28,7 @@ use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
+use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;
 
 class MainTransformer implements MainTransformerInterface
@@ -86,7 +87,7 @@ class MainTransformer implements MainTransformerInterface
             }
         } else {
             if (count($targetTypes) === 0) {
-                $targetTypes = [$this->typeResolver->guessTypeFromVariable($target)];
+                $targetTypes = [TypeGuesser::guessTypeFromVariable($target)];
             }
         }
 
@@ -119,7 +120,7 @@ class MainTransformer implements MainTransformerInterface
 
         // guess the source type
 
-        $sourceTypes = [$this->typeResolver->guessTypeFromVariable($source)];
+        $sourceTypes = [TypeGuesser::guessTypeFromVariable($source)];
 
         // gets simple target types from the provided target type
 

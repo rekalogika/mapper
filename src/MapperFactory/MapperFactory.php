@@ -258,7 +258,6 @@ class MapperFactory
         if (null === $this->objectToObjectTransformer) {
             $this->objectToObjectTransformer = new ObjectToObjectTransformer(
                 propertyAccessor: $this->getPropertyAccessor(),
-                typeResolver: $this->getTypeResolver(),
                 objectMappingResolver: $this->getObjectMappingResolver(),
             );
         }

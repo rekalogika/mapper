@@ -19,11 +19,6 @@ use Symfony\Component\PropertyInfo\Type;
 interface TypeResolverInterface
 {
     /**
-     * Guesses the type of the given variable.
-     */
-    public function guessTypeFromVariable(mixed $variable): Type;
-
-    /**
      * Gets the string representation of a Type.
      *
      * @param Type|MixedType $type

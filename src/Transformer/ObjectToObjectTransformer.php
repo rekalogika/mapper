@@ -29,9 +29,9 @@ use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMapping;
 use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
-use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
+use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyAccess\Exception\AccessException;
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
@@ -45,7 +45,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
     public function __construct(
         private PropertyAccessorInterface $propertyAccessor,
-        private TypeResolverInterface $typeResolver,
         private ObjectMappingResolverInterface $objectMappingResolver,
     ) {
     }
@@ -67,7 +66,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new InvalidArgumentException(sprintf('The source must be an object, "%s" given.', get_debug_type($source)), context: $context);
         }
 
-        $sourceType = $this->typeResolver->guessTypeFromVariable($source);
+        $sourceType = TypeGuesser::guessTypeFromVariable($source);
         $sourceClass = $sourceType->getClassName();
 
         if (null === $sourceClass || !\class_exists($sourceClass)) {

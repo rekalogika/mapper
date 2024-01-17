@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Tests\UnitTest\Util;
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Rekalogika\Mapper\Util\TypeFactory;
+use Rekalogika\Mapper\Util\TypeGuesser;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -30,7 +31,7 @@ class TypeUtilTest extends TestCase
         ?string $className = null
     ): void {
         $typeResolver = new TypeResolver();
-        $type = $typeResolver->guessTypeFromVariable($object);
+        $type = TypeGuesser::guessTypeFromVariable($object);
 
         $this->assertSame($builtInType, $type->getBuiltinType());
         $this->assertSame($className, $type->getClassName());

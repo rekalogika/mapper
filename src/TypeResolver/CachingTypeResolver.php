@@ -28,13 +28,6 @@ class CachingTypeResolver implements TypeResolverInterface
         $this->isSimpleTypeCache = new \WeakMap();
     }
 
-    // cheap. so we don't cache
-
-    public function guessTypeFromVariable(mixed $variable): Type
-    {
-        return $this->decorated->guessTypeFromVariable($variable);
-    }
-
     // can be expensive in a loop. we cache using a weakmap
 
     /**

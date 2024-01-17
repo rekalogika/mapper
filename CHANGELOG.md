@@ -11,6 +11,7 @@
 * perf: Use flyweight pattern for `TypeFactory`
 * perf(`TypeCheck`): Improve `isVariableInstanceOf`.
 * perf(`ScalarToScalarTransformer`): Optimize.
+* perf: Remove type guesser from `TypeResolver`.
 
 ## 0.5.14
 

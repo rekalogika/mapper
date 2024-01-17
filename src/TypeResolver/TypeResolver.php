@@ -13,46 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TypeResolver;
 
-use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
-use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 class TypeResolver implements TypeResolverInterface
 {
-    public function guessTypeFromVariable(mixed $variable): Type
-    {
-        $type = get_debug_type($variable);
-
-        if ($type === 'array') {
-            return TypeFactory::array();
-        } elseif ($type === 'bool') {
-            return TypeFactory::bool();
-        } elseif ($type === 'int') {
-            return TypeFactory::int();
-        } elseif ($type === 'float') {
-            return TypeFactory::float();
-        } elseif ($type === 'string') {
-            return TypeFactory::string();
-        } elseif ($type === 'null') {
-            return TypeFactory::null();
-        }
-
-        if (class_exists($type) || interface_exists($type) || \enum_exists($type)) {
-            return TypeFactory::objectOfClass($type);
-        }
-
-        if (\str_starts_with($type, 'resource')) {
-            return TypeFactory::resource();
-        }
-
-        throw new InvalidArgumentException(sprintf(
-            'Cannot determine type of variable "%s"',
-            get_debug_type($variable),
-        ));
-    }
-
     public function getTypeString(Type|MixedType $type): string
     {
         return TypeUtil::getTypeString($type);
