@@ -17,11 +17,4 @@ use Rekalogika\Mapper\Exception\RuntimeException;
 
 class ContextMemberNotFoundException extends RuntimeException
 {
-    /**
-     * @param class-string $class
-     */
-    public function __construct(string $class)
-    {
-        parent::__construct(sprintf('Cannot find object with class "%s" in context', $class));
-    }
 }

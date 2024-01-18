@@ -13,6 +13,7 @@
 * perf(`ScalarToScalarTransformer`): Optimize.
 * perf: Remove type guesser from `TypeResolver`.
 * perf(`ObjectCache`): Optimize using plain arrays.
+* perf: Optimize `ObjectCache` & `Context`.
 
 ## 0.5.14
 

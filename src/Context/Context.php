@@ -93,6 +93,6 @@ final readonly class Context
     public function get(string $class): object
     {
         // @phpstan-ignore-next-line
-        return $this->context[$class] ?? throw new ContextMemberNotFoundException($class);
+        return $this->context[$class] ?? throw new ContextMemberNotFoundException();
     }
 }

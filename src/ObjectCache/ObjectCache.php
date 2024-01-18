@@ -84,20 +84,6 @@ final class ObjectCache
         return isset($this->preCache[$key][$targetTypeString]);
     }
 
-    private function removePrecache(mixed $source, Type $targetType, Context $context): void
-    {
-        if (!is_object($source)) {
-            return;
-        }
-
-        $targetTypeString = $this->typeResolver->getTypeString($targetType);
-        $key = spl_object_id($source);
-
-        if (isset($this->preCache[$key][$targetTypeString])) {
-            unset($this->preCache[$key][$targetTypeString]);
-        }
-    }
-
     public function containsTarget(mixed $source, Type $targetType, Context $context): bool
     {
         if (!is_object($source)) {
@@ -156,7 +142,7 @@ final class ObjectCache
 
         if (
             $addIfAlreadyExists === false
-            && $this->containsTarget($source, $targetType, $context)
+            && isset($this->cache[$key][$targetTypeString])
         ) {
             throw new LogicException(sprintf(
                 'Target object for source object "%s" and target type "%s" already exists',
@@ -170,6 +156,11 @@ final class ObjectCache
         }
 
         $this->cache[$key][$targetTypeString] = $target;
-        $this->removePrecache($source, $targetType, $context);
+
+        // remove precache
+
+        if (isset($this->preCache[$key][$targetTypeString])) {
+            unset($this->preCache[$key][$targetTypeString]);
+        }
     }
 }
