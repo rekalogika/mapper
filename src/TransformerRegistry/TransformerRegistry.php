@@ -32,8 +32,17 @@ class TransformerRegistry implements TransformerRegistryInterface
     ) {
     }
 
+    /**
+     * @var array<string,TransformerInterface>
+     */
+    private array $transformers = [];
+
     public function get(string $id): TransformerInterface
     {
+        if (isset($this->transformers[$id])) {
+            return $this->transformers[$id];
+        }
+
         $transformer = $this->transformersLocator->get($id);
 
         if (!$transformer instanceof TransformerInterface) {
@@ -44,7 +53,7 @@ class TransformerRegistry implements TransformerRegistryInterface
             ));
         }
 
-        return $transformer;
+        return $this->transformers[$id] = $transformer;
     }
 
     /**
