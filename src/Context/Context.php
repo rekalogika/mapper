@@ -29,16 +29,6 @@ final readonly class Context
     }
 
     /**
-     * @template T of object
-     * @param class-string<T> $class
-     * @return T
-     */
-    public function __invoke(string $class): object
-    {
-        return $this->get($class);
-    }
-
-    /**
      * @param array<int,object> $context
      * @return self
      */
@@ -46,7 +36,7 @@ final readonly class Context
     {
         $self = new self();
 
-        foreach($context as $value) {
+        foreach ($context as $value) {
             $self = $self->with($value);
         }
 
@@ -91,6 +81,17 @@ final readonly class Context
      * @throws ContextMemberNotFoundException
      */
     public function get(string $class): object
+    {
+        // @phpstan-ignore-next-line
+        return $this->context[$class] ?? throw new ContextMemberNotFoundException();
+    }
+
+    /**
+     * @template T of object
+     * @param class-string<T> $class
+     * @return T
+     */
+    public function __invoke(string $class): object
     {
         // @phpstan-ignore-next-line
         return $this->context[$class] ?? throw new ContextMemberNotFoundException();

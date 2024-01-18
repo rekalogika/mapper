@@ -72,18 +72,6 @@ final class ObjectCache
         $this->preCache[$key][$targetTypeString] = true;
     }
 
-    private function isPreCached(mixed $source, Type $targetType, Context $context): bool
-    {
-        if (!is_object($source)) {
-            return false;
-        }
-
-        $targetTypeString = $this->typeResolver->getTypeString($targetType);
-        $key = spl_object_id($source);
-
-        return isset($this->preCache[$key][$targetTypeString]);
-    }
-
     public function containsTarget(mixed $source, Type $targetType, Context $context): bool
     {
         if (!is_object($source)) {
@@ -102,20 +90,22 @@ final class ObjectCache
 
     public function getTarget(mixed $source, Type $targetType, Context $context): mixed
     {
-        if ($this->isPreCached($source, $targetType, $context)) {
-            throw new CircularReferenceException($source, $targetType, context: $context);
-        }
-
-        if ($this->isBlacklisted($source)) {
-            throw new CachedTargetObjectNotFoundException();
-        }
-
         if (!is_object($source)) {
             throw new CachedTargetObjectNotFoundException();
         }
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
         $key = spl_object_id($source);
+
+        // check if precached
+
+        if (isset($this->preCache[$key][$targetTypeString])) {
+            throw new CircularReferenceException($source, $targetType, context: $context);
+        }
+
+        if ($this->isBlacklisted($source)) {
+            throw new CachedTargetObjectNotFoundException();
+        }
 
         /** @var object */
         return $this->cache[$key][$targetTypeString]
