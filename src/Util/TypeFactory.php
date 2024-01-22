@@ -299,20 +299,25 @@ class TypeFactory
     }
 
     public static function objectWithKeyValue(
-        ?string $class,
+        string $class,
         null|Type $keyType,
         null|Type $valueType
     ): Type {
-        if ($class === null || !TypeCheck::nameExists($class)) {
-            throw new InvalidArgumentException(sprintf('"%s" is not a valid class.', $class === null ? 'null' : $class));
-        }
+        $type = clone self::objectOfClass($class);
+        $reflectionClass = new \ReflectionClass($type);
 
-        return new Type(
-            builtinType: 'object',
-            class: $class,
-            collection: true,
-            collectionKeyType: $keyType,
-            collectionValueType: $valueType
-        );
+        $collectionReflection = $reflectionClass->getProperty('collection');
+        $collectionReflection->setAccessible(true);
+        $collectionReflection->setValue($type, true);
+
+        $collectionKeyTypeReflection = $reflectionClass->getProperty('collectionKeyType');
+        $collectionKeyTypeReflection->setAccessible(true);
+        $collectionKeyTypeReflection->setValue($type, [$keyType]);
+
+        $collectionValueTypeReflection = $reflectionClass->getProperty('collectionValueType');
+        $collectionValueTypeReflection->setAccessible(true);
+        $collectionValueTypeReflection->setValue($type, [$valueType]);
+
+        return $type;
     }
 }

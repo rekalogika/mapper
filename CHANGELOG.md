@@ -15,6 +15,8 @@
 * perf(`ObjectCache`): Optimize using plain arrays.
 * perf: Optimize `ObjectCache` & `Context`.
 * perf(`TransformerRegistry`): Cache `TransformerInterface` instances.
+* perf: Optimize `ObjectCache` & `Context`.
+* perf(`TypeFactory`): Optimize `objectWithKeyValue`.
 
 ## 0.5.14
 
