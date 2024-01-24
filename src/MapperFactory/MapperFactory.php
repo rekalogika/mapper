@@ -41,6 +41,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
+use Rekalogika\Mapper\Transformer\SymfonyUidTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToTraversableTransformer;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistry;
@@ -89,6 +90,7 @@ class MapperFactory
     private ?CopyTransformer $copyTransformer = null;
     private ?ClassMethodTransformer $classMethodTransformer = null;
     private ?InheritanceMapTransformer $inheritanceMapTransformer = null;
+    private ?SymfonyUidTransformer $symfonyUidTransformer = null;
 
     private CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
@@ -372,6 +374,15 @@ class MapperFactory
         return $this->inheritanceMapTransformer;
     }
 
+    protected function getSymfonyUidTransformer(): SymfonyUidTransformer
+    {
+        if (null === $this->symfonyUidTransformer) {
+            $this->symfonyUidTransformer = new SymfonyUidTransformer();
+        }
+
+        return $this->symfonyUidTransformer;
+    }
+
     //
     // other services
     //
@@ -414,6 +425,8 @@ class MapperFactory
             => $this->getStringToBackedEnumTransformer();
         yield 'ClassMethodTransformer'
             => $this->getClassMethodTransformer();
+        yield 'SymfonyUidTransformer'
+            => $this->getSymfonyUidTransformer();
         yield 'ObjectToStringTransformer'
             => $this->getObjectToStringTransformer();
         yield 'InheritanceMapTransformer'

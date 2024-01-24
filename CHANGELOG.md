@@ -5,6 +5,7 @@
 * fix: Fix static analysis issues.
 * perf(`TransformerRegistry`): Optimize sorting.
 * perf(`TransformerRegistry`): Optimize caching.
+* feat: Symfony Uid support.
 
 ## 0.5.16
 
