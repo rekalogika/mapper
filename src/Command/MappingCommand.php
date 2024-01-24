@@ -63,7 +63,7 @@ class MappingCommand extends Command
             $id = $entry->getId();
             $variantTargetType = $entry->isVariantTargetType();
 
-            if ($sourceOption) {
+            if ($sourceOption !== null) {
                 if (preg_match('/' . preg_quote($sourceOption) . '/i', $entry->getSourceTypeString()) === 0) {
                     continue;
                 }
@@ -71,7 +71,7 @@ class MappingCommand extends Command
                 $sourceType = preg_replace('/(' . preg_quote($sourceOption) . ')/i', '<bg=yellow>$1</>', $sourceType);
             }
 
-            if ($targetOption) {
+            if ($targetOption !== null) {
                 if (preg_match('/' . preg_quote($targetOption) . '/i', $entry->getTargetTypeString()) === 0) {
                     continue;
                 }
@@ -79,7 +79,7 @@ class MappingCommand extends Command
                 $targetType = preg_replace('/(' . preg_quote($targetOption) . ')/i', '<bg=yellow>$1</>', $targetType);
             }
 
-            if ($classOption) {
+            if ($classOption !== null) {
                 if (
                     preg_match('/' . preg_quote($classOption) . '/i', $entry->getClass()) === 0
                     && preg_match('/' . preg_quote($classOption) . '/i', $entry->getId()) === 0

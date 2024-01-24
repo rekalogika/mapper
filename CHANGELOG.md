@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.17
+
+* fix: Fix static analysis issues.
+
 ## 0.5.16
 
 * perf: Optimize `guessTypeFromVariable`

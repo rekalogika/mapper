@@ -37,7 +37,8 @@ class CachingTypeResolver implements TypeResolverInterface
 
     public function getTypeString(Type|MixedType $type): string
     {
-        if ($result = $this->typeStringCache[$type] ?? null) {
+        $result = $this->typeStringCache[$type] ?? null;
+        if ($result !== null) {
             return $result;
         }
 
@@ -62,7 +63,8 @@ class CachingTypeResolver implements TypeResolverInterface
 
         $key = rawurlencode(serialize($type));
 
-        if ($result = $this->simpleTypesCache[$key] ?? null) {
+        $result = $this->simpleTypesCache[$key] ?? null;
+        if ($result !== null) {
             return $result;
         }
 
