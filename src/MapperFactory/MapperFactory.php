@@ -490,6 +490,7 @@ class MapperFactory
         if (null === $this->transformerRegistry) {
             $this->transformerRegistry = new TransformerRegistry(
                 $this->getTransformersLocator(),
+                $this->getTypeResolver(),
                 $this->getMappingFactory(),
             );
         }

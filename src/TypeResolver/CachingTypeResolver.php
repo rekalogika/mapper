@@ -119,4 +119,9 @@ class CachingTypeResolver implements TypeResolverInterface
     {
         return $this->decorated->getAcceptedTransformerOutputTypeStrings($type);
     }
+
+    public function getAttributeTypes(Type|MixedType $type): array
+    {
+        return $this->decorated->getAttributeTypes($type);
+    }
 }

@@ -221,6 +221,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.transformer_registry', TransformerRegistry::class)
         ->args([
             '$transformersLocator' => tagged_locator('rekalogika.mapper.transformer'),
+            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$mappingFactory' => service('rekalogika.mapper.mapping_factory'),
         ]);
 

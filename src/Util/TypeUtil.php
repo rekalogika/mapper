@@ -359,7 +359,7 @@ class TypeUtil
      * @param Type|MixedType $type
      * @return array<int,Type>
      */
-    private static function getAttributesFromType(
+    public static function getAttributesFromType(
         Type|MixedType $type
     ): array {
         if ($type instanceof MixedType) {

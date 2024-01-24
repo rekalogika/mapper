@@ -56,4 +56,13 @@ class TypeResolver implements TypeResolverInterface
     {
         return $this->getAcceptedTransformerInputTypeStrings($type);
     }
+
+    public function getAttributeTypes(Type|MixedType $type): array
+    {
+        if ($type instanceof MixedType) {
+            return [];
+        }
+
+        return TypeUtil::getAttributesFromType($type);
+    }
 }

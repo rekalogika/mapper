@@ -17,12 +17,14 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 
 class TransformerRegistry implements TransformerRegistryInterface
 {
     public function __construct(
         private ContainerInterface $transformersLocator,
+        private TypeResolverInterface $typeResolver,
         private MappingFactoryInterface $mappingFactory,
     ) {
     }
@@ -55,6 +57,28 @@ class TransformerRegistry implements TransformerRegistryInterface
         array $sourceTypes,
         array $targetTypes,
     ): SearchResult {
+        $newSourceTypes = [];
+        $newTargetTypes = [];
+
+        foreach ($sourceTypes as $sourceType) {
+            $newSourceTypes = [
+                ...$newSourceTypes,
+                $sourceType,
+                ...$this->typeResolver->getAttributeTypes($sourceType),
+            ];
+        }
+
+        foreach ($targetTypes as $targetType) {
+            $newTargetTypes = [
+                ...$newTargetTypes,
+                $targetType,
+                ...$this->typeResolver->getAttributeTypes($targetType),
+            ];
+        }
+
+        $sourceTypes = $newSourceTypes;
+        $targetTypes = $newTargetTypes;
+
         $mapping = $this->mappingFactory->getMapping();
 
         /** @var array<int,SearchResultEntry> */

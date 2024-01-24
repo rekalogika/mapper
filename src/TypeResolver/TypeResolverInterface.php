@@ -69,4 +69,10 @@ interface TypeResolverInterface
      * @return array<int,string>
      */
     public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array;
+
+    /**
+     * @param Type|MixedType $type
+     * @return array<int,Type>
+     */
+    public function getAttributeTypes(Type|MixedType $type): array;
 }
