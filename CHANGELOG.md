@@ -1,8 +1,7 @@
 # CHANGELOG
 
-## 0.5.15
+## 0.5.16
 
-* perf: Add caching for `TransformerRegistry`.
 * perf: Optimize `guessTypeFromVariable`
 * perf: Optimize `Context` & `ObjectCache`
 * perf: Change 'simpletypes' cache to array.
@@ -18,6 +17,10 @@
 * perf: Optimize `ObjectCache` & `Context`.
 * perf(`TypeFactory`): Optimize `objectWithKeyValue`.
 * perf(`CachingTypeResolver`): Use `rawurlencode` instead of `md5`.
+
+## 0.5.15
+
+* perf: Add caching for `TransformerRegistry`.
 
 ## 0.5.14
 
