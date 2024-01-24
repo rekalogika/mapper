@@ -72,7 +72,7 @@ class TransformerRegistry implements TransformerRegistryInterface
 
             foreach ($sourceTypes as $sourceType) {
                 if (
-                    !TypeCheck::isVariableInstanceOf($sourceType, $mappingSourceType)
+                    !TypeCheck::isTypeInstanceOf($sourceType, $mappingSourceType)
                 ) {
                     continue;
                 }
@@ -80,7 +80,7 @@ class TransformerRegistry implements TransformerRegistryInterface
                 foreach ($targetTypes as $targetType) {
                     if ($mappingIsVariantTarget) {
                         if (
-                            TypeCheck::isVariableInstanceOf($targetType, $mappingTargetType)
+                            TypeCheck::isTypeInstanceOf($targetType, $mappingTargetType)
                         ) {
                             $searchResultEntries[$mappingEntry->getOrder()] =
                                 new SearchResultEntry(
