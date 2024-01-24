@@ -3,6 +3,7 @@
 ## 0.5.17
 
 * fix: Fix static analysis issues.
+* perf(`TransformerRegistry`): Optimize sorting.
 
 ## 0.5.16
 
