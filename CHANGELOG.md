@@ -4,6 +4,7 @@
 
 * fix: Fix static analysis issues.
 * perf(`TransformerRegistry`): Optimize sorting.
+* perf(`TransformerRegistry`): Optimize caching.
 
 ## 0.5.16
 
