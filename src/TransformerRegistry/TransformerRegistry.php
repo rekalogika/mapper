@@ -15,19 +15,14 @@ namespace Rekalogika\Mapper\TransformerRegistry;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Exception\LogicException;
-use Rekalogika\Mapper\Mapping\MappingEntry;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
-use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
-use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
-use Symfony\Component\PropertyInfo\Type;
 
 class TransformerRegistry implements TransformerRegistryInterface
 {
     public function __construct(
         private ContainerInterface $transformersLocator,
-        private TypeResolverInterface $typeResolver,
         private MappingFactoryInterface $mappingFactory,
     ) {
     }
@@ -56,96 +51,68 @@ class TransformerRegistry implements TransformerRegistryInterface
         return $this->transformers[$id] = $transformer;
     }
 
-    /**
-     * @todo cache this
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
-     * @return array<int,MappingEntry>
-     */
-    private function getMappingBySourceAndTargetType(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
-    ): array {
-        $sourceTypeStrings = $this->typeResolver
-            ->getAcceptedTransformerInputTypeStrings($sourceType);
-
-        $targetTypeStrings = $this->typeResolver
-            ->getAcceptedTransformerOutputTypeStrings($targetType);
-
-        return $this->mappingFactory->getMapping()
-            ->getMappingBySourceAndTarget($sourceTypeStrings, $targetTypeStrings);
-    }
-
-    private function findBySourceAndTargetType(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
-    ): SearchResult {
-        $mapping = $this->getMappingBySourceAndTargetType(
-            $sourceType,
-            $targetType
-        );
-
-        $searchResultEntries = [];
-
-        foreach ($mapping as $mappingEntry) {
-            if ($mappingEntry->isVariantTargetType()) {
-                // if variant
-
-                $searchResultEntry = new SearchResultEntry(
-                    mappingOrder: $mappingEntry->getOrder(),
-                    sourceType: $sourceType,
-                    targetType: $targetType,
-                    transformerServiceId: $mappingEntry->getId(),
-                    variantTargetType: $mappingEntry->isVariantTargetType()
-                );
-
-                $searchResultEntries[] = $searchResultEntry;
-            } else {
-                // if invariant, check if target type is somewhat identical
-
-                if (
-                    TypeCheck::isSomewhatIdentical(
-                        $targetType,
-                        $mappingEntry->getTargetType()
-                    )
-                ) {
-                    $searchResultEntry = new SearchResultEntry(
-                        mappingOrder: $mappingEntry->getOrder(),
-                        sourceType: $sourceType,
-                        targetType: $targetType,
-                        transformerServiceId: $mappingEntry->getId(),
-                        variantTargetType: $mappingEntry->isVariantTargetType()
-                    );
-
-                    $searchResultEntries[] = $searchResultEntry;
-                }
-            }
-        }
-
-        return new SearchResult($searchResultEntries);
-    }
-
     public function findBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,
     ): SearchResult {
+        $mapping = $this->mappingFactory->getMapping();
+
         /** @var array<int,SearchResultEntry> */
         $searchResultEntries = [];
 
-        foreach ($sourceTypes as $sourceType) {
-            foreach ($targetTypes as $targetType) {
-                $result = $this->findBySourceAndTargetType($sourceType, $targetType);
-                foreach ($result as $searchResultEntry) {
-                    $searchResultEntries[] = $searchResultEntry;
+        foreach ($mapping as $mappingEntry) {
+            $mappingSourceType = $mappingEntry->getSourceType();
+            $mappingTargetType = $mappingEntry->getTargetType();
+            $mappingIsVariantTarget = $mappingEntry->isVariantTargetType();
+            $mappingOrder = $mappingEntry->getOrder();
+
+            if (isset($searchResultEntries[$mappingOrder])) {
+                continue;
+            }
+
+            foreach ($sourceTypes as $sourceType) {
+                if (
+                    !TypeCheck::isVariableInstanceOf($sourceType, $mappingSourceType)
+                ) {
+                    continue;
+                }
+
+                foreach ($targetTypes as $targetType) {
+                    if ($mappingIsVariantTarget) {
+                        if (
+                            TypeCheck::isVariableInstanceOf($targetType, $mappingTargetType)
+                        ) {
+                            $searchResultEntries[$mappingEntry->getOrder()] =
+                                new SearchResultEntry(
+                                    mappingOrder: $mappingEntry->getOrder(),
+                                    sourceType: $sourceType,
+                                    targetType: $targetType,
+                                    transformerServiceId: $mappingEntry->getId(),
+                                    variantTargetType: $mappingEntry->isVariantTargetType()
+                                );
+                        }
+                    } else {
+                        if (
+                            TypeCheck::isSomewhatIdentical(
+                                $targetType,
+                                $mappingTargetType
+                            )
+                        ) {
+                            $searchResultEntries[$mappingEntry->getOrder()] =
+                                new SearchResultEntry(
+                                    mappingOrder: $mappingEntry->getOrder(),
+                                    sourceType: $sourceType,
+                                    targetType: $targetType,
+                                    transformerServiceId: $mappingEntry->getId(),
+                                    variantTargetType: $mappingEntry->isVariantTargetType()
+                                );
+                        }
+                    }
                 }
             }
         }
 
-        usort(
-            $searchResultEntries,
-            fn (SearchResultEntry $a, SearchResultEntry $b)
-            => $a->getMappingOrder() <=> $b->getMappingOrder()
-        );
+        ksort($searchResultEntries);
 
         return new SearchResult($searchResultEntries);
     }
