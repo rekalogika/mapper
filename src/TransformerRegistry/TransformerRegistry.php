@@ -114,6 +114,6 @@ class TransformerRegistry implements TransformerRegistryInterface
 
         ksort($searchResultEntries);
 
-        return new SearchResult($searchResultEntries);
+        return new SearchResult(array_values($searchResultEntries));
     }
 }
