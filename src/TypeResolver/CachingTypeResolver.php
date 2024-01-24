@@ -60,7 +60,7 @@ class CachingTypeResolver implements TypeResolverInterface
             return [$type];
         }
 
-        $key = md5(serialize($type));
+        $key = rawurlencode(serialize($type));
 
         if ($result = $this->simpleTypesCache[$key] ?? null) {
             return $result;

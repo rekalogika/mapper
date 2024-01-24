@@ -17,6 +17,7 @@
 * perf(`TransformerRegistry`): Cache `TransformerInterface` instances.
 * perf: Optimize `ObjectCache` & `Context`.
 * perf(`TypeFactory`): Optimize `objectWithKeyValue`.
+* perf(`CachingTypeResolver`): Use `rawurlencode` instead of `md5`.
 
 ## 0.5.14
 
