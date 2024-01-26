@@ -11,11 +11,14 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\MethodMapper;
+namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
+use Rekalogika\Mapper\MethodMapper\MapToObjectInterface;
+use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;

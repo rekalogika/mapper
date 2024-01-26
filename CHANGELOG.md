@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.18
+
+* refactor(`ClassMethodTransformer`): Move to Transformer namespace.
+
 ## 0.5.17
 
 * fix: Fix static analysis issues.

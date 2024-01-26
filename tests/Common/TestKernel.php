@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Common;
 
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
-use Rekalogika\Mapper\MethodMapper\ClassMethodTransformer;
 use Rekalogika\Mapper\RekalogikaMapperBundle;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
+use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
