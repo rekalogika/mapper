@@ -72,6 +72,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\UidNormalizer;
 use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Uid\Factory\UuidFactory;
 
 class MapperFactory
 {
@@ -425,8 +426,12 @@ class MapperFactory
             => $this->getStringToBackedEnumTransformer();
         yield 'ClassMethodTransformer'
             => $this->getClassMethodTransformer();
-        yield 'SymfonyUidTransformer'
-            => $this->getSymfonyUidTransformer();
+
+        if (class_exists(UuidFactory::class)) {
+            yield 'SymfonyUidTransformer'
+                => $this->getSymfonyUidTransformer();
+        }
+
         yield 'ObjectToStringTransformer'
             => $this->getObjectToStringTransformer();
         yield 'InheritanceMapTransformer'

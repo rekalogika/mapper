@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper;
 
+use Rekalogika\Mapper\DependencyInjection\MapperPass;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,6 +22,17 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class RekalogikaMapperBundle extends AbstractBundle
 {
+    public function build(ContainerBuilder $container)
+    {
+        parent::build($container);
+
+        $container->registerForAutoconfiguration(TransformerInterface::class)
+            ->addTag('rekalogika.mapper.transformer');
+
+        $container->addCompilerPass(new MapperPass());
+    }
+
+
     /**
      * @param array<array-key,mixed> $config
      */
@@ -32,11 +44,6 @@ class RekalogikaMapperBundle extends AbstractBundle
         // load services
 
         $container->import(__DIR__ . '/../config/services.php');
-
-        // autoconfigure services
-
-        $builder->registerForAutoconfiguration(TransformerInterface::class)
-            ->addTag('rekalogika.mapper.transformer');
 
         // load service configuration for test environment
 

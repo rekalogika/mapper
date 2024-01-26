@@ -6,6 +6,7 @@
 * perf(`TransformerRegistry`): Optimize sorting.
 * perf(`TransformerRegistry`): Optimize caching.
 * feat: Symfony Uid support.
+* build: Remove `SymfonyUidTransformer` if Symfony UID is not installed.
 
 ## 0.5.16
 
