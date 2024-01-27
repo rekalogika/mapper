@@ -34,13 +34,14 @@ final readonly class Context
      */
     public static function create(array $context = []): self
     {
-        $self = new self();
+        $newContext = [];
 
         foreach ($context as $value) {
-            $self = $self->with($value);
+            $class = $value::class;
+            $newContext[$class] = $value;
         }
 
-        return $self;
+        return self::createFrom($newContext);
     }
 
     /**

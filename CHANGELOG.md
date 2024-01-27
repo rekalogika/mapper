@@ -6,6 +6,7 @@
 * revert(`TransformerRegistry`): A transformer might apply twice to the same
   source-target pair.
 * style: Use `MarkdownLikeTableStyle` in console commands.
+* perf(`Context`): Improve context creation.
 
 ## 0.5.17
 
