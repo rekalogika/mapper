@@ -45,7 +45,7 @@ class ArrayAndObjectMappingTest extends AbstractIntegrationTest
         $normalizationContext = new NormalizerContext([
             'groups' => ['groupa', 'groupc'],
         ]);
-        $context = Context::create([$normalizationContext]);
+        $context = Context::create($normalizationContext);
 
         $object = ContainingObject::create();
         $dto = $this->mapper->map($object, ContainingObjectDto::class, $context);
@@ -61,7 +61,7 @@ class ArrayAndObjectMappingTest extends AbstractIntegrationTest
         $denormalizationContext = new DenormalizerContext([
             'groups' => ['groupa', 'groupc'],
         ]);
-        $context = Context::create([$denormalizationContext]);
+        $context = Context::create($denormalizationContext);
 
         $dto = new ContainingObjectDto();
         $dto->data = [

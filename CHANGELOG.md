@@ -9,6 +9,7 @@
 * perf(`Context`): Improve context creation.
 * feat: Add `NormalizerContext` & `DenormalizerContext` to provide the context
   for normalizers & denormalizers.
+* dx(`Context`): Change `create()` to use variable-length arguments.
 
 ## 0.5.17
 

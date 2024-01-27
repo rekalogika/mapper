@@ -28,20 +28,16 @@ final readonly class Context
     ) {
     }
 
-    /**
-     * @param array<int,object> $context
-     * @return self
-     */
-    public static function create(array $context = []): self
+    public static function create(object ...$objects): self
     {
-        $newContext = [];
+        $context = [];
 
-        foreach ($context as $value) {
-            $class = $value::class;
-            $newContext[$class] = $value;
+        foreach ($objects as $object) {
+            $class = $object::class;
+            $context[$class] = $object;
         }
 
-        return self::createFrom($newContext);
+        return self::createFrom($context);
     }
 
     /**
