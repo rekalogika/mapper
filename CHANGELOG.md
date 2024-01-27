@@ -5,6 +5,7 @@
 * refactor(`ClassMethodTransformer`): Move to Transformer namespace.
 * revert(`TransformerRegistry`): A transformer might apply twice to the same
   source-target pair.
+* style: Use `MarkdownLikeTableStyle` in console commands.
 
 ## 0.5.17
 

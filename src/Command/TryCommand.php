@@ -90,7 +90,7 @@ class TryCommand extends Command
         $io->section('<info>Type Compatibility</info>');
         $table = new Table($output);
         $table->setHeaders(['Subject', 'Value']);
-        $table->setStyle('box');
+        $table->setStyle(new MarkdownLikeTableStyle());
         $table->setRows($rows);
         $table->render();
 
@@ -134,7 +134,7 @@ class TryCommand extends Command
 
         $table = new Table($output);
         $table->setHeaders(['Ordering', 'Service ID', 'Class', 'Source Type', 'Target Type', 'Variance']);
-        $table->setStyle('box');
+        $table->setStyle(new MarkdownLikeTableStyle());
         $table->setVertical();
         $table->setRows($rows);
         $table->render();

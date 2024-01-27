@@ -96,7 +96,7 @@ class TryPropertyCommand extends Command
 
         $table = new Table($output);
         $table->setHeaders(['Item', 'Value']);
-        $table->setStyle('box');
+        $table->setStyle(new MarkdownLikeTableStyle());
         $table->setRows($rows);
         $table->render();
 
@@ -131,7 +131,7 @@ class TryPropertyCommand extends Command
         $table = new Table($output);
         $table->setVertical();
         $table->setHeaders(['Mapping Order', 'Source Type', 'Target Type', 'Transformer']);
-        $table->setStyle('box');
+        $table->setStyle(new MarkdownLikeTableStyle());
         $table->setRows($rows);
         $table->render();
 

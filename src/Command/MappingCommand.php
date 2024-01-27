@@ -103,8 +103,15 @@ class MappingCommand extends Command
 
         $io->section($title);
         $table = new Table($output);
-        $table->setHeaders(['Ordering', 'Source Type', 'Target Type', 'Target Variance', 'Service ID', 'Class']);
-        $table->setStyle('box');
+        $table->setHeaders([
+            'Ordering',
+            'Source Type',
+            'Target Type',
+            'Target Variance',
+            'Service ID',
+            'Class'
+        ]);
+        $table->setStyle(new MarkdownLikeTableStyle());
         $table->setRows($rows);
         $table->render();
 
