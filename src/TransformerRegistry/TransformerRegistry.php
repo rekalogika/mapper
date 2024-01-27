@@ -136,14 +136,19 @@ class TransformerRegistry implements TransformerRegistryInterface
             foreach ($targetTypes as $targetType) {
                 $result = $this->findBySourceAndTargetType($sourceType, $targetType);
                 foreach ($result as $searchResultEntry) {
-                    $searchResultEntries[$searchResultEntry->getMappingOrder()]
+                    $searchResultEntries[]
                         = $searchResultEntry;
                 }
             }
         }
 
-        ksort($searchResultEntries, SORT_NUMERIC);
+        usort($searchResultEntries, function (
+            SearchResultEntry $a,
+            SearchResultEntry $b
+        ) {
+            return $a->getMappingOrder() <=> $b->getMappingOrder();
+        });
 
-        return new SearchResult(array_values($searchResultEntries));
+        return new SearchResult($searchResultEntries);
     }
 }

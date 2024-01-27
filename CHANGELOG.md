@@ -3,6 +3,8 @@
 ## 0.5.18
 
 * refactor(`ClassMethodTransformer`): Move to Transformer namespace.
+* revert(`TransformerRegistry`): A transformer might apply twice to the same
+  source-target pair.
 
 ## 0.5.17
 
