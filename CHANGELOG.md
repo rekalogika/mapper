@@ -7,6 +7,8 @@
   source-target pair.
 * style: Use `MarkdownLikeTableStyle` in console commands.
 * perf(`Context`): Improve context creation.
+* feat: Add `NormalizerContext` & `DenormalizerContext` to provide the context
+  for normalizers & denormalizers.
 
 ## 0.5.17
 

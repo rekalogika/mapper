@@ -13,37 +13,69 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Serializer\DenormalizerContext;
+use Rekalogika\Mapper\Serializer\NormalizerContext;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
-use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainingObject;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObjectDto\ContainingObjectDto;
 
 class ArrayAndObjectMappingTest extends AbstractIntegrationTest
 {
-    public function testArrayToObject(): void
+    public function testObjectToArrayAndBack(): void
     {
-        $array = [
+        $object = ContainingObject::create();
+        $dto = $this->mapper->map($object, ContainingObjectDto::class);
+
+        $this->assertEquals(1, $dto->data['a'] ?? null);
+        $this->assertEquals('string', $dto->data['b'] ?? null);
+        $this->assertEquals(true, $dto->data['c'] ?? null);
+        $this->assertEquals(1.1, $dto->data['d'] ?? null);
+
+        $object = $this->mapper->map($dto, ContainingObject::class);
+
+        $this->assertEquals(1, $object->getData()?->a);
+        $this->assertEquals('string', $object->getData()?->b);
+        $this->assertEquals(true, $object->getData()?->c);
+        $this->assertEquals(1.1, $object->getData()?->d);
+    }
+
+    public function testObjectToArrayWithSerializerGroups(): void
+    {
+        $normalizationContext = new NormalizerContext([
+            'groups' => ['groupa', 'groupc'],
+        ]);
+        $context = Context::create([$normalizationContext]);
+
+        $object = ContainingObject::create();
+        $dto = $this->mapper->map($object, ContainingObjectDto::class, $context);
+
+        $this->assertEquals(1, $dto->data['a'] ?? null);
+        $this->assertNull($dto->data['b'] ?? null);
+        $this->assertEquals(true, $dto->data['c'] ?? null);
+        $this->assertNull($dto->data['d'] ?? null);
+    }
+
+    public function testArrayToObjectWithSerializerGroups(): void
+    {
+        $denormalizationContext = new DenormalizerContext([
+            'groups' => ['groupa', 'groupc'],
+        ]);
+        $context = Context::create([$denormalizationContext]);
+
+        $dto = new ContainingObjectDto();
+        $dto->data = [
             'a' => 1,
             'b' => 'string',
             'c' => true,
             'd' => 1.1,
         ];
-        $dto = $this->mapper->map($array, ObjectWithScalarPropertiesDto::class);
 
-        $this->assertEquals(1, $dto->a);
-        $this->assertEquals('string', $dto->b);
-        $this->assertEquals(true, $dto->c);
-        $this->assertEquals(1.1, $dto->d);
+        $object = $this->mapper->map($dto, ContainingObject::class, $context);
+
+        $this->assertEquals(1, $object->getData()?->a);
+        $this->assertNull($object->getData()?->b);
+        $this->assertEquals(true, $object->getData()?->c);
+        $this->assertNull($object->getData()?->d);
     }
-
-    // public function testObjectToArray(): void
-    // {
-    //     $class = new ObjectWithScalarProperties();
-
-    //     $array = $this->mapper->map($class, 'array');
-
-    //     $this->assertEquals(1, $array['a'] ?? null);
-    //     $this->assertEquals('string', $array['b'] ?? null);
-    //     $this->assertEquals(true, $array['c'] ?? null);
-    //     $this->assertEquals(1.1, $array['d'] ?? null);
-    // }
-
 }
