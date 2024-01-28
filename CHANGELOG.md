@@ -4,6 +4,7 @@
 
 * perf: Move instantiable check to `ObjectMappingResolver`.
 * refactor: Do not use `array_intersect` to determine object mapping.
+* dx(`ObjectMapping`): Make it mutable.
 
 ## 0.5.18
 

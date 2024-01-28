@@ -39,6 +39,7 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
         string $targetClass,
         Context $context
     ): ObjectMapping {
+        $objectMapping = new ObjectMapping($sourceClass, $targetClass);
 
         // queries
 
@@ -53,10 +54,9 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
 
         $reflectionClass = new \ReflectionClass($targetClass);
         $instantiable = $reflectionClass->isInstantiable();
+        $objectMapping->setInstantiable($instantiable);
 
         // process properties mapping
-
-        $propertyResults = [];
 
         foreach ($writableTargetProperties as $targetProperty) {
             if (!in_array($targetProperty, $readableSourceProperties)) {
@@ -81,16 +81,14 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
                 );
             }
 
-            $propertyResults[] = new PropertyMapping(
+            $objectMapping->addPropertyMapping(new PropertyMapping(
                 $sourceProperty,
                 $targetProperty,
                 $targetPropertyTypes,
-            );
+            ));
         }
 
         // process source properties to target constructor mapping
-
-        $initializableResults = [];
 
         foreach ($initializableTargetProperties as $property) {
             $sourceProperty = $property;
@@ -116,20 +114,14 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
                 );
             }
 
-            $initializableResults[] = new ConstructorMapping(
+            $objectMapping->addConstructorMapping(new ConstructorMapping(
                 $sourceProperty,
                 $targetProperty,
                 $targetPropertyTypes,
-            );
+            ));
         }
 
-        return new ObjectMapping(
-            $sourceClass,
-            $targetClass,
-            $propertyResults,
-            $initializableResults,
-            $instantiable,
-        );
+        return $objectMapping;
     }
 
     /**

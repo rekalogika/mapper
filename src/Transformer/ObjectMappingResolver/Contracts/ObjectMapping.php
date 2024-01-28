@@ -16,34 +16,25 @@ namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts;
 final class ObjectMapping
 {
     /**
+     * @var array<int,PropertyMapping>
+     */
+    private array $propertyMappings = [];
+
+    /**
+     * @var array<int,ConstructorMapping>
+     */
+    private array $constructorMappings = [];
+
+    private bool $instantiable = true;
+
+    /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
-     * @param array<int,PropertyMapping> $propertyMapping
-     * @param array<int,ConstructorMapping> $constructorMapping
      */
     public function __construct(
         private string $sourceClass,
         private string $targetClass,
-        private array $propertyMapping,
-        private array $constructorMapping,
-        private bool $instantiable,
     ) {
-    }
-
-    /**
-     * @return array<int,PropertyMapping>
-     */
-    public function getPropertyMapping(): array
-    {
-        return $this->propertyMapping;
-    }
-
-    /**
-     * @return array<int,ConstructorMapping>
-     */
-    public function getConstructorMapping(): array
-    {
-        return $this->constructorMapping;
     }
 
     /**
@@ -66,4 +57,66 @@ final class ObjectMapping
     {
         return $this->instantiable;
     }
+
+    public function setInstantiable(bool $instantiable): self
+    {
+        $this->instantiable = $instantiable;
+
+        return $this;
+    }
+
+    /**
+     * @return array<int,PropertyMapping>
+     */
+    public function getPropertyMappings(): array
+    {
+        return $this->propertyMappings;
+    }
+
+    public function addPropertyMapping(PropertyMapping $propertyMapping): self
+    {
+        $this->propertyMappings[] = $propertyMapping;
+
+        return $this;
+    }
+
+    public function removePropertyMapping(PropertyMapping $propertyMapping): self
+    {
+        $index = array_search($propertyMapping, $this->propertyMappings, true);
+
+        if (false !== $index) {
+            unset($this->propertyMappings[$index]);
+            $this->propertyMappings = array_values($this->propertyMappings);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return array<int,ConstructorMapping>
+     */
+    public function getConstructorMappings(): array
+    {
+        return $this->constructorMappings;
+    }
+
+    public function addConstructorMapping(ConstructorMapping $constructorMapping): self
+    {
+        $this->constructorMappings[] = $constructorMapping;
+
+        return $this;
+    }
+
+    public function removeConstructorMapping(ConstructorMapping $constructorMapping): self
+    {
+        $index = array_search($constructorMapping, $this->constructorMappings, true);
+
+        if (false !== $index) {
+            unset($this->constructorMappings[$index]);
+            $this->constructorMappings = array_values($this->constructorMappings);
+        }
+
+        return $this;
+    }
+
 }

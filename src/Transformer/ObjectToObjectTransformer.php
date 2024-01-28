@@ -112,7 +112,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // map properties
 
-        foreach ($objectMapping->getPropertyMapping() as $propertyMapping) {
+        foreach ($objectMapping->getPropertyMappings() as $propertyMapping) {
             $sourcePropertyName = $propertyMapping->getSourceProperty();
             $targetPropertyName = $propertyMapping->getTargetProperty();
             $targetTypes = $propertyMapping->getTargetTypes();
@@ -188,7 +188,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // gets the mapping and loop over the mapping
 
-        $initializableMappings = $objectMapping->getConstructorMapping();
+        $initializableMappings = $objectMapping->getConstructorMappings();
 
         $constructorArguments = [];
 
