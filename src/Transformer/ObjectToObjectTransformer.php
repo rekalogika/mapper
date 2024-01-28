@@ -23,7 +23,6 @@ use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\IncompleteConstructorArgument;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
-use Rekalogika\Mapper\Transformer\Exception\InvalidClassException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
@@ -179,17 +178,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         ObjectMapping $objectMapping,
         Context $context
     ): object {
+        $targetClass = $objectMapping->getTargetClass();
+
         // check if class is valid & instantiable
 
-        $targetClass = $targetType->getClassName();
-
-        if (null === $targetClass || !\class_exists($targetClass)) {
-            throw new InvalidClassException($targetType, context: $context);
-        }
-
-        $reflectionClass = new \ReflectionClass($targetClass);
-
-        if (!$reflectionClass->isInstantiable()) {
+        if (!$objectMapping->isInstantiable()) {
             throw new ClassNotInstantiableException($targetClass, context: $context);
         }
 
@@ -241,6 +234,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         }
 
         try {
+            $reflectionClass = new \ReflectionClass($targetClass);
+
             return $reflectionClass->newInstanceArgs($constructorArguments);
         } catch (\TypeError $e) {
             throw new InstantiationFailureException($source, $targetClass, $constructorArguments, $e, context: $context);

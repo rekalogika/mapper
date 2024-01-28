@@ -26,6 +26,7 @@ final class ObjectMapping
         private string $targetClass,
         private array $propertyMapping,
         private array $constructorMapping,
+        private bool $instantiable,
     ) {
     }
 
@@ -45,13 +46,24 @@ final class ObjectMapping
         return $this->constructorMapping;
     }
 
+    /**
+     * @return class-string
+     */
     public function getSourceClass(): string
     {
         return $this->sourceClass;
     }
 
+    /**
+     * @return class-string
+     */
     public function getTargetClass(): string
     {
         return $this->targetClass;
+    }
+
+    public function isInstantiable(): bool
+    {
+        return $this->instantiable;
     }
 }

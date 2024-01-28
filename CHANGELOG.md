@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.19
+
+* perf: Move instantiable check to `ObjectMappingResolver`.
+
 ## 0.5.18
 
 * refactor(`ClassMethodTransformer`): Move to Transformer namespace.

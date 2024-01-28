@@ -45,9 +45,14 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
         $readableSourceProperties = $this
             ->listReadableSourceProperties($sourceClass, $context);
         $writableTargetProperties = $this
-            ->listTargetWritableProperties($targetClass, $context);
+            ->listWritableTargetProperties($targetClass, $context);
         $initializableTargetProperties = $this
-            ->listTargetInitializableProperties($targetClass, $context);
+            ->listInitializableTargetProperties($targetClass, $context);
+
+        // determine if targetClass is instantiable
+
+        $reflectionClass = new \ReflectionClass($targetClass);
+        $instantiable = $reflectionClass->isInstantiable();
 
         // process properties mapping
 
@@ -122,6 +127,7 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
             $targetClass,
             $propertyResults,
             $initializableResults,
+            $instantiable,
         );
     }
 
@@ -150,7 +156,7 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
      * @param class-string $class
      * @return array<int,string>
      */
-    private function listTargetWritableProperties(
+    private function listWritableTargetProperties(
         string $class,
         Context $context
     ): array {
@@ -171,7 +177,7 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
      * @param class-string $class
      * @return array<int,string>
      */
-    private function listTargetInitializableProperties(
+    private function listInitializableTargetProperties(
         string $class,
         Context $context
     ): array {
