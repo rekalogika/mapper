@@ -56,13 +56,14 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
 
         // process properties mapping
 
-        $propertiesToMap = array_intersect($readableSourceProperties, $writableTargetProperties);
-
         $propertyResults = [];
 
-        foreach ($propertiesToMap as $property) {
-            $sourceProperty = $property;
-            $targetProperty = $property;
+        foreach ($writableTargetProperties as $targetProperty) {
+            if (!in_array($targetProperty, $readableSourceProperties)) {
+                continue;
+            }
+
+            $sourceProperty = $targetProperty;
 
             ///
 

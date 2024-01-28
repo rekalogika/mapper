@@ -3,6 +3,7 @@
 ## 0.5.19
 
 * perf: Move instantiable check to `ObjectMappingResolver`.
+* refactor: Do not use `array_intersect` to determine object mapping.
 
 ## 0.5.18
 
