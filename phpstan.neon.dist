@@ -9,6 +9,8 @@ parameters:
     checkInternalClassCaseSensitivity: true
     reportMaybesInPropertyPhpDocTypes: true
     treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        - '#ContainerBuilder::registerAttributeForAutoconfiguration#'
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon

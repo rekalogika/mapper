@@ -27,6 +27,8 @@ use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\PropertyAccessLite\PropertyAccessLite;
+use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
+use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -76,6 +78,11 @@ use Symfony\Component\Uid\Factory\UuidFactory;
 
 class MapperFactory
 {
+    /**
+     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string}>
+     */
+    private array $propertyMappers = [];
+
     private ?Serializer $serializer = null;
 
     private ?NullTransformer $nullTransformer = null;
@@ -103,6 +110,7 @@ class MapperFactory
     private ?ObjectCacheFactoryInterface $objectCacheFactory = null;
     private ?SubMapper $subMapper = null;
     private ?TransformerRegistryInterface $transformerRegistry = null;
+    private ?PropertyMapperResolverInterface $propertyMapperResolver = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -122,6 +130,26 @@ class MapperFactory
         ?CacheItemPoolInterface $propertyInfoExtractorCache = null,
     ) {
         $this->propertyInfoExtractorCache = $propertyInfoExtractorCache ?? new ArrayAdapter();
+    }
+
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     */
+    public function addPropertyMapper(
+        string $sourceClass,
+        string $targetClass,
+        string $property,
+        object $service,
+        string $method
+    ): void {
+        $this->propertyMappers[] = [
+            'sourceClass' => $sourceClass,
+            'targetClass' => $targetClass,
+            'property' => $property,
+            'service' => $service,
+            'method' => $method,
+        ];
     }
 
     public function getMapper(): MapperInterface
@@ -262,6 +290,7 @@ class MapperFactory
             $this->objectToObjectTransformer = new ObjectToObjectTransformer(
                 propertyAccessor: $this->getPropertyAccessor(),
                 objectToObjectMetadataFactory: $this->getObjectToObjectMetadataFactory(),
+                propertyMapperLocator: $this->getPropertyMapperLocator(),
             );
         }
 
@@ -405,6 +434,7 @@ class MapperFactory
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
+                $this->getPropertyMapperResolver(),
             );
         }
 
@@ -514,6 +544,37 @@ class MapperFactory
         }
 
         return $this->transformerRegistry;
+    }
+
+    protected function getPropertyMapperResolver(): PropertyMapperResolverInterface
+    {
+        if (null === $this->propertyMapperResolver) {
+            $this->propertyMapperResolver = new PropertyMapperResolver();
+            foreach ($this->propertyMappers as $propertyMapper) {
+                $this->propertyMapperResolver->addPropertyMapper(
+                    $propertyMapper['sourceClass'],
+                    $propertyMapper['targetClass'],
+                    $propertyMapper['property'],
+                    $propertyMapper['service']::class,
+                    $propertyMapper['method'],
+                );
+            }
+        }
+
+        return $this->propertyMapperResolver;
+    }
+
+    protected function getPropertyMapperLocator(): ContainerInterface
+    {
+        $services = [];
+
+        foreach ($this->propertyMappers as $propertyMapper) {
+            $service = $propertyMapper['service'];
+            $class = $service::class;
+            $services[$class] = $service;
+        }
+
+        return new ServiceLocator($services);
     }
 
     //

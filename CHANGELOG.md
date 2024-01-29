@@ -8,6 +8,8 @@
 * refactor(`ObjectToObjectMetadata`): Class & namespace renames for clarity.
 * refactor(`ObjectToObjectMetadata`): Refactor for future extension.
 * refactor(`ObjectToObjectMetadata`): Add `doReadSource` flag.
+* feat: Add `PropertyMapper` for customizing property mapping in object to
+  object transformation.
 
 ## 0.5.18
 

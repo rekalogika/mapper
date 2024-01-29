@@ -33,6 +33,17 @@ abstract class AbstractIntegrationTest extends TestCase
         $this->factory = new MapperTestFactory(
             additionalTransformers: $this->getAdditionalTransformers()
         );
+
+        foreach ($this->getPropertyMappers() as $propertyMapper) {
+            $this->factory->addPropertyMapper(
+                $propertyMapper['sourceClass'],
+                $propertyMapper['targetClass'],
+                $propertyMapper['property'],
+                $propertyMapper['service'],
+                $propertyMapper['method']
+            );
+        }
+
         $this->mapper = $this->factory->getMapper();
         $this->mainTransformer = $this->factory->getMainTransformer();
         $this->typeResolver = $this->factory->getTypeResolver();
@@ -43,6 +54,14 @@ abstract class AbstractIntegrationTest extends TestCase
      * @return array<string,TransformerInterface>
      */
     protected function getAdditionalTransformers(): array
+    {
+        return [];
+    }
+
+    /**
+     * @return iterable<array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string}>
+     */
+    protected function getPropertyMappers(): iterable
     {
         return [];
     }

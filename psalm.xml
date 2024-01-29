@@ -51,5 +51,10 @@
                 <file name="tests/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php" />
             </errorLevel>
         </MissingConstructor>
+        <ArgumentTypeCoercion>
+            <errorLevel type="suppress">
+                <file name="src/DependencyInjection/RekalogikaMapperExtension.php" />
+            </errorLevel>
+        </ArgumentTypeCoercion>
     </issueHandlers>
 </psalm>

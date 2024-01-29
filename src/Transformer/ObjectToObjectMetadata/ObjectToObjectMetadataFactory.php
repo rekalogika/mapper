@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
@@ -30,6 +31,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        private PropertyMapperResolverInterface $propertyMapperResolver
     ) {
     }
 
@@ -66,6 +68,10 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         foreach ($targetProperties as $targetProperty) {
             $sourceProperty = $targetProperty;
 
+            // determine if a property mapper is defined for the property
+            $propertyMapperPointer = $this->propertyMapperResolver
+                ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
+
             ///
 
             $isSourceReadable = in_array($sourceProperty, $readableSourceProperties);
@@ -101,6 +107,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 initializeTarget: $isTargetInitializable,
                 writeTarget: $isTargetWritable,
                 readTarget: $isTargetReadable,
+                propertyMapper: $propertyMapperPointer,
             );
 
             $objectToObjectMetadata->addPropertyMapping($propertyMapping);

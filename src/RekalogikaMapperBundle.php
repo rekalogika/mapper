@@ -14,43 +14,17 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper;
 
 use Rekalogika\Mapper\DependencyInjection\MapperPass;
-use Rekalogika\Mapper\Tests\Common\TestKernel;
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\DependencyInjection\PropertyMapperPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class RekalogikaMapperBundle extends AbstractBundle
+class RekalogikaMapperBundle extends Bundle
 {
     public function build(ContainerBuilder $container)
     {
         parent::build($container);
 
-        $container->registerForAutoconfiguration(TransformerInterface::class)
-            ->addTag('rekalogika.mapper.transformer');
-
         $container->addCompilerPass(new MapperPass());
-    }
-
-
-    /**
-     * @param array<array-key,mixed> $config
-     */
-    public function loadExtension(
-        array $config,
-        ContainerConfigurator $container,
-        ContainerBuilder $builder
-    ): void {
-        // load services
-
-        $container->import(__DIR__ . '/../config/services.php');
-
-        // load service configuration for test environment
-
-        $env = $builder->getParameter('kernel.environment');
-
-        if ($env === 'test' && class_exists(TestKernel::class)) {
-            $container->import(__DIR__ . '/../config/tests.php');
-        }
+        $container->addCompilerPass(new PropertyMapperPass());
     }
 }

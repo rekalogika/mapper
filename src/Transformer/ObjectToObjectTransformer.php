@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer;
 
+use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
@@ -45,6 +46,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     public function __construct(
         private PropertyAccessorInterface $propertyAccessor,
         private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
+        private ContainerInterface $propertyMapperLocator,
     ) {
     }
 
@@ -121,10 +123,47 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $targetProperty = $propertyMapping->getTargetProperty();
             $targetTypes = $propertyMapping->getTargetTypes();
 
+            // if property mapper is set, then use it and skip the rest
+
+            if ($propertyMapperPointer = $propertyMapping->getPropertyMapper()) {
+                /** @var object */
+                $propertyMapper = $this->propertyMapperLocator
+                    ->get($propertyMapperPointer->getServiceId());
+
+                /**
+                 * @psalm-suppress MixedAssignment
+                 * @psalm-suppress MixedMethodCall
+                 */
+                $targetPropertyValue = $propertyMapper->{$propertyMapperPointer
+                    ->getMethod()}($source);
+
+                try {
+                    $this->propertyAccessor
+                        ->setValue($target, $targetProperty, $targetPropertyValue);
+                } catch (AccessException | UnexpectedTypeException $e) {
+                    throw new UnableToWriteException(
+                        $source,
+                        $target,
+                        $target,
+                        $targetProperty,
+                        $e,
+                        context: $context
+                    );
+                }
+
+                continue;
+            }
+
+            // if source property is null, continue
+
+            if ($sourceProperty === null) {
+                continue;
+            }
+
             // get the value of the source property
 
             try {
-                if ($propertyMapping->doReadSource() && $sourceProperty !== null) {
+                if ($propertyMapping->doReadSource()) {
                     /** @var mixed */
                     $sourcePropertyValue = $this->propertyAccessor
                         ->getValue($source, $sourceProperty);
@@ -216,10 +255,35 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $targetProperty = $propertyMapping->getTargetProperty();
             $targetTypes = $propertyMapping->getTargetTypes();
 
+            // if property mapper is set, then use it
+            if ($propertyMapperPointer = $propertyMapping->getPropertyMapper()) {
+                /** @var object */
+                $propertyMapper = $this->propertyMapperLocator
+                    ->get($propertyMapperPointer->getServiceId());
+
+                /**
+                 * @psalm-suppress MixedAssignment
+                 * @psalm-suppress MixedMethodCall
+                 */
+                $targetPropertyValue = $propertyMapper->{$propertyMapperPointer
+                    ->getMethod()}($source);
+
+                /** @psalm-suppress MixedAssignment */
+                $constructorArguments[$targetProperty] = $targetPropertyValue;
+
+                continue;
+            }
+
+            // if source property is null, continue
+
+            if ($sourceProperty === null) {
+                continue;
+            }
+
             // get the value of the source property
 
             try {
-                if ($propertyMapping->doReadSource() && $sourceProperty !== null) {
+                if ($propertyMapping->doReadSource()) {
                     /** @var mixed */
                     $sourcePropertyValue = $this->propertyAccessor
                         ->getValue($source, $sourceProperty);

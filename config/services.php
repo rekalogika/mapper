@@ -23,6 +23,7 @@ use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\PropertyAccessLite\PropertyAccessLite;
+use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
@@ -146,6 +147,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             '$propertyAccessor' => service('rekalogika.mapper.property_access_lite'),
             '$objectToObjectMetadataFactory' => service('rekalogika.mapper.object_to_object_metadata_factory'),
+            '$propertyMapperLocator' => tagged_locator('rekalogika.mapper.property_mapper'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -900]);
 
@@ -205,6 +207,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
+            service('rekalogika.mapper.property_mapper.resolver'),
         ]);
 
     $services
@@ -250,6 +253,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('rekalogika.mapper.property_info'),
         ]);
+
+    # property mapper
+
+    $services
+        ->set('rekalogika.mapper.property_mapper.resolver', PropertyMapperResolver::class);
 
     # other services
 

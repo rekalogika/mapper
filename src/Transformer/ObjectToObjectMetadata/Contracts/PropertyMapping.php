@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts;
 
+use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
 use Symfony\Component\PropertyInfo\Type;
 
 final class PropertyMapping
@@ -33,6 +34,7 @@ final class PropertyMapping
         private bool $initializeTarget,
         private bool $readTarget,
         private bool $writeTarget,
+        private ?PropertyMapperServicePointer $propertyMapper
     ) {
         $this->targetTypes = array_values($targetTypes);
     }
@@ -129,6 +131,18 @@ final class PropertyMapping
     public function setReadSource(bool $readSource): self
     {
         $this->readSource = $readSource;
+
+        return $this;
+    }
+
+    public function getPropertyMapper(): ?PropertyMapperServicePointer
+    {
+        return $this->propertyMapper;
+    }
+
+    public function setPropertyMapper(?PropertyMapperServicePointer $propertyMapper): self
+    {
+        $this->propertyMapper = $propertyMapper;
 
         return $this;
     }
