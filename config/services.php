@@ -145,7 +145,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set(ObjectToObjectTransformer::class)
         ->args([
             '$propertyAccessor' => service('rekalogika.mapper.property_access_lite'),
-            '$objectMappingResolver' => service('rekalogika.mapper.object_mapping_resolver'),
+            '$objectToObjectMetadataFactory' => service('rekalogika.mapper.object_to_object_metadata_factory'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -900]);
 
@@ -199,7 +199,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # object mapping resolver
 
     $services
-        ->set('rekalogika.mapper.object_mapping_resolver', ObjectToObjectMetadataFactory::class)
+        ->set('rekalogika.mapper.object_to_object_metadata_factory', ObjectToObjectMetadataFactory::class)
         ->args([
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
@@ -208,16 +208,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]);
 
     $services
-        ->set('rekalogika.mapper.cache.object_mapping_resolver')
+        ->set('rekalogika.mapper.cache.object_to_object_metadata_factory')
         ->parent('cache.system')
         ->tag('cache.pool');
 
     $services
-        ->set('rekalogika.mapper.object_mapping_resolver.cache', CachingObjectToObjectMetadataFactory::class)
-        ->decorate('rekalogika.mapper.object_mapping_resolver')
+        ->set('rekalogika.mapper.object_to_object_metadata_factory.cache', CachingObjectToObjectMetadataFactory::class)
+        ->decorate('rekalogika.mapper.object_to_object_metadata_factory')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.object_mapping_resolver')
+            service('rekalogika.mapper.cache.object_to_object_metadata_factory')
         ]);
 
     # transformer registry

@@ -15,13 +15,13 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
-use Rekalogika\Mapper\Transformer\Exception\IncompleteConstructorArgument;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
@@ -44,7 +44,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
     public function __construct(
         private PropertyAccessorInterface $propertyAccessor,
-        private ObjectToObjectMetadataFactoryInterface $objectMappingResolver,
+        private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
     ) {
     }
 
@@ -92,13 +92,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // resolve object mapping
 
-        $objectMapping = $this->objectMappingResolver
+        $objectToObjectMetadata = $this->objectToObjectMetadataFactory
             ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
 
-        // initialize target
+        // initialize target if target is null
 
         if (null === $target) {
-            $target = $this->instantiateTarget($source, $targetType, $objectMapping, $context);
+            $target = $this->instantiateTarget($source, $objectToObjectMetadata, $context);
         } else {
             if (!is_object($target)) {
                 throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
@@ -112,8 +112,17 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // map properties
 
-        foreach ($objectMapping->getPropertyMappings() as $propertyMapping) {
+        foreach ($objectToObjectMetadata->getPropertyMappings() as $propertyMapping) {
+            if ($propertyMapping->doWriteTarget() === false) {
+                continue;
+            }
+
             $sourcePropertyName = $propertyMapping->getSourceProperty();
+
+            if ($sourcePropertyName === null) {
+                continue;
+            }
+
             $targetPropertyName = $propertyMapping->getTargetProperty();
             $targetTypes = $propertyMapping->getTargetTypes();
 
@@ -126,6 +135,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             } catch (NoSuchPropertyException $e) {
                 $sourcePropertyValue = null;
             } catch (UninitializedPropertyException $e) {
+                // skip if the property in the source is unset
                 continue;
             } catch (AccessException | UnexpectedTypeException $e) {
                 $sourcePropertyValue = null;
@@ -134,9 +144,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             // get the value of the target property
 
             try {
-                /** @var mixed */
-                $targetPropertyValue = $this->propertyAccessor
-                    ->getValue($target, $targetPropertyName);
+                if ($propertyMapping->doReadTarget()) {
+                    /** @var mixed */
+                    $targetPropertyValue = $this->propertyAccessor
+                        ->getValue($target, $targetPropertyName);
+                } else {
+                    $targetPropertyValue = null;
+                }
             } catch (UninitializedPropertyException $e) {
                 $targetPropertyValue = null;
             } catch (NoSuchPropertyException | AccessException | UnexpectedTypeException $e) {
@@ -174,48 +188,73 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
     protected function instantiateTarget(
         object $source,
-        Type $targetType,
-        ObjectToObjectMetadata $objectMapping,
+        ObjectToObjectMetadata $objectToObjectMetadata,
         Context $context
     ): object {
-        $targetClass = $objectMapping->getTargetClass();
+        $targetClass = $objectToObjectMetadata->getTargetClass();
 
         // check if class is valid & instantiable
 
-        if (!$objectMapping->isInstantiable()) {
+        if (!$objectToObjectMetadata->isInstantiable()) {
             throw new ClassNotInstantiableException($targetClass, context: $context);
         }
 
         // gets the mapping and loop over the mapping
 
-        $initializableMappings = $objectMapping->getConstructorMappings();
+        $propertyMappings = $objectToObjectMetadata->getPropertyMappings();
 
         $constructorArguments = [];
 
-        foreach ($initializableMappings as $mapping) {
-            $sourcePropertyName = $mapping->getSourceProperty();
-            $targetPropertyName = $mapping->getTargetProperty();
-            $targetTypes = $mapping->getTargetTypes();
+        /** @var array<int,string> */
+        $unsetSourceProperties = [];
 
-            if ($sourcePropertyName === null) {
-                throw new IncompleteConstructorArgument($source, $targetClass, $targetPropertyName, context: $context);
+        foreach ($propertyMappings as $propertyMapping) {
+            if (!$propertyMapping->doInitializeTarget()) {
+                continue;
             }
+
+            $sourceProperty = $propertyMapping->getSourceProperty();
+            $targetProperty = $propertyMapping->getTargetProperty();
+            $targetTypes = $propertyMapping->getTargetTypes();
 
             // get the value of the source property
 
             try {
-                /** @var mixed */
-                $sourcePropertyValue = $this->propertyAccessor
-                    ->getValue($source, $sourcePropertyName);
+                if ($sourceProperty === null) {
+                    $sourcePropertyValue = null;
+                } else {
+                    /** @var mixed */
+                    $sourcePropertyValue = $this->propertyAccessor
+                        ->getValue($source, $sourceProperty);
+                }
             } catch (NoSuchPropertyException $e) {
+                /** @var string $sourceProperty */
                 // if source property is not found, then it is an error
-                throw new IncompleteConstructorArgument($source, $targetClass, $sourcePropertyName, $e, context: $context);
+                throw new UnexpectedValueException(
+                    sprintf(
+                        'Cannot get value of source property "%s::$%s".',
+                        get_debug_type($source),
+                        $sourceProperty
+                    ),
+                    previous: $e,
+                    context: $context
+                );
             } catch (UninitializedPropertyException $e) {
+                /** @var string $sourceProperty */
                 // if source property is unset, we skip it
+                $unsetSourceProperties[] = $sourceProperty;
                 continue;
             } catch (AccessException | UnexpectedTypeException $e) {
+                /** @var string $sourceProperty */
                 // otherwise, it is an error
-                throw new UnableToReadException($source, null, $source, $sourcePropertyName, $e, context: $context);
+                throw new UnableToReadException(
+                    $source,
+                    null,
+                    $source,
+                    $sourceProperty,
+                    $e,
+                    context: $context
+                );
             }
 
             // transform the value
@@ -226,19 +265,26 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 target: null,
                 targetTypes: $targetTypes,
                 context: $context,
-                path: $targetPropertyName,
+                path: $targetProperty,
             );
 
             /** @psalm-suppress MixedAssignment */
-            $constructorArguments[$targetPropertyName] = $targetPropertyValue;
+            $constructorArguments[$targetProperty] = $targetPropertyValue;
         }
 
         try {
             $reflectionClass = new \ReflectionClass($targetClass);
 
             return $reflectionClass->newInstanceArgs($constructorArguments);
-        } catch (\TypeError $e) {
-            throw new InstantiationFailureException($source, $targetClass, $constructorArguments, $e, context: $context);
+        } catch (\TypeError | \ReflectionException $e) {
+            throw new InstantiationFailureException(
+                source: $source,
+                targetClass: $targetClass,
+                constructorArguments: $constructorArguments,
+                unsetSourceProperties: $unsetSourceProperties,
+                previous: $e,
+                context: $context
+            );
         }
     }
 

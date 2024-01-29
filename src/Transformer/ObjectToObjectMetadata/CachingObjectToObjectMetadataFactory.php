@@ -59,12 +59,12 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
             $this->cacheItemPool->deleteItem($cacheKey);
         }
 
-        $objectMapping = $this->decorated
+        $objectToObjectMetadata = $this->decorated
             ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
 
-        $cacheItem->set($objectMapping);
+        $cacheItem->set($objectToObjectMetadata);
         $this->cacheItemPool->save($cacheItem);
 
-        return $this->cache[$cacheKey] = $objectMapping;
+        return $this->cache[$cacheKey] = $objectToObjectMetadata;
     }
 }

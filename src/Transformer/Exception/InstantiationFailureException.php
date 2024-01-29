@@ -19,36 +19,48 @@ class InstantiationFailureException extends NotMappableValueException
 {
     /**
      * @param array<string,mixed> $constructorArguments
+     * @param array<int,string> $unsetSourceProperties
      */
     public function __construct(
         object $source,
         string $targetClass,
         array $constructorArguments,
+        array $unsetSourceProperties,
         \Throwable $previous,
         Context $context,
     ) {
         if (count($constructorArguments) === 0) {
-            parent::__construct(
-                message: sprintf(
-                    'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
-                    \get_debug_type($source),
-                    $targetClass,
-                ),
-                previous: $previous,
-                context: $context,
+            $message = sprintf(
+                'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
+                \get_debug_type($source),
+                $targetClass,
             );
         } else {
-            parent::__construct(
-                message: sprintf(
-                    'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" using constructor arguments: %s.',
-                    \get_debug_type($source),
-                    $targetClass,
-                    self::formatConstructorArguments($constructorArguments)
-                ),
-                previous: $previous,
-                context: $context,
+            $message = sprintf(
+                'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" using constructor arguments: %s.',
+                \get_debug_type($source),
+                $targetClass,
+                self::formatConstructorArguments($constructorArguments)
             );
         }
+
+        if (count($unsetSourceProperties) > 0) {
+            $message .= sprintf(
+                ' Note that the following properties are not set in the source object: %s.',
+                implode(', ', $unsetSourceProperties)
+            );
+        }
+
+        $message .= sprintf(
+            ' The original error message was: %s.',
+            $previous->getMessage()
+        );
+
+        parent::__construct(
+            message: $message,
+            previous: $previous,
+            context: $context
+        );
     }
 
     /**

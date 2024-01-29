@@ -96,7 +96,7 @@ class MapperFactory
     private CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
     private ?TypeResolverInterface $typeResolver = null;
-    private ?ObjectToObjectMetadataFactoryInterface $objectMappingResolver = null;
+    private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
     private ?MainTransformer $mainTransformer = null;
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
@@ -261,7 +261,7 @@ class MapperFactory
         if (null === $this->objectToObjectTransformer) {
             $this->objectToObjectTransformer = new ObjectToObjectTransformer(
                 propertyAccessor: $this->getPropertyAccessor(),
-                objectMappingResolver: $this->getObjectMappingResolver(),
+                objectToObjectMetadataFactory: $this->getObjectToObjectMetadataFactory(),
             );
         }
 
@@ -397,10 +397,10 @@ class MapperFactory
         return $this->typeResolver;
     }
 
-    protected function getObjectMappingResolver(): ObjectToObjectMetadataFactoryInterface
+    protected function getObjectToObjectMetadataFactory(): ObjectToObjectMetadataFactoryInterface
     {
-        if (null === $this->objectMappingResolver) {
-            $this->objectMappingResolver = new ObjectToObjectMetadataFactory(
+        if (null === $this->objectToObjectMetadataFactory) {
+            $this->objectToObjectMetadataFactory = new ObjectToObjectMetadataFactory(
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
@@ -408,7 +408,7 @@ class MapperFactory
             );
         }
 
-        return $this->objectMappingResolver;
+        return $this->objectToObjectMetadataFactory;
     }
 
 

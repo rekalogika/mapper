@@ -26,21 +26,44 @@ final class PropertyMapping
      * @param array<array-key,Type> $targetTypes
      */
     public function __construct(
-        private string $sourceProperty,
+        private ?string $sourceProperty,
         private string $targetProperty,
         array $targetTypes,
+        private bool $initializeTarget = false,
+        private bool $readTarget = false,
+        private bool $writeTarget = false,
     ) {
         $this->targetTypes = array_values($targetTypes);
     }
 
-    public function getSourceProperty(): string
+    /**
+     * Property path of the source
+     */
+    public function getSourceProperty(): ?string
     {
         return $this->sourceProperty;
     }
 
+    public function setSourceProperty(?string $sourceProperty): self
+    {
+        $this->sourceProperty = $sourceProperty;
+
+        return $this;
+    }
+
+    /**
+     * Property path of the target
+     */
     public function getTargetProperty(): string
     {
         return $this->targetProperty;
+    }
+
+    public function setTargetProperty(string $targetProperty): self
+    {
+        $this->targetProperty = $targetProperty;
+
+        return $this;
     }
 
     /**
@@ -49,5 +72,51 @@ final class PropertyMapping
     public function getTargetTypes(): array
     {
         return $this->targetTypes;
+    }
+
+    /**
+     * @param array<int,Type> $targetTypes
+     */
+    public function setTargetTypes(array $targetTypes): self
+    {
+        $this->targetTypes = $targetTypes;
+
+        return $this;
+    }
+
+    public function doInitializeTarget(): bool
+    {
+        return $this->initializeTarget;
+    }
+
+    public function setInitializeTarget(bool $initializeTarget): self
+    {
+        $this->initializeTarget = $initializeTarget;
+
+        return $this;
+    }
+
+    public function doReadTarget(): bool
+    {
+        return $this->readTarget;
+    }
+
+    public function setReadTarget(bool $readTarget): self
+    {
+        $this->readTarget = $readTarget;
+
+        return $this;
+    }
+
+    public function doWriteTarget(): bool
+    {
+        return $this->writeTarget;
+    }
+
+    public function setWriteTarget(bool $writeTarget): self
+    {
+        $this->writeTarget = $writeTarget;
+
+        return $this;
     }
 }

@@ -20,12 +20,13 @@ final class ObjectToObjectMetadata
      */
     private array $propertyMappings = [];
 
-    /**
-     * @var array<int,ConstructorMapping>
-     */
-    private array $constructorMappings = [];
-
     private bool $instantiable = true;
+    private bool $cloneable = true;
+
+    /**
+     * @var array<int,string>
+     */
+    private array $initializableTargetPropertiesNotInSource = [];
 
     /**
      * @param class-string $sourceClass
@@ -65,6 +66,18 @@ final class ObjectToObjectMetadata
         return $this;
     }
 
+    public function isCloneable(): bool
+    {
+        return $this->cloneable;
+    }
+
+    public function setCloneable(bool $cloneable): self
+    {
+        $this->cloneable = $cloneable;
+
+        return $this;
+    }
+
     /**
      * @return array<int,PropertyMapping>
      */
@@ -93,30 +106,20 @@ final class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<int,ConstructorMapping>
+     * @return array<int,string>
      */
-    public function getConstructorMappings(): array
+    public function getInitializableTargetPropertiesNotInSource(): array
     {
-        return $this->constructorMappings;
+        return $this->initializableTargetPropertiesNotInSource;
     }
 
-    public function addConstructorMapping(ConstructorMapping $constructorMapping): self
+    /**
+     * @param array<int,string> $initializableTargetPropertiesNotInSource
+     */
+    public function setInitializableTargetPropertiesNotInSource(array $initializableTargetPropertiesNotInSource): self
     {
-        $this->constructorMappings[] = $constructorMapping;
+        $this->initializableTargetPropertiesNotInSource = $initializableTargetPropertiesNotInSource;
 
         return $this;
     }
-
-    public function removeConstructorMapping(ConstructorMapping $constructorMapping): self
-    {
-        $index = array_search($constructorMapping, $this->constructorMappings, true);
-
-        if (false !== $index) {
-            unset($this->constructorMappings[$index]);
-            $this->constructorMappings = array_values($this->constructorMappings);
-        }
-
-        return $this;
-    }
-
 }

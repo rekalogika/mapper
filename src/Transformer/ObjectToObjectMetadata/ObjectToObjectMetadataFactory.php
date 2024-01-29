@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ConstructorMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
@@ -39,26 +38,32 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         string $targetClass,
         Context $context
     ): ObjectToObjectMetadata {
-        $objectMapping = new ObjectToObjectMetadata($sourceClass, $targetClass);
+        $objectToObjectMetadata = new ObjectToObjectMetadata($sourceClass, $targetClass);
 
         // queries
 
         $readableSourceProperties = $this
-            ->listReadableSourceProperties($sourceClass, $context);
+            ->listReadableProperties($sourceClass, $context);
+        $readableTargetProperties = $this
+            ->listReadableProperties($targetClass, $context);
         $writableTargetProperties = $this
-            ->listWritableTargetProperties($targetClass, $context);
+            ->listWritableProperties($targetClass, $context);
         $initializableTargetProperties = $this
-            ->listInitializableTargetProperties($targetClass, $context);
+            ->listInitializableProperties($targetClass, $context);
+        $targetProperties = $this
+            ->listProperties($targetClass, $context);
+
+        $initializableTargetPropertiesNotInSource = $initializableTargetProperties;
 
         // determine if targetClass is instantiable
 
         $reflectionClass = new \ReflectionClass($targetClass);
-        $instantiable = $reflectionClass->isInstantiable();
-        $objectMapping->setInstantiable($instantiable);
+        $objectToObjectMetadata->setInstantiable($reflectionClass->isInstantiable());
+        $objectToObjectMetadata->setCloneable($reflectionClass->isCloneable());
 
         // process properties mapping
 
-        foreach ($writableTargetProperties as $targetProperty) {
+        foreach ($targetProperties as $targetProperty) {
             if (!in_array($targetProperty, $readableSourceProperties)) {
                 continue;
             }
@@ -67,37 +72,14 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
 
             ///
 
-            $targetPropertyTypes = $this->propertyTypeExtractor
-                ->getTypes($targetClass, $targetProperty);
+            $isTargetReadable = in_array($targetProperty, $readableTargetProperties);
+            $isTargetWritable = in_array($targetProperty, $writableTargetProperties);
+            $isTargetInitializable = in_array($targetProperty, $initializableTargetProperties);
 
-            if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Cannot get type of target property "%s::$%s".',
-                        $targetClass,
-                        $targetProperty
-                    ),
-                    context: $context
-                );
-            }
-
-            $objectMapping->addPropertyMapping(new PropertyMapping(
-                $sourceProperty,
-                $targetProperty,
-                $targetPropertyTypes,
-            ));
-        }
-
-        // process source properties to target constructor mapping
-
-        foreach ($initializableTargetProperties as $property) {
-            $sourceProperty = $property;
-            $targetProperty = $property;
-
-            ///
-
-            if (!in_array($property, $readableSourceProperties)) {
-                $sourceProperty = null;
+            // target is initializeble, remove the property from the list of
+            // uninitialized properties
+            if ($isTargetInitializable) {
+                $initializableTargetPropertiesNotInSource = array_diff($initializableTargetPropertiesNotInSource, [$targetProperty]);
             }
 
             $targetPropertyTypes = $this->propertyTypeExtractor
@@ -114,25 +96,46 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 );
             }
 
-            $objectMapping->addConstructorMapping(new ConstructorMapping(
-                $sourceProperty,
-                $targetProperty,
-                $targetPropertyTypes,
-            ));
+            $propertyMapping = new PropertyMapping(
+                sourceProperty: $sourceProperty,
+                targetProperty: $targetProperty,
+                targetTypes: $targetPropertyTypes,
+                initializeTarget: $isTargetInitializable,
+                writeTarget: $isTargetWritable,
+                readTarget: $isTargetReadable,
+            );
+
+            $objectToObjectMetadata->addPropertyMapping($propertyMapping);
         }
 
-        return $objectMapping;
+        $objectToObjectMetadata
+            ->setInitializableTargetPropertiesNotInSource($initializableTargetPropertiesNotInSource);
+
+        return $objectToObjectMetadata;
     }
 
     /**
      * @param class-string $class
      * @return array<int,string>
      */
-    private function listReadableSourceProperties(
+    private function listProperties(
         string $class,
         Context $context
     ): array {
         $properties = $this->propertyListExtractor->getProperties($class) ?? [];
+
+        return array_values($properties);
+    }
+
+    /**
+     * @param class-string $class
+     * @return array<int,string>
+     */
+    private function listReadableProperties(
+        string $class,
+        Context $context
+    ): array {
+        $properties = $this->listProperties($class, $context);
 
         $readableProperties = [];
 
@@ -149,11 +152,11 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
      * @param class-string $class
      * @return array<int,string>
      */
-    private function listWritableTargetProperties(
+    private function listWritableProperties(
         string $class,
         Context $context
     ): array {
-        $properties = $this->propertyListExtractor->getProperties($class) ?? [];
+        $properties = $this->listProperties($class, $context);
 
         $writableProperties = [];
 
@@ -170,11 +173,11 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
      * @param class-string $class
      * @return array<int,string>
      */
-    private function listInitializableTargetProperties(
+    private function listInitializableProperties(
         string $class,
         Context $context
     ): array {
-        $properties = $this->propertyListExtractor->getProperties($class) ?? [];
+        $properties = $this->listProperties($class, $context);
 
         $initializableProperties = [];
 

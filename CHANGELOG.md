@@ -6,6 +6,7 @@
 * refactor: Do not use `array_intersect` to determine object mapping.
 * dx(`ObjectMapping`): Make it mutable.
 * refactor(`ObjectToObjectMetadata`): Class & namespace renames for clarity.
+* refactor(`ObjectToObjectMetadata`): Refactor for future extension.
 
 ## 0.5.18
 

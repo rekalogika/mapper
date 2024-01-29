@@ -21,7 +21,6 @@ use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithPrivateConstructorDto
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesAndAdditionalNullProperty;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
-use Rekalogika\Mapper\Transformer\Exception\IncompleteConstructorArgument;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 
 class ConstructorTest extends AbstractIntegrationTest
@@ -57,7 +56,7 @@ class ConstructorTest extends AbstractIntegrationTest
 
     public function testMissingSourceProperty(): void
     {
-        $this->expectException(IncompleteConstructorArgument::class);
+        $this->expectException(InstantiationFailureException::class);
         $source = new ObjectWithScalarProperties();
         $this->mapper->map($source, ObjectWithConstructorAndMoreArgumentDto::class);
     }
