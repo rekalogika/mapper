@@ -29,9 +29,10 @@ final class PropertyMapping
         private ?string $sourceProperty,
         private string $targetProperty,
         array $targetTypes,
-        private bool $initializeTarget = false,
-        private bool $readTarget = false,
-        private bool $writeTarget = false,
+        private bool $readSource,
+        private bool $initializeTarget,
+        private bool $readTarget,
+        private bool $writeTarget,
     ) {
         $this->targetTypes = array_values($targetTypes);
     }
@@ -116,6 +117,18 @@ final class PropertyMapping
     public function setWriteTarget(bool $writeTarget): self
     {
         $this->writeTarget = $writeTarget;
+
+        return $this;
+    }
+
+    public function doReadSource(): bool
+    {
+        return $this->readSource;
+    }
+
+    public function setReadSource(bool $readSource): self
+    {
+        $this->readSource = $readSource;
 
         return $this;
     }

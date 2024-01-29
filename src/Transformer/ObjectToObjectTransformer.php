@@ -117,21 +117,20 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 continue;
             }
 
-            $sourcePropertyName = $propertyMapping->getSourceProperty();
-
-            if ($sourcePropertyName === null) {
-                continue;
-            }
-
-            $targetPropertyName = $propertyMapping->getTargetProperty();
+            $sourceProperty = $propertyMapping->getSourceProperty();
+            $targetProperty = $propertyMapping->getTargetProperty();
             $targetTypes = $propertyMapping->getTargetTypes();
 
             // get the value of the source property
 
             try {
-                /** @var mixed */
-                $sourcePropertyValue = $this->propertyAccessor
-                    ->getValue($source, $sourcePropertyName);
+                if ($propertyMapping->doReadSource() && $sourceProperty !== null) {
+                    /** @var mixed */
+                    $sourcePropertyValue = $this->propertyAccessor
+                        ->getValue($source, $sourceProperty);
+                } else {
+                    $sourcePropertyValue = null;
+                }
             } catch (NoSuchPropertyException $e) {
                 $sourcePropertyValue = null;
             } catch (UninitializedPropertyException $e) {
@@ -147,7 +146,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 if ($propertyMapping->doReadTarget()) {
                     /** @var mixed */
                     $targetPropertyValue = $this->propertyAccessor
-                        ->getValue($target, $targetPropertyName);
+                        ->getValue($target, $targetProperty);
                 } else {
                     $targetPropertyValue = null;
                 }
@@ -165,18 +164,18 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 target: $targetPropertyValue,
                 targetTypes: $targetTypes,
                 context: $context,
-                path: $targetPropertyName,
+                path: $targetProperty,
             );
 
             try {
                 $this->propertyAccessor
-                    ->setValue($target, $targetPropertyName, $targetPropertyValue);
+                    ->setValue($target, $targetProperty, $targetPropertyValue);
             } catch (AccessException | UnexpectedTypeException $e) {
                 throw new UnableToWriteException(
                     $source,
                     $target,
                     $target,
-                    $targetPropertyName,
+                    $targetProperty,
                     $e,
                     context: $context
                 );
@@ -220,12 +219,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             // get the value of the source property
 
             try {
-                if ($sourceProperty === null) {
-                    $sourcePropertyValue = null;
-                } else {
+                if ($propertyMapping->doReadSource() && $sourceProperty !== null) {
                     /** @var mixed */
                     $sourcePropertyValue = $this->propertyAccessor
                         ->getValue($source, $sourceProperty);
+                } else {
+                    $sourcePropertyValue = null;
                 }
             } catch (NoSuchPropertyException $e) {
                 /** @var string $sourceProperty */

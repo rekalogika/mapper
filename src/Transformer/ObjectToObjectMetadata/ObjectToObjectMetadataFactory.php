@@ -64,14 +64,11 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         // process properties mapping
 
         foreach ($targetProperties as $targetProperty) {
-            if (!in_array($targetProperty, $readableSourceProperties)) {
-                continue;
-            }
-
             $sourceProperty = $targetProperty;
 
             ///
 
+            $isSourceReadable = in_array($sourceProperty, $readableSourceProperties);
             $isTargetReadable = in_array($targetProperty, $readableTargetProperties);
             $isTargetWritable = in_array($targetProperty, $writableTargetProperties);
             $isTargetInitializable = in_array($targetProperty, $initializableTargetProperties);
@@ -97,9 +94,10 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             }
 
             $propertyMapping = new PropertyMapping(
-                sourceProperty: $sourceProperty,
+                sourceProperty: $isSourceReadable ? $sourceProperty : null,
                 targetProperty: $targetProperty,
                 targetTypes: $targetPropertyTypes,
+                readSource: $isSourceReadable,
                 initializeTarget: $isTargetInitializable,
                 writeTarget: $isTargetWritable,
                 readTarget: $isTargetReadable,

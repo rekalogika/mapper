@@ -7,6 +7,7 @@
 * dx(`ObjectMapping`): Make it mutable.
 * refactor(`ObjectToObjectMetadata`): Class & namespace renames for clarity.
 * refactor(`ObjectToObjectMetadata`): Refactor for future extension.
+* refactor(`ObjectToObjectMetadata`): Add `doReadSource` flag.
 
 ## 0.5.18
 
