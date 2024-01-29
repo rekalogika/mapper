@@ -26,8 +26,8 @@ use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMapping;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
@@ -44,7 +44,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
     public function __construct(
         private PropertyAccessorInterface $propertyAccessor,
-        private ObjectMappingResolverInterface $objectMappingResolver,
+        private ObjectToObjectMetadataFactoryInterface $objectMappingResolver,
     ) {
     }
 
@@ -93,7 +93,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // resolve object mapping
 
         $objectMapping = $this->objectMappingResolver
-            ->resolveObjectMapping($sourceClass, $targetClass, $context);
+            ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
 
         // initialize target
 
@@ -175,7 +175,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     protected function instantiateTarget(
         object $source,
         Type $targetType,
-        ObjectMapping $objectMapping,
+        ObjectToObjectMetadata $objectMapping,
         Context $context
     ): object {
         $targetClass = $objectMapping->getTargetClass();

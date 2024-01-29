@@ -29,9 +29,9 @@ use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\CachingObjectMappingResolver;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\ObjectMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\CachingObjectToObjectMetadataFactory;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
@@ -199,7 +199,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # object mapping resolver
 
     $services
-        ->set('rekalogika.mapper.object_mapping_resolver', ObjectMappingResolver::class)
+        ->set('rekalogika.mapper.object_mapping_resolver', ObjectToObjectMetadataFactory::class)
         ->args([
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
@@ -213,7 +213,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
-        ->set('rekalogika.mapper.object_mapping_resolver.cache', CachingObjectMappingResolver::class)
+        ->set('rekalogika.mapper.object_mapping_resolver.cache', CachingObjectToObjectMetadataFactory::class)
         ->decorate('rekalogika.mapper.object_mapping_resolver')
         ->args([
             service('.inner'),

@@ -11,31 +11,31 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver;
+namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMapping;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 
-final class CachingObjectMappingResolver implements ObjectMappingResolverInterface
+final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     /**
-     * @var array<string,ObjectMapping>
+     * @var array<string,ObjectToObjectMetadata>
      */
     private array $cache = [];
 
     public function __construct(
-        private ObjectMappingResolverInterface $decorated,
+        private ObjectToObjectMetadataFactoryInterface $decorated,
         private CacheItemPoolInterface $cacheItemPool,
     ) {
     }
 
-    public function resolveObjectMapping(
+    public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
         Context $context
-    ): ObjectMapping {
+    ): ObjectToObjectMetadata {
         $cacheKey = $sourceClass . ':' . $targetClass;
 
         if (isset($this->cache[$cacheKey])) {
@@ -49,7 +49,7 @@ final class CachingObjectMappingResolver implements ObjectMappingResolverInterfa
                 /** @var mixed */
                 $cached = $cacheItem->get();
 
-                if ($cached instanceof ObjectMapping) {
+                if ($cached instanceof ObjectToObjectMetadata) {
                     return $this->cache[$cacheKey] = $cached;
                 }
             } catch (\Throwable) {
@@ -60,7 +60,7 @@ final class CachingObjectMappingResolver implements ObjectMappingResolverInterfa
         }
 
         $objectMapping = $this->decorated
-            ->resolveObjectMapping($sourceClass, $targetClass, $context);
+            ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
 
         $cacheItem->set($objectMapping);
         $this->cacheItemPool->save($cacheItem);

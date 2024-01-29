@@ -11,20 +11,20 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver;
+namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ConstructorMapping;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMapping;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ConstructorMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 
-final class ObjectMappingResolver implements ObjectMappingResolverInterface
+final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     public function __construct(
         private PropertyAccessExtractorInterface $propertyAccessExtractor,
@@ -34,12 +34,12 @@ final class ObjectMappingResolver implements ObjectMappingResolverInterface
     ) {
     }
 
-    public function resolveObjectMapping(
+    public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
         Context $context
-    ): ObjectMapping {
-        $objectMapping = new ObjectMapping($sourceClass, $targetClass);
+    ): ObjectToObjectMetadata {
+        $objectMapping = new ObjectToObjectMetadata($sourceClass, $targetClass);
 
         // queries
 

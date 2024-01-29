@@ -11,9 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts;
+namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts;
 
-final class ObjectMapping
+final class ObjectToObjectMetadata
 {
     /**
      * @var array<int,PropertyMapping>

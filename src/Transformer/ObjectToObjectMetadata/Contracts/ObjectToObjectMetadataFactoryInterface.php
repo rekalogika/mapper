@@ -11,19 +11,19 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts;
+namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts;
 
 use Rekalogika\Mapper\Context\Context;
 
-interface ObjectMappingResolverInterface
+interface ObjectToObjectMetadataFactoryInterface
 {
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
-    public function resolveObjectMapping(
+    public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
         Context $context
-    ): ObjectMapping;
+    ): ObjectToObjectMetadata;
 }

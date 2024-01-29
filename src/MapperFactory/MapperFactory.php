@@ -34,9 +34,9 @@ use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\Contracts\ObjectMappingResolverInterface;
-use Rekalogika\Mapper\Transformer\ObjectMappingResolver\ObjectMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
@@ -96,7 +96,7 @@ class MapperFactory
     private CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
     private ?TypeResolverInterface $typeResolver = null;
-    private ?ObjectMappingResolverInterface $objectMappingResolver = null;
+    private ?ObjectToObjectMetadataFactoryInterface $objectMappingResolver = null;
     private ?MainTransformer $mainTransformer = null;
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
@@ -397,10 +397,10 @@ class MapperFactory
         return $this->typeResolver;
     }
 
-    protected function getObjectMappingResolver(): ObjectMappingResolverInterface
+    protected function getObjectMappingResolver(): ObjectToObjectMetadataFactoryInterface
     {
         if (null === $this->objectMappingResolver) {
-            $this->objectMappingResolver = new ObjectMappingResolver(
+            $this->objectMappingResolver = new ObjectToObjectMetadataFactory(
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
