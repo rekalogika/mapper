@@ -4,6 +4,7 @@
 
 * perf(`ObjectToObjectTransformer`): Do simple scalar to scalar mapping without
   delegating to the `MainTransformer`.
+* refactor(`ObjectToObjectTransformer`): Reduce code duplication.
 
 ## 0.5.19
 

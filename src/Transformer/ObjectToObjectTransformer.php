@@ -27,8 +27,11 @@ use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
+use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
+use Rekalogika\Mapper\Transformer\Exception\UnsupportedPropertyMappingException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
@@ -92,7 +95,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             return $source;
         }
 
-        // resolve object mapping
+        // get the object to object mapping metadata
 
         $objectToObjectMetadata = $this->objectToObjectMetadataFactory
             ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
@@ -114,154 +117,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // map properties
 
-        foreach ($objectToObjectMetadata->getPropertyMappings() as $propertyMapping) {
-            if ($propertyMapping->doWriteTarget() === false) {
-                continue;
-            }
-
-            $sourceProperty = $propertyMapping->getSourceProperty();
-            $targetProperty = $propertyMapping->getTargetProperty();
-            $targetTypes = $propertyMapping->getTargetTypes();
-
-            // if a custom property mapper is set, then use it and skip the rest
-
-            if ($propertyMapperPointer = $propertyMapping->getPropertyMapper()) {
-                /** @var object */
-                $propertyMapper = $this->propertyMapperLocator
-                    ->get($propertyMapperPointer->getServiceId());
-
-                /**
-                 * @psalm-suppress MixedAssignment
-                 * @psalm-suppress MixedMethodCall
-                 */
-                $targetPropertyValue = $propertyMapper->{$propertyMapperPointer
-                    ->getMethod()}($source);
-
-                try {
-                    $this->propertyAccessor
-                        ->setValue($target, $targetProperty, $targetPropertyValue);
-                } catch (AccessException | UnexpectedTypeException $e) {
-                    throw new UnableToWriteException(
-                        $source,
-                        $target,
-                        $target,
-                        $targetProperty,
-                        $e,
-                        context: $context
-                    );
-                }
-
-                continue;
-            }
-
-            // if source property is null, continue
-
-            if ($sourceProperty === null) {
-                continue;
-            }
-
-            // get the value of the source property
-
-            try {
-                if ($propertyMapping->doReadSource()) {
-                    /** @var mixed */
-                    $sourcePropertyValue = $this->propertyAccessor
-                        ->getValue($source, $sourceProperty);
-                } else {
-                    $sourcePropertyValue = null;
-                }
-            } catch (NoSuchPropertyException $e) {
-                $sourcePropertyValue = null;
-            } catch (UninitializedPropertyException $e) {
-                // skip if the property in the source is unset
-                continue;
-            } catch (AccessException | UnexpectedTypeException $e) {
-                $sourcePropertyValue = null;
-            }
-
-            // do simple scalar to scalar transformation if possible
-
-            $targetScalarType = $propertyMapping->getTargetScalarType();
-
-            if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
-                switch ($targetScalarType) {
-                    case 'int':
-                        $targetPropertyValue = (int) $sourcePropertyValue;
-                        break;
-                    case 'float':
-                        $targetPropertyValue = (float) $sourcePropertyValue;
-                        break;
-                    case 'string':
-                        $targetPropertyValue = (string) $sourcePropertyValue;
-                        break;
-                    case 'bool':
-                        $targetPropertyValue = (bool) $sourcePropertyValue;
-                        break;
-                }
-
-                try {
-                    $this->propertyAccessor
-                        ->setValue($target, $targetProperty, $targetPropertyValue);
-                } catch (AccessException | UnexpectedTypeException $e) {
-                    throw new UnableToWriteException(
-                        $source,
-                        $target,
-                        $target,
-                        $targetProperty,
-                        $e,
-                        context: $context
-                    );
-                }
-
-                continue;
-            }
-
-            // get the value of the target property
-
-            try {
-                if ($propertyMapping->doReadTarget()) {
-                    /** @var mixed */
-                    $targetPropertyValue = $this->propertyAccessor
-                        ->getValue($target, $targetProperty);
-                } else {
-                    $targetPropertyValue = null;
-                }
-            } catch (UninitializedPropertyException $e) {
-                $targetPropertyValue = null;
-            } catch (NoSuchPropertyException | AccessException | UnexpectedTypeException $e) {
-                $targetPropertyValue = null;
-            }
-
-            // transform the value
-
-            /** @var mixed */
-            $targetPropertyValue = $this->getMainTransformer()->transform(
-                source: $sourcePropertyValue,
-                target: $targetPropertyValue,
-                targetTypes: $targetTypes,
-                context: $context,
-                path: $targetProperty,
-            );
-
-            try {
-                $this->propertyAccessor
-                    ->setValue($target, $targetProperty, $targetPropertyValue);
-            } catch (AccessException | UnexpectedTypeException $e) {
-                throw new UnableToWriteException(
-                    $source,
-                    $target,
-                    $target,
-                    $targetProperty,
-                    $e,
-                    context: $context
-                );
-            }
-        }
+        $this->writeTarget($source, $target, $objectToObjectMetadata, $context);
 
         return $target;
     }
 
-    protected function instantiateTarget(
+    private function instantiateTarget(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
         Context $context
@@ -288,115 +149,26 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 continue;
             }
 
-            $sourceProperty = $propertyMapping->getSourceProperty();
-            $targetProperty = $propertyMapping->getTargetProperty();
-            $targetTypes = $propertyMapping->getTargetTypes();
-
-            // if property mapper is set, then use it
-            if ($propertyMapperPointer = $propertyMapping->getPropertyMapper()) {
-                /** @var object */
-                $propertyMapper = $this->propertyMapperLocator
-                    ->get($propertyMapperPointer->getServiceId());
-
-                /**
-                 * @psalm-suppress MixedAssignment
-                 * @psalm-suppress MixedMethodCall
-                 */
-                $targetPropertyValue = $propertyMapper->{$propertyMapperPointer
-                    ->getMethod()}($source);
+            try {
+                /** @var mixed */
+                $targetPropertyValue = $this->transformValue(
+                    propertyMapping: $propertyMapping,
+                    source: $source,
+                    target: null,
+                    context: $context
+                );
 
                 /** @psalm-suppress MixedAssignment */
-                $constructorArguments[$targetProperty] = $targetPropertyValue;
-
-                continue;
-            }
-
-            // if source property is null, continue
-
-            if ($sourceProperty === null) {
-                continue;
-            }
-
-
-
-            // get the value of the source property
-
-            try {
-                if ($propertyMapping->doReadSource()) {
-                    /** @var mixed */
-                    $sourcePropertyValue = $this->propertyAccessor
-                        ->getValue($source, $sourceProperty);
-                } else {
-                    $sourcePropertyValue = null;
-                }
-            } catch (NoSuchPropertyException $e) {
-                /** @var string $sourceProperty */
-                // if source property is not found, then it is an error
-                throw new UnexpectedValueException(
-                    sprintf(
-                        'Cannot get value of source property "%s::$%s".',
-                        get_debug_type($source),
-                        $sourceProperty
-                    ),
-                    previous: $e,
-                    context: $context
-                );
-            } catch (UninitializedPropertyException $e) {
-                /** @var string $sourceProperty */
-                // if source property is unset, we skip it
+                $constructorArguments[$propertyMapping->getTargetProperty()]
+                    = $targetPropertyValue;
+            } catch (UninitializedSourcePropertyException $e) {
+                $sourceProperty = $e->getPropertyName();
                 $unsetSourceProperties[] = $sourceProperty;
-                continue;
-            } catch (AccessException | UnexpectedTypeException $e) {
-                /** @var string $sourceProperty */
-                // otherwise, it is an error
-                throw new UnableToReadException(
-                    $source,
-                    null,
-                    $source,
-                    $sourceProperty,
-                    $e,
-                    context: $context
-                );
-            }
-
-            // do simple scalar to scalar transformation if possible
-
-            $targetScalarType = $propertyMapping->getTargetScalarType();
-
-            if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
-                switch ($targetScalarType) {
-                    case 'int':
-                        $targetPropertyValue = (int) $sourcePropertyValue;
-                        break;
-                    case 'float':
-                        $targetPropertyValue = (float) $sourcePropertyValue;
-                        break;
-                    case 'string':
-                        $targetPropertyValue = (string) $sourcePropertyValue;
-                        break;
-                    case 'bool':
-                        $targetPropertyValue = (bool) $sourcePropertyValue;
-                        break;
-                }
-
-                $constructorArguments[$targetProperty] = $targetPropertyValue;
 
                 continue;
+            } catch (UnsupportedPropertyMappingException $e) {
+                continue;
             }
-
-            // transform the value
-
-            /** @var mixed */
-            $targetPropertyValue = $this->getMainTransformer()->transform(
-                source: $sourcePropertyValue,
-                target: null,
-                targetTypes: $targetTypes,
-                context: $context,
-                path: $targetProperty,
-            );
-
-            /** @psalm-suppress MixedAssignment */
-            $constructorArguments[$targetProperty] = $targetPropertyValue;
         }
 
         try {
@@ -413,6 +185,179 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 context: $context
             );
         }
+    }
+
+    private function writeTarget(
+        object $source,
+        object $target,
+        ObjectToObjectMetadata $objectToObjectMetadata,
+        Context $context
+    ): void {
+        foreach ($objectToObjectMetadata->getPropertyMappings() as $propertyMapping) {
+            if ($propertyMapping->doWriteTarget() === false) {
+                continue;
+            }
+
+            try {
+                assert(is_object($target));
+
+                /** @var mixed */
+                $targetPropertyValue = $this->transformValue(
+                    propertyMapping: $propertyMapping,
+                    source: $source,
+                    target: $target,
+                    context: $context
+                );
+            } catch (UninitializedSourcePropertyException $e) {
+                continue;
+            } catch (UnsupportedPropertyMappingException $e) {
+                continue;
+            }
+
+            $targetProperty = $propertyMapping->getTargetProperty();
+
+            try {
+                $this->propertyAccessor
+                    ->setValue($target, $targetProperty, $targetPropertyValue);
+            } catch (AccessException | UnexpectedTypeException $e) {
+                throw new UnableToWriteException(
+                    $source,
+                    $target,
+                    $target,
+                    $targetProperty,
+                    $e,
+                    context: $context
+                );
+            }
+        }
+    }
+
+    /**
+     * @throws UnsupportedPropertyMappingException
+     * @throws UninitializedSourcePropertyException
+     */
+    private function transformValue(
+        PropertyMapping $propertyMapping,
+        object $source,
+        ?object $target,
+        Context $context
+    ): mixed {
+        $sourceProperty = $propertyMapping->getSourceProperty();
+        $targetProperty = $propertyMapping->getTargetProperty();
+        $targetTypes = $propertyMapping->getTargetTypes();
+
+        // if a custom property mapper is set, then use it
+
+        if ($propertyMapperPointer = $propertyMapping->getPropertyMapper()) {
+            /** @var object */
+            $propertyMapper = $this->propertyMapperLocator
+                ->get($propertyMapperPointer->getServiceId());
+
+            /**
+             * @psalm-suppress MixedAssignment
+             * @psalm-suppress MixedMethodCall
+             */
+            $targetPropertyValue = $propertyMapper->{$propertyMapperPointer
+                ->getMethod()}($source);
+
+            /** @psalm-suppress MixedAssignment */
+            return $targetPropertyValue;
+        }
+
+        // if source property name is null, continue. there is nothing to
+        // transform
+
+        if ($sourceProperty === null) {
+            throw new UnsupportedPropertyMappingException();
+        }
+
+        // get the value of the source property
+
+        try {
+            if ($propertyMapping->doReadSource()) {
+                /** @var mixed */
+                $sourcePropertyValue = $this->propertyAccessor
+                    ->getValue($source, $sourceProperty);
+            } else {
+                $sourcePropertyValue = null;
+            }
+        } catch (NoSuchPropertyException $e) {
+            // if source property is not found, then it is an error
+            throw new UnexpectedValueException(
+                sprintf(
+                    'Cannot get value of source property "%s::$%s".',
+                    get_debug_type($source),
+                    $sourceProperty
+                ),
+                previous: $e,
+                context: $context
+            );
+        } catch (UninitializedPropertyException $e) {
+            // if source property is unset, we skip it
+            throw new UninitializedSourcePropertyException($sourceProperty);
+        } catch (AccessException | UnexpectedTypeException $e) {
+            // otherwise, it is an error
+            throw new UnableToReadException(
+                $source,
+                $target,
+                $source,
+                $sourceProperty,
+                $e,
+                context: $context
+            );
+        }
+
+        // do simple scalar to scalar transformation if possible
+
+        $targetScalarType = $propertyMapping->getTargetScalarType();
+
+        if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
+            switch ($targetScalarType) {
+                case 'int':
+                    $targetPropertyValue = (int) $sourcePropertyValue;
+                    break;
+                case 'float':
+                    $targetPropertyValue = (float) $sourcePropertyValue;
+                    break;
+                case 'string':
+                    $targetPropertyValue = (string) $sourcePropertyValue;
+                    break;
+                case 'bool':
+                    $targetPropertyValue = (bool) $sourcePropertyValue;
+                    break;
+            }
+
+            return $targetPropertyValue;
+        }
+
+        // get the value of the target property
+
+        try {
+            if ($propertyMapping->doReadTarget() && $target !== null) {
+                /** @var mixed */
+                $targetPropertyValue = $this->propertyAccessor
+                    ->getValue($target, $targetProperty);
+            } else {
+                $targetPropertyValue = null;
+            }
+        } catch (UninitializedPropertyException $e) {
+            $targetPropertyValue = null;
+        } catch (NoSuchPropertyException | AccessException | UnexpectedTypeException $e) {
+            $targetPropertyValue = null;
+        }
+
+        // transform the value
+
+        /** @var mixed */
+        $targetPropertyValue = $this->getMainTransformer()->transform(
+            source: $sourcePropertyValue,
+            target: $targetPropertyValue,
+            targetTypes: $targetTypes,
+            context: $context,
+            path: $targetProperty,
+        );
+
+        return $targetPropertyValue;
     }
 
     public function getSupportedTransformation(): iterable
