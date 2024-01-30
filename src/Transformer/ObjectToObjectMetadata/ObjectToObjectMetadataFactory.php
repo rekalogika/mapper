@@ -88,6 +88,9 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $targetPropertyTypes = $this->propertyTypeExtractor
                 ->getTypes($targetClass, $targetProperty);
 
+            /** @var 'int'|'float'|'string'|'bool'|null */
+            $targetPropertyScalarType = null;
+
             if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
                 throw new InvalidArgumentException(
                     sprintf(
@@ -97,6 +100,13 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                     ),
                     context: $context
                 );
+            } elseif (count($targetPropertyTypes) === 1) {
+                $targetPropertyType = $targetPropertyTypes[0];
+                $targetPropertyBuiltInType = $targetPropertyType->getBuiltinType();
+
+                if (in_array($targetPropertyBuiltInType, ['int', 'float', 'string', 'bool'], true)) {
+                    $targetPropertyScalarType = $targetPropertyBuiltInType;
+                }
             }
 
             $propertyMapping = new PropertyMapping(
@@ -107,6 +117,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 initializeTarget: $isTargetInitializable,
                 writeTarget: $isTargetWritable,
                 readTarget: $isTargetReadable,
+                targetScalarType: $targetPropertyScalarType,
                 propertyMapper: $propertyMapperPointer,
             );
 

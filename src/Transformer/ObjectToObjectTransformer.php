@@ -123,7 +123,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $targetProperty = $propertyMapping->getTargetProperty();
             $targetTypes = $propertyMapping->getTargetTypes();
 
-            // if property mapper is set, then use it and skip the rest
+            // if a custom property mapper is set, then use it and skip the rest
 
             if ($propertyMapperPointer = $propertyMapping->getPropertyMapper()) {
                 /** @var object */
@@ -177,6 +177,43 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 continue;
             } catch (AccessException | UnexpectedTypeException $e) {
                 $sourcePropertyValue = null;
+            }
+
+            // do simple scalar to scalar transformation if possible
+
+            $targetScalarType = $propertyMapping->getTargetScalarType();
+
+            if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
+                switch ($targetScalarType) {
+                    case 'int':
+                        $targetPropertyValue = (int) $sourcePropertyValue;
+                        break;
+                    case 'float':
+                        $targetPropertyValue = (float) $sourcePropertyValue;
+                        break;
+                    case 'string':
+                        $targetPropertyValue = (string) $sourcePropertyValue;
+                        break;
+                    case 'bool':
+                        $targetPropertyValue = (bool) $sourcePropertyValue;
+                        break;
+                }
+
+                try {
+                    $this->propertyAccessor
+                        ->setValue($target, $targetProperty, $targetPropertyValue);
+                } catch (AccessException | UnexpectedTypeException $e) {
+                    throw new UnableToWriteException(
+                        $source,
+                        $target,
+                        $target,
+                        $targetProperty,
+                        $e,
+                        context: $context
+                    );
+                }
+
+                continue;
             }
 
             // get the value of the target property
@@ -280,6 +317,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 continue;
             }
 
+
+
             // get the value of the source property
 
             try {
@@ -318,6 +357,31 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     $e,
                     context: $context
                 );
+            }
+
+            // do simple scalar to scalar transformation if possible
+
+            $targetScalarType = $propertyMapping->getTargetScalarType();
+
+            if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
+                switch ($targetScalarType) {
+                    case 'int':
+                        $targetPropertyValue = (int) $sourcePropertyValue;
+                        break;
+                    case 'float':
+                        $targetPropertyValue = (float) $sourcePropertyValue;
+                        break;
+                    case 'string':
+                        $targetPropertyValue = (string) $sourcePropertyValue;
+                        break;
+                    case 'bool':
+                        $targetPropertyValue = (bool) $sourcePropertyValue;
+                        break;
+                }
+
+                $constructorArguments[$targetProperty] = $targetPropertyValue;
+
+                continue;
             }
 
             // transform the value

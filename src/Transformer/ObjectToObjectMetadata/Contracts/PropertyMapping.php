@@ -25,6 +25,7 @@ final class PropertyMapping
 
     /**
      * @param array<array-key,Type> $targetTypes
+     * @param 'int'|'float'|'string'|'bool'|null $targetScalarType
      */
     public function __construct(
         private ?string $sourceProperty,
@@ -34,6 +35,7 @@ final class PropertyMapping
         private bool $initializeTarget,
         private bool $readTarget,
         private bool $writeTarget,
+        private ?string $targetScalarType,
         private ?PropertyMapperServicePointer $propertyMapper
     ) {
         $this->targetTypes = array_values($targetTypes);
@@ -47,11 +49,9 @@ final class PropertyMapping
         return $this->sourceProperty;
     }
 
-    public function setSourceProperty(?string $sourceProperty): self
+    public function setSourceProperty(?string $sourceProperty): void
     {
         $this->sourceProperty = $sourceProperty;
-
-        return $this;
     }
 
     /**
@@ -62,11 +62,9 @@ final class PropertyMapping
         return $this->targetProperty;
     }
 
-    public function setTargetProperty(string $targetProperty): self
+    public function setTargetProperty(string $targetProperty): void
     {
         $this->targetProperty = $targetProperty;
-
-        return $this;
     }
 
     /**
@@ -80,11 +78,9 @@ final class PropertyMapping
     /**
      * @param array<int,Type> $targetTypes
      */
-    public function setTargetTypes(array $targetTypes): self
+    public function setTargetTypes(array $targetTypes): void
     {
         $this->targetTypes = $targetTypes;
-
-        return $this;
     }
 
     public function doInitializeTarget(): bool
@@ -92,11 +88,9 @@ final class PropertyMapping
         return $this->initializeTarget;
     }
 
-    public function setInitializeTarget(bool $initializeTarget): self
+    public function setInitializeTarget(bool $initializeTarget): void
     {
         $this->initializeTarget = $initializeTarget;
-
-        return $this;
     }
 
     public function doReadTarget(): bool
@@ -104,11 +98,9 @@ final class PropertyMapping
         return $this->readTarget;
     }
 
-    public function setReadTarget(bool $readTarget): self
+    public function setReadTarget(bool $readTarget): void
     {
         $this->readTarget = $readTarget;
-
-        return $this;
     }
 
     public function doWriteTarget(): bool
@@ -116,11 +108,9 @@ final class PropertyMapping
         return $this->writeTarget;
     }
 
-    public function setWriteTarget(bool $writeTarget): self
+    public function setWriteTarget(bool $writeTarget): void
     {
         $this->writeTarget = $writeTarget;
-
-        return $this;
     }
 
     public function doReadSource(): bool
@@ -128,11 +118,9 @@ final class PropertyMapping
         return $this->readSource;
     }
 
-    public function setReadSource(bool $readSource): self
+    public function setReadSource(bool $readSource): void
     {
         $this->readSource = $readSource;
-
-        return $this;
     }
 
     public function getPropertyMapper(): ?PropertyMapperServicePointer
@@ -140,10 +128,27 @@ final class PropertyMapping
         return $this->propertyMapper;
     }
 
-    public function setPropertyMapper(?PropertyMapperServicePointer $propertyMapper): self
+    public function setPropertyMapper(?PropertyMapperServicePointer $propertyMapper): void
     {
         $this->propertyMapper = $propertyMapper;
+    }
 
-        return $this;
+    /**
+     * If set, set the property directly, without delegating to the main
+     * transformer
+     *
+     * @return 'int'|'float'|'string'|'bool'|null
+     */
+    public function getTargetScalarType(): ?string
+    {
+        return $this->targetScalarType;
+    }
+
+    /**
+     * @param 'int'|'float'|'string'|'bool'|null $targetScalarType
+     */
+    public function setTargetScalarType(?string $targetScalarType): void
+    {
+        $this->targetScalarType = $targetScalarType;
     }
 }

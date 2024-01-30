@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.5.20
+
+* perf(`ObjectToObjectTransformer`): Do simple scalar to scalar mapping without
+  delegating to the `MainTransformer`.
+
 ## 0.5.19
 
 * perf: Move instantiable check to `ObjectMappingResolver`.
