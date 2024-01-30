@@ -5,6 +5,8 @@
 * perf(`ObjectToObjectTransformer`): Do simple scalar to scalar mapping without
   delegating to the `MainTransformer`.
 * refactor(`ObjectToObjectTransformer`): Reduce code duplication.
+* refactor: Reduce code duplication in `TraversableToArrayAccessTransformer` &
+  `TraversableToTraversableTransformer`.
 
 ## 0.5.19
 

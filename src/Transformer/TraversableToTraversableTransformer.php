@@ -21,13 +21,14 @@ use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
-use Rekalogika\Mapper\Util\TypeCheck;
+use Rekalogika\Mapper\Transformer\Trait\TraversableTransformerTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
 final class TraversableToTraversableTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
+    use TraversableTransformerTrait;
 
     public function transform(
         mixed $source,
@@ -52,60 +53,36 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
             throw new InvalidArgumentException(sprintf('This transformer does not support existing value, "%s" found.', get_debug_type($target)), context: $context);
         }
 
-        // We can't work if the target type doesn't contain the information
-        // about the type of its member objects
+        // Transform source
 
-        $targetMemberKeyType = $targetType->getCollectionKeyTypes();
-        $targetMemberKeyTypeIsInt = count($targetMemberKeyType) === 1
-            && TypeCheck::isInt($targetMemberKeyType[0]);
-        $targetMemberValueType = $targetType->getCollectionValueTypes();
+        /** @psalm-suppress MixedArgumentTypeCoercion */
+        $transformed = $this->transformTraversableSource(
+            source: $source,
+            target: null,
+            targetType: $targetType,
+            context: $context,
+        );
 
-        // create generator
+        $target = (function () use ($transformed): \Traversable {
+            foreach ($transformed as $row) {
+                /** @psalm-suppress MixedAssignment */
+                $key = $row['key'];
+                /** @psalm-suppress MixedAssignment */
+                $value = $row['value'];
 
-        $target = (function () use (
-            $source,
-            $targetMemberKeyTypeIsInt,
-            $targetMemberValueType,
-            $context
-        ): \Traversable {
-            $i = 0;
-
-            /** @var mixed $sourcePropertyValue */
-            foreach ($source as $sourcePropertyKey => $sourcePropertyValue) {
-                // if target has int key type but the source has string key type,
-                // we discard the source key & use null (i.e. $target[] = $value)
-
-                if ($targetMemberKeyTypeIsInt && is_string($sourcePropertyKey)) {
-                    $targetMemberKey = null;
-                    $path = sprintf('[%d]', $i);
-                } else {
-                    $targetMemberKey = $sourcePropertyKey;
-                    $path = sprintf('[%s]', $sourcePropertyKey);
-                }
-
-                // now transform the source member value to the type of the target
-                // member value
-
-                /** @var mixed */
-                $targetMemberValue = $this->getMainTransformer()->transform(
-                    source: $sourcePropertyValue,
-                    target: null,
-                    targetTypes: $targetMemberValueType,
-                    context: $context,
-                    path: $path,
-                );
-
-                yield $targetMemberKey => $targetMemberValue;
-
-                $i++;
+                yield $key => $value;
             }
         })();
+
+        // Wrap the result if the source is countable
 
         if ($source instanceof \Countable) {
             $target = new TraversableCountableWrapper($target, $source);
         } elseif (is_array($source)) {
             $target = new TraversableCountableWrapper($target, count($source));
         }
+
+        // Add to cache
 
         $context(ObjectCache::class)
             ->saveTarget($source, $targetType, $target, $context);

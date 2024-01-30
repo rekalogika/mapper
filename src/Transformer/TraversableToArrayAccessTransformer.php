@@ -24,6 +24,7 @@ use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\InvalidTypeInArgumentException;
+use Rekalogika\Mapper\Transformer\Trait\TraversableTransformerTrait;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
@@ -31,6 +32,7 @@ use Symfony\Component\PropertyInfo\Type;
 final class TraversableToArrayAccessTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
+    use TraversableTransformerTrait;
 
     public function transform(
         mixed $source,
@@ -55,68 +57,36 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             throw new InvalidArgumentException(sprintf('If target is provided, it must be an instance of "\ArrayAccess" or "array", "%s" given', get_debug_type($target)), context: $context);
         }
 
-        // If the target is not provided, instantiate it, and add to cache.
+        // If the target is not provided, instantiate it
 
         if ($target === null) {
             $target = $this->instantiateArrayAccessOrArray($targetType, $context);
         }
 
+        // Add the target to cache
+
         $context(ObjectCache::class)
             ->saveTarget($source, $targetType, $target, $context);
 
-        // Prepare variables for the output loop
+        // Transform source
 
-        $targetMemberKeyType = $targetType->getCollectionKeyTypes();
-        $targetMemberKeyTypeIsInt = count($targetMemberKeyType) === 1
-            && TypeCheck::isInt($targetMemberKeyType[0]);
-        $targetMemberValueType = $targetType->getCollectionValueTypes();
+        /** @psalm-suppress MixedArgumentTypeCoercion */
+        $transformed = $this->transformTraversableSource(
+            source: $source,
+            target: $target,
+            targetType: $targetType,
+            context: $context,
+        );
 
-        $i = 0;
+        foreach ($transformed as $row) {
+            $key = $row['key'];
+            $value = $row['value'];
 
-        /** @var mixed $sourceMemberValue */
-        foreach ($source as $sourceMemberKey => $sourceMemberValue) {
-            // if target has int key type but the source has string key type,
-            // we discard the source key & use null (i.e. $target[] = $value)
-
-            if ($targetMemberKeyTypeIsInt && is_string($sourceMemberKey)) {
-                $targetMemberKey = null;
-                $path = sprintf('[%d]', $i);
+            if ($key === null) {
+                $target[] = $value;
             } else {
-                $targetMemberKey = $sourceMemberKey;
-                $path = sprintf('[%s]', $sourceMemberKey);
+                $target[$key] = $value;
             }
-
-            // Get the existing member value from the target
-
-            /** @var mixed $targetMemberValue */
-            $targetMemberValue = $target[$sourceMemberKey] ?? null;
-
-            // if target member value is not an object we delete it because it
-            // will be removed anyway
-
-            if (!is_object($targetMemberValue)) {
-                $targetMemberValue = null;
-            }
-
-            // now transform the source member value to the type of the target
-            // member value
-
-            /** @var mixed */
-            $targetMemberValue = $this->getMainTransformer()->transform(
-                source: $sourceMemberValue,
-                target: $targetMemberValue,
-                targetTypes: $targetMemberValueType,
-                context: $context,
-                path: $path,
-            );
-
-            if ($targetMemberKey === null) {
-                $target[] = $targetMemberValue;
-            } else {
-                $target[$targetMemberKey] = $targetMemberValue;
-            }
-
-            $i++;
         }
 
         return $target;
