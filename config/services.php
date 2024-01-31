@@ -24,6 +24,8 @@ use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\PropertyAccessLite\PropertyAccessLite;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactory;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\CachingArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
@@ -126,10 +128,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set(TraversableToArrayAccessTransformer::class)
+        ->args([
+            service('rekalogika.mapper.array_like_metadata_factory')
+        ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -700]);
 
     $services
         ->set(TraversableToTraversableTransformer::class)
+        ->args([
+            service('rekalogika.mapper.array_like_metadata_factory')
+        ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -750]);
 
     $services
@@ -198,7 +206,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.type_resolver.caching.inner'),
         ]);
 
-    # object mapping resolver
+    # object to object metadata factory
 
     $services
         ->set('rekalogika.mapper.object_to_object_metadata_factory', ObjectToObjectMetadataFactory::class)
@@ -221,6 +229,24 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('.inner'),
             service('rekalogika.mapper.cache.object_to_object_metadata_factory')
+        ]);
+
+    # array-like metadata factory
+
+    $services
+        ->set('rekalogika.mapper.array_like_metadata_factory', ArrayLikeMetadataFactory::class);
+
+    $services
+        ->set('rekalogika.mapper.cache.array_like_metadata_factory')
+        ->parent('cache.system')
+        ->tag('cache.pool');
+
+    $services
+        ->set('rekalogika.mapper.array_like_metadata_factory.cache', CachingArrayLikeMetadataFactory::class)
+        ->decorate('rekalogika.mapper.array_like_metadata_factory')
+        ->args([
+            service('.inner'),
+            service('rekalogika.mapper.cache.array_like_metadata_factory')
         ]);
 
     # transformer registry

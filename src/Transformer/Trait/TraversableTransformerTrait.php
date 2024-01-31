@@ -14,24 +14,12 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Trait;
 
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
-use Rekalogika\Mapper\Transformer\Model\TraversableTransformerMetadata;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeCheck;
 
 trait TraversableTransformerTrait
 {
-    private function createTransformationMetadata(
-        ?Type $sourceType,
-        Type $targetType,
-        Context $context
-    ): TraversableTransformerMetadata {
-        return new TraversableTransformerMetadata(
-            sourceType: $sourceType,
-            targetType: $targetType,
-            context: $context,
-        );
-    }
-
     /**
      * @param iterable<mixed,mixed> $source
      * @param \ArrayAccess<mixed,mixed>|array<array-key,mixed>|null $target
@@ -40,7 +28,7 @@ trait TraversableTransformerTrait
     private function transformTraversableSource(
         iterable $source,
         \ArrayAccess|array|null $target,
-        TraversableTransformerMetadata $metadata,
+        ArrayLikeMetadata $targetMetadata,
         Context $context
     ): \Traversable {
         // if the source is SplObjectStorage, we wrap it to fix the iterator
@@ -62,14 +50,14 @@ trait TraversableTransformerTrait
             if (is_string($sourceMemberKey)) {
                 // if the key is a string
 
-                if ($metadata->targetMemberKeyCanBeIntOnly()) {
+                if ($targetMetadata->memberKeyCanBeIntOnly()) {
                     // if target has int key type but the source has string key
                     // type, we discard the source key & use null key (i.e.
                     // $target[] = $value)
 
                     $targetMemberKey = null;
                     $path = sprintf('[%d]', $i);
-                } elseif ($metadata->targetMemberKeyCanBeString()) {
+                } elseif ($targetMetadata->memberKeyCanBeString()) {
                     // if target has string key type, we use the source key as
                     // the target key and let PHP cast it to string
 
@@ -83,7 +71,7 @@ trait TraversableTransformerTrait
                     $targetMemberKey = $this->getMainTransformer()->transform(
                         source: $sourceMemberKey,
                         target: null,
-                        targetTypes: $metadata->getTargetMemberKeyTypes(),
+                        targetTypes: $targetMetadata->getMemberKeyTypes(),
                         context: $context,
                         path: '(key)',
                     );
@@ -98,8 +86,8 @@ trait TraversableTransformerTrait
                 // if the key is an integer
 
                 if (
-                    $metadata->targetMemberKeyCanBeInt()
-                    || $metadata->targetMemberKeyCanBeString()
+                    $targetMetadata->memberKeyCanBeInt()
+                    || $targetMetadata->memberKeyCanBeString()
                 ) {
                     // if the target has int or string key type, we use the
                     // source key as the target key, and let PHP cast it if
@@ -115,7 +103,7 @@ trait TraversableTransformerTrait
                     $targetMemberKey = $this->getMainTransformer()->transform(
                         source: $sourceMemberKey,
                         target: null,
-                        targetTypes: $metadata->getTargetMemberKeyTypes(),
+                        targetTypes: $targetMetadata->getMemberKeyTypes(),
                         context: $context,
                         path: '(key)',
                     );
@@ -134,7 +122,7 @@ trait TraversableTransformerTrait
                 $targetMemberKey = $this->getMainTransformer()->transform(
                     source: $sourceMemberKey,
                     target: null,
-                    targetTypes: $metadata->getTargetMemberKeyTypes(),
+                    targetTypes: $targetMetadata->getMemberKeyTypes(),
                     context: $context,
                     path: '(key)',
                 );
@@ -149,7 +137,7 @@ trait TraversableTransformerTrait
             // if the target value type is untyped, we use the source value as
             // the target value
 
-            if ($metadata->targetMemberValueIsUntyped()) {
+            if ($targetMetadata->memberValueIsUntyped()) {
                 yield [
                     'key' => $targetMemberKey,
                     'value' => $sourceMemberValue,
@@ -161,13 +149,15 @@ trait TraversableTransformerTrait
             // if the target value types has a type compatible with the source
             // value, then we use the source value as the target value
 
-            if ($metadata->isValueCompatibleWithTargetTypes($sourceMemberValue)) {
-                yield [
-                    'key' => $targetMemberKey,
-                    'value' => $sourceMemberValue,
-                ];
+            foreach ($targetMetadata->getMemberValueTypes() as $memberValueType) {
+                if (TypeCheck::isVariableInstanceOf($sourceMemberValue, $memberValueType)) {
+                    yield [
+                        'key' => $targetMemberKey,
+                        'value' => $sourceMemberValue,
+                    ];
 
-                continue;
+                    continue;
+                }
             }
 
             // Get the existing member value from the target
@@ -196,7 +186,7 @@ trait TraversableTransformerTrait
             $targetMemberValue = $this->getMainTransformer()->transform(
                 source: $sourceMemberValue,
                 target: $targetMemberValue,
-                targetTypes: $metadata->getTargetMemberValueTypes(),
+                targetTypes: $targetMetadata->getMemberValueTypes(),
                 context: $context,
                 path: $path,
             );

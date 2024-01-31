@@ -19,13 +19,14 @@ use Doctrine\Common\Collections\ReadableCollection;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadata;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
-use Rekalogika\Mapper\Transformer\Model\TraversableTransformerMetadata;
 use Rekalogika\Mapper\Transformer\Trait\TraversableTransformerTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
@@ -34,6 +35,11 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 {
     use MainTransformerAwareTrait;
     use TraversableTransformerTrait;
+
+    public function __construct(
+        private ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory,
+    ) {
+    }
 
     public function transform(
         mixed $source,
@@ -60,16 +66,13 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // create transformation metadata
 
-        $metadata = $this->createTransformationMetadata(
-            sourceType: $sourceType,
-            targetType: $targetType,
-            context: $context,
-        );
+        $targetMetadata = $this->arrayLikeMetadataFactory
+            ->createArrayLikeMetadata($targetType);
 
         // If the target is not provided, instantiate it
 
         if ($target === null) {
-            $target = $this->instantiateArrayAccessOrArray($metadata, $context);
+            $target = $this->instantiateArrayAccessOrArray($targetMetadata, $context);
         }
 
         // Add the target to cache
@@ -83,7 +86,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         $transformed = $this->transformTraversableSource(
             source: $source,
             target: $target,
-            metadata: $metadata,
+            targetMetadata: $targetMetadata,
             context: $context,
         );
 
@@ -106,18 +109,18 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
      * @phpstan-ignore-next-line
      */
     private function instantiateArrayAccessOrArray(
-        TraversableTransformerMetadata $metadata,
+        ArrayLikeMetadata $targetMetadata,
         Context $context,
     ): \ArrayAccess|array {
         // if it wants an array, just return it. easy.
 
-        if ($metadata->isTargetArray()) {
+        if ($targetMetadata->isArray()) {
             return [];
         }
 
         // otherwise, we try to instantiate the target class
 
-        $class = $metadata->getArrayAccessTargetClass();
+        $class = $targetMetadata->getClass();
         $reflectionClass = new \ReflectionClass($class);
 
         // if instantiable, instantiate
@@ -129,6 +132,10 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 throw new ClassNotInstantiableException($class, context: $context);
             }
 
+            if (!$result instanceof \ArrayAccess) {
+                throw new InvalidArgumentException(sprintf('Target class "%s" must implement "\ArrayAccess"', $class), context: $context);
+            }
+
             return $result;
         }
 
@@ -137,7 +144,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         switch (true) {
             case $class === \ArrayAccess::class:
-                if ($metadata->targetMemberKeyCanBeOtherThanIntOrString()) {
+                if ($targetMetadata->memberKeyCanBeOtherThanIntOrString()) {
                     return new HashTable();
                 }
                 return new \ArrayObject();

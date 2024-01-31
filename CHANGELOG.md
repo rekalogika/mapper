@@ -4,6 +4,7 @@
 
 * refactor: Rename `ObjectStorage` to `HashTable`.
 * refactor(`HashTable`): Supports all variable types.
+* perf: Make `ArrayLikeMetadata` cacheable.
 
 ## 0.5.21
 

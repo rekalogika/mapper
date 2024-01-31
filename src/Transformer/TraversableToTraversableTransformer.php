@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -29,6 +30,11 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 {
     use MainTransformerAwareTrait;
     use TraversableTransformerTrait;
+
+    public function __construct(
+        private ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory,
+    ) {
+    }
 
     public function transform(
         mixed $source,
@@ -55,11 +61,8 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         // create transformation metadata
 
-        $metadata = $this->createTransformationMetadata(
-            sourceType: $sourceType,
-            targetType: $targetType,
-            context: $context,
-        );
+        $targetMetadata = $this->arrayLikeMetadataFactory
+            ->createArrayLikeMetadata($targetType);
 
         // Transform source
 
@@ -67,7 +70,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         $transformed = $this->transformTraversableSource(
             source: $source,
             target: null,
-            metadata: $metadata,
+            targetMetadata: $targetMetadata,
             context: $context,
         );
 

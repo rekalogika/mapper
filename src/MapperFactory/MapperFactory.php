@@ -29,6 +29,8 @@ use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\PropertyAccessLite\PropertyAccessLite;
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactory;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -104,6 +106,7 @@ class MapperFactory
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
     private ?TypeResolverInterface $typeResolver = null;
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
+    private ?ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory = null;
     private ?MainTransformer $mainTransformer = null;
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
@@ -359,7 +362,9 @@ class MapperFactory
     {
         if (null === $this->traversableToArrayAccessTransformer) {
             $this->traversableToArrayAccessTransformer =
-                new TraversableToArrayAccessTransformer();
+                new TraversableToArrayAccessTransformer(
+                    $this->getArrayLikeMetadataFactory(),
+                );
         }
 
         return $this->traversableToArrayAccessTransformer;
@@ -369,7 +374,9 @@ class MapperFactory
     {
         if (null === $this->traversableToTraversableTransformer) {
             $this->traversableToTraversableTransformer =
-                new TraversableToTraversableTransformer();
+                new TraversableToTraversableTransformer(
+                    $this->getArrayLikeMetadataFactory(),
+                );
         }
 
         return $this->traversableToTraversableTransformer;
@@ -441,6 +448,14 @@ class MapperFactory
         return $this->objectToObjectMetadataFactory;
     }
 
+    protected function getArrayLikeMetadataFactory(): ArrayLikeMetadataFactoryInterface
+    {
+        if (null === $this->arrayLikeMetadataFactory) {
+            $this->arrayLikeMetadataFactory = new ArrayLikeMetadataFactory();
+        }
+
+        return $this->arrayLikeMetadataFactory;
+    }
 
     /**
      * @return iterable<string,TransformerInterface>
