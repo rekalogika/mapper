@@ -44,7 +44,11 @@ trait ArrayLikeTransformerTrait
          * @var mixed $sourceMemberValue
          */
         foreach ($source as $sourceMemberKey => $sourceMemberValue) {
-            $result = $this->transformMember(
+            /**
+             * @var mixed $key
+             * @var mixed $value
+             */
+            [$key, $value] = $this->transformMember(
                 counter: $i,
                 sourceMemberKey: $sourceMemberKey,
                 sourceMemberValue: $sourceMemberValue,
@@ -53,7 +57,7 @@ trait ArrayLikeTransformerTrait
                 context: $context,
             );
 
-            yield $result['key'] => $result['value'];
+            yield $key => $value;
 
             $i++;
         }
@@ -61,7 +65,7 @@ trait ArrayLikeTransformerTrait
 
     /**
      * @param null|\ArrayAccess<mixed,mixed>|array<mixed,mixed> $target
-     * @return array{key:mixed,value:mixed}
+     * @return array{0:mixed,1:mixed}
      */
     private function transformMember(
         mixed $sourceMemberKey,
@@ -165,10 +169,7 @@ trait ArrayLikeTransformerTrait
         // the target value
 
         if ($targetMetadata->memberValueIsUntyped()) {
-            return [
-                'key' => $targetMemberKey,
-                'value' => $sourceMemberValue,
-            ];
+            return [$targetMemberKey, $sourceMemberValue];
         }
 
         // if the target value types has a type compatible with the source
@@ -176,10 +177,7 @@ trait ArrayLikeTransformerTrait
 
         foreach ($targetMetadata->getMemberValueTypes() as $memberValueType) {
             if (TypeCheck::isVariableInstanceOf($sourceMemberValue, $memberValueType)) {
-                return [
-                    'key' => $targetMemberKey,
-                    'value' => $sourceMemberValue,
-                ];
+                return [$targetMemberKey, $sourceMemberValue];
             }
         }
 
@@ -219,9 +217,6 @@ trait ArrayLikeTransformerTrait
             path: $path,
         );
 
-        return [
-            'key' => $targetMemberKey,
-            'value' => $targetMemberValue,
-        ];
+        return [$targetMemberKey, $targetMemberValue];
     }
 }

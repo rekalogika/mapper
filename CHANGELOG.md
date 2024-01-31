@@ -7,6 +7,7 @@
 * refactor(`ArrayLikeMetadata`): Add `$type`.
 * refactor(`PropertyMapping`): Add `$sourceTypes`.
 * refactor(`TraversableToArrayAccessTransformer`): Refactor for clarity.
+* refactor(`ArrayLikeTransformerTrait`): Cleanup.
 
 ## 0.5.22
 
