@@ -69,6 +69,28 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         $targetMetadata = $this->arrayLikeMetadataFactory
             ->createArrayLikeMetadata($targetType);
 
+        // Transform source
+
+        $target = $this->doTransform(
+            source: $source,
+            target: $target,
+            targetMetadata: $targetMetadata,
+            context: $context,
+        );
+
+        return $target;
+    }
+
+    /**
+     * @param iterable<mixed,mixed> $source
+     * @param \ArrayAccess<mixed,mixed>|array<array-key,mixed> $target
+     */
+    private function doTransform(
+        iterable $source,
+        \ArrayAccess|array|null $target,
+        ArrayLikeMetadata $targetMetadata,
+        Context $context
+    ): mixed {
         // If the target is not provided, instantiate it
 
         if ($target === null) {
@@ -78,11 +100,10 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // Add the target to cache
 
         $context(ObjectCache::class)
-            ->saveTarget($source, $targetType, $target, $context);
+            ->saveTarget($source, $targetMetadata->getType(), $target, $context);
 
-        // Transform source
+        // Transform the source
 
-        /** @psalm-suppress MixedArgumentTypeCoercion */
         $transformed = $this->transformTraversableSource(
             source: $source,
             target: $target,
