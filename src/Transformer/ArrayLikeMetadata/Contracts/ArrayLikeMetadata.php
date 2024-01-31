@@ -24,6 +24,7 @@ final class ArrayLikeMetadata
      * @param array<array-key,Type> $memberValueTypes
      */
     public function __construct(
+        private Type $type,
         private bool $isArray,
         private ?string $class,
         private array $memberKeyTypes,
@@ -34,6 +35,11 @@ final class ArrayLikeMetadata
         private bool $memberKeyCanBeOtherThanIntOrString,
         private bool $memberValueIsUntyped,
     ) {
+    }
+
+    public function getType(): Type
+    {
+        return $this->type;
     }
 
     /**

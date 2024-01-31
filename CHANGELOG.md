@@ -4,6 +4,7 @@
 
 * refactor(`TraversableTransformerTrait`): Refactor for clarity.
 * refactor(`ArrayLikeTransformerTrait`): Rename for clarity.
+* refactor(`ArrayLikeMetadata`): Add `$type`.
 
 ## 0.5.22
 

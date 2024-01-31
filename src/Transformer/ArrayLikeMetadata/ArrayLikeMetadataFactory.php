@@ -60,6 +60,7 @@ final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterfac
         $memberValueIsUntyped = count($memberValueTypes) === 0;
 
         return new ArrayLikeMetadata(
+            type: $type,
             isArray: $isTargetArray,
             class: $class,
             memberKeyTypes: $memberKeyTypes,
