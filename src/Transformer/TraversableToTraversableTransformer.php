@@ -24,6 +24,7 @@ use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
 use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
+use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;
 
 final class TraversableToTraversableTransformer implements TransformerInterface, MainTransformerAwareInterface
@@ -61,8 +62,12 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         // create transformation metadata
 
+        if ($sourceType === null) {
+            $sourceType = TypeGuesser::guessTypeFromVariable($source);
+        }
+
         $metadata = $this->arrayLikeMetadataFactory
-            ->createArrayLikeMetadata($targetType);
+            ->createArrayLikeMetadata($sourceType, $targetType);
 
         // Transform source
 

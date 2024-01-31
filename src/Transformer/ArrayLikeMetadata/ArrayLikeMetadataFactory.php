@@ -22,8 +22,10 @@ use Symfony\Component\PropertyInfo\Type;
 
 final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterface
 {
-    public function createArrayLikeMetadata(Type $targetType): ArrayLikeMetadata
-    {
+    public function createArrayLikeMetadata(
+        Type $sourceType,
+        Type $targetType
+    ): ArrayLikeMetadata {
         $memberKeyTypes = $targetType->getCollectionKeyTypes();
 
         if (count($memberKeyTypes) === 0) {
@@ -60,6 +62,7 @@ final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterfac
         $memberValueIsUntyped = count($memberValueTypes) === 0;
 
         return new ArrayLikeMetadata(
+            sourceType: $sourceType,
             targetType: $targetType,
             isTargetArray: $isTargetArray,
             targetClass: $class,

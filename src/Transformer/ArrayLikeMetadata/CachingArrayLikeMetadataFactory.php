@@ -31,9 +31,11 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
     ) {
     }
 
-    public function createArrayLikeMetadata(Type $targetType): ArrayLikeMetadata
-    {
-        $cacheKey = \rawurlencode(\serialize($targetType));
+    public function createArrayLikeMetadata(
+        Type $sourceType,
+        Type $targetType
+    ): ArrayLikeMetadata {
+        $cacheKey = hash('xxh128', \serialize([$sourceType, $targetType]));
 
         if (isset($this->cache[$cacheKey])) {
             return $this->cache[$cacheKey];
@@ -57,7 +59,7 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
         }
 
         $arrayLikeMetadata = $this->decorated
-            ->createArrayLikeMetadata($targetType);
+            ->createArrayLikeMetadata($sourceType, $targetType);
 
         $cacheItem->set($arrayLikeMetadata);
         $this->cacheItemPool->save($cacheItem);

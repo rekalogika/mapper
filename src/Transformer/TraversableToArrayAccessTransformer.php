@@ -29,6 +29,7 @@ use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
+use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;
 
 final class TraversableToArrayAccessTransformer implements TransformerInterface, MainTransformerAwareInterface
@@ -66,8 +67,12 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // create transformation metadata
 
+        if ($sourceType === null) {
+            $sourceType = TypeGuesser::guessTypeFromVariable($source);
+        }
+
         $metadata = $this->arrayLikeMetadataFactory
-            ->createArrayLikeMetadata($targetType);
+            ->createArrayLikeMetadata($sourceType, $targetType);
 
         // Transform source
 

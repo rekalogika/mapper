@@ -11,6 +11,7 @@
 * refactor(`MainTransformer`): Add `$sourceType` so we can preserve generics
   information obtained from the source class.
 * refactor(`ArrayLikeMetadata`): Refactor for future extension.
+* refactor(`ArrayLikeMetadata`): Also inject source type information.
 
 ## 0.5.22
 
