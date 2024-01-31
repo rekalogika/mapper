@@ -3,6 +3,7 @@
 ## 0.5.23
 
 * refactor(`TraversableTransformerTrait`): Refactor for clarity.
+* refactor(`ArrayLikeTransformerTrait`): Rename for clarity.
 
 ## 0.5.22
 

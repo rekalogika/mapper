@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
 use Rekalogika\Mapper\Util\TypeCheck;
 
-trait TraversableTransformerTrait
+trait ArrayLikeTransformerTrait
 {
     /**
      * @param iterable<mixed,mixed> $source

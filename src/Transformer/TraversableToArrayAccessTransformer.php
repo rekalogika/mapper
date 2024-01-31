@@ -27,14 +27,14 @@ use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
-use Rekalogika\Mapper\Transformer\Trait\TraversableTransformerTrait;
+use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
 final class TraversableToArrayAccessTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
-    use TraversableTransformerTrait;
+    use ArrayLikeTransformerTrait;
 
     public function __construct(
         private ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory,
