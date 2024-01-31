@@ -85,6 +85,7 @@ trait TraversableTransformerTrait
                         target: null,
                         targetTypes: $metadata->getTargetMemberKeyTypes(),
                         context: $context,
+                        path: '(key)',
                     );
 
                     if ($targetMemberKey instanceof \Stringable) {
@@ -116,6 +117,7 @@ trait TraversableTransformerTrait
                         target: null,
                         targetTypes: $metadata->getTargetMemberKeyTypes(),
                         context: $context,
+                        path: '(key)',
                     );
 
                     if ($targetMemberKey instanceof \Stringable) {
@@ -134,6 +136,7 @@ trait TraversableTransformerTrait
                     target: null,
                     targetTypes: $metadata->getTargetMemberKeyTypes(),
                     context: $context,
+                    path: '(key)',
                 );
 
                 if ($targetMemberKey instanceof \Stringable) {

@@ -8,6 +8,8 @@
 * feat: Fix `SplObjectStorage` iterator by wrapping it in
   `SplObjectStorageWrapper`.
 * refactor(`Path`): Cleanup.
+* feat: Use `(key)` in the path for transformation in the keys of array-like
+  objects.
 
 ## 0.5.20
 

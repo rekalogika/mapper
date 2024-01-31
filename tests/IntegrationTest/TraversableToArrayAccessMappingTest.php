@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayPropertyWithStringKey;
@@ -205,6 +206,14 @@ class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
         }
     }
 
+    public function testTraversableToArrayAccessWithObjectKeyDtoButCannotBeTransformedIntoTargetType(): void
+    {
+        $source = new ObjectWithSplObjectStorageProperty();
+        $this->expectException(CannotFindTransformerException::class);
+        $this->expectExceptionMessage('Mapping path: "property(key)"');
+        $result = $this->mapper
+            ->map($source, ObjectWithArrayPropertyDto::class);
+    }
 
     //
     // preinitialized
