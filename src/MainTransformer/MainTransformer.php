@@ -112,9 +112,6 @@ class MainTransformer implements MainTransformerInterface
         // append path if provided
 
         if ($path !== null) {
-            if (!\str_starts_with($path, '[')) {
-                $path = '.' . $path;
-            }
             $context = $context->with($pathContext->append($path));
         }
 

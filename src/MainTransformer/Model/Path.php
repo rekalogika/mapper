@@ -20,8 +20,11 @@ namespace Rekalogika\Mapper\MainTransformer\Model;
  */
 readonly class Path implements \Stringable
 {
+    /**
+     * @param list<string> $path
+     */
     private function __construct(
-        private string $path = ''
+        private array $path = []
     ) {
     }
 
@@ -32,13 +35,36 @@ readonly class Path implements \Stringable
 
     public function __toString(): string
     {
-        return $this->path;
+        $result = '';
+
+        foreach ($this->path as $path) {
+            // if path contains '[' or ']'
+            if (str_contains($path, '[')) {
+                // remove [ and ]
+                $path = str_replace(['[', ']'], '', $path);
+                $result .= "[{$path}]";
+            } elseif (str_contains($path, '(')) {
+                // remove ( and )
+                $path = str_replace(['(', ')'], '', $path);
+                $result .= "({$path})";
+            } else {
+                $result .= ".{$path}";
+            }
+        }
+
+        // remove leading dot
+
+        if (str_starts_with($result, '.')) {
+            $result = substr($result, 1);
+        }
+
+        return $result;
     }
 
     public function append(string $index): self
     {
         $path = $this->path;
-        $path .= $index;
+        $path[] = $index;
 
         return new self($path);
     }

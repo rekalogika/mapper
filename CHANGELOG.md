@@ -7,6 +7,7 @@
   object.
 * feat: Fix `SplObjectStorage` iterator by wrapping it in
   `SplObjectStorageWrapper`.
+* refactor(`Path`): Cleanup.
 
 ## 0.5.20
 
