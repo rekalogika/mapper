@@ -52,6 +52,7 @@ final class Mapper implements MapperInterface
         $target = $this->transformer->transform(
             source: $source,
             target: $target,
+            sourceType: null,
             targetTypes: [$targetType],
             context: $context ?? Context::create(),
         );

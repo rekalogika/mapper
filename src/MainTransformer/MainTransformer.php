@@ -73,6 +73,7 @@ class MainTransformer implements MainTransformerInterface
     public function transform(
         mixed $source,
         mixed $target,
+        ?Type $sourceType,
         array $targetTypes,
         Context $context,
         string $path = null,
@@ -117,7 +118,7 @@ class MainTransformer implements MainTransformerInterface
 
         // guess the source type
 
-        $sourceTypes = [TypeGuesser::guessTypeFromVariable($source)];
+        $sourceTypes = [$sourceType ?? TypeGuesser::guessTypeFromVariable($source)];
 
         // gets simple target types from the provided target type
 

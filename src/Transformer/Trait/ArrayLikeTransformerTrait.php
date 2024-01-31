@@ -102,6 +102,7 @@ trait ArrayLikeTransformerTrait
                 $targetMemberKey = $this->getMainTransformer()->transform(
                     source: $sourceMemberKey,
                     target: null,
+                    sourceType: null,
                     targetTypes: $targetMetadata->getMemberKeyTypes(),
                     context: $context,
                     path: '(key)',
@@ -134,6 +135,7 @@ trait ArrayLikeTransformerTrait
                 $targetMemberKey = $this->getMainTransformer()->transform(
                     source: $sourceMemberKey,
                     target: null,
+                    sourceType: null,
                     targetTypes: $targetMetadata->getMemberKeyTypes(),
                     context: $context,
                     path: '(key)',
@@ -153,6 +155,7 @@ trait ArrayLikeTransformerTrait
             $targetMemberKey = $this->getMainTransformer()->transform(
                 source: $sourceMemberKey,
                 target: null,
+                sourceType: null,
                 targetTypes: $targetMetadata->getMemberKeyTypes(),
                 context: $context,
                 path: '(key)',
@@ -212,6 +215,7 @@ trait ArrayLikeTransformerTrait
         $targetMemberValue = $this->getMainTransformer()->transform(
             source: $sourceMemberValue,
             target: $targetMemberValue,
+            sourceType: null,
             targetTypes: $targetMetadata->getMemberValueTypes(),
             context: $context,
             path: $path,

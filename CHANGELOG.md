@@ -8,6 +8,8 @@
 * refactor(`PropertyMapping`): Add `$sourceTypes`.
 * refactor(`TraversableToArrayAccessTransformer`): Refactor for clarity.
 * refactor(`ArrayLikeTransformerTrait`): Cleanup.
+* refactor(`MainTransformer`): Add `$sourceType` so we can preserve generics
+  information obtained from the source class.
 
 ## 0.5.22
 

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts;
 
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
+use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 
 final class PropertyMapping
@@ -47,6 +48,17 @@ final class PropertyMapping
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
+    }
+
+    public function getCompatibleSourceType(Type $type): ?Type
+    {
+        foreach ($this->sourceTypes as $sourceType) {
+            if (TypeCheck::isSomewhatIdentical($sourceType, $type)) {
+                return $sourceType;
+            }
+        }
+
+        return null;
     }
 
     /**

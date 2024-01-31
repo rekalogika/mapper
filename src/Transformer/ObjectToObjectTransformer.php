@@ -103,7 +103,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // initialize target if target is null
 
         if (null === $target) {
-            $target = $this->instantiateTarget($source, $objectToObjectMetadata, $context);
+            $target = $this->instantiateTarget(
+                source: $source,
+                objectToObjectMetadata: $objectToObjectMetadata,
+                context: $context
+            );
         } else {
             if (!is_object($target)) {
                 throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
@@ -117,7 +121,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // map properties
 
-        $this->writeTarget($source, $target, $objectToObjectMetadata, $context);
+        $this->writeTarget(
+            source: $source,
+            target: $target,
+            objectToObjectMetadata: $objectToObjectMetadata,
+            context: $context
+        );
 
         return $target;
     }
@@ -346,12 +355,19 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $targetPropertyValue = null;
         }
 
+        // guess source type, and get the compatible type from metadata, so
+        // we can preserve generics information
+
+        $guessedSourceType = TypeGuesser::guessTypeFromVariable($sourcePropertyValue);
+        $sourceType = $propertyMapping->getCompatibleSourceType($guessedSourceType);
+
         // transform the value
 
         /** @var mixed */
         $targetPropertyValue = $this->getMainTransformer()->transform(
             source: $sourcePropertyValue,
             target: $targetPropertyValue,
+            sourceType: $sourceType,
             targetTypes: $targetTypes,
             context: $context,
             path: $targetProperty,

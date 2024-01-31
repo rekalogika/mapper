@@ -101,6 +101,7 @@ final class InheritanceMapTransformer implements
         $result = $this->getMainTransformer()->transform(
             source: $source,
             target: null,
+            sourceType: null,
             targetTypes: [$concreteTargetType],
             context: $context
         );

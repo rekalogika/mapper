@@ -48,10 +48,11 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
 
         /** @var mixed */
         $result = $this->getMainTransformer()->transform(
-            $source,
-            $targetObject,
-            [TypeFactory::objectOfClass($targetClass)],
-            $context
+            source: $source,
+            target: $targetObject,
+            sourceType: null,
+            targetTypes: [TypeFactory::objectOfClass($targetClass)],
+            context: $context
         );
 
         if (is_object($target)) {
@@ -81,10 +82,11 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
 
         /** @var mixed */
         $result = $this->getMainTransformer()->transform(
-            $source,
-            null,
-            $targetPropertyTypes ?? [],
-            $context
+            source:$source,
+            target: null,
+            sourceType: null,
+            targetTypes: $targetPropertyTypes ?? [],
+            context: $context
         );
 
         return $result;
