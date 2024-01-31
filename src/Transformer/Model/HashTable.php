@@ -14,14 +14,14 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Model;
 
 /**
- * Fixes the iterator of SplObjectStorage.
+ * An array-like object that accept an object as the key.
  *
- * @template TKey of int|string|bool|float|object|null
+ * @template TKey
  * @template TValue
  * @implements \Iterator<TKey,TValue>
  * @implements \ArrayAccess<TKey,TValue>
  */
-final class ObjectStorage implements
+final class HashTable implements
     \ArrayAccess,
     \Iterator,
     \Countable
@@ -48,6 +48,8 @@ final class ObjectStorage implements
             return 'bool:' . ($variable ? 'true' : 'false');
         } elseif (is_object($variable)) {
             return 'object:' . spl_object_id($variable);
+        } elseif (\is_resource($variable)) {
+            return 'resource:' . \get_resource_id($variable);
         } elseif ($variable === null) {
             return 'null';
         }

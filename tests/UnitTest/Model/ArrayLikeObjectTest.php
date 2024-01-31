@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\UnitTest\Model;
 
 use PHPUnit\Framework\TestCase;
-use Rekalogika\Mapper\Transformer\Model\ObjectStorage;
+use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
 
 class ArrayLikeObjectTest extends TestCase
@@ -46,9 +46,9 @@ class ArrayLikeObjectTest extends TestCase
     public function testObjectStorage(): void
     {
         /**
-         * @var ObjectStorage<bool|float|int|object|string|null,string>
+         * @var HashTable<bool|float|int|object|string|null,string>
          */
-        $object = new ObjectStorage();
+        $object = new HashTable();
 
         $objectKey = new \stdClass();
         /** @psalm-suppress InvalidArgument */

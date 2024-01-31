@@ -24,7 +24,7 @@ use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
-use Rekalogika\Mapper\Transformer\Model\ObjectStorage;
+use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\TraversableTransformerMetadata;
 use Rekalogika\Mapper\Transformer\Trait\TraversableTransformerTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -138,7 +138,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         switch (true) {
             case $class === \ArrayAccess::class:
                 if ($metadata->targetMemberKeyCanBeOtherThanIntOrString()) {
-                    return new ObjectStorage();
+                    return new HashTable();
                 }
                 return new \ArrayObject();
 

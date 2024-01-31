@@ -30,7 +30,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithout
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
-use Rekalogika\Mapper\Transformer\Model\ObjectStorage;
+use Rekalogika\Mapper\Transformer\Model\HashTable;
 
 class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
 {
@@ -198,7 +198,7 @@ class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
 
         $this->assertInstanceOf(ObjectWithArrayAccessPropertyWithObjectKeyDto::class, $result);
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
-        $this->assertInstanceOf(ObjectStorage::class, $result->property);
+        $this->assertInstanceOf(HashTable::class, $result->property);
 
         foreach ($result->property as $key => $value) {
             $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $key);

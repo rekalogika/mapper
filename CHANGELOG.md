@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.5.22
+
+* refactor: Rename `ObjectStorage` to `HashTable`.
+* refactor(`HashTable`): Supports all variable types.
+
 ## 0.5.21
 
 * feat: Supports object with non `int|string` keys.
