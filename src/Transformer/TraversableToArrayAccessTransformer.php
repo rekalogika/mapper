@@ -66,7 +66,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // create transformation metadata
 
-        $targetMetadata = $this->arrayLikeMetadataFactory
+        $metadata = $this->arrayLikeMetadataFactory
             ->createArrayLikeMetadata($targetType);
 
         // Transform source
@@ -74,7 +74,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         $target = $this->doTransform(
             source: $source,
             target: $target,
-            targetMetadata: $targetMetadata,
+            metadata: $metadata,
             context: $context,
         );
 
@@ -88,26 +88,26 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     private function doTransform(
         iterable $source,
         \ArrayAccess|array|null $target,
-        ArrayLikeMetadata $targetMetadata,
+        ArrayLikeMetadata $metadata,
         Context $context
     ): mixed {
         // If the target is not provided, instantiate it
 
         if ($target === null) {
-            $target = $this->instantiateArrayAccessOrArray($targetMetadata, $context);
+            $target = $this->instantiateArrayAccessOrArray($metadata, $context);
         }
 
         // Add the target to cache
 
         $context(ObjectCache::class)
-            ->saveTarget($source, $targetMetadata->getType(), $target, $context);
+            ->saveTarget($source, $metadata->getTargetType(), $target, $context);
 
         // Transform the source
 
         $transformed = $this->transformTraversableSource(
             source: $source,
             target: $target,
-            targetMetadata: $targetMetadata,
+            metadata: $metadata,
             context: $context,
         );
 
@@ -127,18 +127,18 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
      * @phpstan-ignore-next-line
      */
     private function instantiateArrayAccessOrArray(
-        ArrayLikeMetadata $targetMetadata,
+        ArrayLikeMetadata $metadata,
         Context $context,
     ): \ArrayAccess|array {
         // if it wants an array, just return it. easy.
 
-        if ($targetMetadata->isArray()) {
+        if ($metadata->isTargetArray()) {
             return [];
         }
 
         // otherwise, we try to instantiate the target class
 
-        $class = $targetMetadata->getClass();
+        $class = $metadata->getTargetClass();
         $reflectionClass = new \ReflectionClass($class);
 
         // if instantiable, instantiate
@@ -162,7 +162,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         switch (true) {
             case $class === \ArrayAccess::class:
-                if ($targetMetadata->memberKeyCanBeOtherThanIntOrString()) {
+                if ($metadata->targetMemberKeyCanBeOtherThanIntOrString()) {
                     return new HashTable();
                 }
                 return new \ArrayObject();

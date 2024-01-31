@@ -10,6 +10,7 @@
 * refactor(`ArrayLikeTransformerTrait`): Cleanup.
 * refactor(`MainTransformer`): Add `$sourceType` so we can preserve generics
   information obtained from the source class.
+* refactor(`ArrayLikeMetadata`): Refactor for future extension.
 
 ## 0.5.22
 

@@ -61,7 +61,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         // create transformation metadata
 
-        $targetMetadata = $this->arrayLikeMetadataFactory
+        $metadata = $this->arrayLikeMetadataFactory
             ->createArrayLikeMetadata($targetType);
 
         // Transform source
@@ -70,7 +70,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         $target = $this->transformTraversableSource(
             source: $source,
             target: null,
-            targetMetadata: $targetMetadata,
+            metadata: $metadata,
             context: $context,
         );
 

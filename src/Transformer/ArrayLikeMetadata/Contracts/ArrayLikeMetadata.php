@@ -19,84 +19,84 @@ use Symfony\Component\PropertyInfo\Type;
 final class ArrayLikeMetadata
 {
     /**
-     * @param ?class-string $class
-     * @param array<array-key,Type> $memberKeyTypes
-     * @param array<array-key,Type> $memberValueTypes
+     * @param ?class-string $targetClass
+     * @param array<array-key,Type> $targetMemberKeyTypes
+     * @param array<array-key,Type> $targetMemberValueTypes
      */
     public function __construct(
-        private Type $type,
-        private bool $isArray,
-        private ?string $class,
-        private array $memberKeyTypes,
-        private array $memberValueTypes,
-        private bool $memberKeyCanBeInt,
-        private bool $memberKeyCanBeString,
-        private bool $memberKeyCanBeIntOnly,
-        private bool $memberKeyCanBeOtherThanIntOrString,
-        private bool $memberValueIsUntyped,
+        private Type $targetType,
+        private bool $isTargetArray,
+        private ?string $targetClass,
+        private array $targetMemberKeyTypes,
+        private array $targetMemberValueTypes,
+        private bool $targetMemberKeyCanBeInt,
+        private bool $targetMemberKeyCanBeString,
+        private bool $targetMemberKeyCanBeIntOnly,
+        private bool $targetMemberKeyCanBeOtherThanIntOrString,
+        private bool $targetMemberValueIsUntyped,
     ) {
     }
 
-    public function getType(): Type
+    public function getTargetType(): Type
     {
-        return $this->type;
+        return $this->targetType;
     }
 
     /**
      * @return class-string
      */
-    public function getClass(): string
+    public function getTargetClass(): string
     {
-        if ($this->class === null) {
+        if ($this->targetClass === null) {
             throw new LogicException('This method can only be called if the target is an array.');
         }
 
-        return $this->class;
+        return $this->targetClass;
     }
 
     /**
      * @return array<array-key,Type>
      */
-    public function getMemberKeyTypes(): array
+    public function getTargetMemberKeyTypes(): array
     {
-        return $this->memberKeyTypes;
+        return $this->targetMemberKeyTypes;
     }
 
     /**
      * @return array<array-key,Type>
      */
-    public function getMemberValueTypes(): array
+    public function getTargetMemberValueTypes(): array
     {
-        return $this->memberValueTypes;
+        return $this->targetMemberValueTypes;
     }
 
-    public function memberKeyCanBeInt(): bool
+    public function targetMemberKeyCanBeInt(): bool
     {
-        return $this->memberKeyCanBeInt;
+        return $this->targetMemberKeyCanBeInt;
     }
 
-    public function memberKeyCanBeString(): bool
+    public function targetMemberKeyCanBeString(): bool
     {
-        return $this->memberKeyCanBeString;
+        return $this->targetMemberKeyCanBeString;
     }
 
-    public function memberKeyCanBeIntOnly(): bool
+    public function targetMemberKeyCanBeIntOnly(): bool
     {
-        return $this->memberKeyCanBeIntOnly;
+        return $this->targetMemberKeyCanBeIntOnly;
     }
 
-    public function memberKeyCanBeOtherThanIntOrString(): bool
+    public function targetMemberKeyCanBeOtherThanIntOrString(): bool
     {
-        return $this->memberKeyCanBeOtherThanIntOrString;
+        return $this->targetMemberKeyCanBeOtherThanIntOrString;
     }
 
-    public function memberValueIsUntyped(): bool
+    public function targetMemberValueIsUntyped(): bool
     {
-        return $this->memberValueIsUntyped;
+        return $this->targetMemberValueIsUntyped;
     }
 
-    public function isArray(): bool
+    public function isTargetArray(): bool
     {
-        return $this->isArray;
+        return $this->isTargetArray;
     }
 }

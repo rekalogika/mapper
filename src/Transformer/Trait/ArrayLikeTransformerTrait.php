@@ -28,7 +28,7 @@ trait ArrayLikeTransformerTrait
     private function transformTraversableSource(
         iterable $source,
         \ArrayAccess|array|null $target,
-        ArrayLikeMetadata $targetMetadata,
+        ArrayLikeMetadata $metadata,
         Context $context
     ): \Traversable {
         // if the source is SplObjectStorage, we wrap it to fix the iterator
@@ -53,7 +53,7 @@ trait ArrayLikeTransformerTrait
                 sourceMemberKey: $sourceMemberKey,
                 sourceMemberValue: $sourceMemberValue,
                 target: $target,
-                targetMetadata: $targetMetadata,
+                metadata: $metadata,
                 context: $context,
             );
 
@@ -70,7 +70,7 @@ trait ArrayLikeTransformerTrait
     private function transformMember(
         mixed $sourceMemberKey,
         mixed $sourceMemberValue,
-        ArrayLikeMetadata $targetMetadata,
+        ArrayLikeMetadata $metadata,
         Context $context,
         null|\ArrayAccess|array $target = null,
         ?int $counter = null,
@@ -81,14 +81,14 @@ trait ArrayLikeTransformerTrait
         if (is_string($sourceMemberKey)) {
             // if the key is a string
 
-            if ($targetMetadata->memberKeyCanBeIntOnly()) {
+            if ($metadata->targetMemberKeyCanBeIntOnly()) {
                 // if target has int key type but the source has string key
                 // type, we discard the source key & use null key (i.e.
                 // $target[] = $value)
 
                 $targetMemberKey = null;
                 $path = sprintf('[%d]', $counter ?? -1);
-            } elseif ($targetMetadata->memberKeyCanBeString()) {
+            } elseif ($metadata->targetMemberKeyCanBeString()) {
                 // if target has string key type, we use the source key as
                 // the target key and let PHP cast it to string
 
@@ -103,7 +103,7 @@ trait ArrayLikeTransformerTrait
                     source: $sourceMemberKey,
                     target: null,
                     sourceType: null,
-                    targetTypes: $targetMetadata->getMemberKeyTypes(),
+                    targetTypes: $metadata->getTargetMemberKeyTypes(),
                     context: $context,
                     path: '(key)',
                 );
@@ -118,8 +118,8 @@ trait ArrayLikeTransformerTrait
             // if the key is an integer
 
             if (
-                $targetMetadata->memberKeyCanBeInt()
-                || $targetMetadata->memberKeyCanBeString()
+                $metadata->targetMemberKeyCanBeInt()
+                || $metadata->targetMemberKeyCanBeString()
             ) {
                 // if the target has int or string key type, we use the
                 // source key as the target key, and let PHP cast it if
@@ -136,7 +136,7 @@ trait ArrayLikeTransformerTrait
                     source: $sourceMemberKey,
                     target: null,
                     sourceType: null,
-                    targetTypes: $targetMetadata->getMemberKeyTypes(),
+                    targetTypes: $metadata->getTargetMemberKeyTypes(),
                     context: $context,
                     path: '(key)',
                 );
@@ -156,7 +156,7 @@ trait ArrayLikeTransformerTrait
                 source: $sourceMemberKey,
                 target: null,
                 sourceType: null,
-                targetTypes: $targetMetadata->getMemberKeyTypes(),
+                targetTypes: $metadata->getTargetMemberKeyTypes(),
                 context: $context,
                 path: '(key)',
             );
@@ -171,15 +171,15 @@ trait ArrayLikeTransformerTrait
         // if the target value type is untyped, we use the source value as
         // the target value
 
-        if ($targetMetadata->memberValueIsUntyped()) {
+        if ($metadata->targetMemberValueIsUntyped()) {
             return [$targetMemberKey, $sourceMemberValue];
         }
 
         // if the target value types has a type compatible with the source
         // value, then we use the source value as the target value
 
-        foreach ($targetMetadata->getMemberValueTypes() as $memberValueType) {
-            if (TypeCheck::isVariableInstanceOf($sourceMemberValue, $memberValueType)) {
+        foreach ($metadata->getTargetMemberValueTypes() as $targetMemberValueType) {
+            if (TypeCheck::isVariableInstanceOf($sourceMemberValue, $targetMemberValueType)) {
                 return [$targetMemberKey, $sourceMemberValue];
             }
         }
@@ -216,7 +216,7 @@ trait ArrayLikeTransformerTrait
             source: $sourceMemberValue,
             target: $targetMemberValue,
             sourceType: null,
-            targetTypes: $targetMetadata->getMemberValueTypes(),
+            targetTypes: $metadata->getTargetMemberValueTypes(),
             context: $context,
             path: $path,
         );

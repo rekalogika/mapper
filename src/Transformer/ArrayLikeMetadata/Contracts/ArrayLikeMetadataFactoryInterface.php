@@ -17,5 +17,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 interface ArrayLikeMetadataFactoryInterface
 {
-    public function createArrayLikeMetadata(Type $type): ArrayLikeMetadata;
+    public function createArrayLikeMetadata(
+        Type $targetType
+    ): ArrayLikeMetadata;
 }

@@ -22,9 +22,9 @@ use Symfony\Component\PropertyInfo\Type;
 
 final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterface
 {
-    public function createArrayLikeMetadata(Type $type): ArrayLikeMetadata
+    public function createArrayLikeMetadata(Type $targetType): ArrayLikeMetadata
     {
-        $memberKeyTypes = $type->getCollectionKeyTypes();
+        $memberKeyTypes = $targetType->getCollectionKeyTypes();
 
         if (count($memberKeyTypes) === 0) {
             $memberKeyTypes = [
@@ -33,10 +33,10 @@ final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterfac
             ];
         }
 
-        $memberValueTypes = $type->getCollectionValueTypes();
+        $memberValueTypes = $targetType->getCollectionValueTypes();
 
-        $isTargetArray = TypeCheck::isArray($type);
-        $class = $type->getClassName();
+        $isTargetArray = TypeCheck::isArray($targetType);
+        $class = $targetType->getClassName();
         if ($class !== null) {
             if (!class_exists($class) && !interface_exists($class)) {
                 throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $class));
@@ -60,16 +60,16 @@ final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterfac
         $memberValueIsUntyped = count($memberValueTypes) === 0;
 
         return new ArrayLikeMetadata(
-            type: $type,
-            isArray: $isTargetArray,
-            class: $class,
-            memberKeyTypes: $memberKeyTypes,
-            memberValueTypes: $memberValueTypes,
-            memberKeyCanBeInt: $memberKeyTypeCanBeInt,
-            memberKeyCanBeString: $memberKeyTypeCanBeString,
-            memberKeyCanBeIntOnly: $memberKeyTypeCanBeInt && !$memberKeyTypeCanBeString,
-            memberKeyCanBeOtherThanIntOrString: $memberKeyTypeCanBeOtherThanIntOrString,
-            memberValueIsUntyped: $memberValueIsUntyped,
+            targetType: $targetType,
+            isTargetArray: $isTargetArray,
+            targetClass: $class,
+            targetMemberKeyTypes: $memberKeyTypes,
+            targetMemberValueTypes: $memberValueTypes,
+            targetMemberKeyCanBeInt: $memberKeyTypeCanBeInt,
+            targetMemberKeyCanBeString: $memberKeyTypeCanBeString,
+            targetMemberKeyCanBeIntOnly: $memberKeyTypeCanBeInt && !$memberKeyTypeCanBeString,
+            targetMemberKeyCanBeOtherThanIntOrString: $memberKeyTypeCanBeOtherThanIntOrString,
+            targetMemberValueIsUntyped: $memberValueIsUntyped,
         );
     }
 }
