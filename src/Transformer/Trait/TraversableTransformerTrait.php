@@ -14,53 +14,173 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Trait;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Util\TypeCheck;
+use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
+use Rekalogika\Mapper\Transformer\Model\TraversableTransformerMetadata;
 use Symfony\Component\PropertyInfo\Type;
 
 trait TraversableTransformerTrait
 {
+    private function createTransformationMetadata(
+        ?Type $sourceType,
+        Type $targetType,
+        Context $context
+    ): TraversableTransformerMetadata {
+        return new TraversableTransformerMetadata(
+            sourceType: $sourceType,
+            targetType: $targetType,
+            context: $context,
+        );
+    }
+
     /**
-     * @param iterable<array-key,mixed> $source
+     * @param iterable<mixed,mixed> $source
      * @param \ArrayAccess<mixed,mixed>|array<array-key,mixed>|null $target
      * @return \Traversable<array{key:mixed,value:mixed}>
      */
     private function transformTraversableSource(
         iterable $source,
         \ArrayAccess|array|null $target,
-        Type $targetType,
+        TraversableTransformerMetadata $metadata,
         Context $context
     ): \Traversable {
-        $targetMemberKeyType = $targetType->getCollectionKeyTypes();
-        $targetMemberKeyTypeIsInt = count($targetMemberKeyType) === 1
-            && TypeCheck::isInt($targetMemberKeyType[0]);
-        $targetMemberValueType = $targetType->getCollectionValueTypes();
+        // if the source is SplObjectStorage, we wrap it to fix the iterator
+
+        if ($source instanceof \SplObjectStorage) {
+            $source = new SplObjectStorageWrapper($source);
+        }
 
         $i = 0;
 
         /**
-         * @var array-key $sourceMemberKey
+         * @var mixed $sourceMemberKey
          * @var mixed $sourceMemberValue
-         * */
+         */
         foreach ($source as $sourceMemberKey => $sourceMemberValue) {
-            // if target has int key type but the source has string key type,
-            // we discard the source key & use null (i.e. $target[] = $value)
+            // optimization: we try not to use the main tranformer to transform
+            // the source member key to the target member key type
 
-            if ($targetMemberKeyTypeIsInt && is_string($sourceMemberKey)) {
-                $targetMemberKey = null;
-                $path = sprintf('[%d]', $i);
+            if (is_string($sourceMemberKey)) {
+                // if the key is a string
+
+                if ($metadata->targetMemberKeyCanBeIntOnly()) {
+                    // if target has int key type but the source has string key
+                    // type, we discard the source key & use null key (i.e.
+                    // $target[] = $value)
+
+                    $targetMemberKey = null;
+                    $path = sprintf('[%d]', $i);
+                } elseif ($metadata->targetMemberKeyCanBeString()) {
+                    // if target has string key type, we use the source key as
+                    // the target key and let PHP cast it to string
+
+                    $targetMemberKey = $sourceMemberKey;
+                    $path = sprintf('[%s]', $sourceMemberKey);
+                } else {
+                    // otherwise, the target must be non-int & non-string, so we
+                    // delegate the transformation to the main transformer
+
+                    /** @var mixed */
+                    $targetMemberKey = $this->getMainTransformer()->transform(
+                        source: $sourceMemberKey,
+                        target: null,
+                        targetTypes: $metadata->getTargetMemberKeyTypes(),
+                        context: $context,
+                    );
+
+                    if ($targetMemberKey instanceof \Stringable) {
+                        $path = sprintf('[%s]', (string) $targetMemberKey);
+                    } else {
+                        $path = sprintf('[%s]', get_debug_type($targetMemberKey));
+                    }
+                }
+            } elseif (is_int($sourceMemberKey)) {
+                // if the key is an integer
+
+                if (
+                    $metadata->targetMemberKeyCanBeInt()
+                    || $metadata->targetMemberKeyCanBeString()
+                ) {
+                    // if the target has int or string key type, we use the
+                    // source key as the target key, and let PHP cast it if
+                    // needed
+
+                    $targetMemberKey = $sourceMemberKey;
+                    $path = sprintf('[%s]', $sourceMemberKey);
+                } else {
+                    // otherwise, the target must be non-int & non-string, so we
+                    // delegate the transformation to the main transformer
+
+                    /** @var mixed */
+                    $targetMemberKey = $this->getMainTransformer()->transform(
+                        source: $sourceMemberKey,
+                        target: null,
+                        targetTypes: $metadata->getTargetMemberKeyTypes(),
+                        context: $context,
+                    );
+
+                    if ($targetMemberKey instanceof \Stringable) {
+                        $path = sprintf('[%s]', (string) $targetMemberKey);
+                    } else {
+                        $path = sprintf('[%s]', get_debug_type($targetMemberKey));
+                    }
+                }
             } else {
-                /** @var string|int */
-                $targetMemberKey = $sourceMemberKey;
-                $path = sprintf('[%s]', $sourceMemberKey);
+                // If the type of the key is not an string or int, we delegate
+                // the transformation to the main transformer
+
+                /** @var mixed */
+                $targetMemberKey = $this->getMainTransformer()->transform(
+                    source: $sourceMemberKey,
+                    target: null,
+                    targetTypes: $metadata->getTargetMemberKeyTypes(),
+                    context: $context,
+                );
+
+                if ($targetMemberKey instanceof \Stringable) {
+                    $path = sprintf('[%s]', (string) $targetMemberKey);
+                } else {
+                    $path = sprintf('[%s]', get_debug_type($targetMemberKey));
+                }
+            }
+
+            // if the target value type is untyped, we use the source value as
+            // the target value
+
+            if ($metadata->targetMemberValueIsUntyped()) {
+                yield [
+                    'key' => $targetMemberKey,
+                    'value' => $sourceMemberValue,
+                ];
+
+                continue;
+            }
+
+            // if the target value types has a type compatible with the source
+            // value, then we use the source value as the target value
+
+            if ($metadata->isValueCompatibleWithTargetTypes($sourceMemberValue)) {
+                yield [
+                    'key' => $targetMemberKey,
+                    'value' => $sourceMemberValue,
+                ];
+
+                continue;
             }
 
             // Get the existing member value from the target
 
-            /** @var mixed $targetMemberValue */
-            $targetMemberValue = $target[$sourceMemberKey] ?? null;
+            try {
+                /**
+                 * @var mixed
+                 * @psalm-suppress MixedArrayOffset
+                 * */
+                $targetMemberValue = $target[$sourceMemberKey] ?? null;
+            } catch (\Throwable) { // @phpstan-ignore-line
+                $targetMemberValue = null;
+            }
 
             // if target member value is not an object we delete it because it
-            // will be removed anyway
+            // will not be used anyway
 
             if (!is_object($targetMemberValue)) {
                 $targetMemberValue = null;
@@ -73,7 +193,7 @@ trait TraversableTransformerTrait
             $targetMemberValue = $this->getMainTransformer()->transform(
                 source: $sourceMemberValue,
                 target: $targetMemberValue,
-                targetTypes: $targetMemberValueType,
+                targetTypes: $metadata->getTargetMemberValueTypes(),
                 context: $context,
                 path: $path,
             );

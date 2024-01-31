@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ReadableCollection;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -23,9 +24,9 @@ use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
-use Rekalogika\Mapper\Transformer\Exception\InvalidTypeInArgumentException;
+use Rekalogika\Mapper\Transformer\Model\ObjectStorage;
+use Rekalogika\Mapper\Transformer\Model\TraversableTransformerMetadata;
 use Rekalogika\Mapper\Transformer\Trait\TraversableTransformerTrait;
-use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -57,10 +58,18 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             throw new InvalidArgumentException(sprintf('If target is provided, it must be an instance of "\ArrayAccess" or "array", "%s" given', get_debug_type($target)), context: $context);
         }
 
+        // create transformation metadata
+
+        $metadata = $this->createTransformationMetadata(
+            sourceType: $sourceType,
+            targetType: $targetType,
+            context: $context,
+        );
+
         // If the target is not provided, instantiate it
 
         if ($target === null) {
-            $target = $this->instantiateArrayAccessOrArray($targetType, $context);
+            $target = $this->instantiateArrayAccessOrArray($metadata, $context);
         }
 
         // Add the target to cache
@@ -74,7 +83,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         $transformed = $this->transformTraversableSource(
             source: $source,
             target: $target,
-            targetType: $targetType,
+            metadata: $metadata,
             context: $context,
         );
 
@@ -93,33 +102,23 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     }
 
     /**
-     * @return \ArrayAccess<mixed,mixed>|array<array-key,mixed>
+     * @return \ArrayAccess|array
+     * @phpstan-ignore-next-line
      */
     private function instantiateArrayAccessOrArray(
-        Type $targetType,
+        TraversableTransformerMetadata $metadata,
         Context $context,
     ): \ArrayAccess|array {
         // if it wants an array, just return it. easy.
 
-        if (TypeCheck::isArray($targetType)) {
+        if ($metadata->isTargetArray()) {
             return [];
         }
 
-        $class = $targetType->getClassName();
+        // otherwise, we try to instantiate the target class
 
-        if ($class === null) {
-            throw new InvalidTypeInArgumentException('Target must be an instance of "\ArrayAccess" or "array, "%s" given', $targetType, context: $context);
-        }
-
-        if (!class_exists($class) && !\interface_exists($class)) {
-            throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $class), context: $context);
-        }
-
+        $class = $metadata->getArrayAccessTargetClass();
         $reflectionClass = new \ReflectionClass($class);
-
-        if (!$reflectionClass->implementsInterface(\ArrayAccess::class)) {
-            throw new InvalidArgumentException(sprintf('Target class "%s" must implement "\ArrayAccess"', $class), context: $context);
-        }
 
         // if instantiable, instantiate
 
@@ -130,27 +129,25 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 throw new ClassNotInstantiableException($class, context: $context);
             }
 
-            if (!$result instanceof \ArrayAccess) {
-                throw new InvalidArgumentException(sprintf('Instantiated class "%s" does not implement "\ArrayAccess"', $class), context: $context);
-            }
-
             return $result;
         }
 
         // at this point, $class must be an interface or an abstract class.
         // the following is a heuristic for some popular situations
 
-        $concreteClass = match ($class) {
-            \ArrayAccess::class => \ArrayObject::class,
-            Collection::class => ArrayCollection::class,
-            default => throw new InvalidArgumentException(sprintf('We do not know how to create an instance of "%s"', $class)),
-        };
+        switch (true) {
+            case $class === \ArrayAccess::class:
+                if ($metadata->targetMemberKeyCanBeOtherThanIntOrString()) {
+                    return new ObjectStorage();
+                }
+                return new \ArrayObject();
 
-        if (!class_exists($concreteClass)) {
-            throw new InvalidArgumentException(sprintf('Concrete class "%s" does not exist', $concreteClass));
+            case $class === Collection::class:
+            case $class === ReadableCollection::class:
+                return new ArrayCollection();
         }
 
-        return new $concreteClass();
+        throw new InvalidArgumentException(sprintf('We do not know how to create an instance of "%s"', $class));
     }
 
     public function getSupportedTransformation(): iterable
@@ -162,6 +159,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         $targetTypes = [
             TypeFactory::objectOfClass(Collection::class),
+            TypeFactory::objectOfClass(ReadableCollection::class),
             TypeFactory::objectOfClass(ArrayCollection::class),
             TypeFactory::objectOfClass(\ArrayObject::class),
             TypeFactory::objectOfClass(\ArrayIterator::class),

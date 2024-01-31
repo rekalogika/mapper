@@ -18,14 +18,18 @@ use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayPropertyWithStringKey;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithSplObjectStorageProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyWithObjectKeyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDtoWithIntKey;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithCompatibleHintDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithoutTypeHintDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Transformer\Model\ObjectStorage;
 
 class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
 {
@@ -54,6 +58,21 @@ class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
         $result = $this->mapper->map($source, ObjectWithArrayPropertyWithoutTypeHintDto::class);
 
         $this->assertInstanceOf(ObjectWithArrayPropertyWithoutTypeHintDto::class, $result);
+        $this->assertCount(3, $result->property);
+        $this->assertArrayHasKey(0, $result->property);
+        $this->assertArrayHasKey(1, $result->property);
+        $this->assertArrayHasKey(2, $result->property);
+        $this->assertInstanceOf(ObjectWithScalarProperties::class, $result->property[0]);
+        $this->assertInstanceOf(ObjectWithScalarProperties::class, $result->property[1]);
+        $this->assertInstanceOf(ObjectWithScalarProperties::class, $result->property[2]);
+    }
+
+    public function testTraversableToArrayAccessWithCompatibleTypehint(): void
+    {
+        $source = new ObjectWithTraversableProperties();
+        $result = $this->mapper->map($source, ObjectWithArrayPropertyWithCompatibleHintDto::class);
+
+        $this->assertInstanceOf(ObjectWithArrayPropertyWithCompatibleHintDto::class, $result);
         $this->assertCount(3, $result->property);
         $this->assertArrayHasKey(0, $result->property);
         $this->assertArrayHasKey(1, $result->property);
@@ -167,6 +186,23 @@ class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
         $this->assertEquals("string", $member->b);
         $this->assertEquals(true, $member->c);
         $this->assertEquals(1.1, $member->d);
+    }
+
+    public function testTraversableToArrayAccessWithObjectKeyDto(): void
+    {
+        $source = new ObjectWithSplObjectStorageProperty();
+
+        $result = $this->mapper
+            ->map($source, ObjectWithArrayAccessPropertyWithObjectKeyDto::class);
+
+        $this->assertInstanceOf(ObjectWithArrayAccessPropertyWithObjectKeyDto::class, $result);
+        $this->assertInstanceOf(\ArrayAccess::class, $result->property);
+        $this->assertInstanceOf(ObjectStorage::class, $result->property);
+
+        foreach ($result->property as $key => $value) {
+            $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $key);
+            $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $value);
+        }
     }
 
 

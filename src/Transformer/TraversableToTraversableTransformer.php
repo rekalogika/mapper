@@ -53,13 +53,21 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
             throw new InvalidArgumentException(sprintf('This transformer does not support existing value, "%s" found.', get_debug_type($target)), context: $context);
         }
 
+        // create transformation metadata
+
+        $metadata = $this->createTransformationMetadata(
+            sourceType: $sourceType,
+            targetType: $targetType,
+            context: $context,
+        );
+
         // Transform source
 
         /** @psalm-suppress MixedArgumentTypeCoercion */
         $transformed = $this->transformTraversableSource(
             source: $source,
             target: null,
-            targetType: $targetType,
+            metadata: $metadata,
             context: $context,
         );
 

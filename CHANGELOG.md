@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.5.21
+
+* feat: Supports object with non `int|string` keys.
+* refactor(`TraversableTransformerTrait`): Refactor properties to a metadata
+  object.
+* feat: Fix `SplObjectStorage` iterator by wrapping it in
+  `SplObjectStorageWrapper`.
+
 ## 0.5.20
 
 * perf(`ObjectToObjectTransformer`): Do simple scalar to scalar mapping without
