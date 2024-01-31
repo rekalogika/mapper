@@ -85,6 +85,13 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 $initializableTargetPropertiesNotInSource = array_diff($initializableTargetPropertiesNotInSource, [$targetProperty]);
             }
 
+            // get source property types
+
+            $sourcePropertyTypes = $this->propertyTypeExtractor
+                ->getTypes($sourceClass, $sourceProperty) ?? [];
+
+            // get target property types
+
             $targetPropertyTypes = $this->propertyTypeExtractor
                 ->getTypes($targetClass, $targetProperty);
 
@@ -112,6 +119,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $propertyMapping = new PropertyMapping(
                 sourceProperty: $isSourceReadable ? $sourceProperty : null,
                 targetProperty: $targetProperty,
+                sourceTypes: $sourcePropertyTypes,
                 targetTypes: $targetPropertyTypes,
                 readSource: $isSourceReadable,
                 initializeTarget: $isTargetInitializable,

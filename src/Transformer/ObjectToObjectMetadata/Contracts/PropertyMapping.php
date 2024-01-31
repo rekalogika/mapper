@@ -19,17 +19,24 @@ use Symfony\Component\PropertyInfo\Type;
 final class PropertyMapping
 {
     /**
+     * @var array<int,Type> $sourceTypes
+     */
+    private array $sourceTypes;
+
+    /**
      * @var array<int,Type> $targetTypes
      */
     private array $targetTypes;
 
     /**
+     * @param array<array-key,Type> $sourceTypes
      * @param array<array-key,Type> $targetTypes
      * @param 'int'|'float'|'string'|'bool'|null $targetScalarType
      */
     public function __construct(
         private ?string $sourceProperty,
         private string $targetProperty,
+        array $sourceTypes,
         array $targetTypes,
         private bool $readSource,
         private bool $initializeTarget,
@@ -38,6 +45,7 @@ final class PropertyMapping
         private ?string $targetScalarType,
         private ?PropertyMapperServicePointer $propertyMapper
     ) {
+        $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
     }
 
@@ -65,6 +73,24 @@ final class PropertyMapping
     public function setTargetProperty(string $targetProperty): void
     {
         $this->targetProperty = $targetProperty;
+    }
+
+    /**
+     * @return array<int,Type>
+     */
+    public function getSourceTypes(): array
+    {
+        return $this->sourceTypes;
+    }
+
+    /**
+     * @param array<int,Type> $sourceTypes
+     */
+    public function setSourceTypes(array $sourceTypes): self
+    {
+        $this->sourceTypes = $sourceTypes;
+
+        return $this;
     }
 
     /**
