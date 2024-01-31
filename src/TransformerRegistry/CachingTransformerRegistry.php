@@ -47,7 +47,7 @@ class CachingTransformerRegistry implements TransformerRegistryInterface
         array $sourceTypes,
         array $targetTypes,
     ): SearchResult {
-        $cacheKey = \rawurlencode(serialize($sourceTypes) . '--' . serialize($targetTypes));
+        $cacheKey = hash('xxh128', serialize([$sourceTypes, $targetTypes]));
 
         if (isset($this->findBySourceAndTargetTypesCache[$cacheKey])) {
             return $this->findBySourceAndTargetTypesCache[$cacheKey];

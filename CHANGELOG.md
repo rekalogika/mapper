@@ -12,6 +12,7 @@
   information obtained from the source class.
 * refactor(`ArrayLikeMetadata`): Refactor for future extension.
 * refactor(`ArrayLikeMetadata`): Also inject source type information.
+* perf: Use xxh128 hash for cache keys.
 
 ## 0.5.22
 

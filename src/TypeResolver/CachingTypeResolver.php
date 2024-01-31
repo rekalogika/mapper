@@ -61,7 +61,7 @@ class CachingTypeResolver implements TypeResolverInterface
             return [$type];
         }
 
-        $key = rawurlencode(serialize($type));
+        $key = hash('xxh128', serialize($type));
 
         $result = $this->simpleTypesCache[$key] ?? null;
         if ($result !== null) {
