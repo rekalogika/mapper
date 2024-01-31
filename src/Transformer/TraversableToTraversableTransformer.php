@@ -67,23 +67,12 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         // Transform source
 
         /** @psalm-suppress MixedArgumentTypeCoercion */
-        $transformed = $this->transformTraversableSource(
+        $target = $this->transformTraversableSource(
             source: $source,
             target: null,
             targetMetadata: $targetMetadata,
             context: $context,
         );
-
-        $target = (function () use ($transformed): \Traversable {
-            foreach ($transformed as $row) {
-                /** @psalm-suppress MixedAssignment */
-                $key = $row['key'];
-                /** @psalm-suppress MixedAssignment */
-                $value = $row['value'];
-
-                yield $key => $value;
-            }
-        })();
 
         // Wrap the result if the source is countable
 

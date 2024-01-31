@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.23
+
+* refactor(`TraversableTransformerTrait`): Refactor for clarity.
+
 ## 0.5.22
 
 * refactor: Rename `ObjectStorage` to `HashTable`.

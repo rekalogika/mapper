@@ -90,10 +90,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             context: $context,
         );
 
-        foreach ($transformed as $row) {
-            $key = $row['key'];
-            $value = $row['value'];
-
+        foreach ($transformed as $key => $value) {
             if ($key === null) {
                 $target[] = $value;
             } else {
