@@ -23,14 +23,13 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
   the type of the nested objects.
 * Handles `array`, `ArrayAccess` and `Traversable` objects, and the mapping
   between them.
-* Handles non-string & non-integer keys in array-like objects, like
+* Handles non-string & non-integer keys in array-like objects, including
   `SplObjectStorage`.
-* Lazy stream mapping if the target is type-hinted as `Traversable`. Consumes
-  less memory & avoids hydrating a Doctrine collection prematurely.
-* In addition, when the target is `Traversable` and the source is a `Countable`,
-  then the target will also be a `Countable`. With an extra-lazy Doctrine
-  Collection, the consumer will be able to count the target without causing a
-  full hydration of the source.
+* Lazy loading & lazy stream mapping. Consumes less memory & avoids hydrating a
+  Doctrine collection prematurely.
+* In addition, if the source is a `Countable`, then the target will also be a
+  `Countable`. With an extra-lazy Doctrine Collection, the consumer will be able
+  to count the target without causing a full hydration of the source.
 * Manual mapping using a class method.
 * Easy to extend by creating new transformers, or decorating the existing ones.
 * Match classes using attributes in your transformers, in addition to using
