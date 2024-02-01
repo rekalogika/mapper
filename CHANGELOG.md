@@ -26,6 +26,7 @@
 * feat(`TraversableToArrayAccessTransformer`): Add lazy capability.
 * refactor(`PropertyMapping`): Include information from property read/write
   info.
+* feat: Add support for adder methods.
 
 ## 0.5.22
 

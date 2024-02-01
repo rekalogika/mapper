@@ -29,6 +29,7 @@ use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
 use Rekalogika\Mapper\Transformer\Exception\UnsupportedPropertyMappingException;
+use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
@@ -212,6 +213,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             if (
                 $targetWriteMode !== WriteMode::Method
                 && $targetWriteMode !== WriteMode::Property
+                && $targetWriteMode !== WriteMode::AdderRemover
             ) {
                 continue;
             }
@@ -239,8 +241,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $targetProperty = $propertyMapping->getTargetProperty();
 
             try {
-                $this->propertyAccessor
-                    ->setValue($target, $targetProperty, $targetPropertyValue);
+                if ($targetWriteMode !== WriteMode::AdderRemover) {
+                    $this->propertyAccessor
+                        ->setValue($target, $targetProperty, $targetPropertyValue);
+                }
             } catch (AccessException | UnexpectedTypeException $e) {
                 throw new UnableToWriteException(
                     $source,
@@ -267,6 +271,18 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $sourceProperty = $propertyMapping->getSourceProperty();
         $targetProperty = $propertyMapping->getTargetProperty();
         $targetTypes = $propertyMapping->getTargetTypes();
+
+        $targetScalarType = $propertyMapping->getTargetScalarType();
+
+        $sourceReadMode = $propertyMapping->getSourceReadMode();
+        $sourceReadVisibility = $propertyMapping->getSourceReadVisibility();
+
+        $targetReadMode = $propertyMapping->getTargetReadMode();
+        $targetReadVisibility = $propertyMapping->getTargetReadVisibility();
+
+        $targetWriteMode = $propertyMapping->getTargetWriteMode();
+        $targetWriteName = $propertyMapping->getTargetWriteName();
+        $targetWriteVisibility = $propertyMapping->getTargetReadVisibility();
 
         // if a custom property mapper is set, then use it
 
@@ -296,9 +312,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // get the value of the source property
 
         try {
-            $sourceReadMode = $propertyMapping->getSourceReadMode();
-            $sourceReadVisibility = $propertyMapping->getSourceReadVisibility();
-
             if (
                 $sourceReadMode !== ReadMode::None
                 && $sourceReadVisibility === Visibility::Public
@@ -337,8 +350,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // do simple scalar to scalar transformation if possible
 
-        $targetScalarType = $propertyMapping->getTargetScalarType();
-
         if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
             switch ($targetScalarType) {
                 case 'int':
@@ -361,18 +372,43 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // get the value of the target property
 
         try {
-            $targetReadMode = $propertyMapping->getTargetReadMode();
-            $targetReadVisibility = $propertyMapping->getTargetReadVisibility();
-
             if (
+                $targetWriteMode === WriteMode::AdderRemover
+                && $targetWriteVisibility === Visibility::Public
+                && is_object($target)
+            ) {
+                // if adder/remover, then we create a proxy object to handle the
+                // adder/remover method
+
+                $targetPropertyValue = new AdderRemoverProxy(
+                    $target,
+                    $targetWriteName,
+                    null
+                );
+
+                $key = $targetTypes[0]->getCollectionKeyTypes();
+                $value = $targetTypes[0]->getCollectionValueTypes();
+
+                $targetTypes = [
+                    TypeFactory::objectWithKeyValue(
+                        AdderRemoverProxy::class,
+                        $key[0],
+                        $value[0]
+                    )
+                ];
+            } elseif (
                 $targetReadMode !== ReadMode::None
                 && $targetReadVisibility === Visibility::Public
                 && $target !== null
             ) {
+                // property/getter method
+
                 /** @var mixed */
                 $targetPropertyValue = $this->propertyAccessor
                     ->getValue($target, $targetProperty);
             } else {
+                // cannot read target property
+
                 $targetPropertyValue = null;
             }
         } catch (UninitializedPropertyException $e) {
