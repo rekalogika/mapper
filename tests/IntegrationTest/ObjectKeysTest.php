@@ -15,7 +15,9 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectKeys\RelationshipMap;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectKeysDto\PersonDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectKeysDto\RelationshipMapDto;
+use Rekalogika\Mapper\Transformer\Model\HashTable;
 
 class ObjectKeysTest extends AbstractIntegrationTest
 {
@@ -39,13 +41,30 @@ class ObjectKeysTest extends AbstractIntegrationTest
         $james = $all['James'];
         $jill = $all['Jill'];
 
-        $this->assertSame($john, $relationshipMapDto->spouseMap[$jane]);
-        $this->assertSame($jane, $relationshipMapDto->spouseMap[$john]);
+        $this->assertInstanceOf(PersonDto::class, $john);
+        $this->assertInstanceOf(PersonDto::class, $jane);
+        $this->assertInstanceOf(PersonDto::class, $james);
+        $this->assertInstanceOf(PersonDto::class, $jill);
 
-        $this->assertSame($john, $relationshipMapDto->childToFatherMap[$james]);
-        $this->assertSame($jane, $relationshipMapDto->childToMotherMap[$james]);
+        $spouseMap = $relationshipMapDto->spouseMap;
+        $this->assertNotNull($spouseMap);
+        $this->assertInstanceOf(HashTable::class, $spouseMap);
 
-        $this->assertSame($jane, $relationshipMapDto->childToMotherMap[$jill]);
-        $this->assertSame($john, $relationshipMapDto->childToFatherMap[$jill]);
+        $childToFatherMap = $relationshipMapDto->childToFatherMap;
+        $this->assertNotNull($childToFatherMap);
+        $this->assertInstanceOf(HashTable::class, $childToFatherMap);
+
+        $childToMotherMap = $relationshipMapDto->childToMotherMap;
+        $this->assertNotNull($childToMotherMap);
+        $this->assertInstanceOf(HashTable::class, $childToMotherMap);
+
+        $this->assertSame($john, $spouseMap[$jane]);
+        $this->assertSame($jane, $spouseMap[$john]);
+
+        $this->assertSame($john, $childToFatherMap[$james]);
+        $this->assertSame($jane, $childToMotherMap[$james]);
+
+        $this->assertSame($jane, $childToMotherMap[$jill]);
+        $this->assertSame($john, $childToFatherMap[$jill]);
     }
 }
