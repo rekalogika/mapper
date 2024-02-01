@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ReadableCollection;
+use Rekalogika\Mapper\ArrayInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -27,6 +28,7 @@ use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
+use Rekalogika\Mapper\Transformer\Model\LazyArray;
 use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
@@ -76,21 +78,53 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // Transform source
 
-        $target = $this->doTransform(
+        if (
+            $metadata->targetCanBeLazy()
+            && $target === null
+            && (
+                is_array($source) || (
+                    $source instanceof \ArrayAccess
+                    && $source instanceof \Countable
+                )
+            )
+        ) {
+            /** @psalm-suppress PossiblyInvalidArgument */
+            return $this->lazyTransform(
+                source: $source,
+                metadata: $metadata,
+                context: $context,
+            );
+        }
+        return $this->eagerTransform(
             source: $source,
             target: $target,
             metadata: $metadata,
             context: $context,
         );
 
-        return $target;
+    }
+
+    /**
+     * @param (\Traversable<array-key,mixed>&\ArrayAccess<array-key,mixed>&\Countable)|array<array-key,mixed> $source
+     */
+    private function lazyTransform(
+        (\Traversable&\ArrayAccess&\Countable)|array $source,
+        ArrayLikeMetadata $metadata,
+        Context $context
+    ): mixed {
+        return new LazyArray(
+            source: $source,
+            metadata: $metadata,
+            context: $context,
+            mainTransformer: $this->getMainTransformer(),
+        );
     }
 
     /**
      * @param iterable<mixed,mixed> $source
      * @param \ArrayAccess<mixed,mixed>|array<array-key,mixed> $target
      */
-    private function doTransform(
+    private function eagerTransform(
         iterable $source,
         \ArrayAccess|array|null $target,
         ArrayLikeMetadata $metadata,
@@ -194,6 +228,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             TypeFactory::objectOfClass(\ArrayObject::class),
             TypeFactory::objectOfClass(\ArrayIterator::class),
             TypeFactory::objectOfClass(\ArrayAccess::class),
+            TypeFactory::objectOfClass(ArrayInterface::class),
             TypeFactory::array(),
         ];
 

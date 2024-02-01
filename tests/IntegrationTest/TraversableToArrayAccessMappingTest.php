@@ -19,10 +19,12 @@ use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayPropertyWithStringKey;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithCollectionProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithSplObjectStorageProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyWithObjectKeyDto;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayInterfacePropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDtoWithIntKey;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithCompatibleHintDto;
@@ -31,6 +33,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDt
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
+use Rekalogika\Mapper\Transformer\Model\LazyArray;
 
 class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
 {
@@ -145,6 +148,64 @@ class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
         $result = $this->mapper->map($source, ObjectWithArrayAccessPropertyDto::class);
 
         $this->assertInstanceOf(ObjectWithArrayAccessPropertyDto::class, $result);
+
+        $property = $result->property;
+        $this->assertInstanceOf(LazyArray::class, $property);
+
+        $this->assertInstanceOf(\ArrayAccess::class, $result->property);
+        $this->assertEquals(1, $result->property[1]?->a);
+        $this->assertEquals("string", $result->property[1]?->b);
+        $this->assertEquals(true, $result->property[1]?->c);
+        $this->assertEquals(1.1, $result->property[1]?->d);
+    }
+
+    public function testCollectionToArrayAccessDto(): void
+    {
+        $source = new ObjectWithCollectionProperty();
+
+        $result = $this->mapper->map($source, ObjectWithArrayAccessPropertyDto::class);
+
+        $this->assertInstanceOf(ObjectWithArrayAccessPropertyDto::class, $result);
+
+        $property = $result->property;
+        $this->assertInstanceOf(LazyArray::class, $property);
+
+        $this->assertInstanceOf(\ArrayAccess::class, $result->property);
+        $this->assertEquals(1, $result->property[1]?->a);
+        $this->assertEquals("string", $result->property[1]?->b);
+        $this->assertEquals(true, $result->property[1]?->c);
+        $this->assertEquals(1.1, $result->property[1]?->d);
+    }
+
+    public function testArrayToArrayInterfaceDto(): void
+    {
+        $source = new ObjectWithArrayProperty();
+
+        $result = $this->mapper->map($source, ObjectWithArrayInterfacePropertyDto::class);
+
+        $this->assertInstanceOf(ObjectWithArrayInterfacePropertyDto::class, $result);
+
+        $property = $result->property;
+        $this->assertInstanceOf(LazyArray::class, $property);
+
+        $this->assertInstanceOf(\ArrayAccess::class, $result->property);
+        $this->assertEquals(1, $result->property[1]?->a);
+        $this->assertEquals("string", $result->property[1]?->b);
+        $this->assertEquals(true, $result->property[1]?->c);
+        $this->assertEquals(1.1, $result->property[1]?->d);
+    }
+
+    public function testCollectionToArrayInterfaceDto(): void
+    {
+        $source = new ObjectWithCollectionProperty();
+
+        $result = $this->mapper->map($source, ObjectWithArrayInterfacePropertyDto::class);
+
+        $this->assertInstanceOf(ObjectWithArrayInterfacePropertyDto::class, $result);
+
+        $property = $result->property;
+        $this->assertInstanceOf(LazyArray::class, $property);
+
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
         $this->assertEquals("string", $result->property[1]?->b);

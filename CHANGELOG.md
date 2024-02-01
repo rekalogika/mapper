@@ -13,6 +13,8 @@
 * refactor(`ArrayLikeMetadata`): Refactor for future extension.
 * refactor(`ArrayLikeMetadata`): Also inject source type information.
 * perf: Use xxh128 hash for cache keys.
+* refactor(`ArrayLikeMetadata`): Add more properties.
+* feat(`TraversableToArrayAccessTransformer`): Add lazy capability.
 
 ## 0.5.22
 
