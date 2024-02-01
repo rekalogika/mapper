@@ -3,6 +3,7 @@
 ## 0.5.24
 
 * fix(`ObjectCache`): Enum should not be cached.
+* test: Add more tests for object keys.
 
 ## 0.5.23
 
