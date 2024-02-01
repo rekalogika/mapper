@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.24
+
+* fix(`ObjectCache`): Enum should not be cached.
+
 ## 0.5.23
 
 * refactor(`TraversableTransformerTrait`): Refactor for clarity.

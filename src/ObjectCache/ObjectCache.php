@@ -39,7 +39,8 @@ final class ObjectCache
 
     private function isBlacklisted(mixed $source): bool
     {
-        return $source instanceof \DateTimeInterface;
+        return $source instanceof \DateTimeInterface
+            || $source instanceof \UnitEnum;
     }
 
     /**
