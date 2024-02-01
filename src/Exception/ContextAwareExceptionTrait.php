@@ -31,14 +31,17 @@ trait ContextAwareExceptionTrait
             $path = null;
         }
 
-        if ($path !== null) {
-            $path = (string) $path;
-            if ($path === '') {
-                $path = '(root)';
-            }
-            parent::__construct(sprintf('%s Mapping path: "%s".', $message, $path), $code, $previous);
-        } else {
-            parent::__construct($message, $code, $previous);
+        $path = (string) $path;
+        if ($path === '') {
+            $path = '(root)';
         }
+
+        $message = sprintf('%s Mapping path: "%s".', $message, $path);
+
+        if ($previous !== null) {
+            $message = sprintf('%s Previous message: %s.', $message, $previous->getMessage());
+        }
+
+        parent::__construct($message, $code, $previous);
     }
 }
