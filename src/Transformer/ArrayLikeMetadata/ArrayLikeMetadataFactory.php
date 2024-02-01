@@ -96,16 +96,6 @@ final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterfac
                 || $targetClass === ArrayInterface::class
             );
 
-        // if (!$isSourceArray && $sourceClass !== null) {
-        //     if (
-        //         !is_a($sourceClass, \ArrayAccess::class, true)
-        //         || !is_a($sourceClass, \Traversable::class, true)
-        //         || !is_a($sourceClass, \Countable::class, true)
-        //     ) {
-        //         $targetCanBeLazy = false;
-        //     }
-        // }
-
         return new ArrayLikeMetadata(
             sourceType: $sourceType,
             targetType: $targetType,
