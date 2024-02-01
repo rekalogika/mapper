@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata;
 
+use Rekalogika\Mapper\ArrayInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadataFactoryInterface;
@@ -26,53 +27,109 @@ final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterfac
         Type $sourceType,
         Type $targetType
     ): ArrayLikeMetadata {
-        $memberKeyTypes = $targetType->getCollectionKeyTypes();
+        $targetMemberKeyTypes = $targetType->getCollectionKeyTypes();
 
-        if (count($memberKeyTypes) === 0) {
-            $memberKeyTypes = [
+        if (count($targetMemberKeyTypes) === 0) {
+            $targetMemberKeyTypes = [
                 TypeFactory::int(),
                 TypeFactory::string(),
             ];
         }
 
-        $memberValueTypes = $targetType->getCollectionValueTypes();
+        $targetMemberValueTypes = $targetType->getCollectionValueTypes();
 
+        $isSourceArray = TypeCheck::isArray($sourceType);
         $isTargetArray = TypeCheck::isArray($targetType);
-        $class = $targetType->getClassName();
-        if ($class !== null) {
-            if (!class_exists($class) && !interface_exists($class)) {
-                throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $class));
+
+        $sourceClass = $sourceType->getClassName();
+        if ($sourceClass !== null) {
+            if (!class_exists($sourceClass) && !interface_exists($sourceClass)) {
+                throw new InvalidArgumentException(sprintf('Source class "%s" does not exist', $sourceClass));
             }
         }
 
-        $memberKeyTypeCanBeInt = false;
-        $memberKeyTypeCanBeString = false;
-        $memberKeyTypeCanBeOtherThanIntOrString = false;
+        $targetClass = $targetType->getClassName();
+        if ($targetClass !== null) {
+            if (!class_exists($targetClass) && !interface_exists($targetClass)) {
+                throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $targetClass));
+            }
+        }
 
-        foreach ($memberKeyTypes as $memberKeyType) {
-            if (TypeCheck::isInt($memberKeyType)) {
-                $memberKeyTypeCanBeInt = true;
-            } elseif (TypeCheck::isString($memberKeyType)) {
-                $memberKeyTypeCanBeString = true;
+        $sourceMemberKeyTypeCanBeInt = false;
+        $sourceMemberKeyTypeCanBeString = false;
+        $sourceMemberKeyTypeCanBeOtherThanIntOrString = false;
+
+        foreach ($sourceType->getCollectionKeyTypes() as $sourceMemberKeyType) {
+            if (TypeCheck::isInt($sourceMemberKeyType)) {
+                $sourceMemberKeyTypeCanBeInt = true;
+            } elseif (TypeCheck::isString($sourceMemberKeyType)) {
+                $sourceMemberKeyTypeCanBeString = true;
             } else {
-                $memberKeyTypeCanBeOtherThanIntOrString = true;
+                $sourceMemberKeyTypeCanBeOtherThanIntOrString = true;
             }
         }
 
-        $memberValueIsUntyped = count($memberValueTypes) === 0;
+        $targetMemberKeyTypeCanBeInt = false;
+        $targetMemberKeyTypeCanBeString = false;
+        $targetMemberKeyTypeCanBeOtherThanIntOrString = false;
+
+        foreach ($targetMemberKeyTypes as $targetMemberKeyType) {
+            if (TypeCheck::isInt($targetMemberKeyType)) {
+                $targetMemberKeyTypeCanBeInt = true;
+            } elseif (TypeCheck::isString($targetMemberKeyType)) {
+                $targetMemberKeyTypeCanBeString = true;
+            } else {
+                $targetMemberKeyTypeCanBeOtherThanIntOrString = true;
+            }
+        }
+
+        $targetMemberValueIsUntyped = count($targetMemberValueTypes) === 0;
+
+        // determine if target can be lazy
+
+        $targetCanBeLazy = !$isTargetArray
+            && !$sourceMemberKeyTypeCanBeOtherThanIntOrString
+            && !$targetMemberKeyTypeCanBeOtherThanIntOrString
+            && (
+                $targetClass === \ArrayAccess::class
+                || $targetClass === \Traversable::class
+                || $targetClass === ArrayInterface::class
+            );
+
+        // if (!$isSourceArray && $sourceClass !== null) {
+        //     if (
+        //         !is_a($sourceClass, \ArrayAccess::class, true)
+        //         || !is_a($sourceClass, \Traversable::class, true)
+        //         || !is_a($sourceClass, \Countable::class, true)
+        //     ) {
+        //         $targetCanBeLazy = false;
+        //     }
+        // }
 
         return new ArrayLikeMetadata(
             sourceType: $sourceType,
             targetType: $targetType,
+
+            isSourceArray: $isSourceArray,
+            sourceClass: $sourceClass,
+
             isTargetArray: $isTargetArray,
-            targetClass: $class,
-            targetMemberKeyTypes: $memberKeyTypes,
-            targetMemberValueTypes: $memberValueTypes,
-            targetMemberKeyCanBeInt: $memberKeyTypeCanBeInt,
-            targetMemberKeyCanBeString: $memberKeyTypeCanBeString,
-            targetMemberKeyCanBeIntOnly: $memberKeyTypeCanBeInt && !$memberKeyTypeCanBeString,
-            targetMemberKeyCanBeOtherThanIntOrString: $memberKeyTypeCanBeOtherThanIntOrString,
-            targetMemberValueIsUntyped: $memberValueIsUntyped,
+            targetClass: $targetClass,
+            targetCanBeLazy: $targetCanBeLazy,
+
+            targetMemberKeyTypes: $targetMemberKeyTypes,
+            targetMemberValueTypes: $targetMemberValueTypes,
+
+            sourceMemberKeyCanBeInt: $sourceMemberKeyTypeCanBeInt,
+            sourceMemberKeyCanBeString: $sourceMemberKeyTypeCanBeString,
+            sourceMemberKeyCanBeIntOnly: $sourceMemberKeyTypeCanBeInt && !$sourceMemberKeyTypeCanBeString,
+            sourceMemberKeyCanBeOtherThanIntOrString: $sourceMemberKeyTypeCanBeOtherThanIntOrString,
+
+            targetMemberKeyCanBeInt: $targetMemberKeyTypeCanBeInt,
+            targetMemberKeyCanBeString: $targetMemberKeyTypeCanBeString,
+            targetMemberKeyCanBeIntOnly: $targetMemberKeyTypeCanBeInt && !$targetMemberKeyTypeCanBeString,
+            targetMemberKeyCanBeOtherThanIntOrString: $targetMemberKeyTypeCanBeOtherThanIntOrString,
+            targetMemberValueIsUntyped: $targetMemberValueIsUntyped,
         );
     }
 }
