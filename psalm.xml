@@ -56,5 +56,15 @@
                 <file name="src/DependencyInjection/RekalogikaMapperExtension.php" />
             </errorLevel>
         </ArgumentTypeCoercion>
+        <InternalMethod>
+            <errorLevel type="suppress">
+                <file name="src/Transformer/ObjectToObjectMetadata/ObjectToObjectMetadataFactory.php" />
+            </errorLevel>
+        </InternalMethod>
+        <InternalClass>
+            <errorLevel type="suppress">
+                <file name="src/Transformer/ObjectToObjectMetadata/ObjectToObjectMetadataFactory.php" />
+            </errorLevel>
+        </InternalClass>
     </issueHandlers>
 </psalm>

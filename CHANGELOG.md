@@ -24,6 +24,8 @@
 * perf: Use xxh128 hash for cache keys.
 * refactor(`ArrayLikeMetadata`): Add more properties.
 * feat(`TraversableToArrayAccessTransformer`): Add lazy capability.
+* refactor(`PropertyMapping`): Include information from property read/write
+  info.
 
 ## 0.5.22
 

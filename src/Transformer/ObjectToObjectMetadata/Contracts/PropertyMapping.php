@@ -15,8 +15,6 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts;
 
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
 use Rekalogika\Mapper\Util\TypeCheck;
-use Symfony\Component\PropertyInfo\PropertyReadInfo;
-use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\Type;
 
 final class PropertyMapping
@@ -41,13 +39,15 @@ final class PropertyMapping
         private string $targetProperty,
         array $sourceTypes,
         array $targetTypes,
-        private bool $readSource,
-        private bool $initializeTarget,
-        private bool $readTarget,
-        private bool $writeTarget,
-        private ?PropertyReadInfo $sourceReadInfo,
-        private ?PropertyReadInfo $targetReadInfo,
-        private ?PropertyWriteInfo $targetWriteInfo,
+        private ReadMode $sourceReadMode,
+        private ?string $sourceReadName,
+        private Visibility $sourceReadVisibility,
+        private ReadMode $targetReadMode,
+        private ?string $targetReadName,
+        private Visibility $targetReadVisibility,
+        private WriteMode $targetWriteMode,
+        private ?string $targetWriteName,
+        private Visibility $targetWriteVisibility,
         private ?string $targetScalarType,
         private ?PropertyMapperServicePointer $propertyMapper
     ) {
@@ -66,30 +66,14 @@ final class PropertyMapping
         return null;
     }
 
-    /**
-     * Property path of the source
-     */
     public function getSourceProperty(): ?string
     {
         return $this->sourceProperty;
     }
 
-    public function setSourceProperty(?string $sourceProperty): void
-    {
-        $this->sourceProperty = $sourceProperty;
-    }
-
-    /**
-     * Property path of the target
-     */
     public function getTargetProperty(): string
     {
         return $this->targetProperty;
-    }
-
-    public function setTargetProperty(string $targetProperty): void
-    {
-        $this->targetProperty = $targetProperty;
     }
 
     /**
@@ -101,16 +85,6 @@ final class PropertyMapping
     }
 
     /**
-     * @param array<int,Type> $sourceTypes
-     */
-    public function setSourceTypes(array $sourceTypes): self
-    {
-        $this->sourceTypes = $sourceTypes;
-
-        return $this;
-    }
-
-    /**
      * @return array<int,Type>
      */
     public function getTargetTypes(): array
@@ -118,62 +92,9 @@ final class PropertyMapping
         return $this->targetTypes;
     }
 
-    /**
-     * @param array<int,Type> $targetTypes
-     */
-    public function setTargetTypes(array $targetTypes): void
-    {
-        $this->targetTypes = $targetTypes;
-    }
-
-    public function doInitializeTarget(): bool
-    {
-        return $this->initializeTarget;
-    }
-
-    public function setInitializeTarget(bool $initializeTarget): void
-    {
-        $this->initializeTarget = $initializeTarget;
-    }
-
-    public function doReadTarget(): bool
-    {
-        return $this->readTarget;
-    }
-
-    public function setReadTarget(bool $readTarget): void
-    {
-        $this->readTarget = $readTarget;
-    }
-
-    public function doWriteTarget(): bool
-    {
-        return $this->writeTarget;
-    }
-
-    public function setWriteTarget(bool $writeTarget): void
-    {
-        $this->writeTarget = $writeTarget;
-    }
-
-    public function doReadSource(): bool
-    {
-        return $this->readSource;
-    }
-
-    public function setReadSource(bool $readSource): void
-    {
-        $this->readSource = $readSource;
-    }
-
     public function getPropertyMapper(): ?PropertyMapperServicePointer
     {
         return $this->propertyMapper;
-    }
-
-    public function setPropertyMapper(?PropertyMapperServicePointer $propertyMapper): void
-    {
-        $this->propertyMapper = $propertyMapper;
     }
 
     /**
@@ -187,47 +108,48 @@ final class PropertyMapping
         return $this->targetScalarType;
     }
 
-    /**
-     * @param 'int'|'float'|'string'|'bool'|null $targetScalarType
-     */
-    public function setTargetScalarType(?string $targetScalarType): void
+    public function getSourceReadMode(): ReadMode
     {
-        $this->targetScalarType = $targetScalarType;
+        return $this->sourceReadMode;
     }
 
-    public function getSourceReadInfo(): ?PropertyReadInfo
+    public function getSourceReadName(): ?string
     {
-        return $this->sourceReadInfo;
+        return $this->sourceReadName;
     }
 
-    public function setSourceReadInfo(?PropertyReadInfo $sourceReadInfo): self
+    public function getTargetReadMode(): ReadMode
     {
-        $this->sourceReadInfo = $sourceReadInfo;
-
-        return $this;
+        return $this->targetReadMode;
     }
 
-    public function getTargetReadInfo(): ?PropertyReadInfo
+    public function getTargetReadName(): ?string
     {
-        return $this->targetReadInfo;
+        return $this->targetReadName;
     }
 
-    public function setTargetReadInfo(?PropertyReadInfo $targetReadInfo): self
+    public function getTargetWriteMode(): WriteMode
     {
-        $this->targetReadInfo = $targetReadInfo;
-
-        return $this;
+        return $this->targetWriteMode;
     }
 
-    public function getTargetWriteInfo(): ?PropertyWriteInfo
+    public function getTargetWriteName(): ?string
     {
-        return $this->targetWriteInfo;
+        return $this->targetWriteName;
     }
 
-    public function setTargetWriteInfo(?PropertyWriteInfo $targetWriteInfo): self
+    public function getSourceReadVisibility(): Visibility
     {
-        $this->targetWriteInfo = $targetWriteInfo;
+        return $this->sourceReadVisibility;
+    }
 
-        return $this;
+    public function getTargetReadVisibility(): Visibility
+    {
+        return $this->targetReadVisibility;
+    }
+
+    public function getTargetWriteVisibility(): Visibility
+    {
+        return $this->targetWriteVisibility;
     }
 }

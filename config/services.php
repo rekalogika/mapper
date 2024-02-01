@@ -216,7 +216,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
-            service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_mapper.resolver'),
             service(PropertyReadInfoExtractorInterface::class),
             service(PropertyWriteInfoExtractorInterface::class)

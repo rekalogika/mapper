@@ -20,17 +20,20 @@ use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
-use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ReadMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\Visibility;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\WriteMode;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 
 final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     public function __construct(
-        private PropertyAccessExtractorInterface $propertyAccessExtractor,
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
@@ -57,12 +60,6 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
 
         // queries
 
-        $readableSourceProperties = $this
-            ->listReadableProperties($sourceClass, $context);
-        $readableTargetProperties = $this
-            ->listReadableProperties($targetClass, $context);
-        $writableTargetProperties = $this
-            ->listWritableProperties($targetClass, $context);
         $initializableTargetProperties = $this
             ->listInitializableProperties($targetClass, $context);
         $targetProperties = $this
@@ -82,15 +79,11 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $sourceProperty = $targetProperty;
 
             // determine if a property mapper is defined for the property
+
             $propertyMapperPointer = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
 
-            ///
-
-            $isSourceReadable = in_array($sourceProperty, $readableSourceProperties);
-            $isTargetReadable = in_array($targetProperty, $readableTargetProperties);
-            $isTargetWritable = in_array($targetProperty, $writableTargetProperties);
-            $isTargetInitializable = in_array($targetProperty, $initializableTargetProperties);
+            // get read & write info for source and target properties
 
             $sourceReadInfo = $this->propertyReadInfoExtractor
                 ->getReadInfo($sourceClass, $sourceProperty);
@@ -99,10 +92,87 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $targetWriteInfo = $this->propertyWriteInfoExtractor
                 ->getWriteInfo($targetClass, $targetProperty);
 
-            // target is initializeble, remove the property from the list of
-            // uninitialized properties
-            if ($isTargetInitializable) {
-                $initializableTargetPropertiesNotInSource = array_diff($initializableTargetPropertiesNotInSource, [$targetProperty]);
+            // process source read mode
+
+            if ($sourceReadInfo === null) {
+                $sourceReadMode = ReadMode::None;
+                $sourceReadName = null;
+                $sourceReadVisibility = Visibility::None;
+            } else {
+                $sourceReadMode = match ($sourceReadInfo->getType()) {
+                    PropertyReadInfo::TYPE_METHOD => ReadMode::Method,
+                    PropertyReadInfo::TYPE_PROPERTY => ReadMode::Property,
+                    default => ReadMode::None,
+                };
+
+                $sourceReadName = $sourceReadInfo->getName();
+
+                $sourceReadVisibility = match ($sourceReadInfo->getVisibility()) {
+                    PropertyReadInfo::VISIBILITY_PUBLIC => Visibility::Public,
+                    PropertyReadInfo::VISIBILITY_PROTECTED => Visibility::Protected,
+                    PropertyReadInfo::VISIBILITY_PRIVATE => Visibility::Private,
+                    default => Visibility::None,
+                };
+            }
+
+            // process target read mode
+
+            if ($targetReadInfo === null) {
+                $targetReadMode = ReadMode::None;
+                $targetReadName = null;
+                $targetReadVisibility = Visibility::None;
+            } else {
+                $targetReadMode = match ($targetReadInfo->getType()) {
+                    PropertyReadInfo::TYPE_METHOD => ReadMode::Method,
+                    PropertyReadInfo::TYPE_PROPERTY => ReadMode::Property,
+                    default => ReadMode::None,
+                };
+
+                $targetReadName = $targetReadInfo->getName();
+
+                $targetReadVisibility = match ($targetReadInfo->getVisibility()) {
+                    PropertyReadInfo::VISIBILITY_PUBLIC => Visibility::Public,
+                    PropertyReadInfo::VISIBILITY_PROTECTED => Visibility::Protected,
+                    PropertyReadInfo::VISIBILITY_PRIVATE => Visibility::Private,
+                    default => Visibility::None,
+                };
+            }
+
+            // process target write mode
+
+            if (
+                $targetWriteInfo === null
+            ) {
+                $targetWriteMode = WriteMode::None;
+                $targetWriteName = null;
+                $targetWriteVisibility = Visibility::None;
+            } elseif ($targetWriteInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
+                $targetWriteMode = WriteMode::AdderRemover;
+                $targetWriteName = $targetWriteInfo->getAdderInfo()->getName();
+                $targetWriteVisibility = match ($targetWriteInfo->getAdderInfo()->getVisibility()) {
+                    PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
+                    PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
+                    PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
+                    default => Visibility::None,
+                };
+            } elseif ($targetWriteInfo->getType() === PropertyWriteInfo::TYPE_CONSTRUCTOR) {
+                $targetWriteMode = WriteMode::Constructor;
+                $targetWriteName = $targetWriteInfo->getName();
+                $targetWriteVisibility = Visibility::None;
+            } else {
+                $targetWriteMode = match ($targetWriteInfo->getType()) {
+                    PropertyWriteInfo::TYPE_METHOD => WriteMode::Method,
+                    PropertyWriteInfo::TYPE_PROPERTY => WriteMode::Property,
+                    default => WriteMode::None,
+                };
+
+                $targetWriteName = $targetWriteInfo->getName();
+                $targetWriteVisibility = match ($targetWriteInfo->getVisibility()) {
+                    PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
+                    PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
+                    PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
+                    default => Visibility::None,
+                };
             }
 
             // get source property types
@@ -137,17 +207,19 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             }
 
             $propertyMapping = new PropertyMapping(
-                sourceProperty: $isSourceReadable ? $sourceProperty : null,
+                sourceProperty: $sourceReadMode !== ReadMode::None ? $sourceProperty : null,
                 targetProperty: $targetProperty,
                 sourceTypes: $sourcePropertyTypes,
                 targetTypes: $targetPropertyTypes,
-                readSource: $isSourceReadable,
-                initializeTarget: $isTargetInitializable,
-                writeTarget: $isTargetWritable,
-                sourceReadInfo: $sourceReadInfo,
-                targetReadInfo: $targetReadInfo,
-                targetWriteInfo: $targetWriteInfo,
-                readTarget: $isTargetReadable,
+                sourceReadMode: $sourceReadMode,
+                sourceReadName: $sourceReadName,
+                sourceReadVisibility: $sourceReadVisibility,
+                targetReadMode: $targetReadMode,
+                targetReadName: $targetReadName,
+                targetReadVisibility: $targetReadVisibility,
+                targetWriteMode: $targetWriteMode,
+                targetWriteName: $targetWriteName,
+                targetWriteVisibility: $targetWriteVisibility,
                 targetScalarType: $targetPropertyScalarType,
                 propertyMapper: $propertyMapperPointer,
             );
@@ -172,48 +244,6 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         $properties = $this->propertyListExtractor->getProperties($class) ?? [];
 
         return array_values($properties);
-    }
-
-    /**
-     * @param class-string $class
-     * @return array<int,string>
-     */
-    private function listReadableProperties(
-        string $class,
-        Context $context
-    ): array {
-        $properties = $this->listProperties($class, $context);
-
-        $readableProperties = [];
-
-        foreach ($properties as $property) {
-            if ($this->propertyAccessExtractor->isReadable($class, $property)) {
-                $readableProperties[] = $property;
-            }
-        }
-
-        return $readableProperties;
-    }
-
-    /**
-     * @param class-string $class
-     * @return array<int,string>
-     */
-    private function listWritableProperties(
-        string $class,
-        Context $context
-    ): array {
-        $properties = $this->listProperties($class, $context);
-
-        $writableProperties = [];
-
-        foreach ($properties as $property) {
-            if ($this->propertyAccessExtractor->isWritable($class, $property)) {
-                $writableProperties[] = $property;
-            }
-        }
-
-        return $writableProperties;
     }
 
     /**

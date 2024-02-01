@@ -444,7 +444,6 @@ class MapperFactory
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
-                $this->getPropertyInfoExtractor(),
                 $this->getPropertyMapperResolver(),
                 $this->getPropertyReadInfoExtractor(),
                 $this->getPropertyWriteInfoExtractor()

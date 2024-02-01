@@ -32,6 +32,9 @@ use Rekalogika\Mapper\Transformer\Exception\UnsupportedPropertyMappingException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ReadMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\Visibility;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\WriteMode;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
@@ -154,7 +157,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $unsetSourceProperties = [];
 
         foreach ($propertyMappings as $propertyMapping) {
-            if (!$propertyMapping->doInitializeTarget()) {
+            if ($propertyMapping->getTargetWriteMode() !== WriteMode::Constructor) {
                 continue;
             }
 
@@ -203,7 +206,17 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         Context $context
     ): void {
         foreach ($objectToObjectMetadata->getPropertyMappings() as $propertyMapping) {
-            if ($propertyMapping->doWriteTarget() === false) {
+            $targetWriteMode = $propertyMapping->getTargetWriteMode();
+            $targetWriteVisibility = $propertyMapping->getTargetWriteVisibility();
+
+            if (
+                $targetWriteMode !== WriteMode::Method
+                && $targetWriteMode !== WriteMode::Property
+            ) {
+                continue;
+            }
+
+            if ($targetWriteVisibility !== Visibility::Public) {
                 continue;
             }
 
@@ -283,7 +296,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // get the value of the source property
 
         try {
-            if ($propertyMapping->doReadSource()) {
+            $sourceReadMode = $propertyMapping->getSourceReadMode();
+            $sourceReadVisibility = $propertyMapping->getSourceReadVisibility();
+
+            if (
+                $sourceReadMode !== ReadMode::None
+                && $sourceReadVisibility === Visibility::Public
+            ) {
                 /** @var mixed */
                 $sourcePropertyValue = $this->propertyAccessor
                     ->getValue($source, $sourceProperty);
@@ -342,7 +361,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // get the value of the target property
 
         try {
-            if ($propertyMapping->doReadTarget() && $target !== null) {
+            $targetReadMode = $propertyMapping->getTargetReadMode();
+            $targetReadVisibility = $propertyMapping->getTargetReadVisibility();
+
+            if (
+                $targetReadMode !== ReadMode::None
+                && $targetReadVisibility === Visibility::Public
+                && $target !== null
+            ) {
                 /** @var mixed */
                 $targetPropertyValue = $this->propertyAccessor
                     ->getValue($target, $targetProperty);
