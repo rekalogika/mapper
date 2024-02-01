@@ -49,6 +49,8 @@ use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
+use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -216,6 +218,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_mapper.resolver'),
+            service(PropertyReadInfoExtractorInterface::class),
+            service(PropertyWriteInfoExtractorInterface::class)
         ]);
 
     $services

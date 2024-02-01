@@ -7,6 +7,7 @@
 * fix(`ObjectToObjectTransformer`): Throw exception when trying to map internal
   classes.
 * fix(`ContextAwareExceptionTrait`): Improve exception message.
+* refactor(`PropertyMapping`): Add property read & write info.
 
 ## 0.5.23
 

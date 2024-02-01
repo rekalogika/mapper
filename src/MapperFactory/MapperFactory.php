@@ -62,7 +62,9 @@ use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
 use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
@@ -114,6 +116,8 @@ class MapperFactory
     private ?SubMapper $subMapper = null;
     private ?TransformerRegistryInterface $transformerRegistry = null;
     private ?PropertyMapperResolverInterface $propertyMapperResolver = null;
+    private ?PropertyReadInfoExtractorInterface $propertyReadInfoExtractor = null;
+    private ?PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -442,6 +446,8 @@ class MapperFactory
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyMapperResolver(),
+                $this->getPropertyReadInfoExtractor(),
+                $this->getPropertyWriteInfoExtractor()
             );
         }
 
@@ -590,6 +596,24 @@ class MapperFactory
         }
 
         return new ServiceLocator($services);
+    }
+
+    protected function getPropertyReadInfoExtractor(): PropertyReadInfoExtractorInterface
+    {
+        if (null === $this->propertyReadInfoExtractor) {
+            $this->propertyReadInfoExtractor = $this->getReflectionExtractor();
+        }
+
+        return $this->propertyReadInfoExtractor;
+    }
+
+    protected function getPropertyWriteInfoExtractor(): PropertyWriteInfoExtractorInterface
+    {
+        if (null === $this->propertyWriteInfoExtractor) {
+            $this->propertyWriteInfoExtractor = $this->getReflectionExtractor();
+        }
+
+        return $this->propertyWriteInfoExtractor;
     }
 
     //

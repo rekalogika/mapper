@@ -15,6 +15,8 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts;
 
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
 use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\PropertyInfo\PropertyReadInfo;
+use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\Type;
 
 final class PropertyMapping
@@ -43,6 +45,9 @@ final class PropertyMapping
         private bool $initializeTarget,
         private bool $readTarget,
         private bool $writeTarget,
+        private ?PropertyReadInfo $sourceReadInfo,
+        private ?PropertyReadInfo $targetReadInfo,
+        private ?PropertyWriteInfo $targetWriteInfo,
         private ?string $targetScalarType,
         private ?PropertyMapperServicePointer $propertyMapper
     ) {
@@ -188,5 +193,41 @@ final class PropertyMapping
     public function setTargetScalarType(?string $targetScalarType): void
     {
         $this->targetScalarType = $targetScalarType;
+    }
+
+    public function getSourceReadInfo(): ?PropertyReadInfo
+    {
+        return $this->sourceReadInfo;
+    }
+
+    public function setSourceReadInfo(?PropertyReadInfo $sourceReadInfo): self
+    {
+        $this->sourceReadInfo = $sourceReadInfo;
+
+        return $this;
+    }
+
+    public function getTargetReadInfo(): ?PropertyReadInfo
+    {
+        return $this->targetReadInfo;
+    }
+
+    public function setTargetReadInfo(?PropertyReadInfo $targetReadInfo): self
+    {
+        $this->targetReadInfo = $targetReadInfo;
+
+        return $this;
+    }
+
+    public function getTargetWriteInfo(): ?PropertyWriteInfo
+    {
+        return $this->targetWriteInfo;
+    }
+
+    public function setTargetWriteInfo(?PropertyWriteInfo $targetWriteInfo): self
+    {
+        $this->targetWriteInfo = $targetWriteInfo;
+
+        return $this;
     }
 }

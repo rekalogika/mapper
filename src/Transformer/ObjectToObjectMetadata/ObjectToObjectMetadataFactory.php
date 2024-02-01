@@ -23,7 +23,9 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMappi
 use Symfony\Component\PropertyInfo\PropertyAccessExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 
 final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
@@ -32,7 +34,9 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
-        private PropertyMapperResolverInterface $propertyMapperResolver
+        private PropertyMapperResolverInterface $propertyMapperResolver,
+        private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
+        private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
     ) {
     }
 
@@ -88,6 +92,13 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $isTargetWritable = in_array($targetProperty, $writableTargetProperties);
             $isTargetInitializable = in_array($targetProperty, $initializableTargetProperties);
 
+            $sourceReadInfo = $this->propertyReadInfoExtractor
+                ->getReadInfo($sourceClass, $sourceProperty);
+            $targetReadInfo = $this->propertyReadInfoExtractor
+                ->getReadInfo($targetClass, $targetProperty);
+            $targetWriteInfo = $this->propertyWriteInfoExtractor
+                ->getWriteInfo($targetClass, $targetProperty);
+
             // target is initializeble, remove the property from the list of
             // uninitialized properties
             if ($isTargetInitializable) {
@@ -133,6 +144,9 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 readSource: $isSourceReadable,
                 initializeTarget: $isTargetInitializable,
                 writeTarget: $isTargetWritable,
+                sourceReadInfo: $sourceReadInfo,
+                targetReadInfo: $targetReadInfo,
+                targetWriteInfo: $targetWriteInfo,
                 readTarget: $isTargetReadable,
                 targetScalarType: $targetPropertyScalarType,
                 propertyMapper: $propertyMapperPointer,
