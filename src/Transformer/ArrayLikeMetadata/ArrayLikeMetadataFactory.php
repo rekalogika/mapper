@@ -109,22 +109,17 @@ final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterfac
         return new ArrayLikeMetadata(
             sourceType: $sourceType,
             targetType: $targetType,
-
             isSourceArray: $isSourceArray,
             sourceClass: $sourceClass,
-
             isTargetArray: $isTargetArray,
             targetClass: $targetClass,
             targetCanBeLazy: $targetCanBeLazy,
-
             targetMemberKeyTypes: $targetMemberKeyTypes,
             targetMemberValueTypes: $targetMemberValueTypes,
-
             sourceMemberKeyCanBeInt: $sourceMemberKeyTypeCanBeInt,
             sourceMemberKeyCanBeString: $sourceMemberKeyTypeCanBeString,
             sourceMemberKeyCanBeIntOnly: $sourceMemberKeyTypeCanBeInt && !$sourceMemberKeyTypeCanBeString,
             sourceMemberKeyCanBeOtherThanIntOrString: $sourceMemberKeyTypeCanBeOtherThanIntOrString,
-
             targetMemberKeyCanBeInt: $targetMemberKeyTypeCanBeInt,
             targetMemberKeyCanBeString: $targetMemberKeyTypeCanBeString,
             targetMemberKeyCanBeIntOnly: $targetMemberKeyTypeCanBeInt && !$targetMemberKeyTypeCanBeString,

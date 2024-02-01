@@ -27,22 +27,17 @@ final class ArrayLikeMetadata
     public function __construct(
         private Type $sourceType,
         private Type $targetType,
-
         private bool $isSourceArray,
         private ?string $sourceClass,
-
         private bool $isTargetArray,
         private ?string $targetClass,
         private bool $targetCanBeLazy,
-
         private array $targetMemberKeyTypes,
         private array $targetMemberValueTypes,
-
         private bool $sourceMemberKeyCanBeInt,
         private bool $sourceMemberKeyCanBeString,
         private bool $sourceMemberKeyCanBeIntOnly,
         private bool $sourceMemberKeyCanBeOtherThanIntOrString,
-
         private bool $targetMemberKeyCanBeInt,
         private bool $targetMemberKeyCanBeString,
         private bool $targetMemberKeyCanBeIntOnly,
