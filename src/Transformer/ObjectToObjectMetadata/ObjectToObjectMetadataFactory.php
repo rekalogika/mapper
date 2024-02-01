@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
+use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
@@ -40,6 +41,14 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         string $targetClass,
         Context $context
     ): ObjectToObjectMetadata {
+        if ((new \ReflectionClass($sourceClass))->isInternal()) {
+            throw new InternalClassUnsupportedException($sourceClass, context: $context);
+        }
+
+        if ((new \ReflectionClass($targetClass))->isInternal()) {
+            throw new InternalClassUnsupportedException($targetClass, context: $context);
+        }
+
         $objectToObjectMetadata = new ObjectToObjectMetadata($sourceClass, $targetClass);
 
         // queries

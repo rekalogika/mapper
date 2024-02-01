@@ -4,6 +4,8 @@
 
 * fix(`ObjectCache`): Enum should not be cached.
 * test: Add more tests for object keys.
+* fix(`ObjectToObjectTransformer`): Throw exception when trying to map internal
+  classes.
 
 ## 0.5.23
 
