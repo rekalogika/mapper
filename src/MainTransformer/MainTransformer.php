@@ -33,8 +33,6 @@ use Symfony\Component\PropertyInfo\Type;
 
 class MainTransformer implements MainTransformerInterface
 {
-    public const OBJECT_CACHE = 'object_cache';
-
     public function __construct(
         private ObjectCacheFactoryInterface $objectCacheFactory,
         private TransformerRegistryInterface $transformerRegistry,

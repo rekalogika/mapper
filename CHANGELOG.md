@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.5.27
+
+* style: Remove remnants.
+
 ## 0.5.26
 
 * style(`ReaderWriter`): Cleanup.
