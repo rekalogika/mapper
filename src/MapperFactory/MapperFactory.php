@@ -26,7 +26,6 @@ use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
-use Rekalogika\Mapper\PropertyAccessLite\PropertyAccessLite;
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactory;
@@ -55,7 +54,6 @@ use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Console\Application;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
@@ -131,7 +129,6 @@ class MapperFactory
         private array $additionalTransformers = [],
         private ?ReflectionExtractor $reflectionExtractor = null,
         private ?PhpStanExtractor $phpStanExtractor = null,
-        private ?PropertyAccessorInterface $propertyAccessor = null,
         private ?NormalizerInterface $normalizer = null,
         private ?DenormalizerInterface $denormalizer = null,
         ?CacheItemPoolInterface $propertyInfoExtractorCache = null,
@@ -222,15 +219,6 @@ class MapperFactory
     // concrete services
     //
 
-    private function getConcretePropertyAccessor(): PropertyAccessorInterface
-    {
-        if (null === $this->propertyAccessor) {
-            $this->propertyAccessor = new PropertyAccessLite();
-        }
-
-        return $this->propertyAccessor;
-    }
-
     private function getSerializer(): Serializer
     {
         if (null === $this->serializer) {
@@ -254,11 +242,6 @@ class MapperFactory
     //
     // interfaces
     //
-
-    private function getPropertyAccessor(): PropertyAccessorInterface
-    {
-        return $this->getConcretePropertyAccessor();
-    }
 
     private function getNormalizer(): NormalizerInterface
     {
@@ -295,7 +278,6 @@ class MapperFactory
     {
         if (null === $this->objectToObjectTransformer) {
             $this->objectToObjectTransformer = new ObjectToObjectTransformer(
-                propertyAccessor: $this->getPropertyAccessor(),
                 objectToObjectMetadataFactory: $this->getObjectToObjectMetadataFactory(),
                 propertyMapperLocator: $this->getPropertyMapperLocator(),
             );

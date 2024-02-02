@@ -22,7 +22,6 @@ use Rekalogika\Mapper\Mapping\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
-use Rekalogika\Mapper\PropertyAccessLite\PropertyAccessLite;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\CachingArrayLikeMetadataFactory;
@@ -155,7 +154,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set(ObjectToObjectTransformer::class)
         ->args([
-            '$propertyAccessor' => service('rekalogika.mapper.property_access_lite'),
             '$objectToObjectMetadataFactory' => service('rekalogika.mapper.object_to_object_metadata_factory'),
             '$propertyMapperLocator' => tagged_locator('rekalogika.mapper.property_mapper'),
         ])
@@ -190,11 +188,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('kernel')
         ])
         ->tag('kernel.cache_warmer');
-
-    # propertyaccess lite
-
-    $services
-        ->set('rekalogika.mapper.property_access_lite', PropertyAccessLite::class);
 
     # type resolver
 

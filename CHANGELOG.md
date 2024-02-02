@@ -4,6 +4,7 @@
 
 * style(`ReaderWriter`): Cleanup.
 * test: Test mapping `Money` with integer backing.
+* style: Remove Property Access.
 
 ## 0.5.25
 

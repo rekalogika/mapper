@@ -36,7 +36,6 @@ use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 final class ObjectToObjectTransformer implements TransformerInterface, MainTransformerAwareInterface
@@ -46,8 +45,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     private ReaderWriter $readerWriter;
 
     public function __construct(
-        // @phpstan-ignore-next-line
-        private PropertyAccessorInterface $propertyAccessor,
         private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
         private ContainerInterface $propertyMapperLocator,
         ReaderWriter $readerWriter = null,
