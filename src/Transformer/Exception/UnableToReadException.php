@@ -19,19 +19,15 @@ class UnableToReadException extends NotMappableValueException
 {
     public function __construct(
         mixed $source,
-        mixed $target,
-        mixed $object,
-        string $propertyName,
+        string $property,
         \Throwable $previous = null,
         Context $context = null,
     ) {
         parent::__construct(
             message: sprintf(
-                'Trying to map source type "%s" to target type "%s", but encountered an error when trying to read from the property "%s" on object type "%s".',
+                'Encountered an error when trying to read from the property "%s" from object type "%s".',
+                $property,
                 \get_debug_type($source),
-                \get_debug_type($target),
-                $propertyName,
-                \get_debug_type($object)
             ),
             previous: $previous,
             context: $context,

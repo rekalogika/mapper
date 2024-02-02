@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\Transformer;
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
@@ -25,24 +24,18 @@ use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
-use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
-use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
 use Rekalogika\Mapper\Transformer\Exception\UnsupportedPropertyMappingException;
 use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\WriteMode;
+use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
-use Symfony\Component\PropertyAccess\Exception\AccessException;
-use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
-use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
-use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -50,11 +43,16 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 {
     use MainTransformerAwareTrait;
 
+    private ReaderWriter $readerWriter;
+
     public function __construct(
+        // @phpstan-ignore-next-line
         private PropertyAccessorInterface $propertyAccessor,
         private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
         private ContainerInterface $propertyMapperLocator,
+        ReaderWriter $readerWriter = null,
     ) {
+        $this->readerWriter = $readerWriter ?? new ReaderWriter();
     }
 
     public function transform(
@@ -223,8 +221,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             }
 
             try {
-                assert(is_object($target));
-
                 /** @var mixed */
                 $targetPropertyValue = $this->transformValue(
                     propertyMapping: $propertyMapping,
@@ -238,52 +234,23 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 continue;
             }
 
-            $targetProperty = $propertyMapping->getTargetProperty();
+            // write
 
-            try {
-                if ($targetWriteMode !== WriteMode::AdderRemover) {
-                    $this->propertyAccessor
-                        ->setValue($target, $targetProperty, $targetPropertyValue);
-                }
-            } catch (AccessException | UnexpectedTypeException $e) {
-                throw new UnableToWriteException(
-                    $source,
-                    $target,
-                    $target,
-                    $targetProperty,
-                    $e,
-                    context: $context
-                );
-            }
+            $this->readerWriter->writeTargetProperty(
+                target: $target,
+                propertyMapping: $propertyMapping,
+                value: $targetPropertyValue,
+                context: $context
+            );
         }
     }
 
-    /**
-     * @throws UnsupportedPropertyMappingException
-     * @throws UninitializedSourcePropertyException
-     */
     private function transformValue(
         PropertyMapping $propertyMapping,
         object $source,
         ?object $target,
         Context $context
     ): mixed {
-        $sourceProperty = $propertyMapping->getSourceProperty();
-        $targetProperty = $propertyMapping->getTargetProperty();
-        $targetTypes = $propertyMapping->getTargetTypes();
-
-        $targetScalarType = $propertyMapping->getTargetScalarType();
-
-        $sourceReadMode = $propertyMapping->getSourceReadMode();
-        $sourceReadVisibility = $propertyMapping->getSourceReadVisibility();
-
-        $targetReadMode = $propertyMapping->getTargetReadMode();
-        $targetReadVisibility = $propertyMapping->getTargetReadVisibility();
-
-        $targetWriteMode = $propertyMapping->getTargetWriteMode();
-        $targetWriteName = $propertyMapping->getTargetWriteName();
-        $targetWriteVisibility = $propertyMapping->getTargetReadVisibility();
-
         // if a custom property mapper is set, then use it
 
         if ($propertyMapperPointer = $propertyMapping->getPropertyMapper()) {
@@ -305,50 +272,21 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // if source property name is null, continue. there is nothing to
         // transform
 
+        $sourceProperty = $propertyMapping->getSourceProperty();
+
         if ($sourceProperty === null) {
             throw new UnsupportedPropertyMappingException();
         }
 
         // get the value of the source property
 
-        try {
-            if (
-                $sourceReadMode !== ReadMode::None
-                && $sourceReadVisibility === Visibility::Public
-            ) {
-                /** @var mixed */
-                $sourcePropertyValue = $this->propertyAccessor
-                    ->getValue($source, $sourceProperty);
-            } else {
-                $sourcePropertyValue = null;
-            }
-        } catch (NoSuchPropertyException $e) {
-            // if source property is not found, then it is an error
-            throw new UnexpectedValueException(
-                sprintf(
-                    'Cannot get value of source property "%s::$%s".',
-                    get_debug_type($source),
-                    $sourceProperty
-                ),
-                previous: $e,
-                context: $context
-            );
-        } catch (UninitializedPropertyException $e) {
-            // if source property is unset, we skip it
-            throw new UninitializedSourcePropertyException($sourceProperty);
-        } catch (AccessException | UnexpectedTypeException $e) {
-            // otherwise, it is an error
-            throw new UnableToReadException(
-                $source,
-                $target,
-                $source,
-                $sourceProperty,
-                $e,
-                context: $context
-            );
-        }
+        /** @var mixed */
+        $sourcePropertyValue = $this->readerWriter
+            ->readSourceProperty($source, $propertyMapping, $context);
 
         // do simple scalar to scalar transformation if possible
+
+        $targetScalarType = $propertyMapping->getTargetScalarType();
 
         if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
             switch ($targetScalarType) {
@@ -371,50 +309,32 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // get the value of the target property
 
-        try {
-            if (
-                $targetWriteMode === WriteMode::AdderRemover
-                && $targetWriteVisibility === Visibility::Public
-                && is_object($target)
-            ) {
-                // if adder/remover, then we create a proxy object to handle the
-                // adder/remover method
-
-                $targetPropertyValue = new AdderRemoverProxy(
-                    $target,
-                    $targetWriteName,
-                    null
-                );
-
-                $key = $targetTypes[0]->getCollectionKeyTypes();
-                $value = $targetTypes[0]->getCollectionValueTypes();
-
-                $targetTypes = [
-                    TypeFactory::objectWithKeyValue(
-                        \ArrayAccess::class,
-                        $key[0],
-                        $value[0]
-                    )
-                ];
-            } elseif (
-                $targetReadMode !== ReadMode::None
-                && $targetReadVisibility === Visibility::Public
-                && $target !== null
-            ) {
-                // property/getter method
-
-                /** @var mixed */
-                $targetPropertyValue = $this->propertyAccessor
-                    ->getValue($target, $targetProperty);
-            } else {
-                // cannot read target property
-
-                $targetPropertyValue = null;
-            }
-        } catch (UninitializedPropertyException $e) {
+        if (is_object($target)) {
+            /** @var mixed */
+            $targetPropertyValue = $this->readerWriter->readTargetProperty(
+                $target,
+                $propertyMapping,
+                $context
+            );
+        } else {
             $targetPropertyValue = null;
-        } catch (NoSuchPropertyException | AccessException | UnexpectedTypeException $e) {
-            $targetPropertyValue = null;
+        }
+
+        // if we get an AdderRemoverProxy, change the target type
+
+        $targetTypes = $propertyMapping->getTargetTypes();
+
+        if ($targetPropertyValue instanceof AdderRemoverProxy) {
+            $key = $targetTypes[0]->getCollectionKeyTypes();
+            $value = $targetTypes[0]->getCollectionValueTypes();
+
+            $targetTypes = [
+                TypeFactory::objectWithKeyValue(
+                    \ArrayAccess::class,
+                    $key[0],
+                    $value[0]
+                )
+            ];
         }
 
         // guess source type, and get the compatible type from metadata, so
@@ -432,7 +352,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             sourceType: $sourceType,
             targetTypes: $targetTypes,
             context: $context,
-            path: $targetProperty,
+            path: $propertyMapping->getTargetProperty(),
         );
 
         return $targetPropertyValue;

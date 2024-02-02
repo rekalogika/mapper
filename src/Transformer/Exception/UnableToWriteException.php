@@ -18,20 +18,16 @@ use Rekalogika\Mapper\Context\Context;
 class UnableToWriteException extends NotMappableValueException
 {
     public function __construct(
-        mixed $source,
         mixed $target,
-        mixed $object,
         string $propertyName,
         \Throwable $previous = null,
         Context $context = null,
     ) {
         parent::__construct(
             message: sprintf(
-                'Trying to map source type "%s" to target type "%s", but encountered an error when trying to write to the property "%s" on object type "%s".',
-                \get_debug_type($source),
-                \get_debug_type($target),
+                'Encountered an error when trying to write to the property "%s" on object type "%s".',
                 $propertyName,
-                \get_debug_type($object)
+                \get_debug_type($target),
             ),
             previous: $previous,
             context: $context,

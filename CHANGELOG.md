@@ -12,6 +12,7 @@
 * feat: Add support for adder methods.
 * refactor: Remove `AdderRemoverProxy` from support list, use `ArrayAccess`
   instead.
+* perf: Read & write properties directly without Property Access.
 
 ## 0.5.23
 
