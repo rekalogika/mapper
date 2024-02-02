@@ -7,7 +7,11 @@
 * fix(`ObjectToObjectTransformer`): Throw exception when trying to map internal
   classes.
 * fix(`ContextAwareExceptionTrait`): Improve exception message.
-* refactor(`PropertyMapping`): Add property read & write info.
+* refactor(`PropertyMapping`): Include information from property read/write
+  info.
+* feat: Add support for adder methods.
+* refactor: Remove `AdderRemoverProxy` from support list, use `ArrayAccess`
+  instead.
 
 ## 0.5.23
 
@@ -24,9 +28,6 @@
 * perf: Use xxh128 hash for cache keys.
 * refactor(`ArrayLikeMetadata`): Add more properties.
 * feat(`TraversableToArrayAccessTransformer`): Add lazy capability.
-* refactor(`PropertyMapping`): Include information from property read/write
-  info.
-* feat: Add support for adder methods.
 
 ## 0.5.22
 

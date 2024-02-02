@@ -27,7 +27,6 @@ use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
-use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\LazyArray;
 use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
@@ -230,7 +229,6 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             TypeFactory::objectOfClass(\ArrayIterator::class),
             TypeFactory::objectOfClass(\ArrayAccess::class),
             TypeFactory::objectOfClass(ArrayInterface::class),
-            TypeFactory::objectOfClass(AdderRemoverProxy::class),
             TypeFactory::array(),
         ];
 

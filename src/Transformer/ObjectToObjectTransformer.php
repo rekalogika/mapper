@@ -391,7 +391,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
                 $targetTypes = [
                     TypeFactory::objectWithKeyValue(
-                        AdderRemoverProxy::class,
+                        \ArrayAccess::class,
                         $key[0],
                         $value[0]
                     )
