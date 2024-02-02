@@ -3,6 +3,7 @@
 ## 0.5.27
 
 * style: Remove remnants.
+* test: Add PHPStan unused public.
 
 ## 0.5.26
 
