@@ -27,9 +27,9 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
   `SplObjectStorage`.
 * Lazy loading & lazy stream mapping. Consumes less memory & avoids hydrating a
   Doctrine collection prematurely.
-* In addition, if the source is a `Countable`, then the target will also be a
-  `Countable`. With an extra-lazy Doctrine Collection, the consumer will be able
-  to count the target without causing a full hydration of the source.
+* With lazy loading, if the source is a `Countable`, then the target will also
+  be a `Countable`. With an extra-lazy Doctrine Collection, the consumer will be
+  able to count the target without causing a full hydration of the source.
 * Manual mapping using a class method.
 * Easy to extend by creating new transformers, or decorating the existing ones.
 * Match classes using attributes in your transformers, in addition to using
