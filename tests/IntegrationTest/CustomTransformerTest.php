@@ -17,6 +17,8 @@ use Brick\Money\Money;
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
 use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyToMoneyDtoTransformer;
+use Rekalogika\Mapper\Tests\Fixtures\Money\ObjectWithIntegerBackedMoneyProperty;
+use Rekalogika\Mapper\Tests\Fixtures\Money\ObjectWithMoneyAmountDto;
 
 class CustomTransformerTest extends AbstractIntegrationTest
 {
@@ -43,5 +45,31 @@ class CustomTransformerTest extends AbstractIntegrationTest
 
         $this->assertSame('100000.00', $money->getAmount()->__toString());
         $this->assertSame('IDR', $money->getCurrency()->getCurrencyCode());
+    }
+
+    public function testObjectWithIntegerBackedMoneyToDto(): void
+    {
+        $object = new ObjectWithIntegerBackedMoneyProperty();
+        $object->setAmount(Money::of("100000.00", 'IDR'));
+
+        $dto = $this->mapper->map($object, ObjectWithMoneyAmountDto::class);
+
+        $amount = $dto->amount;
+        $this->assertInstanceOf(MoneyDto::class, $amount);
+        $this->assertSame('100000.00', $amount->getAmount());
+        $this->assertSame('IDR', $amount->getCurrency());
+    }
+
+    public function testObjectWithIntegerBackedMoneyFromDto(): void
+    {
+        $dto = new ObjectWithMoneyAmountDto();
+        $dto->amount = new MoneyDto('100000.00', 'IDR');
+
+        $object = $this->mapper->map($dto, ObjectWithIntegerBackedMoneyProperty::class);
+        $amount = $object->getAmount();
+
+        $this->assertInstanceOf(Money::class, $amount);
+        $this->assertSame('100000.00', $amount->getAmount()->__toString());
+        $this->assertSame('IDR', $amount->getCurrency()->getCurrencyCode());
     }
 }

@@ -3,6 +3,7 @@
 ## 0.5.26
 
 * style(`ReaderWriter`): Cleanup.
+* test: Test mapping `Money` with integer backing.
 
 ## 0.5.25
 
