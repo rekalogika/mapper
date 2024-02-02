@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 0.5.24
+## 0.5.26
+
+* style(`ReaderWriter`): Cleanup.
+
+## 0.5.25
 
 * fix(`ObjectCache`): Enum should not be cached.
 * test: Add more tests for object keys.

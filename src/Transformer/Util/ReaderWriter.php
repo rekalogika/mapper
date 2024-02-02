@@ -43,11 +43,7 @@ class ReaderWriter
             return null;
         }
 
-        $accessorName = $propertyMapping->getSourceReadName();
-        $visibility = $propertyMapping->getSourceReadVisibility();
-        $mode = $propertyMapping->getSourceReadMode();
-
-        if ($visibility !== Visibility::Public) {
+        if ($propertyMapping->getSourceReadVisibility() !== Visibility::Public) {
             throw new UnableToReadException(
                 $source,
                 $property,
@@ -56,6 +52,9 @@ class ReaderWriter
         }
 
         try {
+            $accessorName = $propertyMapping->getSourceReadName();
+            $mode = $propertyMapping->getSourceReadMode();
+
             if ($mode === ReadMode::Property) {
                 return $source->{$accessorName};
             } elseif ($mode === ReadMode::Method) {
@@ -63,7 +62,6 @@ class ReaderWriter
                 return $source->{$accessorName}();
             }
             return null;
-
         } catch (\Error $e) {
             if (\str_contains($e->getMessage(), 'must not be accessed before initialization')) {
                 throw new UninitializedSourcePropertyException($property);
@@ -78,6 +76,9 @@ class ReaderWriter
         }
     }
 
+    /**
+     * @throws UnableToReadException
+     */
     public function readTargetProperty(
         object $target,
         PropertyMapping $propertyMapping,
@@ -98,10 +99,10 @@ class ReaderWriter
             return null;
         }
 
-        $accessorName = $propertyMapping->getTargetReadName();
-        $readMode = $propertyMapping->getTargetReadMode();
-
         try {
+            $accessorName = $propertyMapping->getTargetReadName();
+            $readMode = $propertyMapping->getTargetReadMode();
+
             if ($readMode === ReadMode::Property) {
                 return $target->{$accessorName};
             } elseif ($readMode === ReadMode::Method) {
@@ -109,7 +110,6 @@ class ReaderWriter
                 return $target->{$accessorName}();
             }
             return null;
-
         } catch (\Error $e) {
             if (\str_contains($e->getMessage(), 'must not be accessed before initialization')) {
                 return null;
@@ -124,6 +124,9 @@ class ReaderWriter
         }
     }
 
+    /**
+     * @throws UnableToWriteException
+     */
     public function writeTargetProperty(
         object $target,
         PropertyMapping $propertyMapping,
@@ -134,10 +137,10 @@ class ReaderWriter
             return;
         }
 
-        $accessorName = $propertyMapping->getTargetWriteName();
-        $writeMode = $propertyMapping->getTargetWriteMode();
-
         try {
+            $accessorName = $propertyMapping->getTargetWriteName();
+            $writeMode = $propertyMapping->getTargetWriteMode();
+
             if ($writeMode === WriteMode::Property) {
                 $target->{$accessorName} = $value;
             } elseif ($writeMode === WriteMode::Method) {
