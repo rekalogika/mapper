@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;

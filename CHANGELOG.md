@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 0.5.27
+## 0.6.0
 
 * style: Remove remnants.
 * test: Add PHPStan unused public.
@@ -18,6 +18,7 @@
 * refactor: Move implementation under their own namespaces.
 * refactor(`AsPropertyMapper`): Move to top attribute namespace.
 * refactor: Rename `PropertyMapperServicePointer` to `ServiceMethodSpecification`.
+* refactor: Rename `PropertyMapper` namespace to `CustomMapper`.
 
 ## 0.5.26
 

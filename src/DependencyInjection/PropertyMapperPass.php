@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\DependencyInjection;
 
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\CustomMapper\ServiceMethodSpecification;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
-use Rekalogika\Mapper\PropertyMapper\ServiceMethodSpecification;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

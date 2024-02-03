@@ -15,9 +15,9 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\CustomMapper\ServiceMethodSpecification;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
-use Rekalogika\Mapper\PropertyMapper\ServiceMethodSpecification;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
