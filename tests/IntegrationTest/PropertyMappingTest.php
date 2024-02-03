@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolverInterface;
-use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\ServiceMethodSpecification;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
@@ -52,7 +52,7 @@ class PropertyMappingTest extends AbstractFrameworkTest
         string $sourceClass,
         string $targetClass,
         string $property,
-        ?PropertyMapperServicePointer $expected
+        ?ServiceMethodSpecification $expected
     ): void {
         $propertyMapperResolver = $this->get('rekalogika.mapper.property_mapper.resolver');
 
@@ -64,7 +64,7 @@ class PropertyMappingTest extends AbstractFrameworkTest
     }
 
     /**
-     * @return iterable<array-key,array{class-string,class-string,string,?PropertyMapperServicePointer}>
+     * @return iterable<array-key,array{class-string,class-string,string,?ServiceMethodSpecification}>
      */
     public function propertyMapperResolverDataProvider(): iterable
     {
@@ -72,7 +72,7 @@ class PropertyMappingTest extends AbstractFrameworkTest
             SomeObject::class,
             SomeObjectDto::class,
             'propertyA',
-            new PropertyMapperServicePointer(
+            new ServiceMethodSpecification(
                 PropertyMapperWithoutClassAttribute::class,
                 'mapPropertyA',
                 []
@@ -83,7 +83,7 @@ class PropertyMappingTest extends AbstractFrameworkTest
             SomeObject::class,
             SomeObjectDto::class,
             'propertyB',
-            new PropertyMapperServicePointer(
+            new ServiceMethodSpecification(
                 PropertyMapperWithClassAttribute::class,
                 'mapPropertyB',
                 []
@@ -101,7 +101,7 @@ class PropertyMappingTest extends AbstractFrameworkTest
             SomeObject::class,
             SomeObjectWithConstructorDto::class,
             'propertyA',
-            new PropertyMapperServicePointer(
+            new ServiceMethodSpecification(
                 PropertyMapperWithConstructorWithoutClassAttribute::class,
                 'mapPropertyA',
                 []
@@ -112,7 +112,7 @@ class PropertyMappingTest extends AbstractFrameworkTest
             SomeObject::class,
             SomeObjectWithConstructorDto::class,
             'propertyB',
-            new PropertyMapperServicePointer(
+            new ServiceMethodSpecification(
                 PropertyMapperWithConstructorWithClassAttribute::class,
                 'mapPropertyB',
                 []
@@ -123,7 +123,7 @@ class PropertyMappingTest extends AbstractFrameworkTest
             SomeObject::class,
             SomeObjectDto::class,
             'propertyD',
-            new PropertyMapperServicePointer(
+            new ServiceMethodSpecification(
                 PropertyMapperWithClassAttributeWithoutExplicitProperty::class,
                 'mapPropertyD',
                 []
@@ -134,12 +134,12 @@ class PropertyMappingTest extends AbstractFrameworkTest
             SomeObject::class,
             SomeObjectDto::class,
             'propertyE',
-            new PropertyMapperServicePointer(
+            new ServiceMethodSpecification(
                 PropertyMapperWithExtraArguments::class,
                 'mapPropertyE',
                 [
-                    PropertyMapperServicePointer::ARGUMENT_CONTEXT,
-                    PropertyMapperServicePointer::ARGUMENT_MAIN_TRANSFORMER,
+                    ServiceMethodSpecification::ARGUMENT_CONTEXT,
+                    ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
                 ]
             ),
         ];

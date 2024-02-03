@@ -23,5 +23,5 @@ interface PropertyMapperResolverInterface
         string $sourceClass,
         string $targetClass,
         string $property
-    ): ?PropertyMapperServicePointer;
+    ): ?ServiceMethodSpecification;
 }

@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\DependencyInjection;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
-use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\ServiceMethodSpecification;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -54,7 +54,7 @@ final class PropertyMapperPass implements CompilerPassInterface
 
     /**
      * @param class-string $serviceClass
-     * @return array<int,PropertyMapperServicePointer::ARGUMENT_*>
+     * @return array<int,ServiceMethodSpecification::ARGUMENT_*>
      */
     private static function getExtraArguments(
         string $serviceClass,
@@ -81,8 +81,8 @@ final class PropertyMapperPass implements CompilerPassInterface
             }
 
             $extraArguments[] = match ($type->getName()) {
-                Context::class => PropertyMapperServicePointer::ARGUMENT_CONTEXT,
-                MainTransformerInterface::class => PropertyMapperServicePointer::ARGUMENT_MAIN_TRANSFORMER,
+                Context::class => ServiceMethodSpecification::ARGUMENT_CONTEXT,
+                MainTransformerInterface::class => ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
                 default => throw new InvalidArgumentException(
                     sprintf(
                         'Extra argument with type "%s" for property mapper "%s" in class "%s" is unsupported.',

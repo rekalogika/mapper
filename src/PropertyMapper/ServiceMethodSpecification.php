@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\PropertyMapper;
 
-final readonly class PropertyMapperServicePointer
+final readonly class ServiceMethodSpecification
 {
     public const ARGUMENT_CONTEXT = 'context';
     public const ARGUMENT_MAIN_TRANSFORMER = 'main_transformer';

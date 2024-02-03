@@ -14,19 +14,19 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\PropertyMapper\Implementation;
 
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolverInterface;
-use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\ServiceMethodSpecification;
 
 class PropertyMapperResolver implements PropertyMapperResolverInterface
 {
     /**
-     * @var array<class-string,array<string,array<class-string,PropertyMapperServicePointer>>>
+     * @var array<class-string,array<string,array<class-string,ServiceMethodSpecification>>>
      */
     private array $propertyMappers = [];
 
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
-     * @param array<int,PropertyMapperServicePointer::ARGUMENT_*> $extraArguments
+     * @param array<int,ServiceMethodSpecification::ARGUMENT_*> $extraArguments
      */
     public function addPropertyMapper(
         string $sourceClass,
@@ -37,7 +37,7 @@ class PropertyMapperResolver implements PropertyMapperResolverInterface
         array $extraArguments = []
     ): void {
         $this->propertyMappers[$targetClass][$property][$sourceClass]
-            = new PropertyMapperServicePointer($serviceId, $method, $extraArguments);
+            = new ServiceMethodSpecification($serviceId, $method, $extraArguments);
     }
 
     /**
@@ -48,7 +48,7 @@ class PropertyMapperResolver implements PropertyMapperResolverInterface
         string $sourceClass,
         string $targetClass,
         string $property
-    ): ?PropertyMapperServicePointer {
+    ): ?ServiceMethodSpecification {
         if (!isset($this->propertyMappers[$targetClass][$property])) {
             return null;
         }

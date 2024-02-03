@@ -17,6 +17,7 @@
 * refactor: Rename `MapperPass` to `RemoveOptionalDefinitionPass`
 * refactor: Move implementation under their own namespaces.
 * refactor(`AsPropertyMapper`): Move to top attribute namespace.
+* refactor: Rename `PropertyMapperServicePointer` to `ServiceMethodSpecification`.
 
 ## 0.5.26
 

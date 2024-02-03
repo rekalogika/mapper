@@ -17,7 +17,7 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
-use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\ServiceMethodSpecification;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -264,8 +264,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
             foreach ($extraArguments as $extraArgument) {
                 $extraArgumentsParams[] = match ($extraArgument) {
-                    PropertyMapperServicePointer::ARGUMENT_CONTEXT => $context,
-                    PropertyMapperServicePointer::ARGUMENT_MAIN_TRANSFORMER => $this->getMainTransformer(),
+                    ServiceMethodSpecification::ARGUMENT_CONTEXT => $context,
+                    ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER => $this->getMainTransformer(),
                 };
             }
 

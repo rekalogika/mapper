@@ -27,7 +27,7 @@ use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\PropertyMapper\Implementation\PropertyMapperResolver;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolverInterface;
-use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\ServiceMethodSpecification;
 use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactory;
@@ -85,7 +85,7 @@ use Symfony\Component\Uid\Factory\UuidFactory;
 class MapperFactory
 {
     /**
-     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,extraArguments:array<int,PropertyMapperServicePointer::ARGUMENT_*>}>
+     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,extraArguments:array<int,ServiceMethodSpecification::ARGUMENT_*>}>
      */
     private array $propertyMappers = [];
 
@@ -144,7 +144,7 @@ class MapperFactory
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
-     * @param array<int,PropertyMapperServicePointer::ARGUMENT_*> $extraArguments
+     * @param array<int,ServiceMethodSpecification::ARGUMENT_*> $extraArguments
      */
     public function addPropertyMapper(
         string $sourceClass,

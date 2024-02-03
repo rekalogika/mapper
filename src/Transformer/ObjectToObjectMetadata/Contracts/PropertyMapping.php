@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts;
 
-use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\ServiceMethodSpecification;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -49,7 +49,7 @@ final class PropertyMapping
         private ?string $targetWriteName,
         private Visibility $targetWriteVisibility,
         private ?string $targetScalarType,
-        private ?PropertyMapperServicePointer $propertyMapper
+        private ?ServiceMethodSpecification $propertyMapper
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
@@ -92,7 +92,7 @@ final class PropertyMapping
         return $this->targetTypes;
     }
 
-    public function getPropertyMapper(): ?PropertyMapperServicePointer
+    public function getPropertyMapper(): ?ServiceMethodSpecification
     {
         return $this->propertyMapper;
     }
