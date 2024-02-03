@@ -29,15 +29,15 @@ class ObjectCacheTest extends TestCase
         $source = new \stdClass();
         $context = Context::create();
 
-        $this->assertFalse($objectCache->containsTarget($source, TypeFactory::int(), $context));
+        $this->assertFalse($objectCache->containsTarget($source, TypeFactory::int()));
 
         $target = new \stdClass();
-        $objectCache->saveTarget($source, TypeFactory::int(), $target, $context);
+        $objectCache->saveTarget($source, TypeFactory::int(), $target);
 
-        $this->assertTrue($objectCache->containsTarget($source, TypeFactory::int(), $context));
-        $this->assertSame($target, $objectCache->getTarget($source, TypeFactory::int(), $context));
+        $this->assertTrue($objectCache->containsTarget($source, TypeFactory::int()));
+        $this->assertSame($target, $objectCache->getTarget($source, TypeFactory::int()));
 
         $this->expectException(CachedTargetObjectNotFoundException::class);
-        $objectCache->getTarget($source, TypeFactory::float(), $context);
+        $objectCache->getTarget($source, TypeFactory::float());
     }
 }

@@ -12,6 +12,7 @@
   as extra arguments to the property mapper.
 * refactor(`SubMapper`): Move to its own namespace.
 * refactor(`SubMapper`): Use a factory to create sub mappers.
+* refactor(`ObjectCache`): Remove references to `Context`.
 
 ## 0.5.26
 

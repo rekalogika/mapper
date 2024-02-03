@@ -13,23 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\ObjectCache\Exception;
 
-use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\ExceptionInterface;
 use Rekalogika\Mapper\Exception\RuntimeException;
-use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
 
 class CircularReferenceException extends RuntimeException implements ExceptionInterface
 {
-    public function __construct(mixed $source, Type $targetType, Context $context = null)
+    public function __construct()
     {
-        parent::__construct(
-            sprintf(
-                'Circular reference detected when trying to get the object of type "%s" transformed to "%s".',
-                \get_debug_type($source),
-                TypeUtil::getDebugType($targetType)
-            ),
-            context: $context
-        );
     }
 }

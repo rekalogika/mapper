@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\ObjectCache;
 
-use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException;
@@ -53,7 +52,7 @@ final class ObjectCache
      * @param Type $targetType
      * @return void
      */
-    public function preCache(mixed $source, Type $targetType, Context $context): void
+    public function preCache(mixed $source, Type $targetType): void
     {
         if (!is_object($source)) {
             return;
@@ -73,7 +72,7 @@ final class ObjectCache
         $this->preCache[$key][$targetTypeString] = true;
     }
 
-    public function containsTarget(mixed $source, Type $targetType, Context $context): bool
+    public function containsTarget(mixed $source, Type $targetType): bool
     {
         if (!is_object($source)) {
             return false;
@@ -89,7 +88,7 @@ final class ObjectCache
         return isset($this->cache[$key][$targetTypeString]);
     }
 
-    public function getTarget(mixed $source, Type $targetType, Context $context): mixed
+    public function getTarget(mixed $source, Type $targetType): mixed
     {
         if (!is_object($source)) {
             throw new CachedTargetObjectNotFoundException();
@@ -101,7 +100,7 @@ final class ObjectCache
         // check if precached
 
         if (isset($this->preCache[$key][$targetTypeString])) {
-            throw new CircularReferenceException($source, $targetType, context: $context);
+            throw new CircularReferenceException();
         }
 
         if ($this->isBlacklisted($source)) {
@@ -117,7 +116,6 @@ final class ObjectCache
         mixed $source,
         Type $targetType,
         mixed $target,
-        Context $context,
         bool $addIfAlreadyExists = false,
     ): void {
         if (!is_object($source) || !is_object($target)) {

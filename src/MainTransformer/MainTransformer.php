@@ -16,9 +16,11 @@ namespace Rekalogika\Mapper\MainTransformer;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
+use Rekalogika\Mapper\MainTransformer\Exception\CircularReferenceException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
+use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException as ObjectCacheCircularReferenceException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
@@ -159,16 +161,16 @@ class MainTransformer implements MainTransformerInterface
 
             if ($targetTypeForTransformer !== null) {
                 try {
-                    return $objectCache->getTarget(
-                        $source,
-                        $targetTypeForTransformer,
-                        $context
-                    );
+                    return $objectCache
+                        ->getTarget($source, $targetTypeForTransformer);
                 } catch (CachedTargetObjectNotFoundException) {
-                    $objectCache->preCache(
-                        $source,
-                        $targetTypeForTransformer,
-                        $context
+                    $objectCache
+                        ->preCache($source, $targetTypeForTransformer);
+                } catch (ObjectCacheCircularReferenceException) {
+                    throw new CircularReferenceException(
+                        source: $source,
+                        targetType: $targetTypeForTransformer,
+                        context: $context
                     );
                 }
             }
@@ -207,11 +209,10 @@ class MainTransformer implements MainTransformerInterface
 
             if ($targetTypeForTransformer !== null) {
                 $objectCache->saveTarget(
-                    $source,
-                    $targetTypeForTransformer,
-                    $result,
-                    $context,
-                    true,
+                    source: $source,
+                    targetType: $targetTypeForTransformer,
+                    target: $result,
+                    addIfAlreadyExists: true,
                 );
             }
 
