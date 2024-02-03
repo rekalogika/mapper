@@ -11,10 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\TransformerRegistry;
+namespace Rekalogika\Mapper\TransformerRegistry\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\TransformerRegistry\SearchResult;
+use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 
 class CachingTransformerRegistry implements TransformerRegistryInterface
 {

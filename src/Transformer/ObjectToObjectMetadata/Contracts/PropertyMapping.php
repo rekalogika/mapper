@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts;
 
-use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 

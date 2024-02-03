@@ -11,8 +11,10 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Mapping;
+namespace Rekalogika\Mapper\Mapping\Implementation;
 
+use Rekalogika\Mapper\Mapping\Mapping;
+use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\VarExporter\VarExporter;

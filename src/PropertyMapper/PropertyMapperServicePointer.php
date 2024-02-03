@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\PropertyMapper\Contracts;
+namespace Rekalogika\Mapper\PropertyMapper;
 
 final readonly class PropertyMapperServicePointer
 {

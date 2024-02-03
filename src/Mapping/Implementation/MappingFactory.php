@@ -11,8 +11,10 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Mapping;
+namespace Rekalogika\Mapper\Mapping\Implementation;
 
+use Rekalogika\Mapper\Mapping\Mapping;
+use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;

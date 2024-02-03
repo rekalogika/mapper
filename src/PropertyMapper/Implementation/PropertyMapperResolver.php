@@ -11,10 +11,10 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\PropertyMapper;
+namespace Rekalogika\Mapper\PropertyMapper\Implementation;
 
-use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
-use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolverInterface;
+use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
 
 class PropertyMapperResolver implements PropertyMapperResolverInterface
 {

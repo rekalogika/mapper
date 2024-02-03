@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\DependencyInjection;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
-use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

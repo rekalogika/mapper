@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\TransformerRegistry;
+namespace Rekalogika\Mapper\TransformerRegistry\Implementation;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Exception\LogicException;
@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Mapping\MappingEntry;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\TransformerRegistry\SearchResult;
+use Rekalogika\Mapper\TransformerRegistry\SearchResultEntry;
+use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;

@@ -17,7 +17,7 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
-use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
+use Rekalogika\Mapper\PropertyMapper\PropertyMapperServicePointer;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;

@@ -11,8 +11,10 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\ObjectCache;
+namespace Rekalogika\Mapper\ObjectCache\Implementation;
 
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
 final class ObjectCacheFactory implements ObjectCacheFactoryInterface

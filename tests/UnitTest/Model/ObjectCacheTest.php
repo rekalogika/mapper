@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
-use Rekalogika\Mapper\TypeResolver\TypeResolver;
+use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Rekalogika\Mapper\Util\TypeFactory;
 
 class ObjectCacheTest extends TestCase

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\UnitTest\Util;
 
 use PHPUnit\Framework\TestCase;
-use Rekalogika\Mapper\TypeResolver\TypeResolver;
+use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Rekalogika\Mapper\Util\TypeUtil;

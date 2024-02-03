@@ -20,7 +20,7 @@ use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValu
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtil2Test;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtilTest;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
-use Rekalogika\Mapper\TypeResolver\TypeResolver;
+use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Symfony\Component\PropertyInfo\Type;
 
 class TypeUtil

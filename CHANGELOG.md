@@ -15,6 +15,7 @@
 * refactor(`ObjectCache`): Remove references to `Context`.
 * refactor(`SubMapper`): Add `cache()` method.
 * refactor: Rename `MapperPass` to `RemoveOptionalDefinitionPass`
+* refactor: Move implementation under their own namespaces.
 
 ## 0.5.26
 
