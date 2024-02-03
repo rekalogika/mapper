@@ -4,6 +4,7 @@
 
 * style: Remove remnants.
 * test: Add PHPStan unused public.
+* refactor(`PropertyMapper`): `$sourceClass` is redundant & removed.
 
 ## 0.5.26
 

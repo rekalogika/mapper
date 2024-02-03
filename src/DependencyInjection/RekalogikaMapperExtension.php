@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection;
 
+use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\PropertyMapper\AsPropertyMapper;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -47,63 +48,116 @@ class RekalogikaMapperExtension extends Extension
 
         $container->registerAttributeForAutoconfiguration(
             AsPropertyMapper::class,
-            static function (
-                ChildDefinition $definition,
-                AsPropertyMapper $attribute,
-                \ReflectionMethod $reflector,
-            ): void {
-                $tagAttributes = \get_object_vars($attribute);
-                $tagAttributes['method'] = $reflector->getName();
-
-                if (
-                    !isset($tagAttributes['sourceClass'])
-                    || !isset($tagAttributes['targetClass'])
-                ) {
-                    $classReflection = $reflector->getDeclaringClass();
-                    $classAttributeReflection = $classReflection
-                        ->getAttributes(AsPropertyMapper::class)[0] ?? null;
-
-                    if ($classAttributeReflection === null) {
-                        throw new \LogicException(
-                            sprintf(
-                                'Trying to lookup "sourceClass" or "targetClass" from "AsPropertyMapper" attribute attached to the class "%s" because one or more parameters is not defined in the attribute attached to the method "%s", however the attribute is not found.',
-                                $definition->getClass() ?? $classReflection->getName(),
-                                $reflector->getName()
-                            )
-                        );
-                    }
-
-                    $classAttribute = $classAttributeReflection->newInstance();
-                    $tagAttributes['sourceClass'] ??= $classAttribute->sourceClass;
-                    $tagAttributes['targetClass'] ??= $classAttribute->targetClass;
-                }
-
-                if (!isset($tagAttributes['property'])) {
-                    $tagAttributes['property'] = $reflector->getName();
-                }
-
-                if (!isset($tagAttributes['sourceClass'])) {
-                    throw new \LogicException(
-                        sprintf(
-                            'Missing source class attribute for property mapper service "%s", method "%s".',
-                            $definition->getClass() ?? '?',
-                            $reflector->getName()
-                        )
-                    );
-                }
-
-                if (!isset($tagAttributes['targetClass'])) {
-                    throw new \LogicException(
-                        sprintf(
-                            'Missing target class attribute for property mapper service "%s", method "%s".',
-                            $definition->getClass() ?? '?',
-                            $reflector->getName()
-                        )
-                    );
-                }
-
-                $definition->addTag('rekalogika.mapper.property_mapper', $tagAttributes);
-            }
+            self::propertyMapperConfigurator(...)
         );
+    }
+
+    private static function propertyMapperConfigurator(
+        ChildDefinition $definition,
+        AsPropertyMapper $attribute,
+        \ReflectionMethod $reflector,
+    ): void {
+        /** @var array{sourceClass:class-string,targetClass:class-string,method:string} */
+        $tagAttributes = [];
+
+        // get the AsPropertyMapper attribute attached to the class
+
+        $classReflection = $reflector->getDeclaringClass();
+        $classAttributeReflection = $classReflection
+            ->getAttributes(AsPropertyMapper::class)[0] ?? null;
+
+        // populate tag attributes from AsPropertyMapper attribute
+        // attached to the class
+
+        if ($classAttributeReflection !== null) {
+            $classAttribute = $classAttributeReflection->newInstance();
+            $tagAttributes['targetClass'] = $classAttribute->targetClass;
+
+            if ($classAttribute->property !== null) {
+                throw new LogicException(sprintf(
+                    '"AsPropertyMapper" attribute attached to the class "%s" must not have "property" attribute.',
+                    $classReflection->getName()
+                ));
+            }
+        }
+
+        // populate tag attributes from AsPropertyMapper attribute
+
+        $tagAttributes['method'] = $reflector->getName();
+
+        if ($attribute->property !== null) {
+            $tagAttributes['property'] = $attribute->property;
+        }
+
+        if ($attribute->targetClass !== null) {
+            $tagAttributes['targetClass'] = $attribute->targetClass;
+        }
+
+        // Use the class of the first argument of the method as the source class
+
+        $parameters = $reflector->getParameters();
+        $firstParameter = $parameters[0] ?? null;
+        $type = $firstParameter?->getType();
+
+        if ($type === null || !$type instanceof \ReflectionNamedType) {
+            throw new LogicException(
+                sprintf(
+                    'Unable to determine the source class for property mapper service "%s", method "%s".',
+                    $definition->getClass() ?? '?',
+                    $reflector->getName()
+                )
+            );
+        }
+
+        $tagAttributes['sourceClass'] = $type->getName();
+
+        // if the property is missing, assume it is the same as the
+        // method name
+
+        if (!isset($tagAttributes['property'])) {
+            $tagAttributes['property'] = $reflector->getName();
+        }
+
+        // if the sourceClass is not a class, throw an exception
+
+        if (!class_exists($tagAttributes['sourceClass'])) {
+            throw new \LogicException(
+                sprintf(
+                    'Source class "%s" for property mapper service "%s", method "%s" does not exist.',
+                    $tagAttributes['sourceClass'],
+                    $definition->getClass() ?? '?',
+                    $reflector->getName()
+                )
+            );
+        }
+
+        // if the targetClass is still missing, throw an exception
+
+        if (!isset($tagAttributes['targetClass'])) {
+            throw new \LogicException(
+                sprintf(
+                    'Unable to determine the target class for property mapper service "%s", method "%s".',
+                    $definition->getClass() ?? '?',
+                    $reflector->getName()
+                )
+            );
+        }
+
+        // if the targetClass is not a class, throw an exception
+
+        if (!class_exists($tagAttributes['targetClass'])) {
+            throw new \LogicException(
+                sprintf(
+                    'Target class "%s" for property mapper service "%s", method "%s" does not exist.',
+                    $tagAttributes['targetClass'],
+                    $definition->getClass() ?? '?',
+                    $reflector->getName()
+                )
+            );
+        }
+
+        // finally
+
+        $definition->addTag('rekalogika.mapper.property_mapper', $tagAttributes);
     }
 }

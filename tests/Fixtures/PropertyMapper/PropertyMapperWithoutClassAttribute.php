@@ -15,10 +15,9 @@ namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 
 use Rekalogika\Mapper\PropertyMapper\AsPropertyMapper;
 
-class PropertyMapperA
+class PropertyMapperWithoutClassAttribute
 {
     #[AsPropertyMapper(
-        sourceClass: SomeObject::class,
         targetClass: SomeObjectDto::class,
         property: 'propertyA',
     )]

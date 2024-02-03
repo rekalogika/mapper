@@ -14,10 +14,10 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperA;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperB;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorA;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorB;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithoutClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithoutClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
@@ -30,7 +30,7 @@ class PropertyMappingTest extends AbstractIntegrationTest
             'sourceClass' => SomeObject::class,
             'targetClass' => SomeObjectDto::class,
             'property' => 'propertyA',
-            'service' => new PropertyMapperA(),
+            'service' => new PropertyMapperWithoutClassAttribute(),
             'method' => 'mapPropertyA',
         ];
 
@@ -38,7 +38,7 @@ class PropertyMappingTest extends AbstractIntegrationTest
             'sourceClass' => SomeObject::class,
             'targetClass' => SomeObjectDto::class,
             'property' => 'propertyB',
-            'service' => new PropertyMapperB(),
+            'service' => new PropertyMapperWithClassAttribute(),
             'method' => 'mapPropertyB',
         ];
 
@@ -46,7 +46,7 @@ class PropertyMappingTest extends AbstractIntegrationTest
             'sourceClass' => SomeObject::class,
             'targetClass' => SomeObjectWithConstructorDto::class,
             'property' => 'propertyA',
-            'service' => new PropertyMapperWithConstructorA(),
+            'service' => new PropertyMapperWithConstructorWithoutClassAttribute(),
             'method' => 'mapPropertyA',
         ];
 
@@ -54,7 +54,7 @@ class PropertyMappingTest extends AbstractIntegrationTest
             'sourceClass' => SomeObject::class,
             'targetClass' => SomeObjectWithConstructorDto::class,
             'property' => 'propertyB',
-            'service' => new PropertyMapperWithConstructorB(),
+            'service' => new PropertyMapperWithConstructorWithClassAttribute(),
             'method' => 'mapPropertyB',
         ];
     }

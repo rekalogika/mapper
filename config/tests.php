@@ -12,6 +12,10 @@ declare(strict_types=1);
  */
 
 use Rekalogika\Mapper\Tests\Common\TestKernel;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithoutClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithoutClassAttribute;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -23,4 +27,24 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     foreach ($serviceIds as $serviceId) {
         $services->alias('test.' . $serviceId, $serviceId)->public();
     };
+
+    $services->set(PropertyMapperWithoutClassAttribute::class)
+        ->autowire()
+        ->autoconfigure()
+        ->public();
+
+    $services->set(PropertyMapperWithClassAttribute::class)
+        ->autowire()
+        ->autoconfigure()
+        ->public();
+
+    $services->set(PropertyMapperWithConstructorWithoutClassAttribute::class)
+        ->autowire()
+        ->autoconfigure()
+        ->public();
+
+    $services->set(PropertyMapperWithConstructorWithClassAttribute::class)
+        ->autowire()
+        ->autoconfigure()
+        ->public();
 };
