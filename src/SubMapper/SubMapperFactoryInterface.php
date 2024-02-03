@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\SubMapper;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
+use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal
@@ -23,6 +24,8 @@ interface SubMapperFactoryInterface
 {
     public function createSubMapper(
         MainTransformerInterface $mainTransformer,
+        mixed $source,
+        Type $targetType,
         Context $context
     ): SubMapperInterface;
 }

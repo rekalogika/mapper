@@ -13,6 +13,7 @@
 * refactor(`SubMapper`): Move to its own namespace.
 * refactor(`SubMapper`): Use a factory to create sub mappers.
 * refactor(`ObjectCache`): Remove references to `Context`.
+* refactor(`SubMapper`): Add `cache()` method.
 
 ## 0.5.26
 

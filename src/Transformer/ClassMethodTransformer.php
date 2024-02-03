@@ -52,8 +52,12 @@ final class ClassMethodTransformer implements
 
         // prepare subMapper
 
-        $subMapper = $this->subMapperFactory
-            ->createSubMapper($this->getMainTransformer(), $context);
+        $subMapper = $this->subMapperFactory->createSubMapper(
+            mainTransformer: $this->getMainTransformer(),
+            source: $source,
+            targetType: $targetType,
+            context: $context
+        );
 
         // target class must be valid
 

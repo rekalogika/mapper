@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\SubMapper\Implementation;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
+use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
@@ -34,6 +35,8 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyAccessorInterface $propertyAccessor,
+        private mixed $source,
+        private Type $targetType,
         private Context $context,
     ) {
     }
@@ -115,5 +118,14 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
         );
 
         return $result;
+    }
+
+    public function cache(mixed $target): void
+    {
+        ($this->context)(ObjectCache::class)->saveTarget(
+            source: $this->source,
+            targetType: $this->targetType,
+            target: $target
+        );
     }
 }

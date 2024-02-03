@@ -19,6 +19,7 @@ use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal
@@ -33,12 +34,16 @@ class SubMapperFactory implements SubMapperFactoryInterface
 
     public function createSubMapper(
         MainTransformerInterface $mainTransformer,
+        mixed $source,
+        Type $targetType,
         Context $context,
     ): SubMapperInterface {
         $subMapper = new SubMapper(
-            $this->propertyTypeExtractor,
-            $this->propertyAccessor,
-            $context,
+            propertyTypeExtractor: $this->propertyTypeExtractor,
+            propertyAccessor: $this->propertyAccessor,
+            source: $source,
+            targetType: $targetType,
+            context: $context,
         );
 
         return $subMapper->withMainTransformer($mainTransformer);

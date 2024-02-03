@@ -41,4 +41,9 @@ interface SubMapperInterface
         string $property,
         ?Context $context
     ): mixed;
+
+    /**
+     * Add the target to the object cache
+     */
+    public function cache(mixed $target): void;
 }
