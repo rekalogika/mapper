@@ -19,4 +19,5 @@ class SomeObjectDto
     public ?string $propertyB = null;
     public ?string $propertyC = null;
     public ?string $propertyD = null;
+    public ?string $propertyE = null;
 }

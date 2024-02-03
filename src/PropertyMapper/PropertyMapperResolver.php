@@ -26,16 +26,18 @@ class PropertyMapperResolver implements PropertyMapperResolverInterface
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
+     * @param array<int,PropertyMapperServicePointer::ARGUMENT_*> $extraArguments
      */
     public function addPropertyMapper(
         string $sourceClass,
         string $targetClass,
         string $property,
         string $serviceId,
-        string $method
+        string $method,
+        array $extraArguments = []
     ): void {
         $this->propertyMappers[$targetClass][$property][$sourceClass]
-            = new PropertyMapperServicePointer($serviceId, $method);
+            = new PropertyMapperServicePointer($serviceId, $method, $extraArguments);
     }
 
     /**

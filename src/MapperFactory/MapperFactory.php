@@ -27,6 +27,7 @@ use Rekalogika\Mapper\MethodMapper\SubMapper;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
+use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadataFactoryInterface;
@@ -81,7 +82,7 @@ use Symfony\Component\Uid\Factory\UuidFactory;
 class MapperFactory
 {
     /**
-     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string}>
+     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,extraArguments:array<int,PropertyMapperServicePointer::ARGUMENT_*>}>
      */
     private array $propertyMappers = [];
 
@@ -139,13 +140,15 @@ class MapperFactory
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
+     * @param array<int,PropertyMapperServicePointer::ARGUMENT_*> $extraArguments
      */
     public function addPropertyMapper(
         string $sourceClass,
         string $targetClass,
         string $property,
         object $service,
-        string $method
+        string $method,
+        array $extraArguments = []
     ): void {
         $this->propertyMappers[] = [
             'sourceClass' => $sourceClass,
@@ -153,6 +156,7 @@ class MapperFactory
             'property' => $property,
             'service' => $service,
             'method' => $method,
+            'extraArguments' => $extraArguments,
         ];
     }
 
@@ -559,6 +563,7 @@ class MapperFactory
                     $propertyMapper['property'],
                     $propertyMapper['service']::class,
                     $propertyMapper['method'],
+                    $propertyMapper['extraArguments'],
                 );
             }
         }

@@ -17,6 +17,7 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -255,12 +256,22 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $propertyMapper = $this->propertyMapperLocator
                 ->get($propertyMapperPointer->getServiceId());
 
+            $extraArguments = $propertyMapperPointer->getExtraArguments();
+            $extraArgumentsParams = [];
+
+            foreach ($extraArguments as $extraArgument) {
+                $extraArgumentsParams[] = match ($extraArgument) {
+                    PropertyMapperServicePointer::ARGUMENT_CONTEXT => $context,
+                    PropertyMapperServicePointer::ARGUMENT_MAIN_TRANSFORMER => $this->getMainTransformer(),
+                };
+            }
+
             /**
              * @psalm-suppress MixedAssignment
              * @psalm-suppress MixedMethodCall
              */
             $targetPropertyValue = $propertyMapper->{$propertyMapperPointer
-                ->getMethod()}($source);
+                ->getMethod()}($source, ...$extraArgumentsParams);
 
             /** @psalm-suppress MixedAssignment */
             return $targetPropertyValue;

@@ -15,9 +15,16 @@ namespace Rekalogika\Mapper\PropertyMapper\Contracts;
 
 final readonly class PropertyMapperServicePointer
 {
+    public const ARGUMENT_CONTEXT = 'context';
+    public const ARGUMENT_MAIN_TRANSFORMER = 'main_transformer';
+
+    /**
+     * @param array<int,self::ARGUMENT_*> $extraArguments
+     */
     public function __construct(
         private string $serviceId,
         private string $method,
+        private array $extraArguments,
     ) {
     }
 
@@ -29,5 +36,13 @@ final readonly class PropertyMapperServicePointer
     public function getMethod(): string
     {
         return $this->method;
+    }
+
+    /**
+     * @return array<int,self::ARGUMENT_*>
+     */
+    public function getExtraArguments(): array
+    {
+        return $this->extraArguments;
     }
 }

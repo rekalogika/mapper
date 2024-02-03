@@ -19,18 +19,6 @@ interface PropertyMapperResolverInterface
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
-    public function addPropertyMapper(
-        string $sourceClass,
-        string $targetClass,
-        string $property,
-        string $serviceId,
-        string $method
-    ): void;
-
-    /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
-     */
     public function getPropertyMapper(
         string $sourceClass,
         string $targetClass,

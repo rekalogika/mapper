@@ -8,6 +8,8 @@
 * refactor(`PropertyMapper`): If `property` is missing, use the method name,
   stripping the leading 'map' and lowercasing the first letter. Example:
   `mapName` will map to the property `name`.
+* feat(`PropertyMapper`): Option to add `Context` & `MainTransformerInterface`
+  as extra arguments to the property mapper.
 
 ## 0.5.26
 

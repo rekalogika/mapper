@@ -40,7 +40,6 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
 ## Future Features
 
 * Option to read & write to private properties.
-* Option to inject `Context` and `MainTransformer` to a property mapper.
 * Data collector and profiler integration.
 
 ## Installation
