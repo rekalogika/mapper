@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithoutClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithoutClassAttribute;
@@ -44,6 +45,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->public();
 
     $services->set(PropertyMapperWithConstructorWithClassAttribute::class)
+        ->autowire()
+        ->autoconfigure()
+        ->public();
+
+    $services->set(PropertyMapperWithClassAttributeWithoutExplicitProperty::class)
         ->autowire()
         ->autoconfigure()
         ->public();

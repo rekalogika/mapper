@@ -19,6 +19,7 @@ use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithoutClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithoutClassAttribute;
@@ -121,6 +122,20 @@ class FrameworkTest extends TestCase
                 'mapPropertyB'
             ),
             $result5,
+        );
+
+        $result6 = $propertyMapperResolver->getPropertyMapper(
+            SomeObject::class,
+            SomeObjectDto::class,
+            'propertyD'
+        );
+
+        $this->assertEquals(
+            new PropertyMapperServicePointer(
+                PropertyMapperWithClassAttributeWithoutExplicitProperty::class,
+                'mapPropertyD'
+            ),
+            $result6,
         );
     }
 }

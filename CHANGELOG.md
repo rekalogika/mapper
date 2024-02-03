@@ -5,6 +5,9 @@
 * style: Remove remnants.
 * test: Add PHPStan unused public.
 * refactor(`PropertyMapper`): `$sourceClass` is redundant & removed.
+* refactor(`PropertyMapper`): If `property` is missing, use the method name,
+  stripping the leading 'map' and lowercasing the first letter. Example:
+  `mapName` will map to the property `name`.
 
 ## 0.5.26
 

@@ -115,7 +115,23 @@ class RekalogikaMapperExtension extends Extension
         // method name
 
         if (!isset($tagAttributes['property'])) {
-            $tagAttributes['property'] = $reflector->getName();
+            $name = $reflector->getName();
+            // remove 'map' prefix if exists
+            $name = preg_replace('/^map/', '', $name);
+            if ($name === null) {
+                throw new LogicException(
+                    sprintf(
+                        'Unable to determine the property name for property mapper service "%s", method "%s".',
+                        $definition->getClass() ?? '?',
+                        $reflector->getName()
+                    )
+                );
+            }
+
+            // convert to camel case
+            $name = lcfirst($name);
+
+            $tagAttributes['property'] = $name;
         }
 
         // if the sourceClass is not a class, throw an exception

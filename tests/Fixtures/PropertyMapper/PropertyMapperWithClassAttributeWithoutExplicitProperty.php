@@ -13,10 +13,14 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 
-class SomeObjectDto
+use Rekalogika\Mapper\PropertyMapper\AsPropertyMapper;
+
+#[AsPropertyMapper(targetClass: SomeObjectDto::class)]
+class PropertyMapperWithClassAttributeWithoutExplicitProperty
 {
-    public ?string $propertyA = null;
-    public ?string $propertyB = null;
-    public ?string $propertyC = null;
-    public ?string $propertyD = null;
+    #[AsPropertyMapper]
+    public function mapPropertyD(SomeObject $object): string
+    {
+        return $object::class . '::propertyD';
+    }
 }
