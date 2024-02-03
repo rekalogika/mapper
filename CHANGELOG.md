@@ -14,6 +14,7 @@
 * refactor(`SubMapper`): Use a factory to create sub mappers.
 * refactor(`ObjectCache`): Remove references to `Context`.
 * refactor(`SubMapper`): Add `cache()` method.
+* refactor: Rename `MapperPass` to `RemoveOptionalDefinitionPass`
 
 ## 0.5.26
 

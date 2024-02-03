@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Uid\Factory\UuidFactory;
 
-final class MapperPass implements CompilerPassInterface
+final class RemoveOptionalDefinitionPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {

@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper;
 
-use Rekalogika\Mapper\DependencyInjection\MapperPass;
 use Rekalogika\Mapper\DependencyInjection\PropertyMapperPass;
+use Rekalogika\Mapper\DependencyInjection\RemoveOptionalDefinitionPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -24,7 +24,7 @@ class RekalogikaMapperBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new MapperPass());
+        $container->addCompilerPass(new RemoveOptionalDefinitionPass());
         $container->addCompilerPass(new PropertyMapperPass());
     }
 }
