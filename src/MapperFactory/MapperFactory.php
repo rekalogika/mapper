@@ -28,7 +28,8 @@ use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\PropertyMapper\Contracts\PropertyMapperServicePointer;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
-use Rekalogika\Mapper\SubMapper\SubMapper;
+use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
+use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
@@ -55,6 +56,8 @@ use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Console\Application;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
@@ -112,11 +115,12 @@ class MapperFactory
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
     private ?ObjectCacheFactoryInterface $objectCacheFactory = null;
-    private ?SubMapper $subMapper = null;
+    private ?SubMapperFactoryInterface $subMapperFactory = null;
     private ?TransformerRegistryInterface $transformerRegistry = null;
     private ?PropertyMapperResolverInterface $propertyMapperResolver = null;
     private ?PropertyReadInfoExtractorInterface $propertyReadInfoExtractor = null;
     private ?PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor = null;
+    private ?PropertyAccessorInterface $propertyAccessor = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -385,7 +389,7 @@ class MapperFactory
     {
         if (null === $this->classMethodTransformer) {
             $this->classMethodTransformer = new ClassMethodTransformer(
-                $this->getSubMapper(),
+                $this->getSubMapperFactory(),
             );
         }
 
@@ -528,15 +532,16 @@ class MapperFactory
         return $this->objectCacheFactory;
     }
 
-    protected function getSubMapper(): SubMapper
+    protected function getSubMapperFactory(): SubMapperFactoryInterface
     {
-        if (null === $this->subMapper) {
-            $this->subMapper = new SubMapper(
+        if (null === $this->subMapperFactory) {
+            $this->subMapperFactory = new SubMapperFactory(
                 $this->getPropertyInfoExtractor(),
+                $this->getPropertyAccessor(),
             );
         }
 
-        return $this->subMapper;
+        return $this->subMapperFactory;
     }
 
     protected function getTransformerRegistry(): TransformerRegistryInterface
@@ -600,6 +605,15 @@ class MapperFactory
         }
 
         return $this->propertyWriteInfoExtractor;
+    }
+
+    protected function getPropertyAccessor(): PropertyAccessorInterface
+    {
+        if (null === $this->propertyAccessor) {
+            $this->propertyAccessor = new PropertyAccessor();
+        }
+
+        return $this->propertyAccessor;
     }
 
     //

@@ -11,6 +11,7 @@
 * feat(`PropertyMapper`): Option to add `Context` & `MainTransformerInterface`
   as extra arguments to the property mapper.
 * refactor(`SubMapper`): Move to its own namespace.
+* refactor(`SubMapper`): Use a factory to create sub mappers.
 
 ## 0.5.26
 

@@ -96,7 +96,7 @@ class TestKernel extends Kernel
         yield 'rekalogika.mapper.type_resolver';
         yield 'rekalogika.mapper.type_resolver.caching';
         yield 'rekalogika.mapper.transformer_registry';
-        yield 'rekalogika.mapper.method_mapper.sub_mapper';
+        yield 'rekalogika.mapper.sub_mapper.factory';
         yield 'rekalogika.mapper.object_cache_factory';
         yield 'rekalogika.mapper.mapper';
         yield 'rekalogika.mapper.command.mapping';

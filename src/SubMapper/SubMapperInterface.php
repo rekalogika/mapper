@@ -27,18 +27,18 @@ interface SubMapperInterface
     public function map(
         object $source,
         object|string $target,
-        Context $context
+        ?Context $context
     ): object;
 
     /**
      * Maps a source to the type of the specified class & property
      *
-     * @param class-string $class
+     * @param class-string|object $containing
      */
     public function mapForProperty(
         object $source,
-        string $class,
+        object|string $containing,
         string $property,
-        Context $context
+        ?Context $context
     ): mixed;
 }

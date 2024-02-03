@@ -11,18 +11,21 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\SubMapper;
+namespace Rekalogika\Mapper\SubMapper\Implementation;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
+use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Util\TypeFactory;
+use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
- * Specialized mapper used in MethodMapper.
+ * @internal
  */
 class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
 {
@@ -30,13 +33,15 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
 
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        private PropertyAccessorInterface $propertyAccessor,
+        private Context $context,
     ) {
     }
 
     public function map(
         object $source,
         object|string $target,
-        Context $context,
+        ?Context $context,
     ): object {
         if (is_object($target)) {
             $targetClass = $target::class;
@@ -52,7 +57,7 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
             target: $targetObject,
             sourceType: null,
             targetTypes: [TypeFactory::objectOfClass($targetClass)],
-            context: $context
+            context: $context ?? $this->context
         );
 
         if (is_object($target)) {
@@ -70,23 +75,43 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
 
     public function mapForProperty(
         object $source,
-        string $class,
+        string|object $containing,
         string $property,
-        Context $context,
+        ?Context $context,
     ): mixed {
+        if (is_object($containing)) {
+            $containingObject = $containing;
+            $containingClass = $containing::class;
+
+            try {
+                /** @var mixed */
+                $targetPropertyValue = $this->propertyAccessor
+                    ->getValue($containingObject, $property);
+
+                if (is_scalar($targetPropertyValue)) {
+                    $targetPropertyValue = null;
+                }
+            } catch (ExceptionInterface $e) {
+                $targetPropertyValue = null;
+            }
+        } else {
+            $containingClass = $containing;
+            $containingObject = null;
+            $targetPropertyValue = null;
+        }
+
+
         /** @var array<int,Type>|null */
-        $targetPropertyTypes = $this->propertyTypeExtractor->getTypes(
-            $class,
-            $property,
-        );
+        $targetPropertyTypes = $this->propertyTypeExtractor
+            ->getTypes($containingClass, $property);
 
         /** @var mixed */
         $result = $this->getMainTransformer()->transform(
-            source:$source,
-            target: null,
+            source: $source,
+            target: $targetPropertyValue,
             sourceType: null,
             targetTypes: $targetPropertyTypes ?? [],
-            context: $context
+            context: $context ?? $this->context
         );
 
         return $result;

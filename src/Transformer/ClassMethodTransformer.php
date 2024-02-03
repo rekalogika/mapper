@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
 use Rekalogika\Mapper\MethodMapper\MapToObjectInterface;
-use Rekalogika\Mapper\SubMapper\SubMapper;
+use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -33,7 +33,7 @@ final class ClassMethodTransformer implements
     use MainTransformerAwareTrait;
 
     public function __construct(
-        private SubMapper $subMapper,
+        private SubMapperFactoryInterface $subMapperFactory,
     ) {
     }
 
@@ -52,7 +52,8 @@ final class ClassMethodTransformer implements
 
         // prepare subMapper
 
-        $subMapper = $this->subMapper->withMainTransformer($this->getMainTransformer());
+        $subMapper = $this->subMapperFactory
+            ->createSubMapper($this->getMainTransformer(), $context);
 
         // target class must be valid
 

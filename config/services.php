@@ -22,7 +22,7 @@ use Rekalogika\Mapper\Mapping\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactory;
 use Rekalogika\Mapper\PropertyMapper\PropertyMapperResolver;
-use Rekalogika\Mapper\SubMapper\SubMapper;
+use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\CachingArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
@@ -46,6 +46,7 @@ use Rekalogika\Mapper\TransformerRegistry\TransformerRegistry;
 use Rekalogika\Mapper\TypeResolver\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
@@ -111,7 +112,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set(ClassMethodTransformer::class)
         ->args([
-            service('rekalogika.mapper.method_mapper.sub_mapper'),
+            service('rekalogika.mapper.sub_mapper.factory'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -500]);
 
@@ -271,9 +272,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # method mapper
 
     $services
-        ->set('rekalogika.mapper.method_mapper.sub_mapper', SubMapper::class)
+        ->set('rekalogika.mapper.sub_mapper.factory', SubMapperFactory::class)
         ->args([
             service('rekalogika.mapper.property_info'),
+            service(PropertyAccessorInterface::class),
         ]);
 
     # property mapper
