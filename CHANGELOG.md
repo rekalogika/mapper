@@ -16,6 +16,7 @@
 * refactor(`SubMapper`): Add `cache()` method.
 * refactor: Rename `MapperPass` to `RemoveOptionalDefinitionPass`
 * refactor: Move implementation under their own namespaces.
+* refactor(`AsPropertyMapper`): Move to top attribute namespace.
 
 ## 0.5.26
 

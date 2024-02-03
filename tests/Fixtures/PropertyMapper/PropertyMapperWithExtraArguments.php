@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 
+use Rekalogika\Mapper\Attribute\AsPropertyMapper;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
-use Rekalogika\Mapper\PropertyMapper\AsPropertyMapper;
 
 #[AsPropertyMapper(targetClass: SomeObjectDto::class)]
 class PropertyMapperWithExtraArguments

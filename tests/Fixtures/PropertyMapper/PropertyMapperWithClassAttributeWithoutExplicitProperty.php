@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 
-use Rekalogika\Mapper\PropertyMapper\AsPropertyMapper;
+use Rekalogika\Mapper\Attribute\AsPropertyMapper;
 
 #[AsPropertyMapper(targetClass: SomeObjectDto::class)]
 class PropertyMapperWithClassAttributeWithoutExplicitProperty

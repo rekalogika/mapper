@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection;
 
+use Rekalogika\Mapper\Attribute\AsPropertyMapper;
 use Rekalogika\Mapper\Exception\LogicException;
-use Rekalogika\Mapper\PropertyMapper\AsPropertyMapper;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\Config\FileLocator;
