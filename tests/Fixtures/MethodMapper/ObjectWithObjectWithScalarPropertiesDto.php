@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MethodMapper;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
 use Rekalogika\Mapper\MethodMapper\MapToObjectInterface;
-use Rekalogika\Mapper\MethodMapper\SubMapperInterface;
+use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 

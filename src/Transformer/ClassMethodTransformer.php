@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
 use Rekalogika\Mapper\MethodMapper\MapToObjectInterface;
-use Rekalogika\Mapper\MethodMapper\SubMapper;
+use Rekalogika\Mapper\SubMapper\SubMapper;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;

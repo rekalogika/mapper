@@ -17,7 +17,7 @@ use Brick\Money\Money;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
 use Rekalogika\Mapper\MethodMapper\MapToObjectInterface;
-use Rekalogika\Mapper\MethodMapper\SubMapperInterface;
+use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 
 final class MoneyDto implements MapToObjectInterface, MapFromObjectInterface
 {

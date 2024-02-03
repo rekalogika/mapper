@@ -10,6 +10,7 @@
   `mapName` will map to the property `name`.
 * feat(`PropertyMapper`): Option to add `Context` & `MainTransformerInterface`
   as extra arguments to the property mapper.
+* refactor(`SubMapper`): Move to its own namespace.
 
 ## 0.5.26
 

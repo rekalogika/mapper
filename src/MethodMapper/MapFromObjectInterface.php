@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\MethodMapper;
 
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 
 interface MapFromObjectInterface
 {
