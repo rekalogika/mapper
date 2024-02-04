@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.1
+
+* fix: Add caching for `ObjectMapperTable`.
+
 ## 0.6.0
 
 * style: Remove remnants.

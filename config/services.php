@@ -16,10 +16,11 @@ use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
 use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperTableFactory;
 use Rekalogika\Mapper\CustomMapper\Implementation\PropertyMapperResolver;
+use Rekalogika\Mapper\CustomMapper\Implementation\WarmableObjectMapperTableFactory;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
-use Rekalogika\Mapper\Mapping\Implementation\CachingMappingFactory;
+use Rekalogika\Mapper\Mapping\Implementation\WarmableMappingFactory;
 use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
@@ -194,7 +195,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->alias(MappingFactoryInterface::class, 'rekalogika.mapper.mapping_factory');
 
     $services
-        ->set('rekalogika.mapper.mapping_factory.caching', CachingMappingFactory::class)
+        ->set('rekalogika.mapper.mapping_factory.caching', WarmableMappingFactory::class)
         ->decorate('rekalogika.mapper.mapping_factory')
         ->args([
             service('rekalogika.mapper.mapping_factory.caching.inner'),
@@ -299,6 +300,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.object_mapper.table_factory', ObjectMapperTableFactory::class);
+
+    $services
+        ->set('rekalogika.mapper.object_mapper.table_factory.warmed', WarmableObjectMapperTableFactory::class)
+        ->decorate('rekalogika.mapper.object_mapper.table_factory')
+        ->args([
+            service('.inner'),
+            service('kernel')
+        ])
+        ->tag('kernel.cache_warmer');
 
     # other services
 

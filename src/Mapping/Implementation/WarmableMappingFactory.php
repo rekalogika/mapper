@@ -19,10 +19,12 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\VarExporter\VarExporter;
 
-final class CachingMappingFactory implements
+final class WarmableMappingFactory implements
     MappingFactoryInterface,
     CacheWarmerInterface
 {
+    public const CACHE_FILE = 'rekalogika_mapper_mapping.php';
+
     private ?Mapping $mapping = null;
 
     public function __construct(
@@ -49,40 +51,31 @@ final class CachingMappingFactory implements
             return $this->mapping;
         }
 
-        if ($this->kernel->isDebug()) {
-            return $this->mapping = $this->warmUpAndGetMapping();
-        }
-
-        if (!file_exists($this->getCacheFilePath())) {
-            return $this->mapping = $this->warmUpAndGetMapping();
-        }
-
         try {
             /** @psalm-suppress UnresolvableInclude */
             $result = require $this->getCacheFilePath();
+
+            if (!$result instanceof Mapping) {
+                throw new \UnexpectedValueException();
+            }
         } catch (\Throwable) {
-            unlink($this->getCacheFilePath());
+            @unlink($this->getCacheFilePath());
 
             return $this->mapping = $this->warmUpAndGetMapping();
         }
 
-        if (!$result instanceof Mapping) {
-            unlink($this->getCacheFilePath());
-
-            return $this->mapping = $this->warmUpAndGetMapping();
-        }
 
         return $this->mapping = $result;
     }
 
     public function isOptional(): bool
     {
-        return true;
+        return false;
     }
 
-    public function getCacheFilePath(): string
+    private function getCacheFilePath(): string
     {
-        return $this->kernel->getBuildDir() . '/rekalogika_mapper_mapping.php';
+        return $this->kernel->getBuildDir() . '/' . self::CACHE_FILE;
     }
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
