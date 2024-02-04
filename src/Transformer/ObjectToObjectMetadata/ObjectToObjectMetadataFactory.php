@@ -166,13 +166,18 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                     default => WriteMode::None,
                 };
 
-                $targetWriteName = $targetWriteInfo->getName();
-                $targetWriteVisibility = match ($targetWriteInfo->getVisibility()) {
-                    PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
-                    PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
-                    PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
-                    default => Visibility::None,
-                };
+                if ($targetWriteMode === WriteMode::None) {
+                    $targetWriteName = null;
+                    $targetWriteVisibility = Visibility::None;
+                } else {
+                    $targetWriteName = $targetWriteInfo->getName();
+                    $targetWriteVisibility = match ($targetWriteInfo->getVisibility()) {
+                        PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
+                        PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
+                        PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
+                        default => Visibility::None,
+                    };
+                }
             }
 
             // get source property types

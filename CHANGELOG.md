@@ -20,6 +20,7 @@
 * refactor: Rename `PropertyMapperServicePointer` to `ServiceMethodSpecification`.
 * refactor: Rename `PropertyMapper` namespace to `CustomMapper`.
 * refactor: Genericize `ServiceMethodSpecification` & `ServiceMethodRunner`.
+* fix(`ObjectToObjectMetadataFactory`): Handle `PropertyWriteInfo::TYPE_NONE`.
 
 ## 0.5.26
 
