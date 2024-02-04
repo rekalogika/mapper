@@ -80,7 +80,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
 
             // determine if a property mapper is defined for the property
 
-            $propertyMapperPointer = $this->propertyMapperResolver
+            $serviceMethodSpecification = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
 
             // get read & write info for source and target properties
@@ -221,7 +221,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 targetWriteName: $targetWriteName,
                 targetWriteVisibility: $targetWriteVisibility,
                 targetScalarType: $targetPropertyScalarType,
-                propertyMapper: $propertyMapperPointer,
+                propertyMapper: $serviceMethodSpecification,
             );
 
             $objectToObjectMetadata->addPropertyMapping($propertyMapping);

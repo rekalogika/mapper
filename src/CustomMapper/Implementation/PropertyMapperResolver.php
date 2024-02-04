@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\CustomMapper\Implementation;
 
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
-use Rekalogika\Mapper\CustomMapper\ServiceMethodSpecification;
+use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
 class PropertyMapperResolver implements PropertyMapperResolverInterface
 {

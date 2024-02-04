@@ -11,12 +11,13 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\CustomMapper;
+namespace Rekalogika\Mapper\ServiceMethod;
 
 final readonly class ServiceMethodSpecification
 {
     public const ARGUMENT_CONTEXT = 'context';
     public const ARGUMENT_MAIN_TRANSFORMER = 'main_transformer';
+    public const ARGUMENT_NONE = 'none'; // should not be used
 
     /**
      * @param array<int,self::ARGUMENT_*> $extraArguments

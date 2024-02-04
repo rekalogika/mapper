@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\CustomMapper;
 
+use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
+
 interface PropertyMapperResolverInterface
 {
     /**

@@ -15,9 +15,9 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\CustomMapper\ServiceMethodSpecification;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -254,30 +254,17 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     ): mixed {
         // if a custom property mapper is set, then use it
 
-        if ($propertyMapperPointer = $propertyMapping->getPropertyMapper()) {
-            /** @var object */
-            $propertyMapper = $this->propertyMapperLocator
-                ->get($propertyMapperPointer->getServiceId());
+        if ($serviceMethodSpecification = $propertyMapping->getPropertyMapper()) {
+            $serviceMethodRunner = ServiceMethodRunner::create(
+                serviceLocator: $this->propertyMapperLocator,
+                mainTransformer: $this->getMainTransformer()
+            );
 
-            $extraArguments = $propertyMapperPointer->getExtraArguments();
-            $extraArgumentsParams = [];
-
-            foreach ($extraArguments as $extraArgument) {
-                $extraArgumentsParams[] = match ($extraArgument) {
-                    ServiceMethodSpecification::ARGUMENT_CONTEXT => $context,
-                    ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER => $this->getMainTransformer(),
-                };
-            }
-
-            /**
-             * @psalm-suppress MixedAssignment
-             * @psalm-suppress MixedMethodCall
-             */
-            $targetPropertyValue = $propertyMapper->{$propertyMapperPointer
-                ->getMethod()}($source, ...$extraArgumentsParams);
-
-            /** @psalm-suppress MixedAssignment */
-            return $targetPropertyValue;
+            return $serviceMethodRunner->run(
+                serviceMethodSpecification: $serviceMethodSpecification,
+                input: $source,
+                context: $context
+            );
         }
 
         // if source property name is null, continue. there is nothing to

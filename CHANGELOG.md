@@ -19,6 +19,7 @@
 * refactor(`AsPropertyMapper`): Move to top attribute namespace.
 * refactor: Rename `PropertyMapperServicePointer` to `ServiceMethodSpecification`.
 * refactor: Rename `PropertyMapper` namespace to `CustomMapper`.
+* refactor: Genericize `ServiceMethodSpecification` & `ServiceMethodRunner`.
 
 ## 0.5.26
 
