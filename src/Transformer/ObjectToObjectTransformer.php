@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
+use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -48,6 +49,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
         private ContainerInterface $propertyMapperLocator,
+        private SubMapperFactoryInterface $subMapperFactory,
         ReaderWriter $readerWriter = null,
     ) {
         $this->readerWriter = $readerWriter ?? new ReaderWriter();
@@ -257,12 +259,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         if ($serviceMethodSpecification = $propertyMapping->getPropertyMapper()) {
             $serviceMethodRunner = ServiceMethodRunner::create(
                 serviceLocator: $this->propertyMapperLocator,
-                mainTransformer: $this->getMainTransformer()
+                mainTransformer: $this->getMainTransformer(),
+                subMapperFactory: $this->subMapperFactory
             );
 
             return $serviceMethodRunner->run(
                 serviceMethodSpecification: $serviceMethodSpecification,
-                input: $source,
+                source: $source,
+                targetType: null,
                 context: $context
             );
         }

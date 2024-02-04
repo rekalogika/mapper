@@ -15,27 +15,31 @@ namespace Rekalogika\Mapper\ServiceMethod;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
+use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
+use Symfony\Component\PropertyInfo\Type;
 
 class ServiceMethodRunner
 {
     public static function create(
         ContainerInterface $serviceLocator,
-        MainTransformerInterface $mainTransformer
+        MainTransformerInterface $mainTransformer,
+        SubMapperFactoryInterface $subMapperFactory,
     ): self {
-        return new self($serviceLocator, $mainTransformer);
+        return new self($serviceLocator, $mainTransformer, $subMapperFactory);
     }
 
     private function __construct(
         private ContainerInterface $serviceLocator,
-        private MainTransformerInterface $mainTransformer
+        private MainTransformerInterface $mainTransformer,
+        private SubMapperFactoryInterface $subMapperFactory,
     ) {
     }
 
     public function run(
         ServiceMethodSpecification $serviceMethodSpecification,
-        mixed $input,
+        mixed $source,
+        ?Type $targetType,
         Context $context,
     ): mixed {
         /** @var object */
@@ -49,11 +53,16 @@ class ServiceMethodRunner
             $arguments[] = match ($extraArgument) {
                 ServiceMethodSpecification::ARGUMENT_CONTEXT => $context,
                 ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER => $this->mainTransformer,
-                default => throw new LogicException('Unknown extra argument: ' . $extraArgument, context: $context),
+                ServiceMethodSpecification::ARGUMENT_SUB_MAPPER => $this->subMapperFactory->createSubMapper(
+                    mainTransformer: $this->mainTransformer,
+                    source: $source,
+                    targetType: $targetType,
+                    context: $context
+                ),
             };
         }
 
         /** @psalm-suppress MixedMethodCall */
-        return $service->{$method}($input, ...$arguments);
+        return $service->{$method}($source, ...$arguments);
     }
 }

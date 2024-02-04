@@ -17,7 +17,7 @@ final readonly class ServiceMethodSpecification
 {
     public const ARGUMENT_CONTEXT = 'context';
     public const ARGUMENT_MAIN_TRANSFORMER = 'main_transformer';
-    public const ARGUMENT_NONE = 'none'; // should not be used
+    public const ARGUMENT_SUB_MAPPER = 'sub_mapper';
 
     /**
      * @param array<int,self::ARGUMENT_*> $extraArguments

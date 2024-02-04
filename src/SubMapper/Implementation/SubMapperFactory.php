@@ -35,7 +35,7 @@ class SubMapperFactory implements SubMapperFactoryInterface
     public function createSubMapper(
         MainTransformerInterface $mainTransformer,
         mixed $source,
-        Type $targetType,
+        ?Type $targetType,
         Context $context,
     ): SubMapperInterface {
         $subMapper = new SubMapper(

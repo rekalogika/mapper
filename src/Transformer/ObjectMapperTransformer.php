@@ -57,15 +57,6 @@ final class ObjectMapperTransformer implements
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
-        // prepare subMapper
-
-        $subMapper = $this->subMapperFactory->createSubMapper(
-            mainTransformer: $this->getMainTransformer(),
-            source: $source,
-            targetType: $targetType,
-            context: $context
-        );
-
         // target class must be valid
 
         $targetClass = $targetType->getClassName();
@@ -97,12 +88,14 @@ final class ObjectMapperTransformer implements
 
         $serviceMethodRunner = ServiceMethodRunner::create(
             serviceLocator: $this->serviceLocator,
-            mainTransformer: $this->getMainTransformer()
+            mainTransformer: $this->getMainTransformer(),
+            subMapperFactory: $this->subMapperFactory
         );
 
         return $serviceMethodRunner->run(
             serviceMethodSpecification: $serviceMethodSpecification,
-            input: $source,
+            source: $source,
+            targetType: $targetType,
             context: $context
         );
     }

@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\ServiceMethod;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
+use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 
 class ServiceMethodExtraArgumentUtil
 {
@@ -54,6 +55,7 @@ class ServiceMethodExtraArgumentUtil
             $extraArguments[] = match ($type->getName()) {
                 Context::class => ServiceMethodSpecification::ARGUMENT_CONTEXT,
                 MainTransformerInterface::class => ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
+                SubMapperInterface::class => ServiceMethodSpecification::ARGUMENT_SUB_MAPPER,
                 default => throw new InvalidArgumentException(
                     sprintf(
                         'Extra argument with type "%s" for property mapper "%s" in class "%s" is unsupported.',

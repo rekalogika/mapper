@@ -317,6 +317,7 @@ class MapperFactory
             $this->objectToObjectTransformer = new ObjectToObjectTransformer(
                 objectToObjectMetadataFactory: $this->getObjectToObjectMetadataFactory(),
                 propertyMapperLocator: $this->getPropertyMapperLocator(),
+                subMapperFactory: $this->getSubMapperFactory(),
             );
         }
 

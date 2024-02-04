@@ -168,6 +168,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             '$objectToObjectMetadataFactory' => service('rekalogika.mapper.object_to_object_metadata_factory'),
             '$propertyMapperLocator' => tagged_locator('rekalogika.mapper.property_mapper'),
+            '$subMapperFactory' => service('rekalogika.mapper.sub_mapper.factory'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -900]);
 

@@ -24,6 +24,8 @@
 * feat: `ObjectMapper`
 * refactor: Compiler pass namespace.
 * refactor(`CompilerPass`): Reduce code duplication.
+* feat(`SubMapper`): Now available as additional argument in `PropertyMapper` &
+  `ObjectMapper`.
 
 ## 0.5.26
 
