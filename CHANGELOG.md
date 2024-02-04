@@ -23,6 +23,7 @@
 * fix(`ObjectToObjectMetadataFactory`): Handle `PropertyWriteInfo::TYPE_NONE`.
 * feat: `ObjectMapper`
 * refactor: Compiler pass namespace.
+* refactor(`CompilerPass`): Reduce code duplication.
 
 ## 0.5.26
 

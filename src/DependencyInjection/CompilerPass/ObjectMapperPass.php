@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection\CompilerPass;
 
-use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
-use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
+use Rekalogika\Mapper\ServiceMethod\ServiceMethodExtraArgumentUtil;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -44,55 +42,10 @@ final class ObjectMapperPass implements CompilerPassInterface
                         $tag['targetClass'],
                         $serviceId,
                         $method,
-                        self::getExtraArguments($serviceClass, $method),
+                        ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
                     ]
                 );
             }
         }
-    }
-
-    /**
-     * @param class-string $serviceClass
-     * @return array<int,ServiceMethodSpecification::ARGUMENT_*>
-     */
-    private static function getExtraArguments(
-        string $serviceClass,
-        string $method
-    ): array {
-        $reflectionClass = new \ReflectionClass($serviceClass);
-        $parameters = $reflectionClass->getMethod($method)->getParameters();
-        // remove first element, which is always the source class
-        array_shift($parameters);
-
-        $extraArguments = [];
-
-        foreach ($parameters as $parameter) {
-            $type = $parameter->getType();
-
-            if (!$type instanceof \ReflectionNamedType) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Extra arguments for property mapper "%s" in class "%s" must be type hinted.',
-                        $method,
-                        $serviceClass,
-                    )
-                );
-            }
-
-            $extraArguments[] = match ($type->getName()) {
-                Context::class => ServiceMethodSpecification::ARGUMENT_CONTEXT,
-                MainTransformerInterface::class => ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
-                default => throw new InvalidArgumentException(
-                    sprintf(
-                        'Extra argument with type "%s" for property mapper "%s" in class "%s" is unsupported.',
-                        $type->getName(),
-                        $method,
-                        $serviceClass,
-                    )
-                )
-            };
-        }
-
-        return $extraArguments;
     }
 }
