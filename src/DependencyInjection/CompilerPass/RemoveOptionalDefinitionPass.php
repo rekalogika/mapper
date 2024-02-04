@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\DependencyInjection;
+namespace Rekalogika\Mapper\DependencyInjection\CompilerPass;
 
 use Rekalogika\Mapper\Transformer\SymfonyUidTransformer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;

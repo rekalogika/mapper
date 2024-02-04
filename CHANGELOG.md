@@ -22,6 +22,7 @@
 * refactor: Genericize `ServiceMethodSpecification` & `ServiceMethodRunner`.
 * fix(`ObjectToObjectMetadataFactory`): Handle `PropertyWriteInfo::TYPE_NONE`.
 * feat: `ObjectMapper`
+* refactor: Compiler pass namespace.
 
 ## 0.5.26
 
