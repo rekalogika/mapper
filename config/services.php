@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
+use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperTableFactory;
 use Rekalogika\Mapper\CustomMapper\Implementation\PropertyMapperResolver;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Mapper;
@@ -31,6 +32,7 @@ use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
+use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\CachingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactory;
@@ -99,6 +101,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set(ScalarToScalarTransformer::class)
+        ->tag('rekalogika.mapper.transformer', ['priority' => -300]);
+
+    $services
+        ->set(ObjectMapperTransformer::class)
+        ->args([
+            service('rekalogika.mapper.sub_mapper.factory'),
+            tagged_locator('rekalogika.mapper.object_mapper'),
+            service('rekalogika.mapper.object_mapper.table_factory'),
+        ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -350]);
 
     $services
@@ -269,7 +280,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.cache.transformer_registry')
         ]);
 
-    # method mapper
+    # sub mapper
 
     $services
         ->set('rekalogika.mapper.sub_mapper.factory', SubMapperFactory::class)
@@ -282,6 +293,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.property_mapper.resolver', PropertyMapperResolver::class);
+
+    # object mapper
+
+    $services
+        ->set('rekalogika.mapper.object_mapper.table_factory', ObjectMapperTableFactory::class);
 
     # other services
 

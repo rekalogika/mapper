@@ -18,7 +18,9 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
+use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperTableFactory;
 use Rekalogika\Mapper\CustomMapper\Implementation\PropertyMapperResolver;
+use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Mapper;
@@ -89,6 +91,11 @@ class MapperFactory
      */
     private array $propertyMappers = [];
 
+    /**
+     * @var array<int,array{sourceClass:class-string,targetClass:class-string,service:object,method:string,extraArguments:array<int,ServiceMethodSpecification::ARGUMENT_*>}>
+     */
+    private array $objectMappers = [];
+
     private ?Serializer $serializer = null;
 
     private ?NullTransformer $nullTransformer = null;
@@ -118,6 +125,7 @@ class MapperFactory
     private ?SubMapperFactoryInterface $subMapperFactory = null;
     private ?TransformerRegistryInterface $transformerRegistry = null;
     private ?PropertyMapperResolverInterface $propertyMapperResolver = null;
+    private ?ObjectMapperTableFactoryInterface $objectMapperResolver = null;
     private ?PropertyReadInfoExtractorInterface $propertyReadInfoExtractor = null;
     private ?PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor = null;
     private ?PropertyAccessorInterface $propertyAccessor = null;
@@ -158,6 +166,27 @@ class MapperFactory
             'sourceClass' => $sourceClass,
             'targetClass' => $targetClass,
             'property' => $property,
+            'service' => $service,
+            'method' => $method,
+            'extraArguments' => $extraArguments,
+        ];
+    }
+
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     * @param array<int,ServiceMethodSpecification::ARGUMENT_*> $extraArguments
+     */
+    public function addObjectMapper(
+        string $sourceClass,
+        string $targetClass,
+        object $service,
+        string $method,
+        array $extraArguments = []
+    ): void {
+        $this->objectMappers[] = [
+            'sourceClass' => $sourceClass,
+            'targetClass' => $targetClass,
             'service' => $service,
             'method' => $method,
             'extraArguments' => $extraArguments,
@@ -574,6 +603,25 @@ class MapperFactory
         }
 
         return $this->propertyMapperResolver;
+    }
+
+    protected function getObjectMapperResolver(): ObjectMapperTableFactoryInterface
+    {
+        if (null === $this->objectMapperResolver) {
+            $this->objectMapperResolver = new ObjectMapperTableFactory();
+
+            foreach ($this->objectMappers as $objectMapper) {
+                $this->objectMapperResolver->addObjectMapper(
+                    $objectMapper['sourceClass'],
+                    $objectMapper['targetClass'],
+                    $objectMapper['service']::class,
+                    $objectMapper['method'],
+                    $objectMapper['extraArguments'],
+                );
+            }
+        }
+
+        return $this->objectMapperResolver;
     }
 
     protected function getPropertyMapperLocator(): ContainerInterface

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection;
 
+use Rekalogika\Mapper\Attribute\AsObjectMapper;
 use Rekalogika\Mapper\Attribute\AsPropertyMapper;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
@@ -49,6 +50,11 @@ class RekalogikaMapperExtension extends Extension
         $container->registerAttributeForAutoconfiguration(
             AsPropertyMapper::class,
             self::propertyMapperConfigurator(...)
+        );
+
+        $container->registerAttributeForAutoconfiguration(
+            AsObjectMapper::class,
+            self::objectMapperConfigurator(...)
         );
     }
 
@@ -175,5 +181,56 @@ class RekalogikaMapperExtension extends Extension
         // finally
 
         $definition->addTag('rekalogika.mapper.property_mapper', $tagAttributes);
+    }
+
+    private static function objectMapperConfigurator(
+        ChildDefinition $definition,
+        AsObjectMapper $attribute,
+        \ReflectionMethod $reflector,
+    ): void {
+        /** @var array{sourceClass:class-string,targetClass:class-string} */
+        $tagAttributes = [];
+
+        // add the method
+
+        $tagAttributes['method'] = $reflector->getName();
+
+        // Use the class of the first argument of the method as the source class
+
+        $parameters = $reflector->getParameters();
+        $firstParameter = $parameters[0] ?? null;
+        $type = $firstParameter?->getType();
+
+        if ($type === null || !$type instanceof \ReflectionNamedType) {
+            throw new LogicException(
+                sprintf(
+                    'Unable to determine the source class for property mapper service "%s", method "%s".',
+                    $definition->getClass() ?? '?',
+                    $reflector->getName()
+                )
+            );
+        }
+
+        $tagAttributes['sourceClass'] = $type->getName();
+
+        // use the class of the return type as the target class
+
+        $returnType = $reflector->getReturnType();
+
+        if ($returnType === null || !$returnType instanceof \ReflectionNamedType) {
+            throw new LogicException(
+                sprintf(
+                    'Unable to determine the target class for property mapper service "%s", method "%s".',
+                    $definition->getClass() ?? '?',
+                    $reflector->getName()
+                )
+            );
+        }
+
+        $tagAttributes['targetClass'] = $returnType->getName();
+
+        // finally
+
+        $definition->addTag('rekalogika.mapper.object_mapper', $tagAttributes);
     }
 }
