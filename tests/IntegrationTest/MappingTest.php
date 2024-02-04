@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectImplementingStringable;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
@@ -28,11 +28,12 @@ use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\TraversableToArrayAccessTransformer;
+use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\Type;
 
-class MappingTest extends AbstractIntegrationTest
+class MappingTest extends AbstractFrameworkTest
 {
     /**
      * Testing mapping against default mapping table
@@ -46,7 +47,13 @@ class MappingTest extends AbstractIntegrationTest
         array $targets,
         string $transformerClass
     ): void {
-        $searchResult = $this->transformerRegistry->findBySourceAndTargetTypes(
+        $transformerRegistry = $this->get('test.rekalogika.mapper.transformer_registry');
+        $this->assertInstanceOf(
+            TransformerRegistryInterface::class,
+            $transformerRegistry,
+        );
+
+        $searchResult = $transformerRegistry->findBySourceAndTargetTypes(
             sourceTypes: $sources,
             targetTypes: $targets,
         );
@@ -56,7 +63,7 @@ class MappingTest extends AbstractIntegrationTest
         $first = $searchResult[0] ?? null;
         $this->assertNotNull($first);
 
-        $transformer = $this->transformerRegistry->get(
+        $transformer = $transformerRegistry->get(
             $first->getTransformerServiceId()
         );
 

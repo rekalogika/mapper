@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Adder\Comment;
 use Rekalogika\Mapper\Tests\Fixtures\Adder\Post;
 use Rekalogika\Mapper\Tests\Fixtures\AdderDto\PostDto;
 
-class AdderTest extends AbstractIntegrationTest
+class AdderTest extends AbstractFrameworkTest
 {
     public function testAdder(): void
     {

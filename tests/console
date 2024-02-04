@@ -14,9 +14,11 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests;
 
+use Rekalogika\Mapper\Tests\Common\TestKernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Rekalogika\Mapper\Tests\Common\MapperTestFactory;
-
-$factory = new MapperTestFactory();
-$application = $factory->getApplication()->run();
+$kernel = new TestKernel();
+$application = new Application($kernel);
+$application->run();

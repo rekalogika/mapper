@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Brick\Money\Money;
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithArrayPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithCollectionProperty;
@@ -22,7 +22,7 @@ use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarProp
 use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
-class MethodMapperTest extends AbstractIntegrationTest
+class MethodMapperTest extends AbstractFrameworkTest
 {
     public function testMoneyToMoneyDto(): void
     {

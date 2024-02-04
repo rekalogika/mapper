@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Inheritance\ConcreteClassA;
 use Rekalogika\Mapper\Tests\Fixtures\Inheritance\ConcreteClassC;
 use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\AbstractClassDto;
@@ -26,7 +26,7 @@ use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 
-class InheritanceTest extends AbstractIntegrationTest
+class InheritanceTest extends AbstractFrameworkTest
 {
     public function testMapToAbstractClass(): void
     {

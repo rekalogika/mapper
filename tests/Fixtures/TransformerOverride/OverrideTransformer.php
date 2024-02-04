@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\TransformerOverride;
 
-use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
-use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\Override\ObjectWithArrayProperty;
+use Rekalogika\Mapper\Tests\Fixtures\Override\ObjectWithArrayPropertyDto;
 use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;

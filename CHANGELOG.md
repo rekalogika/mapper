@@ -26,6 +26,7 @@
 * refactor(`CompilerPass`): Reduce code duplication.
 * feat(`SubMapper`): Now available as additional argument in `PropertyMapper` &
   `ObjectMapper`.
+* test: Migrate tests to use `FrameworkBundle`.
 
 ## 0.5.26
 

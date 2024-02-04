@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Symfony\Component\Clock\DatePoint;
 
-class DateTimeMappingTest extends AbstractIntegrationTest
+class DateTimeMappingTest extends AbstractFrameworkTest
 {
     /**
      * @param class-string $sourceClass

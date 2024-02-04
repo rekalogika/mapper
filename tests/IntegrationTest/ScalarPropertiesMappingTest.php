@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithBoolPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithFloatPropertiesDto;
@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithIntPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithStringPropertiesDto;
 
-class ScalarPropertiesMappingTest extends AbstractIntegrationTest
+class ScalarPropertiesMappingTest extends AbstractFrameworkTest
 {
     public function testScalarIdentity(): void
     {

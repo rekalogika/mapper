@@ -13,19 +13,23 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Attribute\ObjectWithAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\Attribute\SomeAttribute;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 
-class AttributeTest extends AbstractIntegrationTest
+class AttributeTest extends AbstractFrameworkTest
 {
     public function testAttribute(): void
     {
         $class = ObjectWithAttribute::class;
         $type = TypeFactory::objectOfClass($class);
 
-        $typeStrings = $this->typeResolver->getAcceptedTransformerInputTypeStrings($type);
+        $typeResolver = $this->get('test.rekalogika.mapper.type_resolver');
+        $this->assertInstanceOf(TypeResolverInterface::class, $typeResolver);
+
+        $typeStrings = $typeResolver->getAcceptedTransformerInputTypeStrings($type);
 
         $this->assertContainsEquals(SomeAttribute::class, $typeStrings);
     }

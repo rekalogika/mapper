@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayPropertyWithStringKey;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithCollectionProperty;
@@ -35,7 +35,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\LazyArray;
 
-class TraversableToArrayAccessMappingTest extends AbstractIntegrationTest
+class TraversableToArrayAccessMappingTest extends AbstractFrameworkTest
 {
     //
     // without typehint

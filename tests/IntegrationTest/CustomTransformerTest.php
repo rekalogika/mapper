@@ -14,21 +14,13 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Brick\Money\Money;
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyDto;
-use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyToMoneyDtoTransformer;
 use Rekalogika\Mapper\Tests\Fixtures\Money\ObjectWithIntegerBackedMoneyProperty;
 use Rekalogika\Mapper\Tests\Fixtures\Money\ObjectWithMoneyAmountDto;
 
-class CustomTransformerTest extends AbstractIntegrationTest
+class CustomTransformerTest extends AbstractFrameworkTest
 {
-    protected function getAdditionalTransformers(): array
-    {
-        return [
-            'MoneyToMoneyDtoTransformer' => new MoneyToMoneyDtoTransformer(),
-        ];
-    }
-
     public function testMoneyToMoneyDto(): void
     {
         $money = Money::of("100000.00", 'IDR');

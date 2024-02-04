@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 
 use Rekalogika\Mapper\Tests\Common\TestKernel;
+use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyToMoneyDtoTransformer;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyObjectMapper;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
@@ -19,7 +20,11 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructo
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithoutClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithExtraArguments;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithoutClassAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\TransformerOverride\OverrideTransformer;
+use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
@@ -43,4 +48,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(PropertyMapperWithClassAttributeWithoutExplicitProperty::class);
     $services->set(PropertyMapperWithExtraArguments::class);
     $services->set(MoneyObjectMapper::class);
+    $services->set(MoneyToMoneyDtoTransformer::class);
+    $services->set(OverrideTransformer::class)
+        ->args([
+            '$transformer' => service(ScalarToScalarTransformer::class),
+        ]);
 };

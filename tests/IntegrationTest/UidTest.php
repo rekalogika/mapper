@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractIntegrationTest;
+use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Uid\ObjectWithStringUids;
 use Rekalogika\Mapper\Tests\Fixtures\Uid\ObjectWithUids;
 use Rekalogika\Mapper\Tests\Fixtures\UidDto\ObjectWithStringUidsDto;
@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\UidDto\ObjectWithUidsDto;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Uid\Uuid;
 
-class UidTest extends AbstractIntegrationTest
+class UidTest extends AbstractFrameworkTest
 {
     public function testUuidToString(): void
     {
