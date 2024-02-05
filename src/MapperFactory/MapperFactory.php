@@ -18,8 +18,10 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
+use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperResolver;
 use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperTableFactory;
 use Rekalogika\Mapper\CustomMapper\Implementation\PropertyMapperResolver;
+use Rekalogika\Mapper\CustomMapper\ObjectMapperResolverInterface;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
@@ -41,6 +43,7 @@ use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
+use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactory;
@@ -102,6 +105,7 @@ class MapperFactory
     private ?ObjectToObjectTransformer $objectToObjectTransformer = null;
     private ?ObjectToStringTransformer $objectToStringTransformer = null;
     private ?ScalarToScalarTransformer $scalarToScalarTransformer = null;
+    private ?ObjectMapperTransformer $objectMapperTransformer = null;
     private ?StringToBackedEnumTransformer $stringToBackedEnumTransformer = null;
     private ?ArrayToObjectTransformer $arrayToObjectTransformer = null;
     private ?ObjectToArrayTransformer $objectToArrayTransformer = null;
@@ -125,7 +129,8 @@ class MapperFactory
     private ?SubMapperFactoryInterface $subMapperFactory = null;
     private ?TransformerRegistryInterface $transformerRegistry = null;
     private ?PropertyMapperResolverInterface $propertyMapperResolver = null;
-    private ?ObjectMapperTableFactoryInterface $objectMapperResolver = null;
+    private ?ObjectMapperTableFactoryInterface $objectMapperTableFactory = null;
+    private ?ObjectMapperResolverInterface $objectMapperResolver = null;
     private ?PropertyReadInfoExtractorInterface $propertyReadInfoExtractor = null;
     private ?PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor = null;
     private ?PropertyAccessorInterface $propertyAccessor = null;
@@ -342,6 +347,20 @@ class MapperFactory
         return $this->scalarToScalarTransformer;
     }
 
+    protected function getObjectMapperTransformer(): TransformerInterface
+    {
+        if (null === $this->objectMapperTransformer) {
+            $this->objectMapperTransformer = new ObjectMapperTransformer(
+                $this->getSubMapperFactory(),
+                $this->getTransformersLocator(),
+                $this->getObjectMapperTableFactory(),
+                $this->getObjectMapperResolver(),
+            );
+        }
+
+        return $this->objectMapperTransformer;
+    }
+
     protected function getStringToBackedEnumTransformer(): TransformerInterface
     {
         if (null === $this->stringToBackedEnumTransformer) {
@@ -490,6 +509,8 @@ class MapperFactory
         yield from $this->additionalTransformers;
         yield 'ScalarToScalarTransformer'
             => $this->getScalarToScalarTransformer();
+        yield 'ObjectMapperTransformer'
+            => $this->getObjectMapperTransformer();
         yield 'DateTimeTransformer'
             => $this->getDateTimeTransformer();
         yield 'StringToBackedEnumTransformer'
@@ -606,13 +627,13 @@ class MapperFactory
         return $this->propertyMapperResolver;
     }
 
-    protected function getObjectMapperResolver(): ObjectMapperTableFactoryInterface
+    protected function getObjectMapperTableFactory(): ObjectMapperTableFactoryInterface
     {
-        if (null === $this->objectMapperResolver) {
-            $this->objectMapperResolver = new ObjectMapperTableFactory();
+        if (null === $this->objectMapperTableFactory) {
+            $this->objectMapperTableFactory = new ObjectMapperTableFactory();
 
             foreach ($this->objectMappers as $objectMapper) {
-                $this->objectMapperResolver->addObjectMapper(
+                $this->objectMapperTableFactory->addObjectMapper(
                     $objectMapper['sourceClass'],
                     $objectMapper['targetClass'],
                     $objectMapper['service']::class,
@@ -620,6 +641,17 @@ class MapperFactory
                     $objectMapper['extraArguments'],
                 );
             }
+        }
+
+        return $this->objectMapperTableFactory;
+    }
+
+    protected function getObjectMapperResolver(): ObjectMapperResolverInterface
+    {
+        if (null === $this->objectMapperResolver) {
+            $this->objectMapperResolver = new ObjectMapperResolver(
+                $this->getObjectMapperTableFactory()
+            );
         }
 
         return $this->objectMapperResolver;

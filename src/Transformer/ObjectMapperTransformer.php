@@ -15,10 +15,9 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\CustomMapper\ObjectMapperTable;
+use Rekalogika\Mapper\CustomMapper\ObjectMapperResolverInterface;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
@@ -34,14 +33,12 @@ final class ObjectMapperTransformer implements
 {
     use MainTransformerAwareTrait;
 
-    private ObjectMapperTable $objectMapperTable;
-
     public function __construct(
         private SubMapperFactoryInterface $subMapperFactory,
         private ContainerInterface $serviceLocator,
-        ObjectMapperTableFactoryInterface $objectMapperTableFactory,
+        private ObjectMapperTableFactoryInterface $objectMapperTableFactory,
+        private ObjectMapperResolverInterface $objectMapperResolver,
     ) {
-        $this->objectMapperTable = $objectMapperTableFactory->createObjectMapperTable();
     }
 
     public function transform(
@@ -79,12 +76,8 @@ final class ObjectMapperTransformer implements
 
         $sourceClass = $source::class;
 
-        $serviceMethodSpecification = $this->objectMapperTable
+        $serviceMethodSpecification = $this->objectMapperResolver
             ->getObjectMapper($sourceClass, $targetClass);
-
-        if ($serviceMethodSpecification === null) {
-            throw new LogicException(sprintf('No object mapper found for source class "%s" and target class "%s".', $sourceClass, $targetClass), context: $context);
-        }
 
         $serviceMethodRunner = ServiceMethodRunner::create(
             serviceLocator: $this->serviceLocator,
@@ -102,7 +95,10 @@ final class ObjectMapperTransformer implements
 
     public function getSupportedTransformation(): iterable
     {
-        foreach ($this->objectMapperTable as $objectMapperTableEntry) {
+        $objectMapperTable = $this->objectMapperTableFactory
+            ->createObjectMapperTable();
+
+        foreach ($objectMapperTable as $objectMapperTableEntry) {
             yield new TypeMapping(
                 TypeFactory::objectOfClass($objectMapperTableEntry->getSourceClass()),
                 TypeFactory::objectOfClass($objectMapperTableEntry->getTargetClass()),

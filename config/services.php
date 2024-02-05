@@ -14,14 +14,16 @@ declare(strict_types=1);
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
+use Rekalogika\Mapper\CustomMapper\Implementation\CachingObjectMapperResolver;
+use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperResolver;
 use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperTableFactory;
 use Rekalogika\Mapper\CustomMapper\Implementation\PropertyMapperResolver;
 use Rekalogika\Mapper\CustomMapper\Implementation\WarmableObjectMapperTableFactory;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
-use Rekalogika\Mapper\Mapping\Implementation\WarmableMappingFactory;
 use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
+use Rekalogika\Mapper\Mapping\Implementation\WarmableMappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
 use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
@@ -110,6 +112,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.sub_mapper.factory'),
             tagged_locator('rekalogika.mapper.object_mapper'),
             service('rekalogika.mapper.object_mapper.table_factory'),
+            service('rekalogika.mapper.object_mapper.resolver'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -350]);
 
@@ -296,7 +299,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set('rekalogika.mapper.property_mapper.resolver', PropertyMapperResolver::class);
 
-    # object mapper
+    # object mapper table factory
 
     $services
         ->set('rekalogika.mapper.object_mapper.table_factory', ObjectMapperTableFactory::class);
@@ -309,6 +312,27 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('kernel')
         ])
         ->tag('kernel.cache_warmer');
+
+    # object mapper resolver
+
+    $services
+        ->set('rekalogika.mapper.object_mapper.resolver', ObjectMapperResolver::class)
+        ->args([
+            service('rekalogika.mapper.object_mapper.table_factory'),
+        ]);
+
+    $services
+        ->set('rekalogika.mapper.cache.object_mapper_resolver')
+        ->parent('cache.system')
+        ->tag('cache.pool');
+
+    $services
+        ->set('rekalogika.mapper.object_mapper.resolver.cache', CachingObjectMapperResolver::class)
+        ->decorate('rekalogika.mapper.object_mapper.resolver')
+        ->args([
+            service('.inner'),
+            service('rekalogika.mapper.cache.object_mapper_resolver')
+        ]);
 
     # other services
 

@@ -3,6 +3,7 @@
 ## 0.6.1
 
 * fix: Add caching for `ObjectMapperTable`.
+* perf: Use `ObjectMapperResolver` to resolve object mapper.
 
 ## 0.6.0
 
