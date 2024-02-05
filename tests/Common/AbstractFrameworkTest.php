@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Common;
 
 use PHPUnit\Framework\TestCase;
+use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\MapperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -55,5 +56,17 @@ abstract class AbstractFrameworkTest extends TestCase
         $this->assertNotNull($result);
 
         return $result;
+    }
+
+    /**
+     * @param class-string $class
+     */
+    protected function assertTransformerInstanceOf(string $class, object $transformer): void
+    {
+        if ($transformer instanceof TraceableTransformer) {
+            $transformer = $transformer->getDecorated();
+        }
+
+        $this->assertInstanceOf($class, $transformer);
     }
 }

@@ -28,14 +28,14 @@ class MainTransformerTest extends AbstractFrameworkTest
 
         $mapping = $mappingFactory->getMapping();
 
-        $this->assertEquals(
-            $mapping->getMappingBySourceAndTarget(['string'], ['string'])[0]->getClass(),
-            ScalarToScalarTransformer::class
+        $this->assertStringContainsString(
+            ScalarToScalarTransformer::class,
+            $mapping->getMappingBySourceAndTarget(['string'], ['string'])[0]->getId(),
         );
 
-        $this->assertEquals(
-            $mapping->getMappingBySourceAndTarget(['string'], [DatePoint::class])[0]->getClass(),
-            DateTimeTransformer::class
+        $this->assertStringContainsString(
+            DateTimeTransformer::class,
+            $mapping->getMappingBySourceAndTarget(['string'], [DatePoint::class])[0]->getId(),
         );
     }
 }

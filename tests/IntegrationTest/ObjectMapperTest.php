@@ -26,8 +26,8 @@ class ObjectMapperTest extends AbstractFrameworkTest
         $moneyObjectMapper = $this->get(MoneyObjectMapper::class);
         $objectMapperTransformer = $this->get('test.' . ObjectMapperTransformer::class);
 
-        $this->assertInstanceOf(MoneyObjectMapper::class, $moneyObjectMapper);
-        $this->assertInstanceOf(ObjectMapperTransformer::class, $objectMapperTransformer);
+        $this->assertTransformerInstanceOf(MoneyObjectMapper::class, $moneyObjectMapper);
+        $this->assertTransformerInstanceOf(ObjectMapperTransformer::class, $objectMapperTransformer);
     }
 
     public function testMoneyToMoneyDto(): void

@@ -48,8 +48,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(PropertyMapperWithClassAttributeWithoutExplicitProperty::class);
     $services->set(PropertyMapperWithExtraArguments::class);
     $services->set(MoneyObjectMapper::class);
-    $services->set(MoneyToMoneyDtoTransformer::class);
+
+    $services->set(MoneyToMoneyDtoTransformer::class)
+        ->tag('rekalogika.mapper.transformer');
     $services->set(OverrideTransformer::class)
+        ->tag('rekalogika.mapper.transformer')
         ->args([
             '$transformer' => service(ScalarToScalarTransformer::class),
         ]);

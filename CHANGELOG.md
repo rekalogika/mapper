@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.2
+
+* feat: Data collector.
+
 ## 0.6.1
 
 * fix: Add caching for `ObjectMapperTable`.

@@ -16,6 +16,7 @@ psalm:
 .PHONY: phpunit
 phpunit:
 	$(eval c ?=)
+	rm -rf var
 	vendor/bin/phpunit --testdox -v $(c)
 
 .PHONY: php-cs-fixer

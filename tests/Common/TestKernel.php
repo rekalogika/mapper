@@ -125,5 +125,7 @@ class TestKernel extends Kernel
         yield 'rekalogika.mapper.command.mapping';
         yield 'rekalogika.mapper.command.try';
         yield 'rekalogika.mapper.command.try_property';
+
+        yield 'rekalogika.mapper.data_collector';
     }
 }

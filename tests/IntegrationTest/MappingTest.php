@@ -65,7 +65,7 @@ class MappingTest extends AbstractFrameworkTest
             $first->getTransformerServiceId()
         );
 
-        $this->assertInstanceOf(
+        $this->assertTransformerInstanceOf(
             $transformerClass,
             $transformer,
         );

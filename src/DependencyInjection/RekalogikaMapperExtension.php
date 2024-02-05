@@ -37,9 +37,14 @@ class RekalogikaMapperExtension extends Extension
         // load service configuration for test environment
 
         $env = $container->getParameter('kernel.environment');
+        $debug = (bool) $container->getParameter('kernel.debug');
 
         if ($env === 'test' && class_exists(TestKernel::class)) {
             $loader->import('tests.php');
+        }
+
+        if ($debug) {
+            $loader->load('debug.php');
         }
 
         // autoconfiguration

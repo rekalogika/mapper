@@ -68,4 +68,17 @@ readonly class Path implements \Stringable
 
         return new self($path);
     }
+
+    public function getLast(): ?string
+    {
+        $lastKey = array_key_last($this->path);
+
+        if ($lastKey === null) {
+            return null;
+        }
+
+        $result = $this->path[$lastKey] ?? null;
+
+        return $result;
+    }
 }

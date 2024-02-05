@@ -105,16 +105,19 @@ class MainTransformer implements MainTransformerInterface
 
         try {
             $pathContext = $context(Path::class);
+
+            // append path
+
+            if ($path === null) {
+                $path = '(not specified)';
+            }
+
+            $context = $context->with($pathContext->append($path));
         } catch (ContextMemberNotFoundException) {
             $pathContext = Path::create();
             $context = $context->with($pathContext);
         }
 
-        // append path if provided
-
-        if ($path !== null) {
-            $context = $context->with($pathContext->append($path));
-        }
 
         // guess the source type
 
