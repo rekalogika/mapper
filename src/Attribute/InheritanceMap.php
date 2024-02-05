@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Attribute;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final readonly class InheritanceMap implements MapperAttributeInterface
+final readonly class InheritanceMap
 {
     /**
      * @param array<class-string,class-string> $map

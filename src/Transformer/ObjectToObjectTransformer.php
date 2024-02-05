@@ -87,7 +87,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new InvalidArgumentException("Cannot get the class name for the target type.", context: $context);
         }
 
-        if (!\class_exists($targetClass)) {
+        if (!\class_exists($targetClass) && !\interface_exists($targetClass)) {
             throw new NotAClassException($targetClass, context: $context);
         }
 

@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
+use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
+use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
@@ -48,15 +50,44 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         string $targetClass,
         Context $context
     ): ObjectToObjectMetadata {
-        if ((new \ReflectionClass($sourceClass))->isInternal()) {
+        $providedTargetClass = $targetClass;
+
+        $sourceReflection = new \ReflectionClass($sourceClass);
+        $providedTargetReflection = new \ReflectionClass($providedTargetClass);
+
+        // check inheritance map
+
+        $attributes = $providedTargetReflection->getAttributes(InheritanceMap::class);
+
+        if (count($attributes) > 0) {
+            $inheritanceMap = $attributes[0]->newInstance();
+
+            $targetClass = $inheritanceMap->getTargetClassFromSourceClass($sourceClass);
+
+            if ($targetClass === null) {
+                throw new SourceClassNotInInheritanceMapException($sourceClass, $providedTargetClass, context: $context);
+            }
+        }
+
+        $targetReflection = new \ReflectionClass($targetClass);
+
+        // check if source and target classes are internal
+
+        if ($sourceReflection->isInternal()) {
             throw new InternalClassUnsupportedException($sourceClass, context: $context);
         }
 
-        if ((new \ReflectionClass($targetClass))->isInternal()) {
+        if ($targetReflection->isInternal()) {
             throw new InternalClassUnsupportedException($targetClass, context: $context);
         }
 
-        $objectToObjectMetadata = new ObjectToObjectMetadata($sourceClass, $targetClass);
+        // instantiate ObjectToObjectMetadata
+
+        $objectToObjectMetadata = new ObjectToObjectMetadata(
+            sourceClass: $sourceClass,
+            targetClass: $targetClass,
+            providedTargetClass: $providedTargetClass
+        );
 
         // queries
 

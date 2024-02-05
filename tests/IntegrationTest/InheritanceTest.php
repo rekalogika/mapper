@@ -23,7 +23,6 @@ use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\ImplementationADto;
 use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\InterfaceDto;
 use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\InterfaceWithoutMapDto;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
-use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 
 class InheritanceTest extends AbstractFrameworkTest
@@ -68,7 +67,7 @@ class InheritanceTest extends AbstractFrameworkTest
     public function testMapToInterfaceWithoutMap(): void
     {
         $concreteClassA = new ConcreteClassA();
-        $this->expectException(NotAClassException::class);
+        $this->expectException(ClassNotInstantiableException::class);
         $result = $this->mapper->map($concreteClassA, InterfaceWithoutMapDto::class);
     }
 

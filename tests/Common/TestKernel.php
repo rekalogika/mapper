@@ -20,7 +20,6 @@ use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
-use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
@@ -85,7 +84,6 @@ class TestKernel extends Kernel
         yield ClassMethodTransformer::class;
         yield SymfonyUidTransformer::class;
         yield ObjectToStringTransformer::class;
-        yield InheritanceMapTransformer::class;
         yield TraversableToArrayAccessTransformer::class;
         yield TraversableToTraversableTransformer::class;
         yield ObjectToArrayTransformer::class;

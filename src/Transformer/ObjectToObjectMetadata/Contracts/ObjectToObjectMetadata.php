@@ -30,11 +30,13 @@ final class ObjectToObjectMetadata
 
     /**
      * @param class-string $sourceClass
-     * @param class-string $targetClass
+     * @param class-string $targetClass Effective target class after resolving inheritance map
+     * @param class-string $providedTargetClass
      */
     public function __construct(
         private string $sourceClass,
         private string $targetClass,
+        private string $providedTargetClass,
     ) {
     }
 
@@ -52,6 +54,14 @@ final class ObjectToObjectMetadata
     public function getTargetClass(): string
     {
         return $this->targetClass;
+    }
+
+    /**
+     * @return class-string
+     */
+    public function getProvidedTargetClass(): string
+    {
+        return $this->providedTargetClass;
     }
 
     public function isInstantiable(): bool

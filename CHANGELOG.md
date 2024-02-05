@@ -4,6 +4,7 @@
 
 * fix: Add caching for `ObjectMapperTable`.
 * perf: Use `ObjectMapperResolver` to resolve object mapper.
+* perf: Incorporate inheritance mapping logic into `ObjectToObjectTransformer`.
 
 ## 0.6.0
 

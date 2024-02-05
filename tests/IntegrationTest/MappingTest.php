@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectImplementingStringable;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
@@ -23,7 +22,6 @@ use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
-use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
@@ -212,20 +210,6 @@ class MappingTest extends AbstractFrameworkTest
                 TypeFactory::objectOfClass(SomeBackedEnum::class)
             ],
             StringToBackedEnumTransformer::class,
-        ];
-
-        //
-        // inheritance
-        //
-
-        yield [
-            [
-                TypeFactory::object(),
-            ],
-            [
-                TypeFactory::objectOfClass(InheritanceMap::class)
-            ],
-            InheritanceMapTransformer::class,
         ];
 
         //

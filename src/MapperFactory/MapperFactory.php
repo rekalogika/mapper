@@ -41,7 +41,6 @@ use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
-use Rekalogika\Mapper\Transformer\InheritanceMapTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
@@ -114,7 +113,6 @@ class MapperFactory
     private ?TraversableToTraversableTransformer $traversableToTraversableTransformer = null;
     private ?CopyTransformer $copyTransformer = null;
     private ?ClassMethodTransformer $classMethodTransformer = null;
-    private ?InheritanceMapTransformer $inheritanceMapTransformer = null;
     private ?SymfonyUidTransformer $symfonyUidTransformer = null;
 
     private CacheItemPoolInterface $propertyInfoExtractorCache;
@@ -445,15 +443,6 @@ class MapperFactory
         return $this->classMethodTransformer;
     }
 
-    protected function getInheritanceMapTransformer(): InheritanceMapTransformer
-    {
-        if (null === $this->inheritanceMapTransformer) {
-            $this->inheritanceMapTransformer = new InheritanceMapTransformer();
-        }
-
-        return $this->inheritanceMapTransformer;
-    }
-
     protected function getSymfonyUidTransformer(): SymfonyUidTransformer
     {
         if (null === $this->symfonyUidTransformer) {
@@ -525,8 +514,6 @@ class MapperFactory
 
         yield 'ObjectToStringTransformer'
             => $this->getObjectToStringTransformer();
-        yield 'InheritanceMapTransformer'
-            => $this->getInheritanceMapTransformer();
         yield 'TraversableToArrayAccessTransformer'
             => $this->getTraversableToArrayAccessTransformer();
         yield 'TraversableToTraversableTransformer'
