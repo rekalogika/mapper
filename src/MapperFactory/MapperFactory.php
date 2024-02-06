@@ -41,6 +41,8 @@ use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
+use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
+use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
@@ -132,6 +134,7 @@ class MapperFactory
     private ?PropertyReadInfoExtractorInterface $propertyReadInfoExtractor = null;
     private ?PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor = null;
     private ?PropertyAccessorInterface $propertyAccessor = null;
+    private ?EagerPropertiesResolverInterface $eagerPropertiesResolver = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -474,7 +477,8 @@ class MapperFactory
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyMapperResolver(),
                 $this->getPropertyReadInfoExtractor(),
-                $this->getPropertyWriteInfoExtractor()
+                $this->getPropertyWriteInfoExtractor(),
+                $this->getEagerPropertiesResolver(),
             );
         }
 
@@ -682,6 +686,15 @@ class MapperFactory
         }
 
         return $this->propertyAccessor;
+    }
+
+    protected function getEagerPropertiesResolver(): EagerPropertiesResolverInterface
+    {
+        if (null === $this->eagerPropertiesResolver) {
+            $this->eagerPropertiesResolver = new HeuristicsEagerPropertiesResolver();
+        }
+
+        return $this->eagerPropertiesResolver;
     }
 
     //

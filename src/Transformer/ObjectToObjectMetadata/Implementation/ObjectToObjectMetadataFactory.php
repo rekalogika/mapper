@@ -17,6 +17,7 @@ use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
@@ -43,6 +44,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         private PropertyMapperResolverInterface $propertyMapperResolver,
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
+        private EagerPropertiesResolverInterface $eagerPropertiesResolver,
     ) {
     }
 
@@ -95,6 +97,11 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
 
         $instantiable = $targetReflection->isInstantiable();
         $cloneable = $targetReflection->isCloneable();
+
+        // determine the list of eager properties
+
+        $eagerProperties = $this->eagerPropertiesResolver
+            ->getEagerProperties($sourceClass);
 
         // determine last modified
 
@@ -241,6 +248,10 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 }
             }
 
+            // determine if source property is lazy
+
+            $sourceLazy = !in_array($sourceProperty, $eagerProperties, true);
+
             $propertyMapping = new PropertyMapping(
                 sourceProperty: $sourceReadMode !== ReadMode::None ? $sourceProperty : null,
                 targetProperty: $targetProperty,
@@ -257,6 +268,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 targetWriteVisibility: $targetWriteVisibility,
                 targetScalarType: $targetPropertyScalarType,
                 propertyMapper: $serviceMethodSpecification,
+                sourceLazy: $sourceLazy,
             );
 
             $propertyMappings[] = $propertyMapping;
@@ -272,6 +284,8 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             initializableTargetPropertiesNotInSource: $initializableTargetPropertiesNotInSource,
             sourceModifiedTime: $sourceModifiedTime,
             targetModifiedTime: $targetModifiedTime,
+            targetProxyClass: null,
+            targetProxyFileName: null,
         );
 
         return $objectToObjectMetadata;

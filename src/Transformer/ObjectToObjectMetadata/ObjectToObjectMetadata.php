@@ -24,6 +24,7 @@ final readonly class ObjectToObjectMetadata
      * @param class-string $providedTargetClass
      * @param array<int,PropertyMapping> $propertyMappings
      * @param array<int,string> $initializableTargetPropertiesNotInSource
+     * @param class-string $targetProxyClass
      */
     public function __construct(
         private string $sourceClass,
@@ -35,6 +36,8 @@ final readonly class ObjectToObjectMetadata
         private array $initializableTargetPropertiesNotInSource,
         private int $sourceModifiedTime,
         private int $targetModifiedTime,
+        private ?string $targetProxyClass,
+        private ?string $targetProxyFileName,
     ) {
     }
 
@@ -96,5 +99,15 @@ final readonly class ObjectToObjectMetadata
     public function getTargetModifiedTime(): int
     {
         return $this->targetModifiedTime;
+    }
+
+    public function getTargetProxyClass(): ?string
+    {
+        return $this->targetProxyClass;
+    }
+
+    public function getTargetProxyFileName(): ?string
+    {
+        return $this->targetProxyFileName;
     }
 }

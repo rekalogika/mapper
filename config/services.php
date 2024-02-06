@@ -33,6 +33,7 @@ use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
+use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
@@ -224,7 +225,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_mapper.resolver'),
             service(PropertyReadInfoExtractorInterface::class),
-            service(PropertyWriteInfoExtractorInterface::class)
+            service(PropertyWriteInfoExtractorInterface::class),
+            service('rekalogika.mapper.eager_properties_resolver'),
         ]);
 
     $services
@@ -330,6 +332,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('.inner'),
             service('rekalogika.mapper.cache.object_mapper_resolver')
         ]);
+
+    # eager properties resolver
+
+    $services
+        ->set('rekalogika.mapper.eager_properties_resolver', HeuristicsEagerPropertiesResolver::class);
 
     # other services
 

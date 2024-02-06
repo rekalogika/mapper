@@ -52,7 +52,8 @@ final readonly class PropertyMapping
         private ?string $targetWriteName,
         private Visibility $targetWriteVisibility,
         private ?string $targetScalarType,
-        private ?ServiceMethodSpecification $propertyMapper
+        private ?ServiceMethodSpecification $propertyMapper,
+        private bool $sourceLazy,
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
@@ -154,5 +155,10 @@ final readonly class PropertyMapping
     public function getTargetWriteVisibility(): Visibility
     {
         return $this->targetWriteVisibility;
+    }
+
+    public function isSourceLazy(): bool
+    {
+        return $this->sourceLazy;
     }
 }

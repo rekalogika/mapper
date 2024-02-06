@@ -5,6 +5,7 @@
 * fix(`TraceData`): Do not throw exception on missing data.
 * fix(`MainTransformer`): Improve error reporting on circular references.
 * fix(`ObjectCache`): Change backing store to `WeakMap`.
+* feat(`EagerPropertyResolver`): Required for future lazy feature.
 
 ## 0.6.6
 
