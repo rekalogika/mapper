@@ -48,7 +48,7 @@ final class MapperDataCollector extends AbstractDataCollector
     public function getMappings(): array
     {
         /** @var array<int,TraceData> */
-        return $this->data['mappings'];
+        return $this->data['mappings'] ?? [];
     }
 
     private ?int $totalMappings = null;

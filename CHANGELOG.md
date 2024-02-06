@@ -3,6 +3,7 @@
 ## 0.6.3
 
 * fix: Add check if warmed files exist.
+* fix(`MapperDataCollector`): Fix problem is no mappings is recorded.
 
 ## 0.6.2
 
