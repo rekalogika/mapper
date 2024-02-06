@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.4
+
+* fix: Hide toolbar icon if no mappings are recorded.
+
 ## 0.6.3
 
 * fix: Add check if warmed files exist.
