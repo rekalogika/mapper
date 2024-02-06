@@ -3,6 +3,7 @@
 ## 0.6.5
 
 * fix(`ObjectToObjectMetadataFactory`): Remove remnants.
+* fix(`SubMapperInterface`): Context is now null by default.
 
 ## 0.6.4
 

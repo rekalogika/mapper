@@ -27,7 +27,7 @@ interface SubMapperInterface
     public function map(
         object $source,
         object|string $target,
-        ?Context $context
+        ?Context $context = null
     ): object;
 
     /**
@@ -39,7 +39,7 @@ interface SubMapperInterface
         object $source,
         object|string $containing,
         string $property,
-        ?Context $context
+        ?Context $context = null
     ): mixed;
 
     /**
