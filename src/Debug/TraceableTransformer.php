@@ -21,7 +21,6 @@ use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
-use Symfony\Component\VarDumper\Cloner\Data;
 
 final class TraceableTransformer implements
     TransformerInterface,
@@ -70,11 +69,10 @@ final class TraceableTransformer implements
             $path = null;
         }
 
-        $traceData = $this->dataCollector->createTraceData(
+        $traceData = new TraceData(
             $path,
             $source,
             $target,
-            $sourceType,
             $targetType,
             $this->decorated::class
         );
@@ -96,6 +94,7 @@ final class TraceableTransformer implements
         $time = microtime(true) - $start;
 
         $traceData->finalizeTime($time);
+        $traceData->finalizeResult($result);
 
         return $result;
     }

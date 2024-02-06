@@ -54,6 +54,7 @@ class TestKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $loader->load(function (ContainerBuilder $container) {
+            $container->setParameter('kernel.secret', 'test');
             $container->loadFromExtension('framework', [
                 'http_method_override' => false,
                 'handle_all_throwables' => true,

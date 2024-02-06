@@ -1,0 +1,51 @@
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block menu %}
+    <span class="label {{ not collector.mappings|length ? 'disabled' }}">
+        <span class="icon">{{ source('@RekalogikaMapper/map.svg') }}</span>
+        <strong>Mapper</strong>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Mapper</h2>
+    <div class="sf-rekalogika_mapper sf-reset">
+        <table>
+            <tr>
+                <th>Path</th>
+                <th>Source</th>
+                <th>Existing Target</th>
+                <th>Wanted Target</th>
+                <th>Result</th>
+                <th>Transformer</th>
+                <th>Duration</th>
+            </tr>
+
+            {% for tracedata in collector.mappings %}
+                {{ _self.render_row(tracedata, 0) }}
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
+
+{% macro render_row(tracedata, depth) %}
+    <tr>
+        <td>
+            {% if depth > 0 %}
+                {% for i in 1..depth %}&nbsp;&nbsp;{% endfor %}{{ tracedata.path ?? '(root)' }}
+            {% else %}
+                {{ tracedata.path ?? '(root)' }}
+            {% endif %}
+        </td>
+        <td>{{ tracedata.sourceType|abbr_class }}</td>
+        <td>{{ tracedata.existingTargetType|abbr_class }}</td>
+        <td>{{ tracedata.targetType|raw }}</td>
+        <td>{{ tracedata.resultType|abbr_class }}</td>
+        <td>{{ tracedata.transformerClass|abbr_class }}</td>
+        <td><span class="nowrap">{{ '%.2f'|format(tracedata.time * 1000) }} ms</span></td>
+    </tr>
+
+    {% for child in tracedata.nestedTraceData %}
+        {{ _self.render_row(child, depth + 1) }}
+    {% endfor %}
+{% endmacro %}

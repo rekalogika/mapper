@@ -13,15 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\DataCollector\DataCollector;
-use Symfony\Component\PropertyInfo\Type;
 
-final class MapperDataCollector extends DataCollector
+final class MapperDataCollector extends AbstractDataCollector
 {
-    public function getName()
+    public function getName(): string
     {
         return 'rekalogika_mapper';
     }
@@ -31,29 +29,6 @@ final class MapperDataCollector extends DataCollector
         Response $response,
         ?\Throwable $exception = null
     ) {
-    }
-
-    /**
-     * @param class-string<TransformerInterface> $transformerClass
-     */
-    public function createTraceData(
-        ?string $path,
-        mixed $source,
-        mixed $target,
-        ?Type $sourceType,
-        ?Type $targetType,
-        string $transformerClass
-    ): TraceData {
-        $traceData = new TraceData(
-            $path,
-            $this->cloneVar($source),
-            $this->cloneVar($target),
-            $sourceType,
-            $targetType,
-            $transformerClass
-        );
-
-        return $traceData;
     }
 
     public function collectTraceData(TraceData $traceData): void
@@ -69,5 +44,10 @@ final class MapperDataCollector extends DataCollector
     {
         /** @var array<int,TraceData> */
         return $this->data['mappings'];
+    }
+
+    public static function getTemplate(): string
+    {
+        return "@RekalogikaMapper/data_collector.html.twig";
     }
 }

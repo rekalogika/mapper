@@ -3,6 +3,7 @@
 ## 0.6.2
 
 * feat: Data collector.
+* feat: Web profiler bundle integration.
 
 ## 0.6.1
 

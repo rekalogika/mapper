@@ -15,11 +15,16 @@ namespace Rekalogika\Mapper\Debug;
 
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\VarDumper\Cloner\Data;
 
 final class TraceData
 {
+    private string $sourceType;
+    private string $existingTargetType;
+    private string $targetType;
+    private ?string $resultType = null;
     private ?float $time = null;
 
     /** @var array<int,self> */
@@ -30,25 +35,22 @@ final class TraceData
      */
     public function __construct(
         private ?string $path,
-        private Data $source,
-        private Data $target,
-        private ?Type $sourceType,
-        private ?Type $targetType,
+        mixed $source,
+        mixed $existingTargetValue,
+        ?Type $targetType,
         private string $transformerClass,
     ) {
+        $this->sourceType = \get_debug_type($source);
+        $this->existingTargetType = \get_debug_type($existingTargetValue);
+
+        if ($targetType !== null) {
+            $this->targetType = TypeUtil::getTypeStringHtml($targetType);
+        } else {
+            $this->targetType = 'mixed';
+        }
     }
 
-    public function getSourceType(): ?Type
-    {
-        return $this->sourceType;
-    }
-
-    public function getTargetType(): ?Type
-    {
-        return $this->targetType;
-    }
-
-    public function finalizeTime(float $time): self
+    public function finalizeTime(float $time): void
     {
         if (count($this->nestedTraceData) === 0) {
             // If this is the last trace data (no nested trace data)
@@ -59,8 +61,11 @@ final class TraceData
             // nested trace data
             $this->time = array_sum(array_map(fn (self $traceData) => $traceData->getTime(), $this->nestedTraceData));
         }
+    }
 
-        return $this;
+    public function finalizeResult(mixed $result): void
+    {
+        $this->resultType = \get_debug_type($result);
     }
 
     public function getTime(): float
@@ -93,18 +98,32 @@ final class TraceData
         $this->nestedTraceData[] = $traceData;
     }
 
-    public function getSource(): Data
-    {
-        return $this->source;
-    }
-
-    public function getTarget(): Data
-    {
-        return $this->target;
-    }
-
     public function getPath(): ?string
     {
         return $this->path;
+    }
+
+    public function getSourceType(): string
+    {
+        return $this->sourceType;
+    }
+
+    public function getExistingTargetType(): string
+    {
+        return $this->existingTargetType;
+    }
+
+    public function getTargetType(): string
+    {
+        return $this->targetType;
+    }
+
+    public function getResultType(): string
+    {
+        if ($this->resultType === null) {
+            throw new LogicException('Result type is not set');
+        }
+
+        return $this->resultType;
     }
 }

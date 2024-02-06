@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Util;
 
 use DaveLiddament\PhpLanguageExtensions\Friend;
 use Rekalogika\Mapper\Attribute\MapperAttributeInterface;
+use Rekalogika\Mapper\Debug\TraceData;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtil2Test;
@@ -260,7 +261,8 @@ class TypeUtil
     #[Friend(
         TypeResolver::class,
         TransformerReturnsUnexpectedValueException::class,
-        TypeUtilTest::class
+        TypeUtilTest::class,
+        TraceData::class
     )]
     public static function getTypeString(Type|MixedType $type): string
     {
@@ -273,6 +275,59 @@ class TypeUtil
             $typeString = $type->getClassName();
             if (null === $typeString) {
                 $typeString = 'object';
+            }
+        }
+
+        if ($type->isCollection()) {
+            $keyTypes = $type->getCollectionKeyTypes();
+
+            if ($keyTypes) {
+                $keyTypesString = [];
+                foreach ($keyTypes as $keyType) {
+                    $keyTypesString[] = self::getTypeString($keyType);
+                }
+                $keyTypesString = implode('|', $keyTypesString);
+            } else {
+                $keyTypesString = 'mixed';
+            }
+
+            $valueTypes = $type->getCollectionValueTypes();
+
+            if ($valueTypes) {
+                $valueTypesString = [];
+                foreach ($valueTypes as $valueType) {
+                    $valueTypesString[] = self::getTypeString($valueType);
+                }
+                $valueTypesString = implode('|', $valueTypesString);
+            } else {
+                $valueTypesString = 'mixed';
+            }
+
+            $typeString .= sprintf('<%s,%s>', $keyTypesString, $valueTypesString);
+        }
+
+        return $typeString;
+    }
+
+    public static function getTypeStringHtml(Type|MixedType $type): string
+    {
+        if ($type instanceof MixedType) {
+            return 'mixed';
+        }
+
+        $typeString = $type->getBuiltinType();
+        if ($typeString === 'object') {
+            $typeString = $type->getClassName();
+
+            if (null === $typeString) {
+                $typeString = 'object';
+            } else {
+                $shortClassName = preg_replace('/^.*\\\\/', '', $typeString) ?? $typeString;
+                $typeString = sprintf(
+                    '<abbr title="%s">%s</a>',
+                    \htmlspecialchars($typeString),
+                    \htmlspecialchars($shortClassName)
+                );
             }
         }
 
