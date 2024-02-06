@@ -79,8 +79,9 @@ final class TraceableTransformer implements
 
         try {
             // add trace data to parent trace data
-            $context(TraceData::class)
-                ->addNestedTraceData($traceData);
+            $parentTraceData = $context(TraceData::class);
+            $parentTraceData->addNestedTraceData($traceData);
+            $context = $context->with($traceData);
         } catch (ContextMemberNotFoundException) {
             // if we are the root transformer, add the trace data to the
             // context, and collect it

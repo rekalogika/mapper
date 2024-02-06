@@ -4,6 +4,7 @@
 
 * feat: Data collector.
 * feat: Web profiler bundle integration.
+* fix: Fix web profiler HTML.
 
 ## 0.6.1
 

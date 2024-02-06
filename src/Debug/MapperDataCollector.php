@@ -24,6 +24,11 @@ final class MapperDataCollector extends AbstractDataCollector
         return 'rekalogika_mapper';
     }
 
+    public static function getTemplate(): string
+    {
+        return "@RekalogikaMapper/data_collector.html.twig";
+    }
+
     public function collect(
         Request $request,
         Response $response,
@@ -46,8 +51,45 @@ final class MapperDataCollector extends AbstractDataCollector
         return $this->data['mappings'];
     }
 
-    public static function getTemplate(): string
+    private ?int $totalMappings = null;
+
+    public function getTotalMappings(): int
     {
-        return "@RekalogikaMapper/data_collector.html.twig";
+        if ($this->totalMappings !== null) {
+            return $this->totalMappings;
+        }
+
+        return $this->totalMappings = count($this->getMappings());
+    }
+
+    private ?int $totalMappingsIncludingSubMappings = null;
+
+    public function getTotalMappingsIncludingSubMappings(): int
+    {
+        if ($this->totalMappingsIncludingSubMappings !== null) {
+            return $this->totalMappingsIncludingSubMappings;
+        }
+
+        $total = 0;
+
+        foreach ($this->getMappings() as $traceData) {
+            $total += $traceData->getTotalMappingsIncludingSubMappings();
+        }
+
+        return $this->totalMappingsIncludingSubMappings = $total;
+    }
+
+    private ?float $totalTime = null;
+
+    public function getTotalTime(): float
+    {
+        if ($this->totalTime !== null) {
+            return $this->totalTime;
+        }
+
+        return $this->totalTime = array_sum(array_map(
+            fn (TraceData $traceData) => $traceData->getTime(),
+            $this->getMappings()
+        ));
     }
 }

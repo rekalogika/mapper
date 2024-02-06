@@ -324,7 +324,7 @@ class TypeUtil
             } else {
                 $shortClassName = preg_replace('/^.*\\\\/', '', $typeString) ?? $typeString;
                 $typeString = sprintf(
-                    '<abbr title="%s">%s</a>',
+                    '<abbr title="%s">%s</abbr>',
                     \htmlspecialchars($typeString),
                     \htmlspecialchars($shortClassName)
                 );
@@ -337,7 +337,7 @@ class TypeUtil
             if ($keyTypes) {
                 $keyTypesString = [];
                 foreach ($keyTypes as $keyType) {
-                    $keyTypesString[] = self::getTypeString($keyType);
+                    $keyTypesString[] = self::getTypeStringHtml($keyType);
                 }
                 $keyTypesString = implode('|', $keyTypesString);
             } else {
@@ -349,14 +349,14 @@ class TypeUtil
             if ($valueTypes) {
                 $valueTypesString = [];
                 foreach ($valueTypes as $valueType) {
-                    $valueTypesString[] = self::getTypeString($valueType);
+                    $valueTypesString[] = self::getTypeStringHtml($valueType);
                 }
                 $valueTypesString = implode('|', $valueTypesString);
             } else {
                 $valueTypesString = 'mixed';
             }
 
-            $typeString .= sprintf('<%s,%s>', $keyTypesString, $valueTypesString);
+            $typeString .= sprintf('&lt;%s,%s&gt;', $keyTypesString, $valueTypesString);
         }
 
         return $typeString;

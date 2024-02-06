@@ -36,11 +36,13 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
   class names.
 * Helpful exception messages.
 * Console commands for debugging.
+* Data collector and profiler integration.
 
 ## Future Features
 
 * Option to read & write to private properties.
-* Data collector and profiler integration.
+* Lazy-loading proxy for target objects.
+* Cache eviction if involved classes change in debug mode.
 
 ## Installation
 

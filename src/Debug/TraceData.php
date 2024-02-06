@@ -126,4 +126,15 @@ final class TraceData
 
         return $this->resultType;
     }
+
+    public function getTotalMappingsIncludingSubMappings(): int
+    {
+        $total = 1;
+
+        foreach ($this->nestedTraceData as $traceData) {
+            $total += $traceData->getTotalMappingsIncludingSubMappings();
+        }
+
+        return $total;
+    }
 }
