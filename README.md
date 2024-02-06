@@ -42,7 +42,6 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
 
 * Option to read & write to private properties.
 * Lazy-loading proxy for target objects.
-* Cache eviction if involved classes change in debug mode.
 
 ## Installation
 

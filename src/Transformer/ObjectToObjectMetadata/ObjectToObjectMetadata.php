@@ -33,6 +33,8 @@ final readonly class ObjectToObjectMetadata
         private bool $instantiable = true,
         private bool $cloneable = true,
         private array $initializableTargetPropertiesNotInSource = [],
+        private int $sourceModifiedTime = 0,
+        private int $targetModifiedTime = 0,
     ) {
     }
 
@@ -84,5 +86,15 @@ final readonly class ObjectToObjectMetadata
     public function getInitializableTargetPropertiesNotInSource(): array
     {
         return $this->initializableTargetPropertiesNotInSource;
+    }
+
+    public function getSourceModifiedTime(): int
+    {
+        return $this->sourceModifiedTime;
+    }
+
+    public function getTargetModifiedTime(): int
+    {
+        return $this->targetModifiedTime;
     }
 }

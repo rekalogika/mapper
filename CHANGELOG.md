@@ -7,6 +7,8 @@
 * fix: Fix web profiler HTML.
 * refactor: Namespace for `ArrayLikeMetadata` & `ObjectToObjectMetadata`.
 * refactor(`ObjectToObjectMetadata`): Made immutable.
+* feat(`ObjectToObjectMetadata`): In debug mode, check if the involved classes
+  have changed.
 
 ## 0.6.1
 

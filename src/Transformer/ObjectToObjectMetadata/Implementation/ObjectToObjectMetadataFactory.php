@@ -25,6 +25,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
+use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
@@ -100,9 +101,13 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
 
         // determine if targetClass is instantiable
 
-        $reflectionClass = new \ReflectionClass($targetClass);
-        $instantiable = $reflectionClass->isInstantiable();
-        $cloneable = $reflectionClass->isCloneable();
+        $instantiable = $targetReflection->isInstantiable();
+        $cloneable = $targetReflection->isCloneable();
+
+        // determine last modified
+
+        $sourceModifiedTime = ClassUtil::getLastModifiedTime($sourceReflection);
+        $targetModifiedTime = ClassUtil::getLastModifiedTime($targetReflection);
 
         // process properties mapping
 
@@ -272,7 +277,9 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             propertyMappings: $propertyMappings,
             instantiable: $instantiable,
             cloneable: $cloneable,
-            initializableTargetPropertiesNotInSource: $initializableTargetPropertiesNotInSource
+            initializableTargetPropertiesNotInSource: $initializableTargetPropertiesNotInSource,
+            sourceModifiedTime: $sourceModifiedTime,
+            targetModifiedTime: $targetModifiedTime,
         );
 
         return $objectToObjectMetadata;

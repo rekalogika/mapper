@@ -15,8 +15,10 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Exception\RuntimeException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Util\ClassUtil;
 
 final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
@@ -28,6 +30,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $decorated,
         private CacheItemPoolInterface $cacheItemPool,
+        private bool $debug,
     ) {
     }
 
@@ -36,11 +39,42 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         string $targetClass,
         Context $context
     ): ObjectToObjectMetadata {
+        return $this->getFromMemoryCache($sourceClass, $targetClass, $context);
+    }
+
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     */
+    private function getFromMemoryCache(
+        string $sourceClass,
+        string $targetClass,
+        Context $context
+    ): ObjectToObjectMetadata {
         $cacheKey = $sourceClass . ':' . $targetClass;
 
         if (isset($this->cache[$cacheKey])) {
-            return $this->cache[$cacheKey];
+            $result = $this->cache[$cacheKey];
+
+            if (!$this->isObjectToObjectMetadataStale($result)) {
+                return $result;
+            }
         }
+
+        return $this->cache[$cacheKey] =
+            $this->getFromCache($sourceClass, $targetClass, $context);
+    }
+
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     */
+    private function getFromCache(
+        string $sourceClass,
+        string $targetClass,
+        Context $context
+    ): ObjectToObjectMetadata {
+        $cacheKey = $sourceClass . ':' . $targetClass;
 
         $cacheItem = $this->cacheItemPool->getItem($cacheKey);
 
@@ -49,13 +83,18 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
                 /** @var mixed */
                 $cached = $cacheItem->get();
 
-                if ($cached instanceof ObjectToObjectMetadata) {
-                    return $this->cache[$cacheKey] = $cached;
+                if (!$cached instanceof ObjectToObjectMetadata) {
+                    throw new RuntimeException();
                 }
+
+                if ($this->isObjectToObjectMetadataStale($cached)) {
+                    throw new RuntimeException();
+                }
+
+                return $cached;
             } catch (\Throwable) {
             }
 
-            unset($this->cache[$cacheKey]);
             $this->cacheItemPool->deleteItem($cacheKey);
         }
 
@@ -65,6 +104,28 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         $cacheItem->set($objectToObjectMetadata);
         $this->cacheItemPool->save($cacheItem);
 
-        return $this->cache[$cacheKey] = $objectToObjectMetadata;
+        return $objectToObjectMetadata;
+    }
+
+    private function isObjectToObjectMetadataStale(
+        ObjectToObjectMetadata $objectToObjectMetadata
+    ): bool {
+        if (!$this->debug) {
+            return false;
+        }
+
+        $sourceModifiedTime = $objectToObjectMetadata->getSourceModifiedTime();
+        $targetModifiedTime = $objectToObjectMetadata->getTargetModifiedTime();
+
+        $sourceFileModifiedTime = ClassUtil::getLastModifiedTime(
+            $objectToObjectMetadata->getSourceClass()
+        );
+
+        $targetFileModifiedTime = ClassUtil::getLastModifiedTime(
+            $objectToObjectMetadata->getTargetClass()
+        );
+
+        return $sourceFileModifiedTime > $sourceModifiedTime
+            || $targetFileModifiedTime > $targetModifiedTime;
     }
 }

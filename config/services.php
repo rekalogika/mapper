@@ -58,6 +58,7 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_locator;
@@ -236,7 +237,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.object_to_object_metadata_factory')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.object_to_object_metadata_factory')
+            service('rekalogika.mapper.cache.object_to_object_metadata_factory'),
+            param('kernel.debug')
         ]);
 
     # array-like metadata factory
