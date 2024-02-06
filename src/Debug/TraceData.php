@@ -70,11 +70,7 @@ final class TraceData
 
     public function getTime(): float
     {
-        if ($this->time === null) {
-            throw new LogicException('Time is not set');
-        }
-
-        return $this->time;
+        return $this->time ?? 0;
     }
 
     /**
@@ -120,11 +116,7 @@ final class TraceData
 
     public function getResultType(): string
     {
-        if ($this->resultType === null) {
-            throw new LogicException('Result type is not set');
-        }
-
-        return $this->resultType;
+        return $this->resultType ?? '__unknown__';
     }
 
     public function getTotalMappingsIncludingSubMappings(): int

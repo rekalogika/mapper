@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.7
+
+* fix(`TraceData`): Do not throw exception on missing data.
+
 ## 0.6.6
 
 * dx(`SubMapperInterface`): `map()` now accepts null input, that will return
