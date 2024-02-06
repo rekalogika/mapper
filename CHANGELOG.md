@@ -1,11 +1,14 @@
 # CHANGELOG
 
+## 0.6.6
+
+* dx(`SubMapperInterface`): `map()` now accepts null input, that will return
+  null.
+
 ## 0.6.5
 
 * fix(`ObjectToObjectMetadataFactory`): Remove remnants.
 * fix(`SubMapperInterface`): Context is now null by default.
-* dx(`SubMapperInterface`): `map()` now accepts null input, that will return
-  null.
 
 ## 0.6.4
 
