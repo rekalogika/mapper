@@ -17,7 +17,7 @@ use Rekalogika\Mapper\ArrayInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
-use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadata;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
 

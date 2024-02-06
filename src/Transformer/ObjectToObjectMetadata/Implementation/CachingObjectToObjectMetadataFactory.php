@@ -11,12 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
+namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 
 final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {

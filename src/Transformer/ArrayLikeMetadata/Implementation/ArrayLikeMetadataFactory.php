@@ -11,12 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata;
+namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation;
 
 use Rekalogika\Mapper\ArrayInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadata;
-use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
+namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Context\Context;
@@ -19,12 +19,12 @@ use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadata;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ObjectToObjectMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ReadMode;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\Visibility;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\WriteMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;

@@ -58,12 +58,12 @@
         </ArgumentTypeCoercion>
         <InternalMethod>
             <errorLevel type="suppress">
-                <file name="src/Transformer/ObjectToObjectMetadata/ObjectToObjectMetadataFactory.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
             </errorLevel>
         </InternalMethod>
         <InternalClass>
             <errorLevel type="suppress">
-                <file name="src/Transformer/ObjectToObjectMetadata/ObjectToObjectMetadataFactory.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
             </errorLevel>
         </InternalClass>
     </issueHandlers>

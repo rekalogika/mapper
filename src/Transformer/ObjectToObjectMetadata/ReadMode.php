@@ -11,14 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts;
+namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
-use Symfony\Component\PropertyInfo\Type;
-
-interface ArrayLikeMetadataFactoryInterface
+enum ReadMode
 {
-    public function createArrayLikeMetadata(
-        Type $sourceType,
-        Type $targetType
-    ): ArrayLikeMetadata;
+    case None;
+    case Method;
+    case Property;
 }

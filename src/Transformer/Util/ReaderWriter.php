@@ -18,10 +18,10 @@ use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
 use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\PropertyMapping;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\ReadMode;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\Visibility;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Contracts\WriteMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 
 /**
  * @internal

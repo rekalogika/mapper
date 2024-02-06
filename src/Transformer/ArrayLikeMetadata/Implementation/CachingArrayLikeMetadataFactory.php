@@ -11,11 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata;
+namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
-use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadata;
-use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterface

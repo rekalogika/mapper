@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts;
+namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata;
 
 use Rekalogika\Mapper\Exception\LogicException;
 use Symfony\Component\PropertyInfo\Type;

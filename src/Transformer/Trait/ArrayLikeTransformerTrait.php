@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Trait;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Contracts\ArrayLikeMetadata;
+use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
 use Rekalogika\Mapper\Util\TypeCheck;
 
