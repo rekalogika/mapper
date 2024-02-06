@@ -43,10 +43,14 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
     }
 
     public function map(
-        object $source,
+        ?object $source,
         object|string $target,
         ?Context $context = null,
-    ): object {
+    ): ?object {
+        if ($source === null) {
+            return null;
+        }
+
         if (is_object($target)) {
             $targetClass = $target::class;
             $targetObject = $target;
@@ -78,7 +82,7 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
     }
 
     public function mapForProperty(
-        object $source,
+        ?object $source,
         string|object $containing,
         string $property,
         ?Context $context = null,

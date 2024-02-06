@@ -22,13 +22,13 @@ interface SubMapperInterface
      *
      * @template T of object
      * @param class-string<T>|T $target
-     * @return T
+     * @return ($source is null ? null : T)
      */
     public function map(
-        object $source,
+        ?object $source,
         object|string $target,
         ?Context $context = null
-    ): object;
+    ): ?object;
 
     /**
      * Maps a source to the type of the specified class & property
@@ -36,7 +36,7 @@ interface SubMapperInterface
      * @param class-string|object $containing
      */
     public function mapForProperty(
-        object $source,
+        ?object $source,
         object|string $containing,
         string $property,
         ?Context $context = null
