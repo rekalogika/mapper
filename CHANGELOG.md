@@ -6,6 +6,7 @@
 * feat: Web profiler bundle integration.
 * fix: Fix web profiler HTML.
 * refactor: Namespace for `ArrayLikeMetadata` & `ObjectToObjectMetadata`.
+* refactor(`ObjectToObjectMetadata`): Made immutable.
 
 ## 0.6.1
 

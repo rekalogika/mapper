@@ -17,7 +17,10 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 
-final class PropertyMapping
+/**
+ * @immutable
+ */
+final readonly class PropertyMapping
 {
     /**
      * @var array<int,Type> $sourceTypes

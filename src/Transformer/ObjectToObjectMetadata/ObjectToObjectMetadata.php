@@ -13,30 +13,26 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
-final class ObjectToObjectMetadata
+/**
+ * @immutable
+ */
+final readonly class ObjectToObjectMetadata
 {
-    /**
-     * @var array<int,PropertyMapping>
-     */
-    private array $propertyMappings = [];
-
-    private bool $instantiable = true;
-    private bool $cloneable = true;
-
-    /**
-     * @var array<int,string>
-     */
-    private array $initializableTargetPropertiesNotInSource = [];
-
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass Effective target class after resolving inheritance map
      * @param class-string $providedTargetClass
+     * @param array<int,PropertyMapping> $propertyMappings
+     * @param array<int,string> $initializableTargetPropertiesNotInSource
      */
     public function __construct(
         private string $sourceClass,
         private string $targetClass,
         private string $providedTargetClass,
+        private array $propertyMappings = [],
+        private bool $instantiable = true,
+        private bool $cloneable = true,
+        private array $initializableTargetPropertiesNotInSource = [],
     ) {
     }
 
@@ -69,23 +65,9 @@ final class ObjectToObjectMetadata
         return $this->instantiable;
     }
 
-    public function setInstantiable(bool $instantiable): self
-    {
-        $this->instantiable = $instantiable;
-
-        return $this;
-    }
-
     public function isCloneable(): bool
     {
         return $this->cloneable;
-    }
-
-    public function setCloneable(bool $cloneable): self
-    {
-        $this->cloneable = $cloneable;
-
-        return $this;
     }
 
     /**
@@ -96,40 +78,11 @@ final class ObjectToObjectMetadata
         return $this->propertyMappings;
     }
 
-    public function addPropertyMapping(PropertyMapping $propertyMapping): self
-    {
-        $this->propertyMappings[] = $propertyMapping;
-
-        return $this;
-    }
-
-    public function removePropertyMapping(PropertyMapping $propertyMapping): self
-    {
-        $index = array_search($propertyMapping, $this->propertyMappings, true);
-
-        if (false !== $index) {
-            unset($this->propertyMappings[$index]);
-            $this->propertyMappings = array_values($this->propertyMappings);
-        }
-
-        return $this;
-    }
-
     /**
      * @return array<int,string>
      */
     public function getInitializableTargetPropertiesNotInSource(): array
     {
         return $this->initializableTargetPropertiesNotInSource;
-    }
-
-    /**
-     * @param array<int,string> $initializableTargetPropertiesNotInSource
-     */
-    public function setInitializableTargetPropertiesNotInSource(array $initializableTargetPropertiesNotInSource): self
-    {
-        $this->initializableTargetPropertiesNotInSource = $initializableTargetPropertiesNotInSource;
-
-        return $this;
     }
 }

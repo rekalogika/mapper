@@ -101,10 +101,12 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         // determine if targetClass is instantiable
 
         $reflectionClass = new \ReflectionClass($targetClass);
-        $objectToObjectMetadata->setInstantiable($reflectionClass->isInstantiable());
-        $objectToObjectMetadata->setCloneable($reflectionClass->isCloneable());
+        $instantiable = $reflectionClass->isInstantiable();
+        $cloneable = $reflectionClass->isCloneable();
 
         // process properties mapping
+
+        $propertyMappings = [];
 
         foreach ($targetProperties as $targetProperty) {
             $sourceProperty = $targetProperty;
@@ -260,11 +262,18 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 propertyMapper: $serviceMethodSpecification,
             );
 
-            $objectToObjectMetadata->addPropertyMapping($propertyMapping);
+            $propertyMappings[] = $propertyMapping;
         }
 
-        $objectToObjectMetadata
-            ->setInitializableTargetPropertiesNotInSource($initializableTargetPropertiesNotInSource);
+        $objectToObjectMetadata = new ObjectToObjectMetadata(
+            sourceClass: $sourceClass,
+            targetClass: $targetClass,
+            providedTargetClass: $providedTargetClass,
+            propertyMappings: $propertyMappings,
+            instantiable: $instantiable,
+            cloneable: $cloneable,
+            initializableTargetPropertiesNotInSource: $initializableTargetPropertiesNotInSource
+        );
 
         return $objectToObjectMetadata;
     }
