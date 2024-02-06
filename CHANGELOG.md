@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.5
+
+* fix(`ObjectToObjectMetadataFactory`): Remove remnants.
+
 ## 0.6.4
 
 * fix: Hide toolbar icon if no mappings are recorded.

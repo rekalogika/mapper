@@ -82,14 +82,6 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             throw new InternalClassUnsupportedException($targetClass, context: $context);
         }
 
-        // instantiate ObjectToObjectMetadata
-
-        $objectToObjectMetadata = new ObjectToObjectMetadata(
-            sourceClass: $sourceClass,
-            targetClass: $targetClass,
-            providedTargetClass: $providedTargetClass
-        );
-
         // queries
 
         $initializableTargetProperties = $this

@@ -29,12 +29,12 @@ final readonly class ObjectToObjectMetadata
         private string $sourceClass,
         private string $targetClass,
         private string $providedTargetClass,
-        private array $propertyMappings = [],
-        private bool $instantiable = true,
-        private bool $cloneable = true,
-        private array $initializableTargetPropertiesNotInSource = [],
-        private int $sourceModifiedTime = 0,
-        private int $targetModifiedTime = 0,
+        private array $propertyMappings,
+        private bool $instantiable,
+        private bool $cloneable,
+        private array $initializableTargetPropertiesNotInSource,
+        private int $sourceModifiedTime,
+        private int $targetModifiedTime,
     ) {
     }
 
