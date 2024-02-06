@@ -21,15 +21,20 @@ use Symfony\Component\PropertyInfo\Type;
 
 class CircularReferenceException extends RuntimeException implements ExceptionInterface
 {
-    public function __construct(mixed $source, Type $targetType, Context $context = null)
-    {
+    public function __construct(
+        mixed $source,
+        Type $targetType,
+        Context $context = null,
+        ?\Throwable $previous = null
+    ) {
         parent::__construct(
             sprintf(
                 'Circular reference detected when trying to get the object of type "%s" transformed to "%s".',
                 \get_debug_type($source),
                 TypeUtil::getDebugType($targetType)
             ),
-            context: $context
+            context: $context,
+            previous: $previous,
         );
     }
 }

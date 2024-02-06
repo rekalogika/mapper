@@ -169,11 +169,12 @@ class MainTransformer implements MainTransformerInterface
                 } catch (CachedTargetObjectNotFoundException) {
                     $objectCache
                         ->preCache($source, $targetTypeForTransformer);
-                } catch (ObjectCacheCircularReferenceException) {
+                } catch (ObjectCacheCircularReferenceException $e) {
                     throw new CircularReferenceException(
                         source: $source,
                         targetType: $targetTypeForTransformer,
-                        context: $context
+                        context: $context,
+                        previous: $e,
                     );
                 }
             }
