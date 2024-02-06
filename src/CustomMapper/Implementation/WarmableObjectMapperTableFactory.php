@@ -41,8 +41,14 @@ class WarmableObjectMapperTableFactory implements
         }
 
         try {
+            $file = $this->getCacheFilePath();
+
+            if (!file_exists($file)) {
+                throw new UnexpectedValueException();
+            }
+
             /** @psalm-suppress UnresolvableInclude */
-            $result = require $this->getCacheFilePath();
+            $result = require $file;
 
             if (!$result instanceof ObjectMapperTable) {
                 throw new UnexpectedValueException();

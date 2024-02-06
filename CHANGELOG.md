@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.3
+
+* fix: Add check if warmed files exist.
+
 ## 0.6.2
 
 * feat: Data collector.

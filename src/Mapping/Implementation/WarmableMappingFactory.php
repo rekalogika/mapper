@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Mapping\Implementation;
 
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
@@ -52,11 +53,17 @@ final class WarmableMappingFactory implements
         }
 
         try {
+            $file = $this->getCacheFilePath();
+
+            if (!file_exists($file)) {
+                throw new UnexpectedValueException();
+            }
+
             /** @psalm-suppress UnresolvableInclude */
-            $result = require $this->getCacheFilePath();
+            $result = require $file;
 
             if (!$result instanceof Mapping) {
-                throw new \UnexpectedValueException();
+                throw new UnexpectedValueException();
             }
         } catch (\Throwable) {
             @unlink($this->getCacheFilePath());
