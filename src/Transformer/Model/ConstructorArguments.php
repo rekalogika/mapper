@@ -50,4 +50,9 @@ class ConstructorArguments
     {
         return $this->unsetSourceProperties;
     }
+
+    public function hasArguments(): bool
+    {
+        return count($this->contructorArguments) > 0;
+    }
 }

@@ -26,6 +26,8 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
+use Rekalogika\Mapper\Transformer\Proxy\Exception\ProxyNotSupportedException;
+use Rekalogika\Mapper\Transformer\Proxy\ProxyGeneratorInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
@@ -34,6 +36,7 @@ use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
+use Symfony\Component\VarExporter\Internal\Hydrator;
 
 final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
@@ -45,6 +48,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
+        private ProxyGeneratorInterface $proxyGenerator,
     ) {
     }
 
@@ -284,17 +288,63 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             sourceClass: $sourceClass,
             targetClass: $targetClass,
             providedTargetClass: $providedTargetClass,
-            propertyMappings: $propertyMappings,
+            allPropertyMappings: $propertyMappings,
             instantiable: $instantiable,
             cloneable: $cloneable,
             initializableTargetPropertiesNotInSource: $initializableTargetPropertiesNotInSource,
             sourceModifiedTime: $sourceModifiedTime,
             targetModifiedTime: $targetModifiedTime,
-            targetProxyClass: null,
-            targetProxyFileName: null,
         );
 
+        // create proxy if possible
+
+        try {
+            $proxySpecification = $this->proxyGenerator
+                ->generateTargetProxy($objectToObjectMetadata);
+
+            $skippedProperties = self::getSkippedProperties(
+                $targetClass,
+                $eagerProperties
+            );
+
+            $objectToObjectMetadata = $objectToObjectMetadata
+                ->withTargetProxy($proxySpecification, $skippedProperties);
+        } catch (ProxyNotSupportedException $e) {
+            // do nothing
+        }
+
         return $objectToObjectMetadata;
+    }
+
+    /**
+     * @return array<string,array{string,string,?string,\ReflectionProperty}>
+     */
+    private static function getPropertyScopes(string $class): array
+    {
+        /** @var array<string,array{string,string,?string,\ReflectionProperty}> */
+        return Hydrator::getPropertyScopes($class);
+    }
+
+    /**
+     * @param array<int,string> $eagerProperties
+     * @return array<string,true>
+     */
+    private static function getSkippedProperties(
+        string $class,
+        array $eagerProperties
+    ): array {
+        $propertyScopes = self::getPropertyScopes($class);
+
+        $skippedProperties = [];
+
+        foreach ($propertyScopes as $scope => $data) {
+            $name = $data[1];
+            if (in_array($name, $eagerProperties, true)) {
+                $skippedProperties[$scope] = true;
+            }
+        }
+
+        return $skippedProperties;
     }
 
     /**

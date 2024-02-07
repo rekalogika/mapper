@@ -39,8 +39,11 @@ use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\CachingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyBuildingMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
+use Rekalogika\Mapper\Transformer\Proxy\Implementation\ProxyGenerator;
+use Rekalogika\Mapper\Transformer\Proxy\Implementation\ProxyRegistry;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\SymfonyUidTransformer;
@@ -227,6 +230,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service(PropertyReadInfoExtractorInterface::class),
             service(PropertyWriteInfoExtractorInterface::class),
             service('rekalogika.mapper.eager_properties_resolver'),
+            service('rekalogika.mapper.proxy_generator'),
         ]);
 
     $services
@@ -241,6 +245,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('.inner'),
             service('rekalogika.mapper.cache.object_to_object_metadata_factory'),
             param('kernel.debug')
+        ]);
+
+    $services
+        ->set('rekalogika.mapper.object_to_object_metadata_factory.proxy_building', ProxyBuildingMetadataFactory::class)
+        ->decorate('rekalogika.mapper.object_to_object_metadata_factory')
+        ->args([
+            service('.inner'),
+            service('rekalogika.mapper.proxy_registry'),
         ]);
 
     # array-like metadata factory
@@ -337,6 +349,21 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.eager_properties_resolver', HeuristicsEagerPropertiesResolver::class);
+
+    # proxy
+
+    $services
+        ->set('rekalogika.mapper.proxy_generator', ProxyGenerator::class);
+
+    $services
+        ->set('rekalogika.mapper.proxy_registry', ProxyRegistry::class)
+        ->args([
+            '$proxyDirectory' => '%kernel.cache_dir%/rekalogika-mapper/proxy',
+        ]);
+
+    $services
+        ->alias('rekalogika.mapper.proxy_autoloader', 'rekalogika.mapper.proxy_registry')
+        ->public();
 
     # other services
 

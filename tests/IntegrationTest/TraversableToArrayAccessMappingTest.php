@@ -274,6 +274,7 @@ class TraversableToArrayAccessMappingTest extends AbstractFrameworkTest
         $this->expectExceptionMessage('Mapping path: "property(key)"');
         $result = $this->mapper
             ->map($source, ObjectWithArrayPropertyDto::class);
+        $this->initialize($result);
     }
 
     //

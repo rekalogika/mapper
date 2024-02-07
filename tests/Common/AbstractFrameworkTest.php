@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\MapperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 
 abstract class AbstractFrameworkTest extends TestCase
 {
@@ -68,5 +69,12 @@ abstract class AbstractFrameworkTest extends TestCase
         }
 
         $this->assertInstanceOf($class, $transformer);
+    }
+
+    protected function initialize(object $object): void
+    {
+        if ($object instanceof LazyObjectInterface) {
+            $object->initializeLazyObject();
+        }
     }
 }

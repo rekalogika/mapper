@@ -25,7 +25,8 @@ class DataCollectorTest extends AbstractFrameworkTest
     public function testDataCollector(): void
     {
         $object = ContainingObject::create();
-        $this->mapper->map($object, ContainingObjectDto::class);
+        $result = $this->mapper->map($object, ContainingObjectDto::class);
+        $this->initialize($result);
 
         $dataCollector = $this->get('test.rekalogika.mapper.data_collector');
         $this->assertInstanceOf(MapperDataCollector::class, $dataCollector);

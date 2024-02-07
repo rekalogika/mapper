@@ -21,12 +21,17 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
   inheritance map attribute.
 * Reads the type from PHP type declaration and PHPDoc annotations, including
   the type of the nested objects.
+* If possible, target objects are lazy-loaded. The mapping does not not occur
+  until the target is accessed.
+* Identifier properties on the source are not lazy-loaded. If the source is also
+  lazy-loaded, we should be able to access the identifier without causing a full
+  hydration of the source.
 * Handles the mapping between `array` or array-like objects, as well as using an
   adder method.
 * Handles non-string & non-integer keys in array-like objects, including
   `SplObjectStorage`.
-* Lazy loading & lazy stream mapping. Consumes less memory & avoids hydrating a
-  Doctrine collection prematurely.
+* Lazy loading & lazy stream mapping with collection types. Consumes less memory
+  & avoids hydrating a Doctrine collection prematurely.
 * With lazy loading, if the source is a `Countable`, then the target will also
   be a `Countable`. With an extra-lazy Doctrine Collection, the consumer will be
   able to count the target without causing a full hydration of the source.
@@ -41,7 +46,6 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
 ## Future Features
 
 * Option to read & write to private properties.
-* Lazy-loading proxy for target objects.
 
 ## Installation
 

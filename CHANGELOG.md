@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## 0.6.8
+## 0.7.0
 
 * refactor(`ObjectToObjectTransformer`): Refactor for future extension.
+* feat: Target object can now be a lazy-loading proxy.
 
 ## 0.6.7
 

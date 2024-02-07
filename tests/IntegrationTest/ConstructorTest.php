@@ -40,7 +40,8 @@ class ConstructorTest extends AbstractFrameworkTest
     {
         $source = new ObjectWithScalarProperties();
         $this->expectException(ClassNotInstantiableException::class);
-        $this->mapper->map($source, ObjectWithPrivateConstructorDto::class);
+        $result = $this->mapper->map($source, ObjectWithPrivateConstructorDto::class);
+        $this->initialize($result);
     }
 
     public function testConstructorAndProperties(): void
@@ -58,13 +59,15 @@ class ConstructorTest extends AbstractFrameworkTest
     {
         $this->expectException(InstantiationFailureException::class);
         $source = new ObjectWithScalarProperties();
-        $this->mapper->map($source, ObjectWithConstructorAndMoreArgumentDto::class);
+        $result = $this->mapper->map($source, ObjectWithConstructorAndMoreArgumentDto::class);
+        $this->initialize($result);
     }
 
     public function testNullSourcePropertyAndNotNullTargetProperty(): void
     {
         $this->expectException(InstantiationFailureException::class);
         $source = new ObjectWithScalarPropertiesAndAdditionalNullProperty();
-        $this->mapper->map($source, ObjectWithConstructorAndMoreArgumentDto::class);
+        $result = $this->mapper->map($source, ObjectWithConstructorAndMoreArgumentDto::class);
+        $this->initialize($result);
     }
 }

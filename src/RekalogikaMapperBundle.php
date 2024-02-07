@@ -17,6 +17,7 @@ use Rekalogika\Mapper\DependencyInjection\CompilerPass\DebugTransformerPass;
 use Rekalogika\Mapper\DependencyInjection\CompilerPass\ObjectMapperPass;
 use Rekalogika\Mapper\DependencyInjection\CompilerPass\PropertyMapperPass;
 use Rekalogika\Mapper\DependencyInjection\CompilerPass\RemoveOptionalDefinitionPass;
+use Rekalogika\Mapper\Transformer\Proxy\ProxyAutoloaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -38,5 +39,21 @@ class RekalogikaMapperBundle extends Bundle
         if ((bool) $container->getParameter('kernel.debug')) {
             $container->addCompilerPass(new DebugTransformerPass());
         }
+    }
+
+    public function boot()
+    {
+        /** @var ProxyAutoloaderInterface */
+        $autoloader = $this->container?->get('rekalogika.mapper.proxy_autoloader');
+
+        $autoloader->registerAutoloader();
+    }
+
+    public function shutdown()
+    {
+        /** @var ProxyAutoloaderInterface */
+        $autoloader = $this->container?->get('rekalogika.mapper.proxy_autoloader');
+
+        $autoloader->unregisterAutoloader();
     }
 }

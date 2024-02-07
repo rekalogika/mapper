@@ -24,6 +24,7 @@ class InternalClassTest extends AbstractFrameworkTest
     {
         $object = new ObjectWithInternalClass();
         $this->expectException(InternalClassUnsupportedException::class);
-        $this->mapper->map($object, ObjectWithInternalClassDto::class);
+        $result = $this->mapper->map($object, ObjectWithInternalClassDto::class);
+        $this->initialize($result);
     }
 }

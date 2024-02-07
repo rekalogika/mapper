@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer;
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
@@ -40,6 +41,7 @@ use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 
 final class ObjectToObjectTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
@@ -105,13 +107,26 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // initialize target if target is null
 
+
         if (null === $target) {
-            $target = $this->instantiateTarget(
-                source: $source,
-                objectToObjectMetadata: $objectToObjectMetadata,
-                context: $context
-            );
+            $canUseTargetProxy = $objectToObjectMetadata->canUseTargetProxy();
+
+            if ($canUseTargetProxy) {
+                $target = $this->instantiateTargetProxy(
+                    source: $source,
+                    objectToObjectMetadata: $objectToObjectMetadata,
+                    context: $context
+                );
+            } else {
+                $target = $this->instantiateRealTarget(
+                    source: $source,
+                    objectToObjectMetadata: $objectToObjectMetadata,
+                    context: $context
+                );
+            }
         } else {
+            $canUseTargetProxy = false;
+
             if (!is_object($target)) {
                 throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
             }
@@ -125,19 +140,21 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             target: $target,
         );
 
-        // map properties
+        // map properties if it is not a proxy
 
-        $this->readSourceAndWriteTarget(
-            source: $source,
-            target: $target,
-            objectToObjectMetadata: $objectToObjectMetadata,
-            context: $context
-        );
+        if (!$canUseTargetProxy) {
+            $this->readSourceAndWriteTarget(
+                source: $source,
+                target: $target,
+                propertyMappings: $objectToObjectMetadata->getPropertyMappings(),
+                context: $context
+            );
+        }
 
         return $target;
     }
 
-    private function instantiateTarget(
+    private function instantiateRealTarget(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
         Context $context
@@ -173,20 +190,110 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         }
     }
 
+    private function instantiateTargetProxy(
+        object $source,
+        ObjectToObjectMetadata $objectToObjectMetadata,
+        Context $context
+    ): object {
+        $targetProxyClass = $objectToObjectMetadata->getTargetProxyClass();
+        $targetClass = $objectToObjectMetadata->getTargetClass();
+
+        // check if class is valid & instantiable
+
+        if (!$objectToObjectMetadata->isInstantiable()) {
+            throw new ClassNotInstantiableException($targetClass, context: $context);
+        }
+
+        if ($targetProxyClass === null) {
+            throw new LogicException('Target proxy class must not be null.', context: $context);
+        }
+
+        if (!class_exists($targetProxyClass)) {
+            throw new LogicException(
+                sprintf('Target proxy class "%s" does not exist.', $targetProxyClass),
+                context: $context
+            );
+        }
+
+        if (!is_a($targetProxyClass, LazyObjectInterface::class, true)) {
+            throw new LogicException(
+                sprintf('Target proxy class must implement "%s".', LazyObjectInterface::class),
+                context: $context
+            );
+        }
+
+        $initializer = function (object $instance) use (
+            $source,
+            $objectToObjectMetadata,
+            $context,
+            $targetClass
+        ): void {
+            if (\method_exists($instance, '__construct')) {
+                $constructorArguments = $this->generateConstructorArguments(
+                    source: $source,
+                    objectToObjectMetadata: $objectToObjectMetadata,
+                    context: $context
+                );
+
+                $arguments = $constructorArguments->getArguments();
+
+                try {
+                    /**
+                     * @psalm-suppress DirectConstructorCall
+                     * @psalm-suppress MixedMethodCall
+                     */
+                    $instance->__construct(...$arguments);
+                } catch (\TypeError | \ReflectionException $e) {
+                    throw new InstantiationFailureException(
+                        source: $source,
+                        targetClass: $targetClass,
+                        constructorArguments: $constructorArguments->getArguments(),
+                        unsetSourceProperties: $constructorArguments->getUnsetSourceProperties(),
+                        previous: $e,
+                        context: $context
+                    );
+                }
+            }
+
+            $this->readSourceAndWriteTarget(
+                source: $source,
+                target: $instance,
+                propertyMappings: $objectToObjectMetadata->getLazyPropertyMappings(),
+                context: $context
+            );
+        };
+
+        /**
+         * @psalm-suppress UndefinedMethod
+         * @psalm-suppress MixedReturnStatement
+         * @var object
+         * @phpstan-ignore-next-line
+         */
+        $target = $targetProxyClass::createLazyGhost(
+            initializer: $initializer,
+            skippedProperties: $objectToObjectMetadata->getTargetProxySkippedProperties()
+        );
+
+        $this->readSourceAndWriteTarget(
+            source: $source,
+            target: $target,
+            propertyMappings: $objectToObjectMetadata->getEagerPropertyMappings(),
+            context: $context
+        );
+
+        return $target;
+    }
+
     private function generateConstructorArguments(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
         Context $context
     ): ConstructorArguments {
-        $propertyMappings = $objectToObjectMetadata->getPropertyMappings();
+        $propertyMappings = $objectToObjectMetadata->getConstructorPropertyMappings();
 
         $constructorArguments = new ConstructorArguments();
 
         foreach ($propertyMappings as $propertyMapping) {
-            if ($propertyMapping->getTargetWriteMode() !== WriteMode::Constructor) {
-                continue;
-            }
-
             try {
                 /** @var mixed */
                 $targetPropertyValue = $this->transformValue(
@@ -213,13 +320,16 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         return $constructorArguments;
     }
 
+    /**
+     * @param array<int,PropertyMapping> $propertyMappings
+     */
     private function readSourceAndWriteTarget(
         object $source,
         object $target,
-        ObjectToObjectMetadata $objectToObjectMetadata,
+        array $propertyMappings,
         Context $context
     ): void {
-        foreach ($objectToObjectMetadata->getPropertyMappings() as $propertyMapping) {
+        foreach ($propertyMappings as $propertyMapping) {
             $this->readSourcePropertyAndWriteTargetProperty(
                 source: $source,
                 target: $target,

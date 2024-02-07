@@ -50,6 +50,11 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectTo
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
+use Rekalogika\Mapper\Transformer\Proxy\Implementation\ProxyGenerator;
+use Rekalogika\Mapper\Transformer\Proxy\Implementation\ProxyRegistry;
+use Rekalogika\Mapper\Transformer\Proxy\ProxyAutoloaderInterface;
+use Rekalogika\Mapper\Transformer\Proxy\ProxyGeneratorInterface;
+use Rekalogika\Mapper\Transformer\Proxy\ProxyRegistryInterface;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\SymfonyUidTransformer;
@@ -135,6 +140,9 @@ class MapperFactory
     private ?PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor = null;
     private ?PropertyAccessorInterface $propertyAccessor = null;
     private ?EagerPropertiesResolverInterface $eagerPropertiesResolver = null;
+    private ?ProxyGeneratorInterface $proxyGenerator = null;
+    private ?ProxyRegistryInterface $proxyRegistry = null;
+    private ?ProxyAutoLoaderInterface $proxyAutoLoader = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -479,6 +487,7 @@ class MapperFactory
                 $this->getPropertyReadInfoExtractor(),
                 $this->getPropertyWriteInfoExtractor(),
                 $this->getEagerPropertiesResolver(),
+                $this->getProxyGenerator(),
             );
         }
 
@@ -695,6 +704,35 @@ class MapperFactory
         }
 
         return $this->eagerPropertiesResolver;
+    }
+
+    protected function getProxyGenerator(): ProxyGeneratorInterface
+    {
+        if (null === $this->proxyGenerator) {
+            $this->proxyGenerator = new ProxyGenerator();
+        }
+
+        return $this->proxyGenerator;
+    }
+
+    protected function getProxyRegistry(): ProxyRegistryInterface
+    {
+        if (null === $this->proxyRegistry) {
+            $this->proxyRegistry = new ProxyRegistry('/tmp/rekalogika-mapper');
+        }
+
+        return $this->proxyRegistry;
+    }
+
+    protected function getProxyAutoLoader(): ProxyAutoLoaderInterface
+    {
+        if (null === $this->proxyAutoLoader) {
+            $proxyRegistry = $this->getProxyRegistry();
+            assert($proxyRegistry instanceof ProxyAutoloaderInterface);
+            $this->proxyAutoLoader = $proxyRegistry;
+        }
+
+        return $this->proxyAutoLoader;
     }
 
     //
