@@ -35,7 +35,7 @@ final readonly class PropertyMapping
     /**
      * @param array<array-key,Type> $sourceTypes
      * @param array<array-key,Type> $targetTypes
-     * @param 'int'|'float'|'string'|'bool'|null $targetScalarType
+     * @param 'int'|'float'|'string'|'bool'|'null'|null $targetScalarType
      */
     public function __construct(
         private ?string $sourceProperty,
@@ -105,7 +105,7 @@ final readonly class PropertyMapping
      * If set, set the property directly, without delegating to the main
      * transformer
      *
-     * @return 'int'|'float'|'string'|'bool'|null
+     * @return 'int'|'float'|'string'|'bool'|'null'|null
      */
     public function getTargetScalarType(): ?string
     {

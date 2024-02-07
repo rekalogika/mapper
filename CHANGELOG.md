@@ -6,6 +6,8 @@
 * fix(`MainTransformer`): Improve error reporting on circular references.
 * fix(`ObjectCache`): Change backing store to `WeakMap`.
 * feat(`EagerPropertyResolver`): Required for future lazy feature.
+* perf(`ObjectToObjectTransformer`): Handle null to scalar transformation
+  internally.
 
 ## 0.6.6
 

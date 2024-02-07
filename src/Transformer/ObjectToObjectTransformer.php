@@ -286,27 +286,31 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $sourcePropertyValue = $this->readerWriter
             ->readSourceProperty($source, $propertyMapping, $context);
 
-        // do simple scalar to scalar transformation if possible
+        // short circuit if the source is null, so we don't have to delegate
+        // to the main transformer
 
         $targetScalarType = $propertyMapping->getTargetScalarType();
 
-        if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
-            switch ($targetScalarType) {
-                case 'int':
-                    $targetPropertyValue = (int) $sourcePropertyValue;
-                    break;
-                case 'float':
-                    $targetPropertyValue = (float) $sourcePropertyValue;
-                    break;
-                case 'string':
-                    $targetPropertyValue = (string) $sourcePropertyValue;
-                    break;
-                case 'bool':
-                    $targetPropertyValue = (bool) $sourcePropertyValue;
-                    break;
-            }
+        if ($sourcePropertyValue === null && $targetScalarType !== null) {
+            return match ($targetScalarType) {
+                'int' => 0,
+                'float' => 0.0,
+                'string' => '',
+                'bool' => false,
+                'null' => null,
+            };
+        }
 
-            return $targetPropertyValue;
+        // same thing if target is scalar & source is scalar
+
+        if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
+            return match ($targetScalarType) {
+                'int' => (int) $sourcePropertyValue,
+                'float' => (float) $sourcePropertyValue,
+                'string' => (string) $sourcePropertyValue,
+                'bool' => (bool) $sourcePropertyValue,
+                'null' => null,
+            };
         }
 
         // get the value of the target property

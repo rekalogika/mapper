@@ -227,7 +227,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $targetPropertyTypes = $this->propertyTypeExtractor
                 ->getTypes($targetClass, $targetProperty);
 
-            /** @var 'int'|'float'|'string'|'bool'|null */
+            /** @var 'int'|'float'|'string'|'bool'|'null'|null */
             $targetPropertyScalarType = null;
 
             if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
@@ -243,7 +243,11 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 $targetPropertyType = $targetPropertyTypes[0];
                 $targetPropertyBuiltInType = $targetPropertyType->getBuiltinType();
 
-                if (in_array($targetPropertyBuiltInType, ['int', 'float', 'string', 'bool'], true)) {
+                if (in_array(
+                    $targetPropertyBuiltInType,
+                    ['int', 'float', 'string', 'bool', 'null'],
+                    true
+                )) {
                     $targetPropertyScalarType = $targetPropertyBuiltInType;
                 }
             }
@@ -251,6 +255,8 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             // determine if source property is lazy
 
             $sourceLazy = !in_array($sourceProperty, $eagerProperties, true);
+
+            // instantiate property mapping
 
             $propertyMapping = new PropertyMapping(
                 sourceProperty: $sourceReadMode !== ReadMode::None ? $sourceProperty : null,
