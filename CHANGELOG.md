@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.6.8
+
+* refactor(`ObjectToObjectTransformer`): Refactor for future extension.
+
 ## 0.6.7
 
 * fix(`TraceData`): Do not throw exception on missing data.

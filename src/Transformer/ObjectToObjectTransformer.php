@@ -29,6 +29,7 @@ use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
 use Rekalogika\Mapper\Transformer\Exception\UnsupportedPropertyMappingException;
 use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
+use Rekalogika\Mapper\Transformer\Model\ConstructorArguments;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
@@ -126,7 +127,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // map properties
 
-        $this->writeTarget(
+        $this->readSourceAndWriteTarget(
             source: $source,
             target: $target,
             objectToObjectMetadata: $objectToObjectMetadata,
@@ -149,14 +150,37 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new ClassNotInstantiableException($targetClass, context: $context);
         }
 
-        // gets the mapping and loop over the mapping
+        $constructorArguments = $this->generateConstructorArguments(
+            source: $source,
+            objectToObjectMetadata: $objectToObjectMetadata,
+            context: $context
+        );
 
+        try {
+            $reflectionClass = new \ReflectionClass($targetClass);
+
+            return $reflectionClass
+                ->newInstanceArgs($constructorArguments->getArguments());
+        } catch (\TypeError | \ReflectionException $e) {
+            throw new InstantiationFailureException(
+                source: $source,
+                targetClass: $targetClass,
+                constructorArguments: $constructorArguments->getArguments(),
+                unsetSourceProperties: $constructorArguments->getUnsetSourceProperties(),
+                previous: $e,
+                context: $context
+            );
+        }
+    }
+
+    private function generateConstructorArguments(
+        object $source,
+        ObjectToObjectMetadata $objectToObjectMetadata,
+        Context $context
+    ): ConstructorArguments {
         $propertyMappings = $objectToObjectMetadata->getPropertyMappings();
 
-        $constructorArguments = [];
-
-        /** @var array<int,string> */
-        $unsetSourceProperties = [];
+        $constructorArguments = new ConstructorArguments();
 
         foreach ($propertyMappings as $propertyMapping) {
             if ($propertyMapping->getTargetWriteMode() !== WriteMode::Constructor) {
@@ -172,12 +196,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     context: $context
                 );
 
-                /** @psalm-suppress MixedAssignment */
-                $constructorArguments[$propertyMapping->getTargetProperty()]
-                    = $targetPropertyValue;
+                $constructorArguments->addArgument(
+                    $propertyMapping->getTargetProperty(),
+                    $targetPropertyValue
+                );
             } catch (UninitializedSourcePropertyException $e) {
                 $sourceProperty = $e->getPropertyName();
-                $unsetSourceProperties[] = $sourceProperty;
+                $constructorArguments->addUnsetSourceProperty($sourceProperty);
 
                 continue;
             } catch (UnsupportedPropertyMappingException $e) {
@@ -185,67 +210,68 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             }
         }
 
-        try {
-            $reflectionClass = new \ReflectionClass($targetClass);
-
-            return $reflectionClass->newInstanceArgs($constructorArguments);
-        } catch (\TypeError | \ReflectionException $e) {
-            throw new InstantiationFailureException(
-                source: $source,
-                targetClass: $targetClass,
-                constructorArguments: $constructorArguments,
-                unsetSourceProperties: $unsetSourceProperties,
-                previous: $e,
-                context: $context
-            );
-        }
+        return $constructorArguments;
     }
 
-    private function writeTarget(
+    private function readSourceAndWriteTarget(
         object $source,
         object $target,
         ObjectToObjectMetadata $objectToObjectMetadata,
         Context $context
     ): void {
         foreach ($objectToObjectMetadata->getPropertyMappings() as $propertyMapping) {
-            $targetWriteMode = $propertyMapping->getTargetWriteMode();
-            $targetWriteVisibility = $propertyMapping->getTargetWriteVisibility();
-
-            if (
-                $targetWriteMode !== WriteMode::Method
-                && $targetWriteMode !== WriteMode::Property
-                && $targetWriteMode !== WriteMode::AdderRemover
-            ) {
-                continue;
-            }
-
-            if ($targetWriteVisibility !== Visibility::Public) {
-                continue;
-            }
-
-            try {
-                /** @var mixed */
-                $targetPropertyValue = $this->transformValue(
-                    propertyMapping: $propertyMapping,
-                    source: $source,
-                    target: $target,
-                    context: $context
-                );
-            } catch (UninitializedSourcePropertyException $e) {
-                continue;
-            } catch (UnsupportedPropertyMappingException $e) {
-                continue;
-            }
-
-            // write
-
-            $this->readerWriter->writeTargetProperty(
+            $this->readSourcePropertyAndWriteTargetProperty(
+                source: $source,
                 target: $target,
                 propertyMapping: $propertyMapping,
-                value: $targetPropertyValue,
                 context: $context
             );
         }
+    }
+
+    private function readSourcePropertyAndWriteTargetProperty(
+        object $source,
+        object $target,
+        PropertyMapping $propertyMapping,
+        Context $context
+    ): void {
+        $targetWriteMode = $propertyMapping->getTargetWriteMode();
+        $targetWriteVisibility = $propertyMapping->getTargetWriteVisibility();
+
+        if (
+            $targetWriteMode !== WriteMode::Method
+            && $targetWriteMode !== WriteMode::Property
+            && $targetWriteMode !== WriteMode::AdderRemover
+        ) {
+            return;
+        }
+
+        if ($targetWriteVisibility !== Visibility::Public) {
+            return;
+        }
+
+        try {
+            /** @var mixed */
+            $targetPropertyValue = $this->transformValue(
+                propertyMapping: $propertyMapping,
+                source: $source,
+                target: $target,
+                context: $context
+            );
+        } catch (UninitializedSourcePropertyException $e) {
+            return;
+        } catch (UnsupportedPropertyMappingException $e) {
+            return;
+        }
+
+        // write
+
+        $this->readerWriter->writeTargetProperty(
+            target: $target,
+            propertyMapping: $propertyMapping,
+            value: $targetPropertyValue,
+            context: $context
+        );
     }
 
     private function transformValue(
