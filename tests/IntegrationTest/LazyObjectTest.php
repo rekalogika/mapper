@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ChildObjectWithIdDto;
+use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ConcreteObjectWithId;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdFinalDto;
@@ -74,5 +76,23 @@ class LazyObjectTest extends AbstractFrameworkTest
         // initialization
         $source = new ObjectWithId();
         $target = $this->mapper->map($source, ObjectWithIdReadOnlyDto::class);
+    }
+
+
+    public function testIdInParentClass(): void
+    {
+        $source = new ObjectWithId();
+        $target = $this->mapper->map($source, ChildObjectWithIdDto::class);
+        $this->assertSame('id', $target->id);
+    }
+
+    public function testIdInParentClassInitialized(): void
+    {
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('This method should not be called');
+
+        $source = new ObjectWithId();
+        $target = $this->mapper->map($source, ChildObjectWithIdDto::class);
+        $foo = $target->name;
     }
 }

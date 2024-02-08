@@ -8,6 +8,7 @@
 * test: Add mandatory config for `symfony/framework-bundle`.
 * fix(`ProxyGenerator`): Handle readonly targets.
 * build: Require `symfony/console`.
+* test: Lazy loading id property from parent class.
 
 ## 0.6.7
 
