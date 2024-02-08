@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.2
+
+* style(`Profiler`): Cosmetic.
+
 ## 0.7.1
 
 * style: Sort `composer.json`

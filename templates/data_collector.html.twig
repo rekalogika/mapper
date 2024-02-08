@@ -42,16 +42,18 @@
     <h2>Mapper</h2>
     <div class="sf-rekalogika_mapper sf-reset">
         <table>
-            <tr>
-                <th>Path</th>
-                <th>Source Type</th>
-                <th>Existing Target Value Type</th>
-                <th>Target Type Hint</th>
-                <th>Selected Target Type</th>
-                <th>Target Result Type</th>
-                <th>Transformer</th>
-                <th>Duration</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Path</th>
+                    <th>Source Type</th>
+                    <th>Existing Target Value Type</th>
+                    <th>Target Type Hint</th>
+                    <th>Selected Target Type</th>
+                    <th>Target Result Type</th>
+                    <th>Transformer</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
 
             {% for tracedata in collector.mappings %}
                 {{ _self.render_row(tracedata, 0) }}
@@ -71,7 +73,11 @@
             {%- elseif depth == 1 -%}
                 └&nbsp;{{- tracedata.path ?? '(???)' -}}
             {%- else -%}
-                {{- tracedata.path ?? '(root)' -}}
+                {%- if tracedata.path -%}
+                    {{- tracedata.path -}}
+                {% else %}
+                    <span class="badge badge-info">Root</span>
+                {%- endif -%}
             {%- endif -%}
         </td>
         {%- endapply -%}
