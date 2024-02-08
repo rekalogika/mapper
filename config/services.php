@@ -385,6 +385,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$transformerRegistry' => service('rekalogika.mapper.transformer_registry'),
+            '$debug' => param('kernel.debug'),
         ]);
 
     $services

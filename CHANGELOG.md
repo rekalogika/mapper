@@ -14,6 +14,7 @@
 * feat(`DataCollector`): Add target type hint information.
 * fix(`ObjectToObjectMetadataFactory`): Fix scalar type logic.
 * test: Fix psalm errors.
+* fix(`MainTransformer`): Inject kernel.debug
 
 ## 0.7.0
 
