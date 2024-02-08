@@ -33,6 +33,7 @@ use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
+use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\ChainEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
@@ -357,7 +358,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # eager properties resolver
 
     $services
-        ->set('rekalogika.mapper.eager_properties_resolver', HeuristicsEagerPropertiesResolver::class);
+        ->set('rekalogika.mapper.eager_properties_resolver', ChainEagerPropertiesResolver::class)
+        ->args([tagged_iterator('rekalogika.mapper.eager_properties_resolver')]);
+
+    $services
+        ->set('rekalogika.mapper.eager_properties_resolver.heuristics', HeuristicsEagerPropertiesResolver::class)
+        ->tag('rekalogika.mapper.eager_properties_resolver', ['priority' => -1000]);
 
     # proxy
 

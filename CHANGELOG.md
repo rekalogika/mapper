@@ -3,6 +3,7 @@
 ## 0.7.2
 
 * style(`Profiler`): Cosmetic.
+* refactor(`EagerPropertiesResolver`): Create `ChainEagerPropertiesResolver`.
 
 ## 0.7.1
 

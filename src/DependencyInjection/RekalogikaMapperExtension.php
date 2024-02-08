@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Attribute\AsPropertyMapper;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -51,6 +52,9 @@ class RekalogikaMapperExtension extends Extension
 
         $container->registerForAutoconfiguration(TransformerInterface::class)
             ->addTag('rekalogika.mapper.transformer');
+
+        $container->registerForAutoconfiguration(EagerPropertiesResolverInterface::class)
+            ->addTag('rekalogika.mapper.eager_properties_resolver');
 
         $container->registerAttributeForAutoconfiguration(
             AsPropertyMapper::class,
