@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
@@ -27,6 +28,8 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\Transformer\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Transformer\Proxy\ProxyGeneratorInterface;
+use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
@@ -35,6 +38,7 @@ use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
+use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\VarExporter\Internal\Hydrator;
 
 final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
@@ -48,6 +52,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private ProxyGeneratorInterface $proxyGenerator,
+        private TypeResolverInterface $typeResolver,
     ) {
     }
 
@@ -222,19 +227,45 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
 
             // get source property types
 
-            $sourcePropertyTypes = $this->propertyTypeExtractor
+            $originalSourcePropertyTypes = $this->propertyTypeExtractor
                 ->getTypes($sourceClass, $sourceProperty) ?? [];
+            $sourcePropertyTypes = [];
+
+            foreach ($originalSourcePropertyTypes as $sourcePropertyType) {
+                $simpleTypes = $this->typeResolver->getSimpleTypes($sourcePropertyType);
+
+                foreach ($simpleTypes as $simpleType) {
+                    if ($simpleType instanceof MixedType) {
+                        continue;
+                    }
+                    $sourcePropertyTypes[] = $simpleType;
+                }
+            }
 
             // get target property types
 
-            $targetPropertyTypes = $this->propertyTypeExtractor
+            $originalTargetPropertyTypes = $this->propertyTypeExtractor
                 ->getTypes($targetClass, $targetProperty) ?? [];
+            $targetPropertyTypes = [];
+
+            foreach ($originalTargetPropertyTypes as $targetPropertyType) {
+                $simpleTypes = $this->typeResolver->getSimpleTypes($targetPropertyType);
+
+                foreach ($simpleTypes as $simpleType) {
+                    if ($simpleType instanceof MixedType) {
+                        continue;
+                    }
+                    $targetPropertyTypes[] = $simpleType;
+                }
+            }
+
+            // determine target scalar type
 
             /** @var 'int'|'float'|'string'|'bool'|'null'|null */
             $targetPropertyScalarType = null;
 
-            if (count($targetPropertyTypes) === 1) {
-                $targetPropertyType = $targetPropertyTypes[0];
+            if (count($originalTargetPropertyTypes) === 1) {
+                $targetPropertyType = $originalTargetPropertyTypes[0];
                 $targetPropertyBuiltInType = $targetPropertyType->getBuiltinType();
 
                 if (in_array(
@@ -243,6 +274,17 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                     true
                 )) {
                     $targetPropertyScalarType = $targetPropertyBuiltInType;
+                }
+            }
+
+            // determine if target can accept null
+
+            $targetCanAcceptNull = false;
+
+            foreach ($targetPropertyTypes as $targetPropertyType) {
+                if ($targetPropertyType->getBuiltinType() === 'null') {
+                    $targetCanAcceptNull = true;
+                    break;
                 }
             }
 
@@ -269,6 +311,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 targetScalarType: $targetPropertyScalarType,
                 propertyMapper: $serviceMethodSpecification,
                 sourceLazy: $sourceLazy,
+                targetCanAcceptNull: $targetCanAcceptNull,
             );
 
             $propertyMappings[] = $propertyMapping;

@@ -422,31 +422,36 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $sourcePropertyValue = $this->readerWriter
             ->readSourceProperty($source, $propertyMapping, $context);
 
-        // short circuit if the source is null, so we don't have to delegate
-        // to the main transformer
+        // short circuit if the the source is null or scalar, and the target
+        // is a scalar, so we don't have to delegate to the main transformer
 
         $targetScalarType = $propertyMapping->getTargetScalarType();
 
-        if ($sourcePropertyValue === null && $targetScalarType !== null) {
-            return match ($targetScalarType) {
-                'int' => 0,
-                'float' => 0.0,
-                'string' => '',
-                'bool' => false,
-                'null' => null,
-            };
+        if ($targetScalarType !== null) {
+            if ($sourcePropertyValue === null) {
+                return match ($targetScalarType) {
+                    'int' => 0,
+                    'float' => 0.0,
+                    'string' => '',
+                    'bool' => false,
+                    'null' => null,
+                };
+            } elseif (is_scalar($sourcePropertyValue)) {
+                return match ($targetScalarType) {
+                    'int' => (int) $sourcePropertyValue,
+                    'float' => (float) $sourcePropertyValue,
+                    'string' => (string) $sourcePropertyValue,
+                    'bool' => (bool) $sourcePropertyValue,
+                    'null' => null,
+                };
+            }
         }
 
-        // same thing if target is scalar & source is scalar
+        // short circuit: if source is null & target accepts null, we set the
+        // target to null
 
-        if ($targetScalarType !== null && is_scalar($sourcePropertyValue)) {
-            return match ($targetScalarType) {
-                'int' => (int) $sourcePropertyValue,
-                'float' => (float) $sourcePropertyValue,
-                'string' => (string) $sourcePropertyValue,
-                'bool' => (bool) $sourcePropertyValue,
-                'null' => null,
-            };
+        if ($propertyMapping->targetCanAcceptNull() && $sourcePropertyValue === null) {
+            return null;
         }
 
         // get the value of the target property

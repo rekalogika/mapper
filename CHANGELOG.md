@@ -17,6 +17,8 @@
 * fix(`MainTransformer`): Inject kernel.debug
 * revert(`Profiler`): Remove guessed badge because of the possibility of
   confusion.
+* perf(`ObjectToObjectTransformer`): If source is null & target accepts null,
+  we set null on the target directly.
 
 ## 0.7.0
 

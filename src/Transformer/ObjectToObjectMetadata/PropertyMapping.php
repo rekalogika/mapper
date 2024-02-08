@@ -54,6 +54,7 @@ final readonly class PropertyMapping
         private ?string $targetScalarType,
         private ?ServiceMethodSpecification $propertyMapper,
         private bool $sourceLazy,
+        private bool $targetCanAcceptNull,
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
@@ -160,5 +161,10 @@ final readonly class PropertyMapping
     public function isSourceLazy(): bool
     {
         return $this->sourceLazy;
+    }
+
+    public function targetCanAcceptNull(): bool
+    {
+        return $this->targetCanAcceptNull;
     }
 }

@@ -232,6 +232,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service(PropertyWriteInfoExtractorInterface::class),
             service('rekalogika.mapper.eager_properties_resolver'),
             service('rekalogika.mapper.proxy_generator'),
+            service('rekalogika.mapper.type_resolver'),
         ]);
 
     $services

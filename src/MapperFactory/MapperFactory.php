@@ -490,6 +490,7 @@ class MapperFactory
                 $this->getPropertyWriteInfoExtractor(),
                 $this->getEagerPropertiesResolver(),
                 $this->getProxyGenerator(),
+                $this->getTypeResolver(),
             );
 
             $objectToObjectMetadataFactory = new ProxyResolvingObjectToObjectMetadataFactory(
