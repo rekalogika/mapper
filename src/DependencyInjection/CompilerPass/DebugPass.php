@@ -18,10 +18,17 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-final class DebugTransformerPass implements CompilerPassInterface
+final class DebugPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container)
     {
+        // remove property info cache
+
+        $container->removeDefinition('rekalogika.mapper.cache.property_info');
+        $container->removeDefinition('rekalogika.mapper.property_info.cache');
+
+        // decorates all transformers using TraceableTransformer
+
         $taggedServices = $container->findTaggedServiceIds('rekalogika.mapper.transformer');
         $dataCollector = new Reference('rekalogika.mapper.data_collector');
 

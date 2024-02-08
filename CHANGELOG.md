@@ -7,6 +7,7 @@
 * refactor(`HeuristicsEagerPropertiesResolver`): Genericize.
 * perf(`ProxyRegistry`): Improve proxy generation performance.
 * style(`ObjectToObjectTransformer`): Add comments for clarity.
+* dx(`DebugPass`): Remove property info caching on debug mode.
 
 ## 0.7.1
 
