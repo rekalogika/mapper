@@ -17,6 +17,7 @@ use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\VarDumper\Cloner\Data;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 
 final class TraceData
 {
@@ -116,6 +117,16 @@ final class TraceData
     public function getResultType(): string
     {
         return $this->resultType ?? '__unknown__';
+    }
+
+    public function isLazyLoadingResult(): bool
+    {
+        $class = $this->getResultType();
+        if (!class_exists($class)) {
+            return false;
+        }
+
+        return is_a($class, LazyObjectInterface::class, true);
     }
 
     public function getTotalMappingsIncludingSubMappings(): int

@@ -8,6 +8,7 @@
   class name.
 * fix(`ProxyGenerator`): Borrow `__CG__` marker for compatibility with
   third-party libraries.
+* feat(`MapperDataCollector`): Add lazy badge for lazy results.
 
 ## 0.7.0
 

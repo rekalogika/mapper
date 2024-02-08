@@ -3,28 +3,28 @@
 {% block toolbar %}
     {% if collector.totalMappings > 0 %}
         {% set icon %}
-            {{ source('@RekalogikaMapper/map.svg') }}
-            <span class="sf-toolbar-value">{{ collector.totalMappings }}</span>
+        {{ source('@RekalogikaMapper/map.svg') }}
+        <span class="sf-toolbar-value">{{ collector.totalMappings }}</span>
         {% endset %}
 
         {% set text %}
-            <div class="sf-toolbar-info-piece">
-                <b>Total mappings</b>
-                <span class="sf-toolbar-status">{{ collector.totalMappings }}</span>
-            </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Total mappings</b>
+            <span class="sf-toolbar-status">{{ collector.totalMappings }}</span>
+        </div>
 
-            <div class="sf-toolbar-info-piece">
-                <b>Including submappings</b>
-                <span class="sf-toolbar-status">{{ collector.totalMappingsIncludingSubMappings }}</span>
-            </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Including submappings</b>
+            <span class="sf-toolbar-status">{{ collector.totalMappingsIncludingSubMappings }}</span>
+        </div>
 
-            <div class="sf-toolbar-info-piece">
-                <b>Total time</b>
-                <span>
-                    {{ '%.2f'|format(collector.totalTime * 1000) }}
-                    <span class="unit">ms</span>
-                </span>
-            </div>
+        <div class="sf-toolbar-info-piece">
+            <b>Total time</b>
+            <span>
+                {{ '%.2f'|format(collector.totalTime * 1000) }}
+                <span class="unit">ms</span>
+            </span>
+        </div>
         {% endset %}
 
         {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: profiler_url }) }}
@@ -77,7 +77,12 @@
         <td>{{ tracedata.sourceType|abbr_class }}</td>
         <td>{{ tracedata.existingTargetType|abbr_class }}</td>
         <td>{{ tracedata.targetType|raw }}</td>
-        <td>{{ tracedata.resultType|abbr_class }}</td>
+        <td>
+            {{ tracedata.resultType|abbr_class }}
+            {% if tracedata.lazyLoadingResult %}
+                <span class="badge badge-success">Lazy</span>
+            {% endif %}
+        </td>
         <td>{{ tracedata.transformerClass|abbr_class }}</td>
         <td>
             <span class="nowrap">{{- '%.2f'|format(tracedata.time * 1000) -}}
