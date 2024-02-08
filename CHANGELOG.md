@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.1
+
+* style: Sort `composer.json`
+
 ## 0.7.0
 
 * refactor(`ObjectToObjectTransformer`): Refactor for future extension.

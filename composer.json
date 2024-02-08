@@ -25,6 +25,7 @@
     "require": {
         "doctrine/collections": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.3",
+        "phpstan/phpdoc-parser": "^1.25",
         "psr/container": "^2.0",
         "symfony/cache": "^6.4 || ^7.0",
         "symfony/clock": "^6.4 || ^7.0",
@@ -34,8 +35,7 @@
         "symfony/property-access": "^6.4 || ^7.0",
         "symfony/property-info": "^6.4 || ^7.0",
         "symfony/serializer": "^6.4 || ^7.0",
-        "symfony/var-exporter": "^6.4.1 || ^6.5 || ^7.0.1 || ^7.1",
-        "phpstan/phpdoc-parser": "^1.25"
+        "symfony/var-exporter": "^6.4.1 || ^6.5 || ^7.0.1 || ^7.1"
     },
     "require-dev": {
         "bnf/phpstan-psr-container": "^1.0",
@@ -66,5 +66,8 @@
         "psr-4": {
             "Rekalogika\\Mapper\\Tests\\": "tests/"
         }
+    },
+    "config": {
+        "sort-packages": true
     }
 }
