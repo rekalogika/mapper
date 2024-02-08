@@ -402,6 +402,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         );
     }
 
+    /**
+     * @param object|null $target Target is null if the transformation is for a
+     * constructor argument
+     */
     private function transformValue(
         PropertyMapping $propertyMapping,
         object $source,
@@ -475,6 +479,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // get the value of the target property
 
         if (is_object($target)) {
+            // if this is for a property mapping, not a constructor argument
+
             /** @var mixed */
             $targetPropertyValue = $this->readerWriter->readTargetProperty(
                 $target,
@@ -482,6 +488,9 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 $context
             );
         } else {
+            // if this is for a constructor argument, we don't have an existing
+            // value
+
             $targetPropertyValue = null;
         }
 
