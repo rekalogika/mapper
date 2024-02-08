@@ -42,7 +42,6 @@ use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 
 final class ObjectToObjectTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
