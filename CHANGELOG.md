@@ -4,6 +4,7 @@
 
 * style(`Profiler`): Cosmetic.
 * refactor(`EagerPropertiesResolver`): Create `ChainEagerPropertiesResolver`.
+* refactor(`HeuristicsEagerPropertiesResolver`): Genericize.
 
 ## 0.7.1
 

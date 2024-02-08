@@ -17,40 +17,48 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolve
 
 class HeuristicsEagerPropertiesResolver implements EagerPropertiesResolverInterface
 {
+    /**
+     * @var array<int,string>
+     */
+    private $properties = [];
+
+    /**
+     * @param array<int,string>|null $properties
+     */
+    public function __construct(?array $properties = null)
+    {
+        $this->properties = $properties ?? [
+            'id',
+            'ID',
+            'Id',
+            'uuid',
+            'UUID',
+            'Uuid',
+            'identifier'
+        ];
+    }
+
     public function getEagerProperties(string $sourceClass): array
     {
         $reflectionClass = new \ReflectionClass($sourceClass);
 
-        try {
-            $id = $reflectionClass->getProperty('id');
-            if ($id->isPublic()) {
-                return ['id'];
+        foreach ($this->properties as $property) {
+            try {
+                $id = $reflectionClass->getProperty($property);
+                if ($id->isPublic()) {
+                    return [$property];
+                }
+            } catch (\ReflectionException) {
             }
-        } catch (\ReflectionException) {
-        }
 
-        try {
-            $id = $reflectionClass->getProperty('uuid');
-            if ($id->isPublic()) {
-                return ['uuid'];
+            try {
+                $methodName = 'get' . ucfirst($property);
+                $id = $reflectionClass->getMethod($methodName);
+                if ($id->isPublic()) {
+                    return [$property];
+                }
+            } catch (\ReflectionException) {
             }
-        } catch (\ReflectionException) {
-        }
-
-        try {
-            $id = $reflectionClass->getMethod('getId');
-            if ($id->isPublic()) {
-                return ['id'];
-            }
-        } catch (\ReflectionException) {
-        }
-
-        try {
-            $id = $reflectionClass->getMethod('getUuid');
-            if ($id->isPublic()) {
-                return ['uuid'];
-            }
-        } catch (\ReflectionException) {
         }
 
         return [];
