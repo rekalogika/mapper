@@ -210,6 +210,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new LogicException('Target proxy class must not be null.', context: $context);
         }
 
+        // if proxy class does not exist, create it
+
         if (!class_exists($targetProxyClass)) {
             $proxySpecification = $objectToObjectMetadata->getTargetProxySpecification();
 
@@ -228,12 +230,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             }
         }
 
-        if (!is_a($targetProxyClass, LazyObjectInterface::class, true)) {
-            throw new LogicException(
-                sprintf('Target proxy class must implement "%s".', LazyObjectInterface::class),
-                context: $context
-            );
-        }
+        // create proxy initializer. this initializer will be executed when the
+        // proxy is first accessed
 
         $initializer = function (object $instance) use (
             $source,
@@ -241,6 +239,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $context,
             $targetClass
         ): void {
+            // if constructor exists, process it
+
             if (\method_exists($instance, '__construct')) {
                 $constructorArguments = $this->generateConstructorArguments(
                     source: $source,
@@ -268,6 +268,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 }
             }
 
+            // map lazy properties
+
             $this->readSourceAndWriteTarget(
                 source: $source,
                 target: $instance,
@@ -276,16 +278,20 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             );
         };
 
+        // instantiate the proxy
+
         /**
          * @psalm-suppress UndefinedMethod
          * @psalm-suppress MixedReturnStatement
+         * @psalm-suppress MixedMethodCall
          * @var object
-         * @phpstan-ignore-next-line
          */
         $target = $targetProxyClass::createLazyGhost(
             initializer: $initializer,
             skippedProperties: $objectToObjectMetadata->getTargetProxySkippedProperties()
         );
+
+        // map eager properties
 
         $this->readSourceAndWriteTarget(
             source: $source,

@@ -6,6 +6,7 @@
 * refactor(`EagerPropertiesResolver`): Create `ChainEagerPropertiesResolver`.
 * refactor(`HeuristicsEagerPropertiesResolver`): Genericize.
 * perf(`ProxyRegistry`): Improve proxy generation performance.
+* style(`ObjectToObjectTransformer`): Add comments for clarity.
 
 ## 0.7.1
 
