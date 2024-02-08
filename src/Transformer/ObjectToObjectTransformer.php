@@ -106,8 +106,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $objectToObjectMetadata = $this->objectToObjectMetadataFactory
             ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
 
-        // initialize target if target is null
+        // disregard target if target is read only
 
+        if ($objectToObjectMetadata->isTargetReadOnly()) {
+            $target = null;
+        }
+
+        // initialize target if target is null
 
         if (null === $target) {
             $canUseTargetProxy = $objectToObjectMetadata->canUseTargetProxy();

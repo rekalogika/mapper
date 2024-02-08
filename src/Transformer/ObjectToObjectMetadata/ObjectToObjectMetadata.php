@@ -64,6 +64,7 @@ final readonly class ObjectToObjectMetadata
         private array $initializableTargetPropertiesNotInSource,
         private int $sourceModifiedTime,
         private int $targetModifiedTime,
+        private bool $targetReadOnly,
         private ?string $targetProxyClass = null,
         private ?string $targetProxyCode = null,
         private array $targetProxySkippedProperties = [],
@@ -112,6 +113,7 @@ final readonly class ObjectToObjectMetadata
             $this->initializableTargetPropertiesNotInSource,
             $this->sourceModifiedTime,
             $this->targetModifiedTime,
+            $this->targetReadOnly,
             $proxySpecification->getClass(),
             $proxySpecification->getCode(),
             $targetProxySkippedProperties
@@ -251,5 +253,10 @@ final readonly class ObjectToObjectMetadata
     public function getTargetProxySkippedProperties(): array
     {
         return $this->targetProxySkippedProperties;
+    }
+
+    public function isTargetReadOnly(): bool
+    {
+        return $this->targetReadOnly;
     }
 }

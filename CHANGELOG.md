@@ -8,6 +8,8 @@
 * perf(`ProxyRegistry`): Improve proxy generation performance.
 * style(`ObjectToObjectTransformer`): Add comments for clarity.
 * dx(`DebugPass`): Remove property info caching on debug mode.
+* fix(`ObjectToObjectTransformer`): Disregard existing target if it is read
+  only.
 
 ## 0.7.1
 

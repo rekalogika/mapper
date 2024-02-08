@@ -110,6 +110,10 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         $eagerProperties = $this->eagerPropertiesResolver
             ->getEagerProperties($sourceClass);
 
+        // determine if target read only
+
+        $targetReadOnly = $targetReflection->isReadOnly();
+
         // determine last modified
 
         $sourceModifiedTime = ClassUtil::getLastModifiedTime($sourceReflection);
@@ -326,6 +330,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             initializableTargetPropertiesNotInSource: $initializableTargetPropertiesNotInSource,
             sourceModifiedTime: $sourceModifiedTime,
             targetModifiedTime: $targetModifiedTime,
+            targetReadOnly: $targetReadOnly,
         );
 
         // create proxy if possible
