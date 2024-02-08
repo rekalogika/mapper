@@ -12,7 +12,9 @@
         "mapping",
         "api",
         "symfony",
-        "api-platform"
+        "api-platform",
+        "lazy-loading",
+        "proxy"
     ],
     "authors": [
         {

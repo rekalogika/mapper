@@ -6,6 +6,7 @@
 * feat: Target object can now be a lazy-loading proxy.
 * fix: Bump lower bound of `symfony/var-exporter` to `6.4.1` & `7.0.1`.
 * test: Add mandatory config for `symfony/framework-bundle`.
+* fix(`ProxyGenerator`): Handle readonly targets.
 
 ## 0.6.7
 

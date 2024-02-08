@@ -1,27 +1,30 @@
+PHP=php
+COMPOSER=composer
+
 .PHONY: test
 test: dump phpstan psalm phpunit
 
 .PHONY: dump
 dump:
-	composer dump-autoload --optimize
+	$(COMPOSER) dump-autoload --optimize
 
 .PHONY: phpstan
 phpstan:
-	vendor/bin/phpstan analyse
+	$(PHP) vendor/bin/phpstan analyse
 
 .PHONY: psalm
 psalm:
-	vendor/bin/psalm
+	$(PHP) vendor/bin/psalm
 
 .PHONY: phpunit
 phpunit:
 	$(eval c ?=)
 	rm -rf var
-	vendor/bin/phpunit --testdox -v $(c)
+	$(PHP) vendor/bin/phpunit --testdox -v $(c)
 
 .PHONY: php-cs-fixer
 php-cs-fixer: tools/php-cs-fixer
-	$< fix --config=.php-cs-fixer.dist.php --verbose --allow-risky=yes
+	$(PHP) $< fix --config=.php-cs-fixer.dist.php --verbose --allow-risky=yes
 
 .PHONY: tools/php-cs-fixer
 tools/php-cs-fixer:

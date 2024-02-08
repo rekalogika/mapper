@@ -71,7 +71,8 @@ final class ProxyGenerator implements ProxyGeneratorInterface
             $this->getClassHeader() .
             sprintf('namespace %s;', $namespace) . "\n\n" .
             sprintf(
-                'final class %s%s',
+                'final %sclass %s%s',
+                $targetReflection->isReadOnly() ? 'readonly ' : ' ',
                 $shortName,
                 ProxyHelper::generateLazyGhost($targetReflection)
             );
