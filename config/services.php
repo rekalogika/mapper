@@ -40,6 +40,7 @@ use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\CachingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyBuildingMetadataFactory;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyResolvingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\Proxy\Implementation\ProxyGenerator;
@@ -245,6 +246,13 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('.inner'),
             service('rekalogika.mapper.cache.object_to_object_metadata_factory'),
             param('kernel.debug')
+        ]);
+
+    $services
+        ->set('rekalogika.mapper.object_to_object_metadata_factory.proxy_resolving', ProxyResolvingObjectToObjectMetadataFactory::class)
+        ->decorate('rekalogika.mapper.object_to_object_metadata_factory')
+        ->args([
+            service('.inner'),
         ]);
 
     $services

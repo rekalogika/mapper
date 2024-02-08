@@ -3,6 +3,7 @@
 ## 0.7.1
 
 * style: Sort `composer.json`
+* fix(`ObjectToObjectMetadataFactory`): Resolve proxy classes to real classes.
 
 ## 0.7.0
 
