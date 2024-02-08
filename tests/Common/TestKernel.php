@@ -61,6 +61,10 @@ class TestKernel extends Kernel
                 'php_errors' => [
                     'log' => true,
                 ],
+                'uid' => [
+                    'default_uuid_version' => 7,
+                    'time_based_uuid_version' => 7,
+                ]
             ]);
 
             $container->loadFromExtension('rekalogika_mapper', $this->config);
