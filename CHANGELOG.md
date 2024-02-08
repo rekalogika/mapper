@@ -12,6 +12,7 @@
 * test: Fix psalm errors.
 * fix: Mixed & untyped property was not previously working.
 * feat(`DataCollector`): Add target type hint information.
+* fix(`ObjectToObjectMetadataFactory`): Fix scalar type logic.
 
 ## 0.7.0
 

@@ -233,7 +233,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             /** @var 'int'|'float'|'string'|'bool'|'null'|null */
             $targetPropertyScalarType = null;
 
-            if (!(null === $targetPropertyTypes || count($targetPropertyTypes) === 0)) {
+            if (count($targetPropertyTypes) === 1) {
                 $targetPropertyType = $targetPropertyTypes[0];
                 $targetPropertyBuiltInType = $targetPropertyType->getBuiltinType();
 
