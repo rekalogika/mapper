@@ -47,7 +47,6 @@ use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyBuildingMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyResolvingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
@@ -334,6 +333,7 @@ class MapperFactory
                 objectToObjectMetadataFactory: $this->getObjectToObjectMetadataFactory(),
                 propertyMapperLocator: $this->getPropertyMapperLocator(),
                 subMapperFactory: $this->getSubMapperFactory(),
+                proxyRegistry: $this->getProxyRegistry(),
             );
         }
 
@@ -495,11 +495,6 @@ class MapperFactory
 
             $objectToObjectMetadataFactory = new ProxyResolvingObjectToObjectMetadataFactory(
                 $objectToObjectMetadataFactory,
-            );
-
-            $objectToObjectMetadataFactory = new ProxyBuildingMetadataFactory(
-                $objectToObjectMetadataFactory,
-                $this->getProxyRegistry(),
             );
 
             $this->objectToObjectMetadataFactory = $objectToObjectMetadataFactory;

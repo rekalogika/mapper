@@ -17,6 +17,5 @@ interface ProxyRegistryInterface
 {
     public function registerProxy(
         ProxySpecification $proxySpecification,
-        int $lastModified,
     ): void;
 }

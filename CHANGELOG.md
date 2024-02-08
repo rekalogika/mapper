@@ -5,6 +5,7 @@
 * style(`Profiler`): Cosmetic.
 * refactor(`EagerPropertiesResolver`): Create `ChainEagerPropertiesResolver`.
 * refactor(`HeuristicsEagerPropertiesResolver`): Genericize.
+* perf(`ProxyRegistry`): Improve proxy generation performance.
 
 ## 0.7.1
 

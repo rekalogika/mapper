@@ -33,10 +33,8 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
 
     public function registerProxy(
         ProxySpecification $proxySpecification,
-        int $lastModified
     ): void {
         $proxyClass = $proxySpecification->getClass();
-        $proxyCode = $proxySpecification->getCode();
 
         $proxyFile = sprintf(
             '%s/%s',
@@ -44,11 +42,7 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
             self::getProxyFileName($proxyClass)
         );
 
-        if (file_exists($proxyFile) && filemtime($proxyFile) >= $lastModified) {
-            return;
-        }
-
-        file_put_contents($proxyFile, $proxyCode);
+        file_put_contents($proxyFile, $proxySpecification->getCode());
     }
 
     public function registerAutoloader(): void

@@ -36,6 +36,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataF
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
+use Rekalogika\Mapper\Transformer\Proxy\ProxyRegistryInterface;
 use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -53,6 +54,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
         private ContainerInterface $propertyMapperLocator,
         private SubMapperFactoryInterface $subMapperFactory,
+        private ProxyRegistryInterface $proxyRegistry,
         ReaderWriter $readerWriter = null,
     ) {
         $this->readerWriter = $readerWriter ?? new ReaderWriter();
@@ -209,10 +211,21 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         }
 
         if (!class_exists($targetProxyClass)) {
-            throw new LogicException(
-                sprintf('Target proxy class "%s" does not exist.', $targetProxyClass),
-                context: $context
-            );
+            $proxySpecification = $objectToObjectMetadata->getTargetProxySpecification();
+
+            if ($proxySpecification === null) {
+                throw new LogicException('Target proxy specification must not be null.', context: $context);
+            }
+
+            $this->proxyRegistry->registerProxy($proxySpecification);
+
+            // @phpstan-ignore-next-line
+            if (!class_exists($targetProxyClass)) {
+                throw new LogicException(
+                    sprintf('Unable to find target proxy class "%s".', $targetProxyClass),
+                    context: $context
+                );
+            }
         }
 
         if (!is_a($targetProxyClass, LazyObjectInterface::class, true)) {

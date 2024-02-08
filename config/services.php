@@ -40,7 +40,6 @@ use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\CachingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyBuildingMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyResolvingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
@@ -175,6 +174,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$objectToObjectMetadataFactory' => service('rekalogika.mapper.object_to_object_metadata_factory'),
             '$propertyMapperLocator' => tagged_locator('rekalogika.mapper.property_mapper'),
             '$subMapperFactory' => service('rekalogika.mapper.sub_mapper.factory'),
+            '$proxyRegistry' => service('rekalogika.mapper.proxy_registry'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -900]);
 
@@ -255,14 +255,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.object_to_object_metadata_factory')
         ->args([
             service('.inner'),
-        ]);
-
-    $services
-        ->set('rekalogika.mapper.object_to_object_metadata_factory.proxy_building', ProxyBuildingMetadataFactory::class)
-        ->decorate('rekalogika.mapper.object_to_object_metadata_factory')
-        ->args([
-            service('.inner'),
-            service('rekalogika.mapper.proxy_registry'),
         ]);
 
     # array-like metadata factory

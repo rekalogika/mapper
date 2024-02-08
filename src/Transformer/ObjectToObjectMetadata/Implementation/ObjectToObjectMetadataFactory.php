@@ -28,7 +28,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\Transformer\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Transformer\Proxy\ProxyGeneratorInterface;
-use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
