@@ -79,8 +79,8 @@ class TestKernel extends Kernel
         yield MapperInterface::class;
 
         yield 'rekalogika.mapper.property_info';
-        yield 'rekalogika.mapper.cache.property_info';
-        yield 'rekalogika.mapper.property_info.cache';
+        // yield 'rekalogika.mapper.cache.property_info';
+        // yield 'rekalogika.mapper.property_info.cache';
 
         yield ScalarToScalarTransformer::class;
         yield ObjectMapperTransformer::class;
