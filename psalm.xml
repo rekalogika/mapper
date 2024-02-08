@@ -49,6 +49,9 @@
         <MissingConstructor>
             <errorLevel type="suppress">
                 <file name="tests/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php" />
+                <file name="tests/Fixtures/UninitializedProperty/ObjectWithUninitializedProperty.php" />
+                <file name="tests/Fixtures/UninitializedPropertyDto/FinalObjectWithUninitializedPropertyDto.php" />
+                <file name="tests/Fixtures/UninitializedPropertyDto/ObjectWithUninitializedPropertyDto.php" />
             </errorLevel>
         </MissingConstructor>
         <ArgumentTypeCoercion>

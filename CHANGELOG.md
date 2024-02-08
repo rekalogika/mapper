@@ -10,6 +10,7 @@
 * dx(`DebugPass`): Remove property info caching on debug mode.
 * fix(`ObjectToObjectTransformer`): Disregard existing target if it is read
   only.
+* fix(`ReaderWriter`): Fix reading unset properties on a proxy.
 
 ## 0.7.1
 

@@ -63,7 +63,12 @@ class ReaderWriter
             }
             return null;
         } catch (\Error $e) {
-            if (\str_contains($e->getMessage(), 'must not be accessed before initialization')) {
+            $message = $e->getMessage();
+
+            if (
+                \str_contains($message, 'must not be accessed before initialization')
+                || \str_contains($message, 'Cannot access uninitialized non-nullable property')
+            ) {
                 throw new UninitializedSourcePropertyException($property);
             }
 
@@ -111,7 +116,12 @@ class ReaderWriter
             }
             return null;
         } catch (\Error $e) {
-            if (\str_contains($e->getMessage(), 'must not be accessed before initialization')) {
+            $message = $e->getMessage();
+
+            if (
+                \str_contains($message, 'must not be accessed before initialization')
+                || \str_contains($message, 'Cannot access uninitialized non-nullable property')
+            ) {
                 return null;
             }
 
