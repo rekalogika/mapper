@@ -18,7 +18,9 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 
 class ProxyNotSupportedException extends RuntimeException
 {
-    public function __construct(ObjectToObjectMetadata $metadata, \Throwable $previous = null)
+    private string $reason;
+
+    public function __construct(ObjectToObjectMetadata $metadata, \Throwable $previous)
     {
         parent::__construct(
             sprintf(
@@ -28,5 +30,12 @@ class ProxyNotSupportedException extends RuntimeException
             ),
             previous: $previous
         );
+
+        $this->reason = $previous->getMessage();
+    }
+
+    public function getReason(): string
+    {
+        return $this->reason;
     }
 }

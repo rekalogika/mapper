@@ -3,6 +3,8 @@
 ## 0.7.3
 
 * test: Add tests for read-only targets.
+* feat(`ObjectToObjectMetadata`): Store the reason if the object cannot use
+  proxy.
 
 ## 0.7.2
 

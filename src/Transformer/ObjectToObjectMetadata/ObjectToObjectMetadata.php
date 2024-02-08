@@ -68,6 +68,7 @@ final readonly class ObjectToObjectMetadata
         private ?string $targetProxyClass = null,
         private ?string $targetProxyCode = null,
         private array $targetProxySkippedProperties = [],
+        private ?string $cannotUseProxyReason = null,
     ) {
         $constructorPropertyMappings = [];
         $lazyPropertyMappings = [];
@@ -116,7 +117,29 @@ final readonly class ObjectToObjectMetadata
             $this->targetReadOnly,
             $proxySpecification->getClass(),
             $proxySpecification->getCode(),
-            $targetProxySkippedProperties
+            $targetProxySkippedProperties,
+            cannotUseProxyReason: null
+        );
+    }
+
+    public function withReasonCannotUseProxy(
+        string $reason
+    ): self {
+        return new self(
+            $this->sourceClass,
+            $this->targetClass,
+            $this->providedTargetClass,
+            $this->allPropertyMappings,
+            $this->instantiable,
+            $this->cloneable,
+            $this->initializableTargetPropertiesNotInSource,
+            $this->sourceModifiedTime,
+            $this->targetModifiedTime,
+            $this->targetReadOnly,
+            null,
+            null,
+            [],
+            cannotUseProxyReason: $reason,
         );
     }
 
@@ -258,5 +281,10 @@ final readonly class ObjectToObjectMetadata
     public function isTargetReadOnly(): bool
     {
         return $this->targetReadOnly;
+    }
+
+    public function getCannotUseProxyReason(): ?string
+    {
+        return $this->cannotUseProxyReason;
     }
 }

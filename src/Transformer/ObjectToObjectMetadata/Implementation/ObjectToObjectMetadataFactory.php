@@ -347,7 +347,8 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $objectToObjectMetadata = $objectToObjectMetadata
                 ->withTargetProxy($proxySpecification, $skippedProperties);
         } catch (ProxyNotSupportedException $e) {
-            // do nothing
+            $objectToObjectMetadata = $objectToObjectMetadata
+                ->withReasonCannotUseProxy($e->getReason());
         }
 
         return $objectToObjectMetadata;
