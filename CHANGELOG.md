@@ -9,6 +9,7 @@
 * fix(`ProxyGenerator`): Borrow `__CG__` marker for compatibility with
   third-party libraries.
 * feat(`MapperDataCollector`): Add lazy badge for lazy results.
+* test: Fix psalm errors.
 
 ## 0.7.0
 

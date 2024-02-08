@@ -54,6 +54,7 @@
         <ArgumentTypeCoercion>
             <errorLevel type="suppress">
                 <file name="src/DependencyInjection/RekalogikaMapperExtension.php" />
+                <file name="tests/IntegrationTest/ObjectToObjectMetadataFactoryTest.php" />
             </errorLevel>
         </ArgumentTypeCoercion>
         <InternalMethod>
@@ -66,5 +67,10 @@
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
             </errorLevel>
         </InternalClass>
+        <UndefinedClass>
+            <errorLevel type="suppress">
+                <file name="tests/IntegrationTest/ObjectToObjectMetadataFactoryTest.php" />
+            </errorLevel>
+        </UndefinedClass>
     </issueHandlers>
 </psalm>
