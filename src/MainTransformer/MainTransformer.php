@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\MainTransformer\Exception\CircularReferenceException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
+use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException as ObjectCacheCircularReferenceException;
@@ -39,6 +40,7 @@ class MainTransformer implements MainTransformerInterface
         private ObjectCacheFactoryInterface $objectCacheFactory,
         private TransformerRegistryInterface $transformerRegistry,
         private TypeResolverInterface $typeResolver,
+        private bool $debug = false,
     ) {
     }
 
@@ -119,13 +121,31 @@ class MainTransformer implements MainTransformerInterface
         }
 
 
-        // guess the source type
+        // determine the source type
 
-        $sourceTypes = [$sourceType ?? TypeGuesser::guessTypeFromVariable($source)];
+        if ($sourceType !== null) {
+            $sourceTypes = [$sourceType];
+            $isSourceTypeGuessed = false;
+        } else {
+            $sourceTypes = [TypeGuesser::guessTypeFromVariable($source)];
+            $isSourceTypeGuessed = true;
+        }
 
         // gets simple target types from the provided target type
 
         $targetTypes = $this->getSimpleTypes($targetTypes);
+
+        // if debug, inject debug context
+
+        if ($this->debug) {
+            $context = $context->with(
+                new DebugContext(
+                    sourceType: $sourceTypes[0],
+                    targetTypes: $targetTypes,
+                    sourceTypeGuessed: $isSourceTypeGuessed
+                )
+            );
+        }
 
         // search for the matching transformers according to the source and
         // target types

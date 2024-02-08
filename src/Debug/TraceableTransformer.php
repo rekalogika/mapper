@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Debug;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
+use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
@@ -69,12 +70,23 @@ final class TraceableTransformer implements
             $path = null;
         }
 
+        try {
+            $debugContext = $context(DebugContext::class);
+            $possibleTargetTypes = $debugContext->getTargetTypes();
+            $sourceTypeGuessed = $debugContext->isSourceTypeGuessed();
+        } catch (ContextMemberNotFoundException) {
+            $possibleTargetTypes = null;
+            $sourceTypeGuessed = false;
+        }
+
         $traceData = new TraceData(
-            $path,
-            $source,
-            $target,
-            $targetType,
-            $this->decorated::class
+            path: $path,
+            source: $source,
+            existingTargetValue: $target,
+            possibleTargetTypes: $possibleTargetTypes,
+            selectedTargetType: $targetType,
+            transformerClass: $this->decorated::class,
+            sourceTypeGuessed: $sourceTypeGuessed
         );
 
         try {

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
@@ -23,7 +24,8 @@ final class TraceData
 {
     private string $sourceType;
     private string $existingTargetType;
-    private string $targetType;
+    private string $possibleTargetTypes;
+    private string $selectedTargetType;
     private ?string $resultType = null;
     private ?float $time = null;
 
@@ -31,22 +33,31 @@ final class TraceData
     private array $nestedTraceData = [];
 
     /**
+     * @param array<int,Type|MixedType> $possibleTargetTypes
      * @param class-string<TransformerInterface> $transformerClass
      */
     public function __construct(
         private ?string $path,
         mixed $source,
         mixed $existingTargetValue,
-        ?Type $targetType,
+        ?array $possibleTargetTypes,
+        ?Type $selectedTargetType,
         private string $transformerClass,
+        private bool $sourceTypeGuessed,
     ) {
         $this->sourceType = \get_debug_type($source);
         $this->existingTargetType = \get_debug_type($existingTargetValue);
 
-        if ($targetType !== null) {
-            $this->targetType = TypeUtil::getTypeStringHtml($targetType);
+        if ($selectedTargetType !== null) {
+            $this->selectedTargetType = TypeUtil::getTypeStringHtml($selectedTargetType);
         } else {
-            $this->targetType = 'mixed';
+            $this->selectedTargetType = 'mixed';
+        }
+
+        if ($possibleTargetTypes === null) {
+            $this->possibleTargetTypes = "__unknown__";
+        } else {
+            $this->possibleTargetTypes = TypeUtil::getTypeStringHtml($possibleTargetTypes);
         }
     }
 
@@ -109,9 +120,14 @@ final class TraceData
         return $this->existingTargetType;
     }
 
-    public function getTargetType(): string
+    public function getPossibleTargetTypes(): string
     {
-        return $this->targetType;
+        return $this->possibleTargetTypes;
+    }
+
+    public function getSelectedTargetType(): string
+    {
+        return $this->selectedTargetType;
     }
 
     public function getResultType(): string
@@ -138,5 +154,10 @@ final class TraceData
         }
 
         return $total;
+    }
+
+    public function isSourceTypeGuessed(): bool
+    {
+        return $this->sourceTypeGuessed;
     }
 }

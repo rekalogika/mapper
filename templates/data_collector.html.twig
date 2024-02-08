@@ -44,10 +44,11 @@
         <table>
             <tr>
                 <th>Path</th>
-                <th>Source</th>
-                <th>Existing Target</th>
-                <th>Wanted Target</th>
-                <th>Result</th>
+                <th>Source Type</th>
+                <th>Existing Target Value Type</th>
+                <th>Target Type Hint</th>
+                <th>Selected Target Type</th>
+                <th>Target Result Type</th>
                 <th>Transformer</th>
                 <th>Duration</th>
             </tr>
@@ -74,9 +75,15 @@
             {%- endif -%}
         </td>
         {%- endapply -%}
-        <td>{{ tracedata.sourceType|abbr_class }}</td>
+        <td>
+            {{ tracedata.sourceType|abbr_class }}
+            {% if tracedata.sourceTypeGuessed %}
+                <span class="badge badge-info">Guessed</span>
+            {% endif %}
+        </td>
         <td>{{ tracedata.existingTargetType|abbr_class }}</td>
-        <td>{{ tracedata.targetType|raw }}</td>
+        <td>{{ tracedata.possibleTargetTypes|raw }}</td>
+        <td>{{ tracedata.selectedTargetType|raw }}</td>
         <td>
             {{ tracedata.resultType|abbr_class }}
             {% if tracedata.lazyLoadingResult %}

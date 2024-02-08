@@ -11,6 +11,7 @@
 * feat(`MapperDataCollector`): Add lazy badge for lazy results.
 * test: Fix psalm errors.
 * fix: Mixed & untyped property was not previously working.
+* feat(`DataCollector`): Add target type hint information.
 
 ## 0.7.0
 

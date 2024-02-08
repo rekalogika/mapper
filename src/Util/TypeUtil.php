@@ -309,8 +309,25 @@ class TypeUtil
         return $typeString;
     }
 
-    public static function getTypeStringHtml(Type|MixedType $type): string
+    /**
+     * @param Type|MixedType|array<int,Type|MixedType> $type
+     * @return string
+     */
+    public static function getTypeStringHtml(Type|MixedType|array $type): string
     {
+        if (\is_array($type)) {
+            if (count($type) === 0) {
+                return 'mixed';
+            }
+
+            $typeStrings = [];
+            foreach ($type as $t) {
+                $typeStrings[] = self::getTypeStringHtml($t);
+            }
+
+            return implode('|', $typeStrings);
+        }
+
         if ($type instanceof MixedType) {
             return 'mixed';
         }
