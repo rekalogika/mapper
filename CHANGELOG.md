@@ -15,6 +15,8 @@
 * fix(`ObjectToObjectMetadataFactory`): Fix scalar type logic.
 * test: Fix psalm errors.
 * fix(`MainTransformer`): Inject kernel.debug
+* revert(`Profiler`): Remove guessed badge because of the possibility of
+  confusion.
 
 ## 0.7.0
 

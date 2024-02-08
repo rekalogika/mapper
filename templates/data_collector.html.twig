@@ -77,9 +77,6 @@
         {%- endapply -%}
         <td>
             {{ tracedata.sourceType|abbr_class }}
-            {% if tracedata.sourceTypeGuessed %}
-                <span class="badge badge-info">Guessed</span>
-            {% endif %}
         </td>
         <td>{{ tracedata.existingTargetType|abbr_class }}</td>
         <td>{{ tracedata.possibleTargetTypes|raw }}</td>
