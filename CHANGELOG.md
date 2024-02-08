@@ -4,6 +4,10 @@
 
 * style: Sort `composer.json`
 * fix(`ObjectToObjectMetadataFactory`): Resolve proxy classes to real classes.
+* fix(`ProxyGenerator`): Target proxy classes now does not depend on source
+  class name.
+* fix(`ProxyGenerator`): Borrow `__CG__` marker for compatibility with
+  third-party libraries.
 
 ## 0.7.0
 

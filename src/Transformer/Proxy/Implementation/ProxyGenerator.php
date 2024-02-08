@@ -47,8 +47,7 @@ final class ProxyGenerator implements ProxyGeneratorInterface
     private function generateProxyClassName(string $sourceClass, string $targetClass): string
     {
         return sprintf(
-            'Rekalogika\Mapper\Generated\%s\To\%s',
-            $sourceClass,
+            'Rekalogika\Mapper\Generated\__CG__\%s',
             $targetClass
         );
     }
