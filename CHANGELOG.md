@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.7.3
+
+* test: Add tests for read-only targets.
+
 ## 0.7.2
 
 * style(`Profiler`): Cosmetic.
