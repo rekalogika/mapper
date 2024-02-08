@@ -10,6 +10,7 @@
   third-party libraries.
 * feat(`MapperDataCollector`): Add lazy badge for lazy results.
 * test: Fix psalm errors.
+* fix: Mixed & untyped property was not previously working.
 
 ## 0.7.0
 

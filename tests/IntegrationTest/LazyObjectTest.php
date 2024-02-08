@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ChildObjectWithIdDto;
-use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ConcreteObjectWithId;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdFinalDto;

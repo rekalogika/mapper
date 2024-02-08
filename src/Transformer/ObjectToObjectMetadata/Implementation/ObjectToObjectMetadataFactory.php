@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
-use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
@@ -229,21 +228,12 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             // get target property types
 
             $targetPropertyTypes = $this->propertyTypeExtractor
-                ->getTypes($targetClass, $targetProperty);
+                ->getTypes($targetClass, $targetProperty) ?? [];
 
             /** @var 'int'|'float'|'string'|'bool'|'null'|null */
             $targetPropertyScalarType = null;
 
-            if (null === $targetPropertyTypes || count($targetPropertyTypes) === 0) {
-                throw new InvalidArgumentException(
-                    sprintf(
-                        'Cannot get type of target property "%s::$%s".',
-                        $targetClass,
-                        $targetProperty
-                    ),
-                    context: $context
-                );
-            } elseif (count($targetPropertyTypes) === 1) {
+            if (!(null === $targetPropertyTypes || count($targetPropertyTypes) === 0)) {
                 $targetPropertyType = $targetPropertyTypes[0];
                 $targetPropertyBuiltInType = $targetPropertyType->getBuiltinType();
 
