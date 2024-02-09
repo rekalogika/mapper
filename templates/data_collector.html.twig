@@ -196,5 +196,150 @@
 {% endmacro %}
 
 {% macro render_o2o_metadata(metadata) %}
-    {{  dump(metadata) }}
+    <h3>From
+        {{ metadata.sourceClass|abbr_class }}
+        to
+        {{ metadata.providedTargetClass|abbr_class }}</h3>
+    <table>
+        <thead>
+            <tr>
+                <th class="key" scope="col">Item</th>
+                <th scope="col">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Source class</th>
+                <td>{{ metadata.sourceClass|abbr_class }}</td>
+            </tr>
+            <tr>
+                <th>Wanted target class</th>
+                <td>{{ metadata.providedTargetClass|abbr_class }}</td>
+            </tr>
+            <tr>
+                <th>Concrete target class</th>
+                <td>
+                    {{ metadata.targetClass|abbr_class }}
+                    {% if metadata.targetReadOnly %}
+                        <span class="label status-error">Read-only</span>
+                    {% endif %}
+                    {% if not metadata.instantiable %}
+                        <span class="label status-error">Not instantiable</span>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Target proxy class</th>
+                <td>
+                    {% if metadata.targetProxyClass %}
+                        {{ metadata.targetProxyClass|abbr_class }}
+                    {% else %}
+                        <span class="label status-error">Unsupported</span>
+                        {{ metadata.cannotUseProxyReason }}
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Target Property</th>
+                <th>Source Read Mode</th>
+                <th>Target Read Mode</th>
+                <th>Target Write Mode</th>
+                <th>Target Scalar Type</th>
+            </tr>
+        </thead>
+
+        {% if metadata.constructorPropertyMappings|length > 0 %}
+            <tr class="status-success">
+                <th colspan="5">Constructor arguments</th>
+            </tr>
+            {% for mapping in metadata.constructorPropertyMappings %}
+                {{ _self.render_o2o_property_mapping(mapping) }}
+            {% endfor %}
+        {% endif %}
+
+        {% if metadata.eagerPropertyMappings|length > 0 %}
+            <tr class="status-success">
+                <th colspan="5">Eager property mappings</th>
+            </tr>
+            {% for mapping in metadata.eagerPropertyMappings %}
+                {{ _self.render_o2o_property_mapping(mapping) }}
+            {% endfor %}
+        {% endif %}
+
+        {% if metadata.lazyPropertyMappings|length > 0 %}
+            <tr class="status-success">
+                <th colspan="5">Lazy property mappings</th>
+            </tr>
+            {% for mapping in metadata.lazyPropertyMappings %}
+                {{ _self.render_o2o_property_mapping(mapping) }}
+            {% endfor %}
+        {% endif %}
+
+    </table>
+{% endmacro %}
+
+{% macro render_o2o_property_mapping(mapping) %}
+    <tr>
+        <td>
+            {{ mapping.targetProperty }}
+        </td>
+        <td style="white-space: nowrap">
+            {{ _self.render_o2o_property_mapping_read_mode(mapping.sourceReadMode, mapping.sourceReadName, mapping.sourceReadVisibility) }}
+        </td>
+        <td style="white-space: nowrap">
+            {{ _self.render_o2o_property_mapping_read_mode(mapping.targetReadMode, mapping.targetReadName, mapping.targetReadVisibility) }}
+        </td>
+        <td style="white-space: nowrap">
+            {{ _self.render_o2o_property_mapping_write_mode(mapping.targetWriteMode, mapping.targetWriteName, mapping.targetWriteVisibility) }}
+        </td>
+        <td>
+            {% if mapping.targetScalarType %}
+                <span class="badge badge-success">{{ mapping.targetScalarType }}</span>
+            {% endif %}
+
+            {% if mapping.targetCanAcceptNull %}
+                <span class="badge badge-success">nullable</span>
+            {% endif %}
+        </td>
+    </tr>
+{% endmacro %}
+
+{% macro render_o2o_property_mapping_read_mode(mode, name, visibility) %}
+    {%- if mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\ReadMode::Method') -%}
+        -&gt;{{ name }}()
+    {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\ReadMode::Property') -%}
+        -&gt;{{ name }}
+    {%- else -%}
+        <span class="badge badge-danger">None</span>
+    {%- endif -%}
+    {{- _self.render_visibility(visibility) -}}
+{% endmacro %}
+
+{% macro render_o2o_property_mapping_write_mode(mode, name, visibility) %}
+    {%- if mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Method') -%}
+        -&gt;{{ name }}()
+    {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Property') -%}
+        -&gt;{{ name }}
+    {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::AdderRemover') -%}
+        -&gt;{{ name }}()
+    {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Constructor') -%}
+        <span class="badge badge-info">Constructor argument</span>
+    {%- else -%}
+        <span class="badge badge-danger">None</span>
+    {%- endif -%}
+
+    {{- _self.render_visibility(visibility) -}}
+{% endmacro %}
+
+{% macro render_visibility(visibility) %}
+    {%- if visibility == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\Visibility::Protected') -%}
+        <span class="badge badge-danger">Protected</span>
+    {%- elseif visibility == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\Visibility::Private') -%}
+        <span class="badge badge-danger">Private</span>
+    {%- endif -%}
 {% endmacro %}
