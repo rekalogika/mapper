@@ -362,7 +362,7 @@
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::AdderRemover') -%}
         -&gt;{{ name }}()
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Constructor') -%}
-        <span class="badge badge-info">Constructor argument</span>
+        -&gt;__construct(...)
     {%- else -%}
         <span class="badge badge-danger">None</span>
     {%- endif -%}
