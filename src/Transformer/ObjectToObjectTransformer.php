@@ -237,46 +237,27 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // create proxy initializer. this initializer will be executed when the
         // proxy is first accessed
 
-        $initializer = function (object $instance) use (
+        $initializer = function (object $target) use (
             $source,
             $objectToObjectMetadata,
             $context,
-            $targetClass
         ): void {
-            // if constructor exists, process it
+            // if the constructor is lazy, run it here
 
-            if (\method_exists($instance, '__construct')) {
-                $constructorArguments = $this->generateConstructorArguments(
+            if (!$objectToObjectMetadata->constructorIsEager()) {
+                $target = $this->runConstructorManually(
                     source: $source,
+                    target: $target,
                     objectToObjectMetadata: $objectToObjectMetadata,
                     context: $context
                 );
-
-                $arguments = $constructorArguments->getArguments();
-
-                try {
-                    /**
-                     * @psalm-suppress DirectConstructorCall
-                     * @psalm-suppress MixedMethodCall
-                     */
-                    $instance->__construct(...$arguments);
-                } catch (\TypeError | \ReflectionException $e) {
-                    throw new InstantiationFailureException(
-                        source: $source,
-                        targetClass: $targetClass,
-                        constructorArguments: $constructorArguments->getArguments(),
-                        unsetSourceProperties: $constructorArguments->getUnsetSourceProperties(),
-                        previous: $e,
-                        context: $context
-                    );
-                }
             }
 
             // map lazy properties
 
             $this->readSourceAndWriteTarget(
                 source: $source,
-                target: $instance,
+                target: $target,
                 propertyMappings: $objectToObjectMetadata->getLazyPropertyMappings(),
                 context: $context
             );
@@ -295,6 +276,17 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             skippedProperties: $objectToObjectMetadata->getTargetProxySkippedProperties()
         );
 
+        // if the constructor is eager, run it here
+
+        if ($objectToObjectMetadata->constructorIsEager()) {
+            $target = $this->runConstructorManually(
+                source: $source,
+                target: $target,
+                objectToObjectMetadata: $objectToObjectMetadata,
+                context: $context
+            );
+        }
+
         // map eager properties
 
         $this->readSourceAndWriteTarget(
@@ -303,6 +295,44 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             propertyMappings: $objectToObjectMetadata->getEagerPropertyMappings(),
             context: $context
         );
+
+        return $target;
+    }
+
+    private function runConstructorManually(
+        object $source,
+        object $target,
+        ObjectToObjectMetadata $objectToObjectMetadata,
+        Context $context
+    ): object {
+        if (!\method_exists($target, '__construct')) {
+            return $target;
+        }
+
+        $constructorArguments = $this->generateConstructorArguments(
+            source: $source,
+            objectToObjectMetadata: $objectToObjectMetadata,
+            context: $context
+        );
+
+        $arguments = $constructorArguments->getArguments();
+
+        try {
+            /**
+             * @psalm-suppress DirectConstructorCall
+             * @psalm-suppress MixedMethodCall
+             */
+            $target->__construct(...$arguments);
+        } catch (\TypeError | \ReflectionException $e) {
+            throw new InstantiationFailureException(
+                source: $source,
+                targetClass: $target::class,
+                constructorArguments: $constructorArguments->getArguments(),
+                unsetSourceProperties: $constructorArguments->getUnsetSourceProperties(),
+                previous: $e,
+                context: $context
+            );
+        }
 
         return $target;
     }

@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\LazyObject;
 
-readonly class ObjectWithIdReadOnlyDto
+class ObjectWithIdAndNameInConstructorDto
 {
     public function __construct(
         public string $id,
+        public string $name
     ) {
     }
+
+    public ?string $other = null;
 }

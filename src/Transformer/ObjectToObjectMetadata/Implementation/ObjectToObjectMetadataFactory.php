@@ -331,6 +331,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             sourceModifiedTime: $sourceModifiedTime,
             targetModifiedTime: $targetModifiedTime,
             targetReadOnly: $targetReadOnly,
+            constructorIsEager: false,
         );
 
         // create proxy if possible
@@ -339,13 +340,41 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $proxySpecification = $this->proxyGenerator
                 ->generateTargetProxy($objectToObjectMetadata);
 
+            // determine if the constructor contains eager properties. if it
+            // does, then the constructor is eager
+
+            $constructorIsEager = false;
+
+            foreach ($objectToObjectMetadata->getConstructorPropertyMappings() as $propertyMapping) {
+                if (!$propertyMapping->isSourceLazy()) {
+                    $constructorIsEager = true;
+                    break;
+                }
+            }
+
+            // if the constructor is eager, then every constructor argument is
+            // eager
+
+            if ($constructorIsEager) {
+                foreach ($objectToObjectMetadata->getConstructorPropertyMappings() as $propertyMapping) {
+                    $eagerProperties[] = $propertyMapping->getTargetProperty();
+                }
+
+                $eagerProperties = \array_unique($eagerProperties);
+            }
+
+            // skipped properties is the argument used by createLazyGhost()
+
             $skippedProperties = self::getSkippedProperties(
                 $targetClass,
                 $eagerProperties
             );
 
-            $objectToObjectMetadata = $objectToObjectMetadata
-                ->withTargetProxy($proxySpecification, $skippedProperties);
+            $objectToObjectMetadata = $objectToObjectMetadata->withTargetProxy(
+                $proxySpecification,
+                $skippedProperties,
+                $constructorIsEager
+            );
         } catch (ProxyNotSupportedException $e) {
             $objectToObjectMetadata = $objectToObjectMetadata
                 ->withReasonCannotUseProxy($e->getReason());

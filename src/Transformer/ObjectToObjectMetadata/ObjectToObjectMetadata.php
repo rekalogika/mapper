@@ -65,6 +65,7 @@ final readonly class ObjectToObjectMetadata
         private int $sourceModifiedTime,
         private int $targetModifiedTime,
         private bool $targetReadOnly,
+        private bool $constructorIsEager,
         private ?string $targetProxyClass = null,
         private ?string $targetProxyCode = null,
         private array $targetProxySkippedProperties = [],
@@ -102,7 +103,8 @@ final readonly class ObjectToObjectMetadata
      */
     public function withTargetProxy(
         ProxySpecification $proxySpecification,
-        array $targetProxySkippedProperties
+        array $targetProxySkippedProperties,
+        bool $constructorIsEager,
     ): self {
         return new self(
             $this->sourceClass,
@@ -115,6 +117,7 @@ final readonly class ObjectToObjectMetadata
             $this->sourceModifiedTime,
             $this->targetModifiedTime,
             $this->targetReadOnly,
+            $constructorIsEager,
             $proxySpecification->getClass(),
             $proxySpecification->getCode(),
             $targetProxySkippedProperties,
@@ -136,6 +139,7 @@ final readonly class ObjectToObjectMetadata
             $this->sourceModifiedTime,
             $this->targetModifiedTime,
             $this->targetReadOnly,
+            $this->constructorIsEager,
             null,
             null,
             [],
@@ -286,5 +290,10 @@ final readonly class ObjectToObjectMetadata
     public function getCannotUseProxyReason(): ?string
     {
         return $this->cannotUseProxyReason;
+    }
+
+    public function constructorIsEager(): bool
+    {
+        return $this->constructorIsEager;
     }
 }

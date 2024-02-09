@@ -16,9 +16,12 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ChildObjectWithIdDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId;
+use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameInConstructorDto;
+use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameMustBeCalled;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdFinalDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdReadOnlyDto;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class LazyObjectTest extends AbstractFrameworkTest
 {
@@ -93,5 +96,21 @@ class LazyObjectTest extends AbstractFrameworkTest
         $source = new ObjectWithId();
         $target = $this->mapper->map($source, ChildObjectWithIdDto::class);
         $foo = $target->name;
+    }
+
+    /**
+     * If the constructor has an eager property, the constructor is eager.
+     */
+    public function testEagerAndLazyPropertyInConstruct(): void
+    {
+        $source = new ObjectWithIdAndNameMustBeCalled();
+        $target = $this->mapper->map($source, ObjectWithIdAndNameInConstructorDto::class);
+        $this->assertInstanceOf(LazyObjectInterface::class, $target);
+
+        $this->assertTrue($source->isIdAndNameCalled());
+        $this->assertFalse($target->isLazyObjectInitialized());
+
+        $this->assertEquals('other', $target->other);
+        $this->assertTrue($target->isLazyObjectInitialized());
     }
 }
