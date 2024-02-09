@@ -10,6 +10,8 @@
 * test: In 8.2, read only classes cannot be lazy.
 * fix(`ObjectToObjectTransformer`): If target is lazy and its constructor
   contains an eager argument, then the rest of the arguments must be eager.
+* fix(`ObjectToObjectMetadataFactory`): If the target is not writable, skip the
+  mapping.
 
 ## 0.7.2
 

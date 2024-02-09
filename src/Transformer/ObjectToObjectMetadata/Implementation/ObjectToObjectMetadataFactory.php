@@ -191,9 +191,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             if (
                 $targetWriteInfo === null
             ) {
-                $targetWriteMode = WriteMode::None;
-                $targetWriteName = null;
-                $targetWriteVisibility = Visibility::None;
+                continue;
             } elseif ($targetWriteInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
                 $targetWriteMode = WriteMode::AdderRemover;
                 $targetWriteName = $targetWriteInfo->getAdderInfo()->getName();
@@ -215,8 +213,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
                 };
 
                 if ($targetWriteMode === WriteMode::None) {
-                    $targetWriteName = null;
-                    $targetWriteVisibility = Visibility::None;
+                    continue;
                 } else {
                     $targetWriteName = $targetWriteInfo->getName();
                     $targetWriteVisibility = match ($targetWriteInfo->getVisibility()) {
