@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,6 +43,14 @@ final class MapperDataCollector extends AbstractDataCollector
         $this->data['mappings'][] = $traceData;
     }
 
+    public function collectObjectToObjectMetadata(
+        ObjectToObjectMetadata $objectToObjectMetadata
+    ): void {
+        $key = hash('xxh128', serialize($objectToObjectMetadata));
+        /** @psalm-suppress MixedArrayAssignment */
+        $this->data['object_to_object_metadata'][$key] = $objectToObjectMetadata;
+    }
+
     /**
      * @return array<int,TraceData>
      */
@@ -49,6 +58,15 @@ final class MapperDataCollector extends AbstractDataCollector
     {
         /** @var array<int,TraceData> */
         return $this->data['mappings'] ?? [];
+    }
+
+    /**
+     * @return array<int,ObjectToObjectMetadata>
+     */
+    public function getObjectToObjectMetadatas(): array
+    {
+        /** @psalm-suppress MixedArgument */
+        return array_values($this->data['object_to_object_metadata'] ?? []);
     }
 
     private ?int $totalMappings = null;

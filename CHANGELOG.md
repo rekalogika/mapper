@@ -5,7 +5,8 @@
 * test: Add tests for read-only targets.
 * feat(`ObjectToObjectMetadata`): Store the reason if the object cannot use
   proxy.
-* style(profiler panel): Improve layout.
+* style(`Profiler`): Improve layout.
+* feat(`Profiler`): Collect object to object metadata.
 
 ## 0.7.2
 

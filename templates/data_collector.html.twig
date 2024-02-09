@@ -50,6 +50,7 @@
 
             <div class="sf-tabs">
                 {{ _self.render_mappings_tab(collector.mappings) }}
+                {{ _self.render_o2o_tab(collector.objectToObjectMetadatas) }}
             </div>
         {% endif %}
 
@@ -101,6 +102,21 @@
                     {{ _self.render_row(tracedata, 0) }}
                 {% endfor %}
             </table>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_o2o_tab(metadatas) %}
+    <div class="tab {{ not metadatas ? 'disabled' }}">
+        <h3 class="tab-title">
+            Object to Object Metadata
+            <span class="badge">{{ metadatas|length }}</span>
+        </h3>
+
+        <div class="tab-content">
+            {% for metadata in metadatas %}
+                {{ _self.render_o2o_metadata(metadata) }}
+            {% endfor %}
         </div>
     </div>
 {% endmacro %}
@@ -177,4 +193,8 @@
     {% for child in tracedata.nestedTraceData %}
         {{ _self.render_row(child, depth + 1) }}
     {% endfor %}
+{% endmacro %}
+
+{% macro render_o2o_metadata(metadata) %}
+    {{  dump(metadata) }}
 {% endmacro %}

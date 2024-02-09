@@ -243,7 +243,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.object_to_object_metadata_factory.cache', CachingObjectToObjectMetadataFactory::class)
-        ->decorate('rekalogika.mapper.object_to_object_metadata_factory')
+        ->decorate('rekalogika.mapper.object_to_object_metadata_factory', null, 500)
         ->args([
             service('.inner'),
             service('rekalogika.mapper.cache.object_to_object_metadata_factory'),
@@ -252,7 +252,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.object_to_object_metadata_factory.proxy_resolving', ProxyResolvingObjectToObjectMetadataFactory::class)
-        ->decorate('rekalogika.mapper.object_to_object_metadata_factory')
+        ->decorate('rekalogika.mapper.object_to_object_metadata_factory', null, -500)
         ->args([
             service('.inner'),
         ]);
