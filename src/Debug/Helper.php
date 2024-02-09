@@ -13,16 +13,17 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
+use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
 final class Helper
 {
     /**
-     * @param Type|array<int,Type> $type
+     * @param Type|array<int,Type|MixedType> $type
      * @return string
      */
-    public function typeToHtml(Type|array|null $type): string
+    public function typeToHtml(Type|MixedType|array|null $type): string
     {
         if ($type === null) {
             return 'mixed';

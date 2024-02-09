@@ -54,6 +54,7 @@
             <div class="sf-tabs">
                 {{ _self.render_mappings_tab(collector.mappings) }}
                 {{ _self.render_o2o_tab(collector.objectToObjectMetadatas, helper) }}
+                {{ _self.render_mapping_table(collector.mappingTable, helper) }}
             </div>
         {% endif %}
 
@@ -120,6 +121,43 @@
             {% for metadata in metadatas %}
                 {{ _self.render_o2o_metadata(metadata, helper) }}
             {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_mapping_table(table, helper) %}
+    <div class="tab">
+        <h3 class="tab-title">
+            Mapping Table
+        </h3>
+
+        <div class="tab-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Source</th>
+                        <th>Target</th>
+                        <th>Target Variance</th>
+                        <th>Transformer</th>
+                    </tr>
+                </thead>
+                {% for row in table %}
+                    <tr>
+                        <td>{{ row.order }}</td>
+                        <td>{{ helper.typeToHtml(row.sourceType)|raw }}</td>
+                        <td>{{ helper.typeToHtml(row.targetType)|raw }}</td>
+                        <td>
+                            {% if row.variantTargetType %}
+                                <span class="badge badge-warning">Variant</span>
+                            {% else %}
+                                <span class="badge badge-info">Invariant</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ row.class|abbr_class }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </div>
     </div>
 {% endmacro %}

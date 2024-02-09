@@ -201,7 +201,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.mapping_factory.caching', WarmableMappingFactory::class)
-        ->decorate('rekalogika.mapper.mapping_factory')
+        ->decorate('rekalogika.mapper.mapping_factory', null, 500)
         ->args([
             service('rekalogika.mapper.mapping_factory.caching.inner'),
             service('kernel')

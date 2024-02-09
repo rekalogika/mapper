@@ -24,6 +24,11 @@ abstract class AbstractTransformerDecorator implements TransformerInterface
     ) {
     }
 
+    public function getDecorated(): TransformerInterface
+    {
+        return $this->decorated;
+    }
+
     public function transform(
         mixed $source,
         mixed $target,

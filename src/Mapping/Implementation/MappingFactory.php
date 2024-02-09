@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Mapping\Implementation;
 
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
+use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -69,6 +70,10 @@ final class MappingFactory implements MappingFactoryInterface
             $sourceTypes = $this->getSimpleTypes($typeMapping->getSourceType());
             $targetTypes = $this->getSimpleTypes($typeMapping->getTargetType());
             $isVariantTargetType = $typeMapping->isVariantTargetType();
+
+            if ($transformer instanceof AbstractTransformerDecorator) {
+                $transformer = $transformer->getDecorated();
+            }
 
             foreach ($sourceTypes as $sourceType) {
                 foreach ($targetTypes as $targetType) {

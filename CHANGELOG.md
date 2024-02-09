@@ -12,6 +12,7 @@
   contains an eager argument, then the rest of the arguments must be eager.
 * fix(`ObjectToObjectMetadataFactory`): If the target is not writable, skip the
   mapping.
+* feat(`Profiler`): Show mapping table.
 
 ## 0.7.2
 

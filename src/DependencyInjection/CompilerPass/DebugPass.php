@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection\CompilerPass;
 
+use Rekalogika\Mapper\Debug\TraceableMappingFactory;
 use Rekalogika\Mapper\Debug\TraceableObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -55,7 +56,18 @@ final class DebugPass implements CompilerPassInterface
         $serviceId = 'rekalogika.mapper.object_to_object_metadata_factory.cache';
         $decoratedService = $container->getDefinition($serviceId);
         $container->register('debug.' . $serviceId, TraceableObjectToObjectMetadataFactory::class)
-            ->setDecoratedService($serviceId, null)
+            ->setDecoratedService($serviceId)
+            ->setArguments([
+                $decoratedService,
+                $dataCollector,
+            ]);
+
+        // decorates mapping factory
+
+        $serviceId = 'rekalogika.mapper.mapping_factory';
+        $decoratedService = $container->getDefinition($serviceId);
+        $container->register('debug.' . $serviceId, TraceableMappingFactory::class)
+            ->setDecoratedService($serviceId, null, 100)
             ->setArguments([
                 $decoratedService,
                 $dataCollector,

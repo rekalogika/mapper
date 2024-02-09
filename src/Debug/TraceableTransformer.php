@@ -18,12 +18,13 @@ use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
+use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
 
-final class TraceableTransformer implements
+final class TraceableTransformer extends AbstractTransformerDecorator implements
     TransformerInterface,
     MainTransformerAwareInterface
 {

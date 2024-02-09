@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
+use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,6 +52,11 @@ final class MapperDataCollector extends AbstractDataCollector
         $this->data['object_to_object_metadata'][$key] = $objectToObjectMetadata;
     }
 
+    public function collectMappingTable(Mapping $mapping): void
+    {
+        $this->data['mapping'] = $mapping;
+    }
+
     public function getHelper(): Helper
     {
         return new Helper();
@@ -72,6 +78,17 @@ final class MapperDataCollector extends AbstractDataCollector
     {
         /** @psalm-suppress MixedArgument */
         return array_values($this->data['object_to_object_metadata'] ?? []);
+    }
+
+    public function getMappingTable(): Mapping
+    {
+        $result = $this->data['mapping'] ?? new Mapping();
+
+        if (!$result instanceof Mapping) {
+            return new Mapping();
+        }
+
+        return $result;
     }
 
     private ?int $totalMappings = null;
