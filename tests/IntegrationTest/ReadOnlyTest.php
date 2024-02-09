@@ -29,6 +29,10 @@ class ReadOnlyTest extends AbstractFrameworkTest
         $this->assertSame('foo', $target->name);
     }
 
+    /**
+     * In PHP 8.2, readonly class can't be lazy
+     * @requires PHP >= 8.3.0
+     */
     public function testToReadOnly(): void
     {
         $source = new Source('foo');
@@ -46,6 +50,10 @@ class ReadOnlyTest extends AbstractFrameworkTest
         $this->assertSame('foo', $newTarget->name);
     }
 
+    /**
+     * In PHP 8.2, readonly class can't be lazy
+     * @requires PHP >= 8.3.0
+     */
     public function testToExistingReadOnly(): void
     {
         $source = new Source('foo');
@@ -54,5 +62,4 @@ class ReadOnlyTest extends AbstractFrameworkTest
         $this->assertInstanceOf(LazyObjectInterface::class, $newTarget);
         $this->assertSame('foo', $newTarget->name);
     }
-
 }
