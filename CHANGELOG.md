@@ -13,6 +13,8 @@
 * fix(`ObjectToObjectMetadataFactory`): If the target is not writable, skip the
   mapping.
 * feat(`Profiler`): Show mapping table.
+* refactor(`MappingFactory`): Separate cache warmer from
+  `WarmableMappingFactory`.
 
 ## 0.7.2
 

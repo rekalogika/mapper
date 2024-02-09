@@ -16,13 +16,10 @@ namespace Rekalogika\Mapper\Mapping\Implementation;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\VarExporter\VarExporter;
 
-final class WarmableMappingFactory implements
-    MappingFactoryInterface,
-    CacheWarmerInterface
+final class WarmableMappingFactory implements MappingFactoryInterface
 {
     public const CACHE_FILE = 'rekalogika_mapper_mapping.php';
 
@@ -41,7 +38,7 @@ final class WarmableMappingFactory implements
 
     private function warmUpAndGetMapping(): Mapping
     {
-        $this->warmUp($this->kernel->getCacheDir(), $this->kernel->getBuildDir());
+        $this->warmUp();
 
         return $this->getMappingFromInnerFactory();
     }
@@ -75,21 +72,14 @@ final class WarmableMappingFactory implements
         return $this->mapping = $result;
     }
 
-    public function isOptional(): bool
-    {
-        return false;
-    }
-
     private function getCacheFilePath(): string
     {
         return $this->kernel->getBuildDir() . '/' . self::CACHE_FILE;
     }
 
-    public function warmUp(string $cacheDir, ?string $buildDir = null): array
+    public function warmUp(): void
     {
         $mapping = VarExporter::export($this->realMappingFactory->getMapping());
         file_put_contents($this->getCacheFilePath(), '<?php return ' . $mapping . ';');
-
-        return [];
     }
 }

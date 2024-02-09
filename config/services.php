@@ -22,6 +22,7 @@ use Rekalogika\Mapper\CustomMapper\Implementation\WarmableObjectMapperTableFacto
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
 use Rekalogika\Mapper\Mapper;
 use Rekalogika\Mapper\MapperInterface;
+use Rekalogika\Mapper\Mapping\Implementation\MappingCacheWarmer;
 use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\Implementation\WarmableMappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
@@ -201,10 +202,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.mapping_factory.caching', WarmableMappingFactory::class)
-        ->decorate('rekalogika.mapper.mapping_factory', null, 500)
+        ->decorate('rekalogika.mapper.mapping_factory', null, 100)
         ->args([
-            service('rekalogika.mapper.mapping_factory.caching.inner'),
+            service('.inner'),
             service('kernel')
+        ]);
+
+    # mapping cache warmer
+
+    $services
+        ->set('rekalogika.mapper.mapping_factory.warmer', MappingCacheWarmer::class)
+        ->args([
+            service('rekalogika.mapper.mapping_factory.caching'),
         ])
         ->tag('kernel.cache_warmer');
 

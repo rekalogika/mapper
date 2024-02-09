@@ -67,7 +67,7 @@ final class DebugPass implements CompilerPassInterface
         $serviceId = 'rekalogika.mapper.mapping_factory';
         $decoratedService = $container->getDefinition($serviceId);
         $container->register('debug.' . $serviceId, TraceableMappingFactory::class)
-            ->setDecoratedService($serviceId, null, 100)
+            ->setDecoratedService($serviceId, null, 50)
             ->setArguments([
                 $decoratedService,
                 $dataCollector,
