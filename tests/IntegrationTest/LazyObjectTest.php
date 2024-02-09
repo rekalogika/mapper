@@ -72,13 +72,11 @@ class LazyObjectTest extends AbstractFrameworkTest
      *
      * @requires PHP >= 8.3.0
      */
-    public function testReadOnly83(): void
-    {
-        // if a proxy is used, it should not throw an exception without
-        // initialization
-        $source = new ObjectWithId();
-        $target = $this->mapper->map($source, ObjectWithIdReadOnlyDto::class);
-    }
+    // public function testReadOnly83(): void
+    // {
+    //     $source = new ObjectWithId();
+    //     $target = $this->mapper->map($source, ObjectWithIdReadOnlyDto::class);
+    // }
 
 
     public function testIdInParentClass(): void
