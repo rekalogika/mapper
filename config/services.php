@@ -35,6 +35,7 @@ use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\ChainEagerPropertiesResolver;
+use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\DoctrineEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
@@ -365,6 +366,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set('rekalogika.mapper.eager_properties_resolver.heuristics', HeuristicsEagerPropertiesResolver::class)
         ->tag('rekalogika.mapper.eager_properties_resolver', ['priority' => -1000]);
+
+    $services
+        ->set('rekalogika.mapper.eager_properties_resolver.doctrine', DoctrineEagerPropertiesResolver::class)
+        ->args([service('doctrine')])
+        ->tag('rekalogika.mapper.eager_properties_resolver', ['priority' => -500]);
 
     # proxy
 

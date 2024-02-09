@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Common;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\MapperInterface;
@@ -76,5 +79,30 @@ abstract class AbstractFrameworkTest extends TestCase
         if ($object instanceof LazyObjectInterface) {
             $object->initializeLazyObject();
         }
+    }
+
+    private ?EntityManagerInterface $entityManager = null;
+
+    private function doctrineInit(): EntityManagerInterface
+    {
+        $managerRegistry = $this->get('doctrine');
+        $this->assertInstanceOf(ManagerRegistry::class, $managerRegistry);
+
+        $entityManager = $managerRegistry->getManager();
+        $this->assertInstanceOf(EntityManagerInterface::class, $entityManager);
+
+        $schemaTool = new SchemaTool($entityManager);
+        $schemaTool->createSchema($entityManager->getMetadataFactory()->getAllMetadata());
+
+        return $entityManager;
+    }
+
+    public function getEntityManager(): EntityManagerInterface
+    {
+        if ($this->entityManager !== null) {
+            return $this->entityManager;
+        }
+
+        return $this->entityManager = $this->doctrineInit();
     }
 }

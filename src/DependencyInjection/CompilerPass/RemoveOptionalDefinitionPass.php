@@ -25,5 +25,9 @@ final class RemoveOptionalDefinitionPass implements CompilerPassInterface
         if (!class_exists(UuidFactory::class)) {
             $container->removeDefinition(SymfonyUidTransformer::class);
         }
+
+        if (!$container->hasDefinition('doctrine')) {
+            $container->removeDefinition('rekalogika.mapper.eager_properties_resolver.doctrine');
+        }
     }
 }

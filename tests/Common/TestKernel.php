@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Common;
 
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\RekalogikaMapperBundle;
@@ -48,25 +49,16 @@ class TestKernel extends Kernel
     public function registerBundles(): iterable
     {
         yield new FrameworkBundle();
+        yield new DoctrineBundle();
         yield new RekalogikaMapperBundle();
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $loader->load(function (ContainerBuilder $container) {
-            $container->setParameter('kernel.secret', 'test');
-            $container->loadFromExtension('framework', [
-                'http_method_override' => false,
-                'handle_all_throwables' => true,
-                'php_errors' => [
-                    'log' => true,
-                ],
-                'uid' => [
-                    'default_uuid_version' => 7,
-                    'time_based_uuid_version' => 7,
-                ]
-            ]);
+        $confDir = $this->getProjectDir() . '/tests/Resources/';
+        $loader->load($confDir . '*' . '.yaml', 'glob');
 
+        $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('rekalogika_mapper', $this->config);
         });
     }
@@ -132,5 +124,9 @@ class TestKernel extends Kernel
         yield 'rekalogika.mapper.command.try_property';
 
         yield 'rekalogika.mapper.data_collector';
+
+        yield 'rekalogika.mapper.eager_properties_resolver';
+        yield 'rekalogika.mapper.eager_properties_resolver.heuristics';
+        yield 'rekalogika.mapper.eager_properties_resolver.doctrine';
     }
 }

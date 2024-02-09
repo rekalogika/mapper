@@ -15,6 +15,8 @@
 * feat(`Profiler`): Show mapping table.
 * refactor(`MappingFactory`): Separate cache warmer from
   `WarmableMappingFactory`.
+* feat(`DoctrineEagerPropertiesResolver`): Automatically identifies ID columns
+  of a Doctrine entity.
 
 ## 0.7.2
 
