@@ -95,6 +95,17 @@ final class TraceableTransformer implements
             $parentTraceData->addNestedTraceData($traceData);
             $context = $context->with($traceData);
         } catch (ContextMemberNotFoundException) {
+            // @phpstan-ignore-next-line
+            $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+            $caller = $backtrace[2];
+            $traceData->setCaller(
+                $caller['file'] ?? null,
+                $caller['line'] ?? null,
+                $caller['function'],
+                $caller['class'] ?? null,
+                $caller['type'] ?? null
+            );
+
             // if we are the root transformer, add the trace data to the
             // context, and collect it
             $context = $context->with($traceData);

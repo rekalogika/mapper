@@ -41,28 +41,102 @@
 {% block panel %}
     <h2>Mapper</h2>
     <div class="sf-rekalogika_mapper sf-reset">
-        <table>
-            <thead>
-                <tr>
-                    <th>Path</th>
-                    <th>Source Type</th>
-                    <th>Existing Target Value Type</th>
-                    <th>Target Type Hint</th>
-                    <th>Selected Target Type</th>
-                    <th>Target Result Type</th>
-                    <th>Transformer</th>
-                    <th>Duration</th>
-                </tr>
-            </thead>
+        {% if collector.mappings|length == 0 %}
+            <div class="empty">
+                <p>No mappings were recorded.</p>
+            </div>
+        {% else %}
+            {{ _self.render_metrics(collector) }}
 
-            {% for tracedata in collector.mappings %}
-                {{ _self.render_row(tracedata, 0) }}
-            {% endfor %}
-        </table>
+            <div class="sf-tabs">
+                {{ _self.render_mappings_tab(collector.mappings) }}
+            </div>
+        {% endif %}
+
     </div>
 {% endblock %}
 
+{% macro render_metrics(collector) %}
+    <div class="metrics">
+        <div class="metric">
+            <span class="value">{{ collector.totalMappings }}</span>
+            <span class="label">Mappings</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ collector.totalMappingsIncludingSubMappings }}</span>
+            <span class="label">Including submappings</span>
+        </div>
+
+        <div class="metric">
+            <span class="value">{{ '%.2f'|format(collector.totalTime * 1000) }}</span>
+            <span class="label">Total time (ms)</span>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_mappings_tab(mappings) %}
+    <div class="tab {{ not mappings ? 'disabled' }}">
+        <h3 class="tab-title">
+            Mappings
+            <span class="badge">{{ mappings|length }}</span>
+        </h3>
+
+        <div class="tab-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Path</th>
+                        <th>Source Type</th>
+                        <th>Existing Target Value Type</th>
+                        <th>Target Type Hint</th>
+                        <th>Selected Target Type</th>
+                        <th>Target Result Type</th>
+                        <th>Transformer</th>
+                        <th>Duration</th>
+                    </tr>
+                </thead>
+
+                {% for tracedata in mappings %}
+                    {{ _self.render_row(tracedata, 0) }}
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro render_row(tracedata, depth) %}
+    {% if depth == 0 %}
+        <tr class="status-success">
+            <th colspan="8">
+                Called by:
+                {% if tracedata.caller is defined %}
+                    {% set caller = tracedata.caller %}
+                    {% set random = random() %}
+                    <span class="metadata">
+                        {% if caller.line %}
+                            {% set link = caller.file|file_link(caller.line) %}
+                            {% if link %}
+                                <a href="{{ link }}" title="{{ caller.file }}">{{ caller.name }}</a>
+                            {% else %}
+                                <abbr title="{{ caller.file }}">{{ caller.name }}</abbr>
+                            {% endif %}
+                        {% else %}
+                            {{ caller.name }}
+                        {% endif %}
+                        line
+                        <a class="text-small sf-toggle" data-toggle-selector="#sf-trace-{{ random }}">{{ caller.line }}</a>
+                    </span>
+
+                    <div class="sf-serializer-compact hidden" id="sf-trace-{{ random }}">
+                        <div class="trace">
+                            {{ caller.file|file_excerpt(caller.line) }}
+                        </div>
+                    </div>
+                {% endif %}
+            </th>
+        </tr>
+    {% endif %}
     <tr>
         {%- apply spaceless -%}
         <td>

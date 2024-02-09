@@ -17,7 +17,6 @@ use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
-use Symfony\Component\VarDumper\Cloner\Data;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
 final class TraceData
@@ -31,6 +30,14 @@ final class TraceData
 
     /** @var array<int,self> */
     private array $nestedTraceData = [];
+
+    private ?string $callerFile = null;
+    private ?int $callerLine = null;
+    private ?string $callerFunction = null;
+    /** @var class-string */
+    private ?string $callerClass = null;
+    private ?string $callerType = null;
+    private ?string $callerName = null;
 
     /**
      * @param array<int,Type|MixedType> $possibleTargetTypes
@@ -159,5 +166,55 @@ final class TraceData
     public function isSourceTypeGuessed(): bool
     {
         return $this->sourceTypeGuessed;
+    }
+
+    /**
+     * @param class-string|null $class
+     */
+    public function setCaller(
+        ?string $file,
+        ?int $line,
+        string $function,
+        ?string $class,
+        ?string $type
+    ): self {
+        $this->callerFile = $file ?? 'unknown';
+        $this->callerLine = $line;
+        $this->callerFunction = $function;
+        $this->callerClass = $class;
+        $this->callerType = $type;
+
+        if ($file !== null) {
+            $name = str_replace('\\', '/', $file);
+            $pos = strrpos($name, '/');
+            if (is_int($pos)) {
+                $name = substr($name, $pos + 1);
+            }
+        } else {
+            $name = 'unknown';
+        }
+
+        $this->callerName = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return null|array{file:string|null,line:int|null,function:string|null,class:class-string|null,type:string|null,name:string|null}
+     */
+    public function getCaller(): ?array
+    {
+        if ($this->callerFunction === null) {
+            return null;
+        }
+
+        return [
+            'file' => $this->callerFile,
+            'line' => $this->callerLine,
+            'function' => $this->callerFunction,
+            'class' => $this->callerClass,
+            'type' => $this->callerType,
+            'name' => $this->callerName,
+        ];
     }
 }
