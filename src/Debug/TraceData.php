@@ -23,8 +23,6 @@ final class TraceData
 {
     private string $sourceType;
     private string $existingTargetType;
-    private string $possibleTargetTypes;
-    private string $selectedTargetType;
     private ?string $resultType = null;
     private ?float $time = null;
 
@@ -40,32 +38,20 @@ final class TraceData
     private ?string $callerName = null;
 
     /**
-     * @param array<int,Type|MixedType> $possibleTargetTypes
+     * @param null|array<int,Type|MixedType> $possibleTargetTypes
      * @param class-string<TransformerInterface> $transformerClass
      */
     public function __construct(
         private ?string $path,
         mixed $source,
         mixed $existingTargetValue,
-        ?array $possibleTargetTypes,
-        ?Type $selectedTargetType,
+        private ?array $possibleTargetTypes,
+        private ?Type $selectedTargetType,
         private string $transformerClass,
         private bool $sourceTypeGuessed,
     ) {
         $this->sourceType = \get_debug_type($source);
         $this->existingTargetType = \get_debug_type($existingTargetValue);
-
-        if ($selectedTargetType !== null) {
-            $this->selectedTargetType = TypeUtil::getTypeStringHtml($selectedTargetType);
-        } else {
-            $this->selectedTargetType = 'mixed';
-        }
-
-        if ($possibleTargetTypes === null) {
-            $this->possibleTargetTypes = "__unknown__";
-        } else {
-            $this->possibleTargetTypes = TypeUtil::getTypeStringHtml($possibleTargetTypes);
-        }
     }
 
     public function finalizeTime(float $time): void
@@ -127,14 +113,35 @@ final class TraceData
         return $this->existingTargetType;
     }
 
-    public function getPossibleTargetTypes(): string
+    /**
+     * @return null|array<int,Type|MixedType>
+     */
+    public function getPossibleTargetTypes(): ?array
     {
         return $this->possibleTargetTypes;
     }
 
-    public function getSelectedTargetType(): string
+    public function getPossibleTargetTypesHtml(): string
+    {
+        if ($this->possibleTargetTypes === null) {
+            return "__unknown__";
+        }
+        return TypeUtil::getTypeStringHtml($this->possibleTargetTypes);
+        ;
+    }
+
+    public function getSelectedTargetType(): ?Type
     {
         return $this->selectedTargetType;
+    }
+
+    public function getSelectedTargetTypeHtml(): string
+    {
+        if ($this->selectedTargetType !== null) {
+            return TypeUtil::getTypeStringHtml($this->selectedTargetType);
+        }
+        return 'mixed';
+
     }
 
     public function getResultType(): string

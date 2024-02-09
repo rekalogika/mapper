@@ -40,6 +40,7 @@
 
 {% block panel %}
     <h2>Mapper</h2>
+
     <div class="sf-rekalogika_mapper sf-reset">
         {% if collector.mappings|length == 0 %}
             <div class="empty">
@@ -48,9 +49,11 @@
         {% else %}
             {{ _self.render_metrics(collector) }}
 
+            {% set helper = collector.helper %}
+
             <div class="sf-tabs">
                 {{ _self.render_mappings_tab(collector.mappings) }}
-                {{ _self.render_o2o_tab(collector.objectToObjectMetadatas) }}
+                {{ _self.render_o2o_tab(collector.objectToObjectMetadatas, helper) }}
             </div>
         {% endif %}
 
@@ -106,7 +109,7 @@
     </div>
 {% endmacro %}
 
-{% macro render_o2o_tab(metadatas) %}
+{% macro render_o2o_tab(metadatas, helper) %}
     <div class="tab {{ not metadatas ? 'disabled' }}">
         <h3 class="tab-title">
             Object to Object Metadata
@@ -115,7 +118,7 @@
 
         <div class="tab-content">
             {% for metadata in metadatas %}
-                {{ _self.render_o2o_metadata(metadata) }}
+                {{ _self.render_o2o_metadata(metadata, helper) }}
             {% endfor %}
         </div>
     </div>
@@ -175,8 +178,8 @@
             {{ tracedata.sourceType|abbr_class }}
         </td>
         <td>{{ tracedata.existingTargetType|abbr_class }}</td>
-        <td>{{ tracedata.possibleTargetTypes|raw }}</td>
-        <td>{{ tracedata.selectedTargetType|raw }}</td>
+        <td>{{ tracedata.possibleTargetTypesHtml|raw }}</td>
+        <td>{{ tracedata.selectedTargetTypeHtml|raw }}</td>
         <td>
             {{ tracedata.resultType|abbr_class }}
             {% if tracedata.lazyLoadingResult %}
@@ -195,7 +198,7 @@
     {% endfor %}
 {% endmacro %}
 
-{% macro render_o2o_metadata(metadata) %}
+{% macro render_o2o_metadata(metadata, helper) %}
     <h3>From
         {{ metadata.sourceClass|abbr_class }}
         to
@@ -246,47 +249,78 @@
         <thead>
             <tr>
                 <th>Target Property</th>
+                <th>Source Types</th>
+                <th>Target Types</th>
                 <th>Source Read Mode</th>
                 <th>Target Read Mode</th>
                 <th>Target Write Mode</th>
-                <th>Target Scalar Type</th>
+                <th>Flags</th>
             </tr>
         </thead>
 
         {% if metadata.constructorPropertyMappings|length > 0 %}
             <tr class="status-success">
-                <th colspan="5">Constructor arguments</th>
+                <th colspan="7">
+                    Constructor arguments
+
+                    {% if metadata.targetProxyClass %}
+                        <span class="badge badge-warning">
+                            {% if metadata.constructorIsEager %}
+                                Eager
+                            {% else %}
+                                Lazy
+                            {% endif %}
+                        </span>
+                    {% endif %}
+                </th>
             </tr>
             {% for mapping in metadata.constructorPropertyMappings %}
-                {{ _self.render_o2o_property_mapping(mapping) }}
+                {{ _self.render_o2o_property_mapping(mapping, helper) }}
             {% endfor %}
         {% endif %}
 
-        {% if metadata.eagerPropertyMappings|length > 0 %}
-            <tr class="status-success">
-                <th colspan="5">Eager property mappings</th>
-            </tr>
-            {% for mapping in metadata.eagerPropertyMappings %}
-                {{ _self.render_o2o_property_mapping(mapping) }}
-            {% endfor %}
-        {% endif %}
+        {% if metadata.targetProxyClass %}
+            {% if metadata.eagerPropertyMappings|length > 0 %}
+                <tr class="status-success">
+                    <th colspan="7">Eager property mappings</th>
+                </tr>
+                {% for mapping in metadata.eagerPropertyMappings %}
+                    {{ _self.render_o2o_property_mapping(mapping, helper) }}
+                {% endfor %}
+            {% endif %}
 
-        {% if metadata.lazyPropertyMappings|length > 0 %}
-            <tr class="status-success">
-                <th colspan="5">Lazy property mappings</th>
-            </tr>
-            {% for mapping in metadata.lazyPropertyMappings %}
-                {{ _self.render_o2o_property_mapping(mapping) }}
-            {% endfor %}
+            {% if metadata.lazyPropertyMappings|length > 0 %}
+                <tr class="status-success">
+                    <th colspan="7">Lazy property mappings</th>
+                </tr>
+                {% for mapping in metadata.lazyPropertyMappings %}
+                    {{ _self.render_o2o_property_mapping(mapping, helper) }}
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            {% if metadata.propertyMappings|length > 0 %}
+                <tr class="status-success">
+                    <th colspan="7">Property mappings</th>
+                </tr>
+                {% for mapping in metadata.propertyMappings %}
+                    {{ _self.render_o2o_property_mapping(mapping, helper) }}
+                {% endfor %}
+            {% endif %}
         {% endif %}
 
     </table>
 {% endmacro %}
 
-{% macro render_o2o_property_mapping(mapping) %}
+{% macro render_o2o_property_mapping(mapping, helper) %}
     <tr>
         <td>
             {{ mapping.targetProperty }}
+        </td>
+        <td>
+            {{ helper.typeToHtml(mapping.sourceTypes)|raw }}
+        </td>
+        <td>
+            {{ helper.typeToHtml(mapping.targetTypes)|raw }}
         </td>
         <td style="white-space: nowrap">
             {{ _self.render_o2o_property_mapping_read_mode(mapping.sourceReadMode, mapping.sourceReadName, mapping.sourceReadVisibility) }}

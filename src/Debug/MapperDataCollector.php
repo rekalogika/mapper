@@ -51,6 +51,11 @@ final class MapperDataCollector extends AbstractDataCollector
         $this->data['object_to_object_metadata'][$key] = $objectToObjectMetadata;
     }
 
+    public function getHelper(): Helper
+    {
+        return new Helper();
+    }
+
     /**
      * @return array<int,TraceData>
      */
