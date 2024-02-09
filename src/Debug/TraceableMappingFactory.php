@@ -15,11 +15,8 @@ namespace Rekalogika\Mapper\Debug;
 
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
-use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-final class TraceableMappingFactory implements
-    MappingFactoryInterface,
-    CacheWarmerInterface
+final class TraceableMappingFactory implements MappingFactoryInterface
 {
     private bool $mappingCollected = false;
 
@@ -27,20 +24,6 @@ final class TraceableMappingFactory implements
         private MappingFactoryInterface $decorated,
         private MapperDataCollector $dataCollector
     ) {
-    }
-
-    public function isOptional(): bool
-    {
-        return $this->decorated instanceof CacheWarmerInterface && $this->decorated->isOptional();
-    }
-
-    public function warmUp(string $cacheDir, ?string $buildDir = null): array
-    {
-        if ($this->decorated instanceof CacheWarmerInterface) {
-            return $this->decorated->warmUp($cacheDir, $buildDir);
-        }
-
-        return [];
     }
 
     public function getMapping(): Mapping
