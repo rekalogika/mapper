@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ChildObjectWithIdDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId;
@@ -21,6 +23,8 @@ use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameMustBeCalled;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdFinalDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdReadOnlyDto;
+use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
+use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class LazyObjectTest extends AbstractFrameworkTest
@@ -110,5 +114,25 @@ class LazyObjectTest extends AbstractFrameworkTest
 
         $this->assertEquals('other', $target->other);
         $this->assertTrue($target->isLazyObjectInitialized());
+    }
+
+    public function testEnablingLazyObject(): void
+    {
+        $options = new MapperOptions(enableLazyLoading: true);
+        $context = Context::create($options);
+
+        $source = new ObjectWithScalarProperties();
+        $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class, $context);
+        $this->assertInstanceOf(LazyObjectInterface::class, $target);
+    }
+
+    public function testDisablingLazyObject(): void
+    {
+        $options = new MapperOptions(enableLazyLoading: false);
+        $context = Context::create($options);
+
+        $source = new ObjectWithScalarProperties();
+        $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class, $context);
+        $this->assertNotInstanceOf(LazyObjectInterface::class, $target);
     }
 }

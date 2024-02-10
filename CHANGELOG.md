@@ -6,6 +6,9 @@
   member is not found.
 * refactor(`Context`): Context is now `Traversable`.
 * feat(`MapperOptions`): Add context object to provide mapping options.
+* feat(`MainTransformer`): Manual garbage collector.
+* feat(`ObjectToObjectTransformer`): Option to disable lazy loading.
+* feat(`ObjectToObjectTransformer`): Option to disable target value reading.
 
 ## 0.7.3
 

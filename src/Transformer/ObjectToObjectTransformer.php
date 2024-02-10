@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -106,16 +107,21 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $objectToObjectMetadata = $this->objectToObjectMetadataFactory
             ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
 
-        // disregard target if target is read only
+        // disregard target if target is read only or target value reading is
+        // disabled
 
-        if ($objectToObjectMetadata->isTargetReadOnly()) {
+        if (
+            $objectToObjectMetadata->isTargetReadOnly()
+            || !$context(MapperOptions::class)?->enableTargetValueReading
+        ) {
             $target = null;
         }
 
         // initialize target if target is null
 
         if (null === $target) {
-            $canUseTargetProxy = $objectToObjectMetadata->canUseTargetProxy();
+            $canUseTargetProxy = $objectToObjectMetadata->canUseTargetProxy()
+                && $context(MapperOptions::class)?->enableLazyLoading;
 
             if ($canUseTargetProxy) {
                 $target = $this->instantiateTargetProxy(
@@ -511,9 +517,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             return null;
         }
 
-        // get the value of the target property
+        // get the value of the target property if the target is an object and
+        // target value reading is enabled
 
-        if (is_object($target)) {
+        if (
+            is_object($target)
+            && $context(MapperOptions::class)?->enableTargetValueReading
+        ) {
             // if this is for a property mapping, not a constructor argument
 
             /** @var mixed */
