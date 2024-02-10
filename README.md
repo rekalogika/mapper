@@ -21,11 +21,12 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
   inheritance map attribute.
 * Reads the type from PHP type declaration and PHPDoc annotations, including
   the type of the nested objects.
-* If possible, target objects are lazy-loaded. The mapping does not not occur
+* If possible, target objects are lazy-loaded. The mapping does not take place
   until the target is accessed.
-* Identifier properties on the source are not lazy-loaded. If the source is also
-  lazy-loaded, we should be able to access the identifier without causing a full
-  hydration of the source.
+* Attempts to detect identifier properties on the source side. Those properties
+  on the target side will be mapped eagerly, and will not trigger the hydration.
+  Thus, API Platform will be able to generate IRIs without causing the hydration
+  of the entire object graph.
 * Handles the mapping between `array` or array-like objects, as well as using an
   adder method.
 * Handles non-string & non-integer keys in array-like objects, including
@@ -46,6 +47,7 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
 ## Future Features
 
 * Option to read & write to private properties.
+* Migrate engine to `symfony/type-info`.
 
 ## Installation
 
