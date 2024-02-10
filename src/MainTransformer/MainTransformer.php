@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\MainTransformer;
 
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\MainTransformer\Exception\CircularReferenceException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
@@ -79,6 +80,13 @@ class MainTransformer implements MainTransformerInterface
         Context $context,
         string $path = null,
     ): mixed {
+        // if MapperOptions is not provided, use the default options
+
+        if (!($mapperOptions = $context(MapperOptions::class))) {
+            $mapperOptions = new MapperOptions();
+            $context = $context->with($mapperOptions);
+        }
+
         // if target is provided, guess the type from it.
         // if target is not provided, use the provided target type. if it is
         // also not provided, then the target type is mixed.
