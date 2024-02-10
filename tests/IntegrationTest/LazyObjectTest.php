@@ -118,7 +118,7 @@ class LazyObjectTest extends AbstractFrameworkTest
 
     public function testEnablingLazyObject(): void
     {
-        $options = new MapperOptions(enableLazyLoading: true);
+        $options = new MapperOptions(lazyLoading: true);
         $context = Context::create($options);
 
         $source = new ObjectWithScalarProperties();
@@ -128,7 +128,7 @@ class LazyObjectTest extends AbstractFrameworkTest
 
     public function testDisablingLazyObject(): void
     {
-        $options = new MapperOptions(enableLazyLoading: false);
+        $options = new MapperOptions(lazyLoading: false);
         $context = Context::create($options);
 
         $source = new ObjectWithScalarProperties();

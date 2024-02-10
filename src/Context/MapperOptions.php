@@ -19,12 +19,12 @@ namespace Rekalogika\Mapper\Context;
 final readonly class MapperOptions
 {
     /**
-     * @param boolean $enableLazyLoading Enable or disable lazy loading.
-     * @param boolean $enableTargetValueReading If disabled, values on the target side will not be read, and assumed to be null.
+     * @param boolean $lazyLoading Enable or disable lazy loading.
+     * @param boolean $readTargetValue If disabled, values on the target side will not be read, and assumed to be null.
      */
     public function __construct(
-        public bool $enableLazyLoading = true,
-        public bool $enableTargetValueReading = true,
+        public bool $lazyLoading = true,
+        public bool $readTargetValue = true,
     ) {
     }
 }

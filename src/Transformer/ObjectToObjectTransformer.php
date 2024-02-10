@@ -112,7 +112,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         if (
             $objectToObjectMetadata->isTargetReadOnly()
-            || !$context(MapperOptions::class)?->enableTargetValueReading
+            || !$context(MapperOptions::class)?->readTargetValue
         ) {
             $target = null;
         }
@@ -121,7 +121,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         if (null === $target) {
             $canUseTargetProxy = $objectToObjectMetadata->canUseTargetProxy()
-                && $context(MapperOptions::class)?->enableLazyLoading;
+                && $context(MapperOptions::class)?->lazyLoading;
 
             if ($canUseTargetProxy) {
                 $target = $this->instantiateTargetProxy(
@@ -522,7 +522,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         if (
             is_object($target)
-            && $context(MapperOptions::class)?->enableTargetValueReading
+            && $context(MapperOptions::class)?->readTargetValue
         ) {
             // if this is for a property mapping, not a constructor argument
 

@@ -11,6 +11,7 @@
 * feat(`ObjectToObjectTransformer`): Option to disable target value reading.
 * refactor(`MainTransformer`): Make manual GC interval a static variable.
 * refactor(`ObjectToObjectMetadataFactory`): Remove `Context`.
+* refactor(`MapperOptions`): Simplify option names.
 
 ## 0.7.3
 
