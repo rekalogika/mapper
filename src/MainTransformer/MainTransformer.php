@@ -36,6 +36,8 @@ use Symfony\Component\PropertyInfo\Type;
 
 class MainTransformer implements MainTransformerInterface
 {
+    private static int $runCounter = 1;
+
     public function __construct(
         private ObjectCacheFactoryInterface $objectCacheFactory,
         private TransformerRegistryInterface $transformerRegistry,
@@ -85,6 +87,16 @@ class MainTransformer implements MainTransformerInterface
         if (!($mapperOptions = $context(MapperOptions::class))) {
             $mapperOptions = new MapperOptions();
             $context = $context->with($mapperOptions);
+        }
+
+        // if manual garbage collection interval is set, run it
+
+        if (($manualGcInterval = $context(MapperOptions::class)?->manualGcInterval) > 0) {
+            if (self::$runCounter % $manualGcInterval === 0) {
+                gc_collect_cycles();
+            }
+
+            self::$runCounter++;
         }
 
         // if target is provided, guess the type from it.
