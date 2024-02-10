@@ -131,7 +131,7 @@ class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
             throw new CacheNotSupportedException($this->context);
         }
 
-        ($this->context)(ObjectCache::class)->saveTarget(
+        ($this->context)(ObjectCache::class)?->saveTarget(
             source: $this->source,
             targetType: $this->targetType,
             target: $target

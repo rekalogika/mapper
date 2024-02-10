@@ -140,7 +140,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // save object to cache
 
-        $context(ObjectCache::class)->saveTarget(
+        $context(ObjectCache::class)?->saveTarget(
             source: $source,
             targetType: $targetType,
             target: $target,

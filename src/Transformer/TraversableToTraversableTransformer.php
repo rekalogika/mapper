@@ -89,7 +89,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         // Add to cache
 
-        $context(ObjectCache::class)->saveTarget(
+        $context(ObjectCache::class)?->saveTarget(
             source: $source,
             targetType: $targetType,
             target: $target,

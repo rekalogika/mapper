@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\MainTransformer;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\MainTransformer\Exception\CircularReferenceException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
@@ -96,18 +95,14 @@ class MainTransformer implements MainTransformerInterface
 
         // get or create object cache
 
-        try {
-            $objectCache = $context(ObjectCache::class);
-        } catch (ContextMemberNotFoundException) {
+        if (!($objectCache = $context(ObjectCache::class))) {
             $objectCache = $this->objectCacheFactory->createObjectCache();
             $context = $context->with($objectCache);
         }
 
         // initialize path it it doesn't exist
 
-        try {
-            $pathContext = $context(Path::class);
-
+        if ($pathContext = $context(Path::class)) {
             // append path
 
             if ($path === null) {
@@ -115,11 +110,10 @@ class MainTransformer implements MainTransformerInterface
             }
 
             $context = $context->with($pathContext->append($path));
-        } catch (ContextMemberNotFoundException) {
+        } else {
             $pathContext = Path::create();
             $context = $context->with($pathContext);
         }
-
 
         // determine the source type
 

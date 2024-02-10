@@ -137,7 +137,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // Add the target to cache
 
-        $context(ObjectCache::class)->saveTarget(
+        $context(ObjectCache::class)?->saveTarget(
             source: $source,
             targetType: $metadata->getTargetType(),
             target: $target,

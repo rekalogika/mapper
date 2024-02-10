@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.8.0
+
+* refactor(`Context`): Returns null instead of throwing exception if the
+  member is not found.
+
 ## 0.7.3
 
 * test: Add tests for read-only targets.

@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Exception;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
 
 trait ContextAwareExceptionTrait
@@ -25,11 +24,7 @@ trait ContextAwareExceptionTrait
         ?\Throwable $previous = null,
         protected ?Context $context = null,
     ) {
-        try {
-            $path = $context?->get(Path::class);
-        } catch (ContextMemberNotFoundException) {
-            $path = null;
-        }
+        $path = $context?->get(Path::class);
 
         $path = (string) $path;
         if ($path === '') {

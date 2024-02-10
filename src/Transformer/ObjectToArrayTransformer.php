@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Serializer\NormalizerContext;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -46,11 +45,7 @@ final class ObjectToArrayTransformer implements TransformerInterface
             throw new InvalidArgumentException(sprintf('Source must be object, "%s" given', get_debug_type($source)), context: $context);
         }
 
-        try {
-            $normalizerContext = $context(NormalizerContext::class)->toArray();
-        } catch (ContextMemberNotFoundException) {
-            $normalizerContext = [];
-        }
+        $normalizerContext = $context(NormalizerContext::class)?->toArray() ?? [];
 
         return $this->normalizer->normalize(
             $source,

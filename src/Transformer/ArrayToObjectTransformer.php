@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Serializer\DenormalizerContext;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
@@ -53,11 +52,7 @@ final class ArrayToObjectTransformer implements TransformerInterface
             throw new InvalidTypeInArgumentException('Target type must be an object, "%s" given', $targetType, context: $context);
         }
 
-        try {
-            $denormalizerContext = $context(DenormalizerContext::class)->toArray();
-        } catch (ContextMemberNotFoundException) {
-            $denormalizerContext = [];
-        }
+        $denormalizerContext = $context(DenormalizerContext::class)?->toArray() ?? [];
 
         if ($target !== null) {
             if (!is_object($target)) {

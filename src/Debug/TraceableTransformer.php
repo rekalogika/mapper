@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Debug;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Context\ContextMemberNotFoundException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
@@ -65,17 +64,12 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         ?Type $targetType,
         Context $context
     ): mixed {
-        try {
-            $path = $context(Path::class)->getLast();
-        } catch (ContextMemberNotFoundException) {
-            $path = null;
-        }
+        $path = $context(Path::class)?->getLast();
 
-        try {
-            $debugContext = $context(DebugContext::class);
+        if ($debugContext = $context(DebugContext::class)) {
             $possibleTargetTypes = $debugContext->getTargetTypes();
             $sourceTypeGuessed = $debugContext->isSourceTypeGuessed();
-        } catch (ContextMemberNotFoundException) {
+        } else {
             $possibleTargetTypes = null;
             $sourceTypeGuessed = false;
         }
@@ -90,12 +84,11 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
             sourceTypeGuessed: $sourceTypeGuessed
         );
 
-        try {
-            // add trace data to parent trace data
-            $parentTraceData = $context(TraceData::class);
+        // add trace data to parent trace data
+        if ($parentTraceData = $context(TraceData::class)) {
             $parentTraceData->addNestedTraceData($traceData);
             $context = $context->with($traceData);
-        } catch (ContextMemberNotFoundException) {
+        } else {
             // @phpstan-ignore-next-line
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
             $caller = $backtrace[2];
