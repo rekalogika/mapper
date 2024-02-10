@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Rekalogika\Mapper\Attribute\InheritanceMap;
-use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
@@ -58,7 +57,6 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
-        Context $context
     ): ObjectToObjectMetadata {
         $providedTargetClass = $targetClass;
 
@@ -75,7 +73,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
             $targetClass = $inheritanceMap->getTargetClassFromSourceClass($sourceClass);
 
             if ($targetClass === null) {
-                throw new SourceClassNotInInheritanceMapException($sourceClass, $providedTargetClass, context: $context);
+                throw new SourceClassNotInInheritanceMapException($sourceClass, $providedTargetClass);
             }
         }
 
@@ -84,19 +82,19 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
         // check if source and target classes are internal
 
         if ($sourceReflection->isInternal()) {
-            throw new InternalClassUnsupportedException($sourceClass, context: $context);
+            throw new InternalClassUnsupportedException($sourceClass);
         }
 
         if ($targetReflection->isInternal()) {
-            throw new InternalClassUnsupportedException($targetClass, context: $context);
+            throw new InternalClassUnsupportedException($targetClass);
         }
 
         // queries
 
         $initializableTargetProperties = $this
-            ->listInitializableProperties($targetClass, $context);
+            ->listInitializableProperties($targetClass);
         $targetProperties = $this
-            ->listProperties($targetClass, $context);
+            ->listProperties($targetClass);
 
         $initializableTargetPropertiesNotInSource = $initializableTargetProperties;
 
@@ -417,7 +415,6 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
      */
     private function listProperties(
         string $class,
-        Context $context
     ): array {
         $properties = $this->propertyListExtractor->getProperties($class) ?? [];
 
@@ -430,9 +427,8 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
      */
     private function listInitializableProperties(
         string $class,
-        Context $context
     ): array {
-        $properties = $this->listProperties($class, $context);
+        $properties = $this->listProperties($class);
 
         $initializableProperties = [];
 

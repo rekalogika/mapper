@@ -104,6 +104,7 @@ a few keystrokes.
 * Option to read & write to private properties.
 * Migrate engine to `symfony/type-info`.
 * Auto-detect static factory method.
+* Use our own interface for proxy objects.
 
 ## Documentation
 

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
@@ -29,7 +28,6 @@ class ObjectToObjectMetadataFactoryTest extends AbstractFrameworkTest
         $metadata = $factory->createObjectToObjectMetadata(
             ObjectWithScalarProperties::class,
             ObjectWithScalarPropertiesDto::class,
-            Context::create()
         );
 
         $this->assertEquals(ObjectWithScalarProperties::class, $metadata->getSourceClass());
@@ -54,7 +52,6 @@ PHP);
             // @phpstan-ignore-next-line
             'Proxies\\__CG__\\Rekalogika\\Mapper\\Tests\\Fixtures\\Scalar\\ObjectWithScalarProperties',
             ObjectWithScalarPropertiesDto::class,
-            Context::create()
         );
 
         $this->assertEquals(ObjectWithScalarProperties::class, $metadata->getSourceClass());

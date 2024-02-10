@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
-use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 
@@ -27,12 +26,10 @@ final class ProxyResolvingObjectToObjectMetadataFactory implements ObjectToObjec
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
-        Context $context
     ): ObjectToObjectMetadata {
         $metadata = $this->decorated->createObjectToObjectMetadata(
             $this->resolveRealClass($sourceClass),
             $targetClass,
-            $context
         );
 
         return $metadata;

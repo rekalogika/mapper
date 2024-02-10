@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
-use Rekalogika\Mapper\Context\Context;
-
 interface ObjectToObjectMetadataFactoryInterface
 {
     /**
@@ -24,6 +22,5 @@ interface ObjectToObjectMetadataFactoryInterface
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
-        Context $context
     ): ObjectToObjectMetadata;
 }

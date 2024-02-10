@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
-use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 
@@ -28,9 +27,8 @@ final class TraceableObjectToObjectMetadataFactory implements ObjectToObjectMeta
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
-        Context $context
     ): ObjectToObjectMetadata {
-        $metadata = $this->decorated->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
+        $metadata = $this->decorated->createObjectToObjectMetadata($sourceClass, $targetClass);
 
         $this->dataCollector->collectObjectToObjectMetadata($metadata);
 

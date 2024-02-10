@@ -10,6 +10,7 @@
 * feat(`ObjectToObjectTransformer`): Option to disable lazy loading.
 * feat(`ObjectToObjectTransformer`): Option to disable target value reading.
 * refactor(`MainTransformer`): Make manual GC interval a static variable.
+* refactor(`ObjectToObjectMetadataFactory`): Remove `Context`.
 
 ## 0.7.3
 

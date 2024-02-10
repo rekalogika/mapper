@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
-use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\RuntimeException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
@@ -37,9 +36,8 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
-        Context $context
     ): ObjectToObjectMetadata {
-        return $this->getFromMemoryCache($sourceClass, $targetClass, $context);
+        return $this->getFromMemoryCache($sourceClass, $targetClass);
     }
 
     /**
@@ -49,7 +47,6 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
     private function getFromMemoryCache(
         string $sourceClass,
         string $targetClass,
-        Context $context
     ): ObjectToObjectMetadata {
         $cacheKey = $sourceClass . ':' . $targetClass;
 
@@ -62,7 +59,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         }
 
         return $this->cache[$cacheKey] =
-            $this->getFromCache($sourceClass, $targetClass, $context);
+            $this->getFromCache($sourceClass, $targetClass);
     }
 
     /**
@@ -72,7 +69,6 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
     private function getFromCache(
         string $sourceClass,
         string $targetClass,
-        Context $context
     ): ObjectToObjectMetadata {
         $cacheKey = $sourceClass . ':' . $targetClass;
 
@@ -99,7 +95,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         }
 
         $objectToObjectMetadata = $this->decorated
-            ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
+            ->createObjectToObjectMetadata($sourceClass, $targetClass);
 
         $cacheItem->set($objectToObjectMetadata);
         $this->cacheItemPool->save($cacheItem);

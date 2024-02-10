@@ -105,7 +105,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // get the object to object mapping metadata
 
         $objectToObjectMetadata = $this->objectToObjectMetadataFactory
-            ->createObjectToObjectMetadata($sourceClass, $targetClass, $context);
+            ->createObjectToObjectMetadata($sourceClass, $targetClass);
 
         // disregard target if target is read only or target value reading is
         // disabled
