@@ -36,6 +36,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 class MainTransformer implements MainTransformerInterface
 {
+    public static int $manualGcInterval = 10000;
     private static int $runCounter = 1;
 
     public function __construct(
@@ -91,8 +92,8 @@ class MainTransformer implements MainTransformerInterface
 
         // if manual garbage collection interval is set, run it
 
-        if (($manualGcInterval = $context(MapperOptions::class)?->manualGcInterval) > 0) {
-            if (self::$runCounter % $manualGcInterval === 0) {
+        if (self::$manualGcInterval > 0) {
+            if (self::$runCounter % self::$manualGcInterval === 0) {
                 gc_collect_cycles();
             }
 
