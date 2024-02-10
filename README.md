@@ -1,10 +1,65 @@
 # rekalogika/mapper
 
-An object mapper (also called automapper) for PHP and Symfony. It maps an object
-to another object. Primarily used to map an entity to a DTO, but also useful for
-other mapping purposes.
+`rekalogika/mapper` is an object mapper for PHP and Symfony, also commonly known
+as an automapper. It maps an object to another object. Primarily used to map an
+entity to a DTO, but also useful for other mapping purposes. It removes the
+complexity of mapping an object to another object, and even an object graph to
+another object graph.
 
 Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.dev/mapper/).
+
+## Installation
+
+```bash
+composer require rekalogika/mapper
+```
+
+## Usage
+
+```php
+use App\Entity\Book;
+use Rekalogika\Mapper\MapperInterface;
+
+/** @var MapperInterface $mapper */
+/** @var Book $book */
+
+$result = $mapper->map($book, BookDto::class);
+
+// or map to an existing object
+
+$bookDto = new BookDto();
+$mapper->map($book, $bookDto);
+```
+
+## Why Use a Mapper?
+
+Why do we need to use a mapper to save a few keystrokes, and not just use
+something simple like this?
+
+```php
+class BookDto
+{
+    public static function create(Book $book): self
+    {
+        $dto = new self();
+        // ...
+
+        return $dto;
+    }
+}
+```
+
+Everyone must have that idea at some point. However, as the project grows, the
+target classes (DTOs) may start to reference each other, and become a rich
+object graph. Your code will start to have many special cases, and is no longer
+as simple as you thought it would be. It becomes harder to maintain, and then
+eventually forces you to sit back and try to resolve the problem. When (if?) you
+successfully engineer a solution, you will end up with something that resembles
+a mapping framework anyway.
+
+Mapping can be simple, but can also become a highly complex task. A mapper is
+created out of necessity to handle the complexity, not just as a means of saving
+a few keystrokes.
 
 ## Features
 
@@ -48,34 +103,7 @@ Full documentation is available at [rekalogika.dev/mapper](https://rekalogika.de
 
 * Option to read & write to private properties.
 * Migrate engine to `symfony/type-info`.
-
-## Installation
-
-```bash
-composer require rekalogika/mapper
-```
-## Usage
-
-In Symfony projects, simply autowire `MapperInterface`. In non Symfony projects,
-instantiate a `MapperFactory`, and use `getMapper()` to get an instance of
-`MapperInterface`.
-
-To map objects, you can use the `map()` method of `MapperInterface`.
-
-```php
-use Rekalogika\Mapper\MapperInterface;
-
-/** @var MapperInterface $mapper */
-
-$book = new Book();
-$result = $mapper->map($book, BookDto::class);
-
-// or map to an existing object
-
-$book = new Book();
-$bookDto = new BookDto();
-$mapper->map($book, $bookDto);
-```
+* Auto-detect static factory method.
 
 ## Documentation
 
