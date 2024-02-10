@@ -12,6 +12,7 @@
 * refactor(`MainTransformer`): Make manual GC interval a static variable.
 * refactor(`ObjectToObjectMetadataFactory`): Remove `Context`.
 * refactor(`MapperOptions`): Simplify option names.
+* fix: Fix deprecations.
 
 ## 0.7.3
 

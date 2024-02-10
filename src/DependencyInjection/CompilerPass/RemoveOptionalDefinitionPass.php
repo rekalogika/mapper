@@ -20,7 +20,7 @@ use Symfony\Component\Uid\Factory\UuidFactory;
 
 final class RemoveOptionalDefinitionPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         if (!class_exists(UuidFactory::class)) {
             $container->removeDefinition(SymfonyUidTransformer::class);

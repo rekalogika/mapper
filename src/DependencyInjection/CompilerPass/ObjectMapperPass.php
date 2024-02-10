@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 final class ObjectMapperPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $objectMapperTableFactory = $container
             ->getDefinition('rekalogika.mapper.object_mapper.table_factory');

@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 final class PropertyMapperPass implements CompilerPassInterface
 {
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $propertyMapperResolver = $container
             ->getDefinition('rekalogika.mapper.property_mapper.resolver');

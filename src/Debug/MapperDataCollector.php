@@ -35,7 +35,7 @@ final class MapperDataCollector extends AbstractDataCollector
         Request $request,
         Response $response,
         ?\Throwable $exception = null
-    ) {
+    ): void {
     }
 
     public function collectTraceData(TraceData $traceData): void
