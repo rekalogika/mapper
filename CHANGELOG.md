@@ -4,6 +4,7 @@
 
 * refactor(`Context`): Returns null instead of throwing exception if the
   member is not found.
+* refactor(`Context`): Context is now `Traversable`.
 
 ## 0.7.3
 

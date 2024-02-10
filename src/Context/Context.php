@@ -17,8 +17,9 @@ use Rekalogika\Mapper\Exception\LogicException;
 
 /**
  * @immutable
+ * @implements \IteratorAggregate<int,object>
  */
-final readonly class Context
+final readonly class Context implements \IteratorAggregate
 {
     /**
      * @param array<class-string,object> $context
@@ -26,6 +27,13 @@ final readonly class Context
     private function __construct(
         readonly private array $context = []
     ) {
+    }
+
+    public function getIterator(): \Traversable
+    {
+        foreach ($this->context as $object) {
+            yield $object;
+        }
     }
 
     public static function create(object ...$objects): self
