@@ -98,6 +98,7 @@ a few keystrokes.
 * Helpful exception messages.
 * Console commands for debugging.
 * Data collector and profiler integration.
+* Coded from the start using strict types, and maxed out PHPStan and Psalm.
 
 ## Future Features
 
@@ -105,6 +106,9 @@ a few keystrokes.
 * Migrate engine to `symfony/type-info`.
 * Auto-detect static factory method.
 * Use our own interface for proxy objects.
+* `MapFrom` and `MapTo` attributes.
+* Support `ramsey/uuid`
+* Improve non-framework usage.
 
 ## Documentation
 
