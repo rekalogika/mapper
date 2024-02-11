@@ -98,7 +98,8 @@ a few keystrokes.
 * Helpful exception messages.
 * Console commands for debugging.
 * Data collector and profiler integration.
-* Coded from the start using strict types, and maxed out PHPStan and Psalm.
+* Coded from the start using PHP 8, strict types, and maxed-out PHPStan and
+  Psalm.
 
 ## Future Features
 
