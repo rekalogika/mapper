@@ -13,15 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Proxy;
 
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\Proxy\Exception\ProxyNotSupportedException;
 
 interface ProxyGeneratorInterface
 {
     /**
+     * @param class-string $class
      * @throws ProxyNotSupportedException
      */
-    public function generateTargetProxy(
-        ObjectToObjectMetadata $metadata
-    ): ProxySpecification;
+    public function generateProxy(string $class): ProxySpecification;
 }

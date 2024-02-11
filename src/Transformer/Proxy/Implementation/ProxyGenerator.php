@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Proxy\Implementation;
 
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Transformer\Proxy\ProxyGeneratorInterface;
 use Rekalogika\Mapper\Transformer\Proxy\ProxySpecification;
@@ -22,45 +21,40 @@ use Symfony\Component\VarExporter\ProxyHelper;
 
 final class ProxyGenerator implements ProxyGeneratorInterface
 {
-    public function generateTargetProxy(ObjectToObjectMetadata $metadata): ProxySpecification
+    public function generateProxy(string $class): ProxySpecification
     {
-        $sourceClass = $metadata->getSourceClass();
-        $targetClass = $metadata->getTargetClass();
-
         /** @var class-string */
-        $proxyClass = $this->generateProxyClassName($sourceClass, $targetClass);
+        $proxyClass = $this->generateProxyClassName($class);
 
         try {
-            $proxyCode = $this->generateProxyCode($sourceClass, $targetClass);
+            $proxyCode = $this->generateProxyCode($class);
         } catch (LogicException $e) {
-            throw new ProxyNotSupportedException($metadata, $e);
+            throw new ProxyNotSupportedException($class, $e);
         }
 
         return new ProxySpecification($proxyClass, $proxyCode);
     }
 
     /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
+     * @param class-string $class
      * @return string
      */
-    private function generateProxyClassName(string $sourceClass, string $targetClass): string
+    private function generateProxyClassName(string $class): string
     {
         return sprintf(
             'Rekalogika\Mapper\Generated\__CG__\%s',
-            $targetClass
+            $class
         );
     }
 
     /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
+     * @param class-string $class
      * @return string
      */
-    private function generateProxyCode(string $sourceClass, string $targetClass): string
+    private function generateProxyCode(string $class): string
     {
-        $proxyClass = $this->generateProxyClassName($sourceClass, $targetClass);
-        $targetReflection = new \ReflectionClass($targetClass);
+        $proxyClass = $this->generateProxyClassName($class);
+        $targetReflection = new \ReflectionClass($class);
 
         // get proxy class name & namespace
         $shortName = preg_replace('/.*\\\\/', '', $proxyClass);

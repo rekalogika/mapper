@@ -333,7 +333,7 @@ final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFacto
 
         try {
             $proxySpecification = $this->proxyGenerator
-                ->generateTargetProxy($objectToObjectMetadata);
+                ->generateProxy($targetClass);
 
             // determine if the constructor contains eager properties. if it
             // does, then the constructor is eager

@@ -14,19 +14,20 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Proxy\Exception;
 
 use Rekalogika\Mapper\Exception\RuntimeException;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 
 class ProxyNotSupportedException extends RuntimeException
 {
     private string $reason;
 
-    public function __construct(ObjectToObjectMetadata $metadata, \Throwable $previous)
+    /**
+     * @param class-string $class
+     */
+    public function __construct(string $class, \Throwable $previous)
     {
         parent::__construct(
             sprintf(
-                'Creating target proxy is not supported for target class "%s" and source class "%s"',
-                $metadata->getTargetClass(),
-                $metadata->getSourceClass()
+                'Creating a proxy for class "%s" is not supported.',
+                $class
             ),
             previous: $previous
         );
