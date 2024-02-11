@@ -28,6 +28,7 @@ final class RemoveOptionalDefinitionPass implements CompilerPassInterface
 
         if (!$container->hasDefinition('doctrine')) {
             $container->removeDefinition('rekalogika.mapper.eager_properties_resolver.doctrine');
+            $container->removeDefinition('rekalogika.mapper.proxy_generator.doctrine');
         }
     }
 }

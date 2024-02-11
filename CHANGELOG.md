@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.8.1
+
+* fix(`DoctrineProxyGenerator`): Remove if Doctrine is not available.
+
 ## 0.8.0
 
 * refactor(`Context`): Returns null instead of throwing exception if the
