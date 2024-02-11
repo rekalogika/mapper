@@ -70,7 +70,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         string $sourceClass,
         string $targetClass,
     ): ObjectToObjectMetadata {
-        $cacheKey = $sourceClass . ':' . $targetClass;
+        $cacheKey = hash('xxh128', $sourceClass . $targetClass);
 
         $cacheItem = $this->cacheItemPool->getItem($cacheKey);
 

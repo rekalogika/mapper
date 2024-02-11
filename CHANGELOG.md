@@ -4,6 +4,7 @@
 
 * fix(`DoctrineProxyGenerator`): Remove if Doctrine is not available.
 * fix(service definition): Add interface aliases for easy decoration.
+* fix(`CachingObjectToObjectMetadataFactory`): Fix invalid cache key (issue #3).
 
 ## 0.8.0
 
