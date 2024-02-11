@@ -29,7 +29,7 @@ final class ProxyGenerator implements ProxyGeneratorInterface
         try {
             $proxyCode = $this->generateProxyCode($class);
         } catch (LogicException $e) {
-            throw new ProxyNotSupportedException($class, $e);
+            throw new ProxyNotSupportedException($class, previous: $e);
         }
 
         return new ProxySpecification($proxyClass, $proxyCode);

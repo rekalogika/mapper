@@ -17,6 +17,8 @@ use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithMultipleIdentifier;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifier;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifierDto;
+use Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity;
+use Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntityInputDto;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\DoctrineEagerPropertiesResolver;
 use Symfony\Component\VarExporter\LazyObjectInterface;
@@ -101,5 +103,13 @@ class DoctrineTest extends AbstractFrameworkTest
         $this->assertEquals(['id1', 'id2'], $eagerProperties);
     }
 
+    public function testInputDtoToEntityMapping(): void
+    {
+        $input = new SimpleEntityInputDto();
+        $input->name = 'my-name';
+
+        $entity = $this->mapper->map($input, SimpleEntity::class);
+        $this->assertNotInstanceOf(LazyObjectInterface::class, $entity);
+    }
 
 }

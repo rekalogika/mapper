@@ -27,6 +27,7 @@ use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\Implementation\WarmableMappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
+use Rekalogika\Mapper\Proxy\Implementation\DoctrineProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyRegistry;
 use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
@@ -376,6 +377,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.proxy_generator', ProxyGenerator::class);
+
+    $services
+        ->set('rekalogika.mapper.proxy_generator.doctrine', DoctrineProxyGenerator::class)
+        ->decorate('rekalogika.mapper.proxy_generator')
+        ->args([
+            service('.inner'),
+            service('doctrine'),
+        ]);
 
     $services
         ->set('rekalogika.mapper.proxy_registry', ProxyRegistry::class)

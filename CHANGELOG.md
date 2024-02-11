@@ -15,6 +15,7 @@
 * fix: Fix deprecations.
 * refactor(`ProxyGeneratorInterface`): Use class as input. Remove dependency on `ObjectToObjectMetadata`.
 * refactor(`ProxyGeneratorInterface`): Move proxy namespace to top-level namespace.
+* fix(`ProxyGenerator`): Prevent Doctrine entities from being proxied.
 
 ## 0.7.3
 
