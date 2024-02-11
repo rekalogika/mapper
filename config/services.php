@@ -30,6 +30,7 @@ use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
 use Rekalogika\Mapper\Proxy\Implementation\DoctrineProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyRegistry;
+use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
 use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation\ArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation\CachingArrayLikeMetadataFactory;
@@ -37,6 +38,7 @@ use Rekalogika\Mapper\Transformer\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\CopyTransformer;
 use Rekalogika\Mapper\Transformer\DateTimeTransformer;
+use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\ChainEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\DoctrineEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
@@ -193,14 +195,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # mappingfactory
 
     $services
+        ->alias(MappingFactoryInterface::class, 'rekalogika.mapper.mapping_factory');
+
+    $services
         ->set('rekalogika.mapper.mapping_factory', MappingFactory::class)
         ->args([
             tagged_iterator('rekalogika.mapper.transformer', 'key'),
             service('rekalogika.mapper.type_resolver')
         ]);
-
-    $services
-        ->alias(MappingFactoryInterface::class, 'rekalogika.mapper.mapping_factory');
 
     $services
         ->set('rekalogika.mapper.mapping_factory.caching', WarmableMappingFactory::class)
@@ -361,6 +363,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # eager properties resolver
 
     $services
+        ->alias(EagerPropertiesResolverInterface::class, 'rekalogika.mapper.eager_properties_resolver');
+
+    $services
         ->set('rekalogika.mapper.eager_properties_resolver', ChainEagerPropertiesResolver::class)
         ->args([tagged_iterator('rekalogika.mapper.eager_properties_resolver')]);
 
@@ -373,7 +378,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([service('doctrine')])
         ->tag('rekalogika.mapper.eager_properties_resolver', ['priority' => -500]);
 
-    # proxy
+    # proxy generator
+
+    $services
+        ->alias(ProxyGeneratorInterface::class, 'rekalogika.mapper.proxy_generator');
 
     $services
         ->set('rekalogika.mapper.proxy_generator', ProxyGenerator::class);
@@ -385,6 +393,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('.inner'),
             service('doctrine'),
         ]);
+
+    # proxy registry
 
     $services
         ->set('rekalogika.mapper.proxy_registry', ProxyRegistry::class)

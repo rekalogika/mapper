@@ -3,6 +3,7 @@
 ## 0.8.1
 
 * fix(`DoctrineProxyGenerator`): Remove if Doctrine is not available.
+* fix(service definition): Add interface aliases for easy decoration.
 
 ## 0.8.0
 
