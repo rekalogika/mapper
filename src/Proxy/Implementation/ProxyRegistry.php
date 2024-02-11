@@ -11,11 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\Proxy\Implementation;
+namespace Rekalogika\Mapper\Proxy\Implementation;
 
-use Rekalogika\Mapper\Transformer\Proxy\ProxyAutoloaderInterface;
-use Rekalogika\Mapper\Transformer\Proxy\ProxyRegistryInterface;
-use Rekalogika\Mapper\Transformer\Proxy\ProxySpecification;
+use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
+use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
+use Rekalogika\Mapper\Proxy\ProxySpecification;
 
 final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInterface
 {

@@ -27,6 +27,8 @@ use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\Implementation\WarmableMappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
+use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
+use Rekalogika\Mapper\Proxy\Implementation\ProxyRegistry;
 use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation\ArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation\CachingArrayLikeMetadataFactory;
@@ -45,8 +47,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectTo
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyResolvingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToStringTransformer;
-use Rekalogika\Mapper\Transformer\Proxy\Implementation\ProxyGenerator;
-use Rekalogika\Mapper\Transformer\Proxy\Implementation\ProxyRegistry;
 use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\SymfonyUidTransformer;

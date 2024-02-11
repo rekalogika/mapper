@@ -11,9 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\Proxy;
+namespace Rekalogika\Mapper\Proxy;
 
-use Rekalogika\Mapper\Transformer\Proxy\Exception\ProxyNotSupportedException;
+use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 
 interface ProxyGeneratorInterface
 {

@@ -17,7 +17,7 @@ use Rekalogika\Mapper\DependencyInjection\CompilerPass\DebugPass;
 use Rekalogika\Mapper\DependencyInjection\CompilerPass\ObjectMapperPass;
 use Rekalogika\Mapper\DependencyInjection\CompilerPass\PropertyMapperPass;
 use Rekalogika\Mapper\DependencyInjection\CompilerPass\RemoveOptionalDefinitionPass;
-use Rekalogika\Mapper\Transformer\Proxy\ProxyAutoloaderInterface;
+use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

@@ -11,11 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\Proxy\Implementation;
+namespace Rekalogika\Mapper\Proxy\Implementation;
 
-use Rekalogika\Mapper\Transformer\Proxy\Exception\ProxyNotSupportedException;
-use Rekalogika\Mapper\Transformer\Proxy\ProxyGeneratorInterface;
-use Rekalogika\Mapper\Transformer\Proxy\ProxySpecification;
+use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
+use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
+use Rekalogika\Mapper\Proxy\ProxySpecification;
 use Symfony\Component\VarExporter\Exception\LogicException;
 use Symfony\Component\VarExporter\ProxyHelper;
 

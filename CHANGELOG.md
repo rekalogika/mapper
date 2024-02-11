@@ -13,6 +13,8 @@
 * refactor(`ObjectToObjectMetadataFactory`): Remove `Context`.
 * refactor(`MapperOptions`): Simplify option names.
 * fix: Fix deprecations.
+* refactor(`ProxyGeneratorInterface`): Use class as input. Remove dependency on `ObjectToObjectMetadata`.
+* refactor(`ProxyGeneratorInterface`): Move proxy namespace to top-level namespace.
 
 ## 0.7.3
 

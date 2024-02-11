@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
-use Rekalogika\Mapper\Transformer\Proxy\ProxySpecification;
+use Rekalogika\Mapper\Proxy\ProxySpecification;
 
 /**
  * @immutable
