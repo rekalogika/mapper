@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\MapperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -34,7 +35,11 @@ abstract class AbstractFrameworkTest extends TestCase
         $kernel = new TestKernel();
         $kernel->boot();
         $this->container = $kernel->getContainer();
-        $this->mapper = $this->get(MapperInterface::class);
+
+        $this->mapper = new MapperDecorator(
+            $this->get(MapperInterface::class),
+            $this->getMapperContext()
+        );
     }
 
     /**
@@ -60,6 +65,11 @@ abstract class AbstractFrameworkTest extends TestCase
         $this->assertNotNull($result);
 
         return $result;
+    }
+
+    protected function getMapperContext(): Context
+    {
+        return Context::create();
     }
 
     /**

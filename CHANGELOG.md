@@ -3,6 +3,7 @@
 ## 0.9.0
 
 * fix(`MapperInterface`): Fix type-hint mismatch.
+* test: Add hook to override the default `Context`.
 
 ## 0.8.1
 
