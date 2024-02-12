@@ -74,7 +74,7 @@ class TypeUtil
      * Gets all the possible simple types from a Type
      *
      * @param Type $type
-     * @return array<array-key,Type>
+     * @return array<int,Type>
      */
     #[Friend(TypeResolver::class)]
     public static function getSimpleTypes(Type $type, bool $withParents = false): array
@@ -87,7 +87,7 @@ class TypeUtil
      * Types
      *
      * @param array<array-key,Type> $types
-     * @return array<array-key,Type>
+     * @return array<int,Type>
      */
     private static function getTypePermutations(
         array $types,

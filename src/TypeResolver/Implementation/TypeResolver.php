@@ -30,10 +30,20 @@ class TypeResolver implements TypeResolverInterface
         return TypeUtil::isSimpleType($type);
     }
 
-    public function getSimpleTypes(Type|MixedType $type): array
+    public function getSimpleTypes(array|Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {
             return [$type];
+        } elseif (is_array($type)) {
+            $simpleTypes = [];
+
+            foreach ($type as $i) {
+                foreach ($this->getSimpleTypes($i) as $simpleType) {
+                    $simpleTypes[] = $simpleType;
+                }
+            }
+
+            return $simpleTypes;
         }
 
         return TypeUtil::getSimpleTypes($type);

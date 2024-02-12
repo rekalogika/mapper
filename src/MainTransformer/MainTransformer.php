@@ -57,24 +57,6 @@ class MainTransformer implements MainTransformerInterface
         return $transformer;
     }
 
-    /**
-     * @param array<array-key,Type|MixedType> $types
-     * @return array<int,Type|MixedType>
-     */
-    private function getSimpleTypes(
-        array $types
-    ): array {
-        $simpleTypes = [];
-
-        foreach ($types as $type) {
-            foreach ($this->typeResolver->getSimpleTypes($type) as $simpleType) {
-                $simpleTypes[] = $simpleType;
-            }
-        }
-
-        return $simpleTypes;
-    }
-
     public function transform(
         mixed $source,
         mixed $target,
@@ -148,7 +130,7 @@ class MainTransformer implements MainTransformerInterface
 
         // gets simple target types from the provided target type
 
-        $targetTypes = $this->getSimpleTypes($targetTypes);
+        $targetTypes = $this->typeResolver->getSimpleTypes($targetTypes);
 
         // if debug, inject debug context
 

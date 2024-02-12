@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.1
+
+* perf(`TypeResolver`): Optimize `getSimpleTypes`.
+
 ## 0.9.0
 
 * fix(`MapperInterface`): Fix type-hint mismatch.

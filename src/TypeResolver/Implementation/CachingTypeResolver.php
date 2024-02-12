@@ -52,11 +52,11 @@ class CachingTypeResolver implements TypeResolverInterface
     // can be expensive in a loop. we cache using a weakmap
 
     /**
-     * @var array<string,array<array-key,MixedType|Type>>
+     * @var array<string,array<int,MixedType|Type>>
      */
     private array $simpleTypesCache = [];
 
-    public function getSimpleTypes(Type|MixedType $type): array
+    public function getSimpleTypes(array|Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {
             return [$type];
