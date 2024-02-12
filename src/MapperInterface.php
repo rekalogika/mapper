@@ -22,5 +22,5 @@ interface MapperInterface
      * @param class-string<T>|T $target
      * @return T
      */
-    public function map(mixed $source, object|string $target, ?Context $context = null): mixed;
+    public function map(object $source, object|string $target, ?Context $context = null): object;
 }

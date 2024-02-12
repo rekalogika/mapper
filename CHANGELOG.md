@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.0
+
+* fix(`MapperInterface`): Fix type-hint mismatch.
+
 ## 0.8.1
 
 * fix(`DoctrineProxyGenerator`): Remove if Doctrine is not available.
