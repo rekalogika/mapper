@@ -3,6 +3,7 @@
 ## 0.9.1
 
 * perf(`TypeResolver`): Optimize `getSimpleTypes`.
+* fix(`MainTransformer`): Reduce GC interval to 500.
 
 ## 0.9.0
 

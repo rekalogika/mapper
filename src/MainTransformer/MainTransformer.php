@@ -36,7 +36,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 class MainTransformer implements MainTransformerInterface
 {
-    public static int $manualGcInterval = 10000;
+    public static int $manualGcInterval = 500;
     private static int $runCounter = 1;
 
     public function __construct(
