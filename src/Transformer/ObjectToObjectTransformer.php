@@ -485,36 +485,41 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $sourcePropertyValue = $this->readerWriter
             ->readSourceProperty($source, $propertyMapping, $context);
 
-        // short circuit if the the source is null or scalar, and the target
-        // is a scalar, so we don't have to delegate to the main transformer
+        // short circuit. optimization for transformation between scalar and
+        // null, so that we don't have to go through the main transformer for
+        // this common task.
 
-        $targetScalarType = $propertyMapping->getTargetScalarType();
+        if ($context(MapperOptions::class)?->objectToObjectScalarShortCircuit) {
+            // if source is null & target accepts null, we set the
+            // target to null
 
-        if ($targetScalarType !== null) {
-            if ($sourcePropertyValue === null) {
-                return match ($targetScalarType) {
-                    'int' => 0,
-                    'float' => 0.0,
-                    'string' => '',
-                    'bool' => false,
-                    'null' => null,
-                };
-            } elseif (is_scalar($sourcePropertyValue)) {
-                return match ($targetScalarType) {
-                    'int' => (int) $sourcePropertyValue,
-                    'float' => (float) $sourcePropertyValue,
-                    'string' => (string) $sourcePropertyValue,
-                    'bool' => (bool) $sourcePropertyValue,
-                    'null' => null,
-                };
+            if ($propertyMapping->targetCanAcceptNull() && $sourcePropertyValue === null) {
+                return null;
             }
-        }
 
-        // short circuit: if source is null & target accepts null, we set the
-        // target to null
+            // if the the source is null or scalar, and the target is a scalar
 
-        if ($propertyMapping->targetCanAcceptNull() && $sourcePropertyValue === null) {
-            return null;
+            $targetScalarType = $propertyMapping->getTargetScalarType();
+
+            if ($targetScalarType !== null) {
+                if ($sourcePropertyValue === null) {
+                    return match ($targetScalarType) {
+                        'int' => 0,
+                        'float' => 0.0,
+                        'string' => '',
+                        'bool' => false,
+                        'null' => null,
+                    };
+                } elseif (is_scalar($sourcePropertyValue)) {
+                    return match ($targetScalarType) {
+                        'int' => (int) $sourcePropertyValue,
+                        'float' => (float) $sourcePropertyValue,
+                        'string' => (string) $sourcePropertyValue,
+                        'bool' => (bool) $sourcePropertyValue,
+                        'null' => null,
+                    };
+                }
+            }
         }
 
         // get the value of the target property if the target is an object and

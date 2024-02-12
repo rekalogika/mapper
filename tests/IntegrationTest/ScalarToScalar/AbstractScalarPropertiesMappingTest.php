@@ -11,22 +11,57 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\IntegrationTest;
+namespace Rekalogika\Mapper\Tests\IntegrationTest\ScalarToScalar;
 
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
+use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesWithNullContents;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithBoolPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithFloatPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithIntPropertiesDto;
+use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarConstructorArgumentDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithStringPropertiesDto;
 
-class ScalarPropertiesMappingTest extends AbstractFrameworkTest
+abstract class AbstractScalarPropertiesMappingTest extends AbstractFrameworkTest
 {
     public function testScalarIdentity(): void
     {
         $class = new ObjectWithScalarProperties();
         $dto = $this->mapper->map($class, ObjectWithScalarPropertiesDto::class);
+
+        $this->assertEquals($class->a, $dto->a);
+        $this->assertEquals($class->b, $dto->b);
+        $this->assertEquals($class->c, $dto->c);
+        $this->assertEquals($class->d, $dto->d);
+    }
+
+    public function testScalarIdentityWithTargetConstructorArgument(): void
+    {
+        $class = new ObjectWithScalarProperties();
+        $dto = $this->mapper->map($class, ObjectWithScalarConstructorArgumentDto::class);
+
+        $this->assertEquals($class->a, $dto->a);
+        $this->assertEquals($class->b, $dto->b);
+        $this->assertEquals($class->c, $dto->c);
+        $this->assertEquals($class->d, $dto->d);
+    }
+
+    public function testNullSourcesToScalarNullableTargets(): void
+    {
+        $class = new ObjectWithScalarPropertiesWithNullContents();
+        $dto = $this->mapper->map($class, ObjectWithScalarPropertiesDto::class);
+
+        $this->assertNull($dto->a);
+        $this->assertNull($dto->b);
+        $this->assertNull($dto->c);
+        $this->assertNull($dto->d);
+    }
+
+    public function testNullSourcesToScalarNullableConstructorArgumentsTargets(): void
+    {
+        $class = new ObjectWithScalarPropertiesWithNullContents();
+        $dto = $this->mapper->map($class, ObjectWithScalarConstructorArgumentDto::class);
 
         $this->assertEquals($class->a, $dto->a);
         $this->assertEquals($class->b, $dto->b);

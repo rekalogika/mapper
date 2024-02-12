@@ -4,6 +4,8 @@
 
 * fix(`MapperInterface`): Fix type-hint mismatch.
 * test: Add hook to override the default `Context`.
+* test: Test with and without scalar short circuit.
+* fix: Null value to nullable target transformation (issue #4).
 
 ## 0.8.1
 

@@ -42,6 +42,7 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolve
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\ChainEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\DoctrineEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
+use Rekalogika\Mapper\Transformer\NullToNullTransformer;
 use Rekalogika\Mapper\Transformer\NullTransformer;
 use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
@@ -111,6 +112,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ]);
 
     # transformers
+
+    $services
+        ->set(NullToNullTransformer::class)
+        ->tag('rekalogika.mapper.transformer', ['priority' => 1000]);
 
     $services
         ->set(ScalarToScalarTransformer::class)
