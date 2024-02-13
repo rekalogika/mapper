@@ -101,7 +101,7 @@ a few keystrokes.
 * Coded from the start using PHP 8, strict types, and maxed-out PHPStan and
   Psalm.
 
-## Future Features
+## To-Do List
 
 * Option to read & write to private properties.
 * Migrate engine to `symfony/type-info`.
@@ -110,6 +110,7 @@ a few keystrokes.
 * `MapFrom` and `MapTo` attributes.
 * Support `ramsey/uuid`
 * Improve non-framework usage.
+* Warm up proxies from the list of classes provided by the user.
 
 ## Documentation
 
