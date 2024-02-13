@@ -3,6 +3,7 @@
 ## 0.10.1
 
 * fix: Deprecate `MapFromObjectInterface` & `MapToObjectInterface`.
+* refactor(`MainTransformer`): Move to implementation namespace.
 
 ## 0.10.0
 

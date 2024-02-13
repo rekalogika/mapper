@@ -18,7 +18,6 @@ use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\RekalogikaMapperBundle;
 use Rekalogika\Mapper\Transformer\Implementation\ArrayToObjectTransformer;
-use Rekalogika\Mapper\Transformer\Implementation\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\CopyTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\NullTransformer;

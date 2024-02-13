@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Common;
 
-use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MapperFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
@@ -32,7 +32,7 @@ class MapperTestFactory extends MapperFactory
         return parent::getTypeResolver();
     }
 
-    public function getMainTransformer(): MainTransformer
+    public function getMainTransformer(): MainTransformerInterface
     {
         return parent::getMainTransformer();
     }

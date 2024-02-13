@@ -20,7 +20,7 @@ use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperTableFactory;
 use Rekalogika\Mapper\CustomMapper\Implementation\PropertyMapperResolver;
 use Rekalogika\Mapper\CustomMapper\Implementation\WarmableObjectMapperTableFactory;
 use Rekalogika\Mapper\Implementation\Mapper;
-use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\Implementation\MappingCacheWarmer;
 use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;

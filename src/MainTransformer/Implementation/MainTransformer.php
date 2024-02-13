@@ -11,13 +11,14 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\MainTransformer;
+namespace Rekalogika\Mapper\MainTransformer\Implementation;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\MainTransformer\Exception\CircularReferenceException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
+use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
 use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;

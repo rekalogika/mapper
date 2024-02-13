@@ -26,6 +26,7 @@ use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Implementation\Mapper;
 use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
@@ -128,7 +129,7 @@ class MapperFactory
     private ?TypeResolverInterface $typeResolver = null;
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
     private ?ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory = null;
-    private ?MainTransformer $mainTransformer = null;
+    private ?MainTransformerInterface $mainTransformer = null;
     private ?MapperInterface $mapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
     private ?ObjectCacheFactoryInterface $objectCacheFactory = null;
@@ -565,7 +566,7 @@ class MapperFactory
         return new ServiceLocator(iterator_to_array($this->getTransformersIterator()));
     }
 
-    protected function getMainTransformer(): MainTransformer
+    protected function getMainTransformer(): MainTransformerInterface
     {
         if (null === $this->mainTransformer) {
             $this->mainTransformer = new MainTransformer(
