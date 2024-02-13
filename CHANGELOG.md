@@ -5,6 +5,7 @@
 * fix(`composer.json`): Change PHP require to `>=8.2`.
 * refactor(`Mapper`): Move under implementation namespace.
 * refactor: Rename `ArrayInterface` to `CollectionInterface`.
+* refactor(`MapperFactory`): Move to top namespace.
 
 ## 0.9.1
 

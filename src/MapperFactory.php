@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\MapperFactory;
+namespace Rekalogika\Mapper;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
@@ -26,7 +26,6 @@ use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Implementation\Mapper;
 use Rekalogika\Mapper\MainTransformer\MainTransformer;
-use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
@@ -66,6 +65,7 @@ use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\Implementation\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
+use Rekalogika\Mapper\Util\ServiceLocator;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Console\Application;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
