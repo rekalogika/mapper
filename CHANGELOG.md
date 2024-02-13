@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## 0.9.2
+## 0.10.0
 
 * fix(`composer.json`): Change PHP require to `>=8.2`.
+* refactor(`Mapper`): Move under implementation namespace.
 
 ## 0.9.1
 
