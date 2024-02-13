@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection\CompilerPass;
 
-use Rekalogika\Mapper\Transformer\SymfonyUidTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\SymfonyUidTransformer;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Uid\Factory\UuidFactory;

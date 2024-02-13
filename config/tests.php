@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructo
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithExtraArguments;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithoutClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\TransformerOverride\OverrideTransformer;
-use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;

@@ -6,6 +6,7 @@
 * refactor(`Mapper`): Move under implementation namespace.
 * refactor: Rename `ArrayInterface` to `CollectionInterface`.
 * refactor(`MapperFactory`): Move to top namespace.
+* refactor(`Transformer`): Move implementation to its own namespace.
 
 ## 0.9.1
 

@@ -17,8 +17,8 @@ use Rekalogika\Mapper\Debug\MapperDataCollector;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainingObject;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObjectDto\ContainingObjectDto;
-use Rekalogika\Mapper\Transformer\ObjectToArrayTransformer;
-use Rekalogika\Mapper\Transformer\ObjectToObjectTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\ObjectToArrayTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 
 class DataCollectorTest extends AbstractFrameworkTest
 {

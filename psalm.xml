@@ -23,12 +23,12 @@
     <issueHandlers>
         <MixedArrayOffset>
             <errorLevel type="suppress">
-                <file name="src/Transformer/TraversableToArrayAccessTransformer.php" />
+                <file name="src/Transformer/Implementation/TraversableToArrayAccessTransformer.php" />
             </errorLevel>
         </MixedArrayOffset>
         <MixedAssignment>
             <errorLevel type="suppress">
-                <file name="src/Transformer/TraversableToArrayAccessTransformer.php" />
+                <file name="src/Transformer/Implementation/TraversableToArrayAccessTransformer.php" />
             </errorLevel>
         </MixedAssignment>
         <PossiblyInvalidArgument>

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer;
+namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
@@ -22,15 +22,13 @@ use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
-use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
-use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
-use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
 use Rekalogika\Mapper\Transformer\Exception\UnsupportedPropertyMappingException;
+use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
+use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
 use Rekalogika\Mapper\Transformer\Model\ConstructorArguments;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
@@ -38,6 +36,8 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataF
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
+use Rekalogika\Mapper\Transformer\TransformerInterface;
+use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;

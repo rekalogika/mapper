@@ -16,8 +16,8 @@ namespace Rekalogika\Mapper\Tests\Fixtures\TransformerOverride;
 use Rekalogika\Mapper\Tests\Fixtures\Override\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\Override\ObjectWithArrayPropertyDto;
 use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
-use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
+use Rekalogika\Mapper\Transformer\TransformerInterface;
+use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 
 /**

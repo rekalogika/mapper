@@ -16,8 +16,8 @@ namespace Rekalogika\Mapper\Mapping\Implementation;
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
-use Rekalogika\Mapper\Transformer\Contracts\MixedType;
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\Transformer\MixedType;
+use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;
 

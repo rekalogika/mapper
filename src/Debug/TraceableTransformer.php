@@ -18,9 +18,9 @@ use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
 use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
-use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
-use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
+use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
+use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**

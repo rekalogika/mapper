@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\TransformerRegistry\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
+use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 

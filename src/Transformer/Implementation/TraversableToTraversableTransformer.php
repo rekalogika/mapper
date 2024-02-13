@@ -11,18 +11,18 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer;
+namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareInterface;
-use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
-use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
-use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
+use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
+use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
 use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
+use Rekalogika\Mapper\Transformer\TransformerInterface;
+use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;

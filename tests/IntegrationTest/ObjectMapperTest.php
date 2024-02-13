@@ -17,7 +17,7 @@ use Brick\Money\Money;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyObjectMapper;
-use Rekalogika\Mapper\Transformer\ObjectMapperTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
 
 class ObjectMapperTest extends AbstractFrameworkTest
 {

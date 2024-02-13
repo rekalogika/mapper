@@ -15,8 +15,8 @@ namespace Rekalogika\Mapper\Tests\UnitTest;
 
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
-use Rekalogika\Mapper\Transformer\DateTimeTransformer;
-use Rekalogika\Mapper\Transformer\ScalarToScalarTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\DateTimeTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Symfony\Component\Clock\DatePoint;
 
 class MainTransformerTest extends AbstractFrameworkTest
