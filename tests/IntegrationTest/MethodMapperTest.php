@@ -22,6 +22,9 @@ use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarProp
 use Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
+/**
+ * @deprecated
+ */
 class MethodMapperTest extends AbstractFrameworkTest
 {
     public function testMoneyToMoneyDto(): void

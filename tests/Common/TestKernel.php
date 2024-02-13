@@ -78,7 +78,6 @@ class TestKernel extends Kernel
         yield ObjectMapperTransformer::class;
         yield DateTimeTransformer::class;
         yield StringToBackedEnumTransformer::class;
-        yield ClassMethodTransformer::class;
         yield SymfonyUidTransformer::class;
         yield ObjectToStringTransformer::class;
         yield TraversableToArrayAccessTransformer::class;

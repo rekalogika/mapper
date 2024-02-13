@@ -86,5 +86,13 @@
                 <file name="tests/IntegrationTest/MixedTypeTest.php" />
             </errorLevel>
         </MissingPropertyType>
+        <DeprecatedClass>
+            <errorLevel type="suppress">
+                <file name="src/MapperFactory.php" />
+                <file name="src/Transformer/MainTransformerAwareTrait.php" />
+                <file name="src/Transformer/Implementation/ClassMethodTransformer.php" />
+                <file name="tests/IntegrationTest/MethodMapperTest.php" />
+            </errorLevel>
+        </DeprecatedClass>
     </issueHandlers>
 </psalm>

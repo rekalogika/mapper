@@ -25,7 +25,7 @@ use Rekalogika\Mapper\CustomMapper\ObjectMapperResolverInterface;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Implementation\Mapper;
-use Rekalogika\Mapper\MainTransformer\MainTransformer;
+use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
 use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
@@ -445,6 +445,10 @@ class MapperFactory
         return $this->copyTransformer;
     }
 
+    /**
+     * @deprecated
+     * @psalm-suppress DeprecatedClass
+     */
     protected function getClassMethodTransformer(): ClassMethodTransformer
     {
         if (null === $this->classMethodTransformer) {
@@ -526,8 +530,11 @@ class MapperFactory
             => $this->getDateTimeTransformer();
         yield 'StringToBackedEnumTransformer'
             => $this->getStringToBackedEnumTransformer();
-        yield 'ClassMethodTransformer'
-            => $this->getClassMethodTransformer();
+        /**
+         * @psalm-suppress DeprecatedMethod
+         * @phpstan-ignore-next-line
+         */
+        yield 'ClassMethodTransformer' => $this->getClassMethodTransformer();
 
         if (class_exists(UuidFactory::class)) {
             yield 'SymfonyUidTransformer'

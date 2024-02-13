@@ -26,6 +26,9 @@ use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @deprecated
+ */
 final class ClassMethodTransformer implements
     TransformerInterface,
     MainTransformerAwareInterface

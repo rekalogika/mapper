@@ -19,6 +19,10 @@ use Rekalogika\Mapper\MethodMapper\MapFromObjectInterface;
 use Rekalogika\Mapper\MethodMapper\MapToObjectInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 
+/**
+ * @deprecated
+ * @psalm-suppress DeprecatedInterface
+ */
 final class MoneyDto implements MapToObjectInterface, MapFromObjectInterface
 {
     public function __construct(

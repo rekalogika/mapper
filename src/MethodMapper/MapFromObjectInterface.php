@@ -16,6 +16,9 @@ namespace Rekalogika\Mapper\MethodMapper;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 
+/**
+ * @deprecated
+ */
 interface MapFromObjectInterface
 {
     public static function mapFromObject(

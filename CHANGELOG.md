@@ -1,4 +1,8 @@
-# CHANGELOG
+# CHANGELO
+
+## 0.10.1
+
+* fix: Deprecate `MapFromObjectInterface` & `MapToObjectInterface`.
 
 ## 0.10.0
 

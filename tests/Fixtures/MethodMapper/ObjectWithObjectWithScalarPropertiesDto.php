@@ -20,6 +20,10 @@ use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
+/**
+ * @deprecated
+ * @psalm-suppress DeprecatedInterface
+ */
 final class ObjectWithObjectWithScalarPropertiesDto implements
     MapFromObjectInterface,
     MapToObjectInterface
