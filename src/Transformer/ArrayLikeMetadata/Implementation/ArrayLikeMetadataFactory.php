@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation;
 
-use Rekalogika\Mapper\ArrayInterface;
+use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
@@ -96,7 +96,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             && (
                 $targetClass === \ArrayAccess::class
                 || $targetClass === \Traversable::class
-                || $targetClass === ArrayInterface::class
+                || $targetClass === CollectionInterface::class
             );
 
         return new ArrayLikeMetadata(

@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ReadableCollection;
-use Rekalogika\Mapper\ArrayInterface;
+use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -230,7 +230,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             TypeFactory::objectOfClass(\ArrayObject::class),
             TypeFactory::objectOfClass(\ArrayIterator::class),
             TypeFactory::objectOfClass(\ArrayAccess::class),
-            TypeFactory::objectOfClass(ArrayInterface::class),
+            TypeFactory::objectOfClass(CollectionInterface::class),
             TypeFactory::array(),
         ];
 

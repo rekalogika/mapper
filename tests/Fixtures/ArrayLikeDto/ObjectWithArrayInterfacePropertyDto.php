@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto;
 
-use Rekalogika\Mapper\ArrayInterface;
+use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 class ObjectWithArrayInterfacePropertyDto
 {
     /**
-     * @var ?ArrayInterface<int,ObjectWithScalarPropertiesDto>
+     * @var ?CollectionInterface<int,ObjectWithScalarPropertiesDto>
      */
-    public ?ArrayInterface $property = null;
+    public ?CollectionInterface $property = null;
 }

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Model;
 
-use Rekalogika\Mapper\ArrayInterface;
+use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
@@ -24,10 +24,10 @@ use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
 /**
  * @template TKey of array-key
  * @template TValue
- * @implements ArrayInterface<TKey,TValue>
+ * @implements CollectionInterface<TKey,TValue>
  * @internal
  */
-final class LazyArray implements ArrayInterface
+final class LazyArray implements CollectionInterface
 {
     use MainTransformerAwareTrait;
     use ArrayLikeTransformerTrait;
