@@ -22,7 +22,7 @@ use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
- * Initialize transformer mappings
+ * @internal
  */
 final class MappingFactory implements MappingFactoryInterface
 {

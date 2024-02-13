@@ -17,8 +17,9 @@ namespace Rekalogika\Mapper\Transformer\Model;
  * @template TKey
  * @template TValue
  * @implements \IteratorAggregate<TKey,TValue>
+ * @internal
  */
-final class TraversableCountableWrapper implements \IteratorAggregate, \Countable
+final readonly class TraversableCountableWrapper implements \IteratorAggregate, \Countable
 {
     /**
      * @param \Traversable<TKey,TValue> $traversable

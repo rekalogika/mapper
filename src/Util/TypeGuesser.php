@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Util;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyInfo\Type;
 
-class TypeGuesser
+final class TypeGuesser
 {
     private function __construct()
     {

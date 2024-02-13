@@ -20,6 +20,8 @@ use Rekalogika\Mapper\Proxy\ProxySpecification;
 
 /**
  * Prevent proxy creation for Doctrine entities.
+ *
+ * @internal
  */
 final class DoctrineProxyGenerator implements ProxyGeneratorInterface
 {

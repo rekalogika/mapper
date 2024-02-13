@@ -17,6 +17,9 @@ use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @internal
+ */
 interface TransformerRegistryInterface
 {
     public function get(string $id): TransformerInterface;

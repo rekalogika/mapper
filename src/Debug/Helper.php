@@ -17,7 +17,7 @@ use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-final class Helper
+final readonly class Helper
 {
     /**
      * @param Type|array<int,Type|MixedType> $type

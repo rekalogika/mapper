@@ -20,8 +20,9 @@ namespace Rekalogika\Mapper\Transformer\Model;
  * @template TValue
  * @implements \IteratorAggregate<TKey,TValue>
  * @implements \ArrayAccess<TKey,TValue>
+ * @internal
  */
-final class SplObjectStorageWrapper implements
+final readonly class SplObjectStorageWrapper implements
     \ArrayAccess,
     \IteratorAggregate,
     \Countable

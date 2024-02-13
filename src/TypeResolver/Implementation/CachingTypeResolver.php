@@ -17,7 +17,10 @@ use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;
 
-class CachingTypeResolver implements TypeResolverInterface
+/**
+ * @internal
+ */
+final class CachingTypeResolver implements TypeResolverInterface
 {
     public function __construct(
         private TypeResolverInterface $decorated,

@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Proxy;
 
+/**
+ * @internal
+ */
 interface ProxyRegistryInterface
 {
     public function registerProxy(

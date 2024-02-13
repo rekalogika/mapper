@@ -18,6 +18,9 @@ use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @internal
+ */
 final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterface
 {
     /**

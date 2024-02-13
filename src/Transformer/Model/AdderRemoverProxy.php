@@ -19,8 +19,9 @@ use Rekalogika\Mapper\Exception\LogicException;
  * @template TKey of array-key
  * @template TValue
  * @implements \ArrayAccess<TKey,TValue>
+ * @internal
  */
-class AdderRemoverProxy implements \ArrayAccess
+final readonly class AdderRemoverProxy implements \ArrayAccess
 {
     public function __construct(
         private object $hostObject,

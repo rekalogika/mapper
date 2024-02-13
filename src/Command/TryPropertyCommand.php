@@ -25,8 +25,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 
+/**
+ * @internal
+ */
 #[AsCommand(name: 'rekalogika:mapper:tryproperty', description: 'Gets the mapping result by providing the class and property name of the source and target.')]
-class TryPropertyCommand extends Command
+final class TryPropertyCommand extends Command
 {
     public function __construct(
         private TransformerRegistryInterface $transformerRegistry,

@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata;
 use Rekalogika\Mapper\Exception\LogicException;
 use Symfony\Component\PropertyInfo\Type;
 
-final class ArrayLikeMetadata
+/**
+ * @internal
+ */
+final readonly class ArrayLikeMetadata
 {
     /**
      * @param ?class-string $sourceClass

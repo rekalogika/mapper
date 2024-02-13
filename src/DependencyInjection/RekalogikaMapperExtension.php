@@ -25,7 +25,10 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 
-class RekalogikaMapperExtension extends Extension
+/**
+ * @internal
+ */
+final class RekalogikaMapperExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {

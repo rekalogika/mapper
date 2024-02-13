@@ -19,6 +19,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * Debug context for main transformer. Used for tracing.
  *
+ * @internal
  * @immutable
  */
 final readonly class DebugContext

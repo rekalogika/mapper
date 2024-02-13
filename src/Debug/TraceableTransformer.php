@@ -23,6 +23,9 @@ use Rekalogika\Mapper\Transformer\Contracts\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @internal
+ */
 final class TraceableTransformer extends AbstractTransformerDecorator implements
     TransformerInterface,
     MainTransformerAwareInterface

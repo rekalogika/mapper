@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Transformer\Exception\InvalidTypeInArgumentException;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
-final class StringToBackedEnumTransformer implements TransformerInterface
+final readonly class StringToBackedEnumTransformer implements TransformerInterface
 {
     public function transform(
         mixed $source,

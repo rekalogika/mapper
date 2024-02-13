@@ -15,7 +15,10 @@ namespace Rekalogika\Mapper\CustomMapper\Exception;
 
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 
-class ObjectMapperNotFoundException extends UnexpectedValueException
+/**
+ * @internal
+ */
+final class ObjectMapperNotFoundException extends UnexpectedValueException
 {
     public function __construct(
         string $sourceClass,

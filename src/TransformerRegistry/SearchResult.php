@@ -14,10 +14,11 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\TransformerRegistry;
 
 /**
+ * @internal
  * @implements \IteratorAggregate<int,SearchResultEntry>
  * @implements \ArrayAccess<int,SearchResultEntry>
  */
-class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
+final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
 {
     /**
      * @param array<int,SearchResultEntry> $entries
@@ -37,7 +38,7 @@ class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
         return isset($this->entries[$offset]);
     }
 
-    public function offsetGet(mixed $offset): mixed
+    public function offsetGet(mixed $offset): SearchResultEntry
     {
         return $this->entries[$offset];
     }

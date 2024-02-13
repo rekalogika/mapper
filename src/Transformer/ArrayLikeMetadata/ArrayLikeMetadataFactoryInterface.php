@@ -15,6 +15,9 @@ namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata;
 
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @internal
+ */
 interface ArrayLikeMetadataFactoryInterface
 {
     public function createArrayLikeMetadata(

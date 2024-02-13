@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 
-final class CopyTransformer implements TransformerInterface
+final readonly class CopyTransformer implements TransformerInterface
 {
     public function transform(
         mixed $source,

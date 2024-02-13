@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Contracts;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyInfo\Type;
 
-class TypeMapping
+final readonly class TypeMapping
 {
     /**
      * @param Type|MixedType $sourceType

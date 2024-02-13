@@ -17,7 +17,10 @@ use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperResolverInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
-class CachingObjectMapperResolver implements ObjectMapperResolverInterface
+/**
+ * @internal
+ */
+final class CachingObjectMapperResolver implements ObjectMapperResolverInterface
 {
     /**
      * @var array<class-string,array<class-string,ServiceMethodSpecification>>

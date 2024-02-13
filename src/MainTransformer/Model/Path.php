@@ -18,7 +18,7 @@ namespace Rekalogika\Mapper\MainTransformer\Model;
  *
  * @immutable
  */
-readonly class Path implements \Stringable
+final readonly class Path implements \Stringable
 {
     /**
      * @param list<string> $path

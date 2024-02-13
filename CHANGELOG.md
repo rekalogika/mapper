@@ -5,6 +5,7 @@
 * perf(`TypeResolver`): Optimize `getSimpleTypes`.
 * fix(`MainTransformer`): Reduce GC interval to 500.
 * build: Require PHP 8.2.
+* chore: Add `final`, `readonly`, and `internal` if applicable to all classes.
 
 ## 0.9.0
 

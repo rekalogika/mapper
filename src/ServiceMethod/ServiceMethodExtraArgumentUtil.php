@@ -18,7 +18,10 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 
-class ServiceMethodExtraArgumentUtil
+/**
+ * @internal
+ */
+final readonly class ServiceMethodExtraArgumentUtil
 {
     private function __construct()
     {

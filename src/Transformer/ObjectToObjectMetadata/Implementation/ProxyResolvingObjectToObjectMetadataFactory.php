@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 
-final class ProxyResolvingObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
+/**
+ * @internal
+ */
+final readonly class ProxyResolvingObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $decorated,

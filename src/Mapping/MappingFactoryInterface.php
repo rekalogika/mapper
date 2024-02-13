@@ -15,6 +15,8 @@ namespace Rekalogika\Mapper\Mapping;
 
 /**
  * Initialize transformer mappings
+ *
+ * @internal
  */
 interface MappingFactoryInterface
 {

@@ -15,7 +15,10 @@ namespace Rekalogika\Mapper\CustomMapper;
 
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
-class ObjectMapperTableEntry
+/**
+ * @internal
+ */
+final readonly class ObjectMapperTableEntry
 {
     /**
      * @param class-string $sourceClass

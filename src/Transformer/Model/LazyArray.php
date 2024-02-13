@@ -25,8 +25,9 @@ use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
  * @template TKey of array-key
  * @template TValue
  * @implements ArrayInterface<TKey,TValue>
+ * @internal
  */
-class LazyArray implements ArrayInterface
+final class LazyArray implements ArrayInterface
 {
     use MainTransformerAwareTrait;
     use ArrayLikeTransformerTrait;

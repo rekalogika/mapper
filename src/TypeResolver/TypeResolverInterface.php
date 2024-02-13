@@ -16,6 +16,9 @@ namespace Rekalogika\Mapper\TypeResolver;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @internal
+ */
 interface TypeResolverInterface
 {
     /**

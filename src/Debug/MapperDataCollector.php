@@ -19,6 +19,9 @@ use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * @internal
+ */
 final class MapperDataCollector extends AbstractDataCollector
 {
     public function getName(): string

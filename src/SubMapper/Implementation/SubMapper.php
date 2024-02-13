@@ -29,7 +29,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
+final class SubMapper implements SubMapperInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
 

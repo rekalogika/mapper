@@ -17,6 +17,9 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @internal
+ */
 final class MappingEntry
 {
     private static int $counter = 0;

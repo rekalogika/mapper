@@ -29,7 +29,7 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
  * Map an array to an object. Uses the Symfony Serializer component as the
  * backend.
  */
-final class ArrayToObjectTransformer implements TransformerInterface
+final readonly class ArrayToObjectTransformer implements TransformerInterface
 {
     public function __construct(
         private DenormalizerInterface $denormalizer,

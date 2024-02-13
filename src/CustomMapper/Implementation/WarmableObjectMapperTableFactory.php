@@ -20,7 +20,10 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\VarExporter\VarExporter;
 
-class WarmableObjectMapperTableFactory implements
+/**
+ * @internal
+ */
+final class WarmableObjectMapperTableFactory implements
     ObjectMapperTableFactoryInterface,
     CacheWarmerInterface
 {

@@ -20,7 +20,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-final class DebugPass implements CompilerPassInterface
+/**
+ * @internal
+ */
+final readonly class DebugPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {

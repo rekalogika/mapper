@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\CustomMapper;
 
+/**
+ * @internal
+ */
 interface ObjectMapperTableFactoryInterface
 {
     public function createObjectMapperTable(): ObjectMapperTable;

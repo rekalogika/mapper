@@ -17,6 +17,9 @@ use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
+/**
+ * @internal
+ */
 final class ObjectCacheFactory implements ObjectCacheFactoryInterface
 {
     public function __construct(

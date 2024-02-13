@@ -19,7 +19,7 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 /**
  * Simple container for non-framework use
  */
-final class ServiceLocator implements ContainerInterface
+final readonly class ServiceLocator implements ContainerInterface
 {
     /**
      * @param array<array-key,mixed> $services

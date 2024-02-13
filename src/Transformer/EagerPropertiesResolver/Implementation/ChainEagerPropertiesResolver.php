@@ -15,7 +15,10 @@ namespace Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation;
 
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 
-class ChainEagerPropertiesResolver implements EagerPropertiesResolverInterface
+/**
+ * @internal
+ */
+final readonly class ChainEagerPropertiesResolver implements EagerPropertiesResolverInterface
 {
     /**
      * @param iterable<EagerPropertiesResolverInterface> $resolvers

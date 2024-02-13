@@ -19,7 +19,10 @@ use Rekalogika\Mapper\CustomMapper\ObjectMapperTable;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
-class ObjectMapperResolver implements ObjectMapperResolverInterface
+/**
+ * @internal
+ */
+final class ObjectMapperResolver implements ObjectMapperResolverInterface
 {
     private ?ObjectMapperTable $objectMapperTable = null;
 

@@ -17,7 +17,7 @@ use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
-class TypeCheck
+final class TypeCheck
 {
     private function __construct()
     {

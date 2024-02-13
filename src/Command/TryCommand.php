@@ -25,8 +25,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
+/**
+ * @internal
+ */
 #[AsCommand(name: 'rekalogika:mapper:try', description: 'Gets the mapping result from a source and target type pair.')]
-class TryCommand extends Command
+final class TryCommand extends Command
 {
     public function __construct(
         private TransformerRegistryInterface $transformerRegistry,

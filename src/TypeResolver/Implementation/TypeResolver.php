@@ -18,7 +18,10 @@ use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class TypeResolver implements TypeResolverInterface
+/**
+ * @internal
+ */
+final readonly class TypeResolver implements TypeResolverInterface
 {
     public function getTypeString(Type|MixedType $type): string
     {

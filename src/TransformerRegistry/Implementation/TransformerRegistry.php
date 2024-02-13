@@ -26,7 +26,10 @@ use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 
-class TransformerRegistry implements TransformerRegistryInterface
+/**
+ * @internal
+ */
+final class TransformerRegistry implements TransformerRegistryInterface
 {
     public function __construct(
         private ContainerInterface $transformersLocator,

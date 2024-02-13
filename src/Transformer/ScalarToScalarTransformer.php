@@ -20,7 +20,7 @@ use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
-final class ScalarToScalarTransformer implements TransformerInterface
+final readonly class ScalarToScalarTransformer implements TransformerInterface
 {
     public function transform(
         mixed $source,

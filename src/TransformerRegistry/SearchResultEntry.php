@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\TransformerRegistry;
 use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
-class SearchResultEntry
+/**
+ * @internal
+ */
+final readonly class SearchResultEntry
 {
     public function __construct(
         private int $mappingOrder,

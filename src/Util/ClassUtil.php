@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Util;
 
-class ClassUtil
+/**
+ * @internal
+ */
+final readonly class ClassUtil
 {
     private function __construct()
     {

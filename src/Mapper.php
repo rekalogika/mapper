@@ -18,7 +18,10 @@ use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 
-final class Mapper implements MapperInterface
+/**
+ * @internal
+ */
+final readonly class Mapper implements MapperInterface
 {
     public function __construct(
         private MainTransformerInterface $transformer,

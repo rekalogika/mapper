@@ -18,7 +18,7 @@ use Symfony\Component\Console\Helper\TableStyle;
 /**
  * Markdown-like table style, for the ease of copy-paste to documentation.
  */
-class MarkdownLikeTableStyle extends TableStyle
+final class MarkdownLikeTableStyle extends TableStyle
 {
     public function __construct()
     {

@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\CustomMapper\Implementation;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
-class PropertyMapperResolver implements PropertyMapperResolverInterface
+/**
+ * @internal
+ */
+final class PropertyMapperResolver implements PropertyMapperResolverInterface
 {
     /**
      * @var array<class-string,array<string,array<class-string,ServiceMethodSpecification>>>

@@ -17,6 +17,7 @@ use Rekalogika\Mapper\Transformer\Contracts\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
+ * @internal
  * @implements \IteratorAggregate<int,MappingEntry>
  */
 final class Mapping implements \IteratorAggregate

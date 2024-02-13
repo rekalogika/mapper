@@ -39,7 +39,10 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\VarExporter\Internal\Hydrator;
 
-final class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
+/**
+ * @internal
+ */
+final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     public function __construct(
         private PropertyListExtractorInterface $propertyListExtractor,

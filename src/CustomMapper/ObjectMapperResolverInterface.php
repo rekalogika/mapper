@@ -16,6 +16,9 @@ namespace Rekalogika\Mapper\CustomMapper;
 use Rekalogika\Mapper\CustomMapper\Exception\ObjectMapperNotFoundException;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
+/**
+ * @internal
+ */
 interface ObjectMapperResolverInterface
 {
     /**

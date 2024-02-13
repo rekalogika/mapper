@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
-final class NullTransformer implements TransformerInterface
+final readonly class NullTransformer implements TransformerInterface
 {
     public function transform(
         mixed $source,

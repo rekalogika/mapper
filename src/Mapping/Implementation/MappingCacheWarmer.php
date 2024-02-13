@@ -15,7 +15,10 @@ namespace Rekalogika\Mapper\Mapping\Implementation;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-final class MappingCacheWarmer implements CacheWarmerInterface
+/**
+ * @internal
+ */
+final readonly class MappingCacheWarmer implements CacheWarmerInterface
 {
     public function __construct(
         private WarmableMappingFactory $warmableMappingFactory,

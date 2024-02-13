@@ -21,7 +21,10 @@ use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
-final class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterface
+/**
+ * @internal
+ */
+final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterface
 {
     public function createArrayLikeMetadata(
         Type $sourceType,

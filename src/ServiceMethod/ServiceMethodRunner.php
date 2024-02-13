@@ -19,7 +19,10 @@ use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Symfony\Component\PropertyInfo\Type;
 
-class ServiceMethodRunner
+/**
+ * @internal
+ */
+final readonly class ServiceMethodRunner
 {
     public static function create(
         ContainerInterface $serviceLocator,

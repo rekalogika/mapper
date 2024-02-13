@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\ServiceMethod;
 
+/**
+ * @internal
+ */
 final readonly class ServiceMethodSpecification
 {
     public const ARGUMENT_CONTEXT = 'context';

@@ -16,6 +16,9 @@ namespace Rekalogika\Mapper\Debug;
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 
+/**
+ * @internal
+ */
 final class TraceableMappingFactory implements MappingFactoryInterface
 {
     private bool $mappingCollected = false;

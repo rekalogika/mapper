@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Proxy\ProxySpecification;
 use Symfony\Component\VarExporter\Exception\LogicException;
 use Symfony\Component\VarExporter\ProxyHelper;
 
+/**
+ * @internal
+ */
 final class ProxyGenerator implements ProxyGeneratorInterface
 {
     public function generateProxy(string $class): ProxySpecification

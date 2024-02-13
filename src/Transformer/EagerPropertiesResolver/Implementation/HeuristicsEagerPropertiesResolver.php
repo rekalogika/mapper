@@ -15,12 +15,15 @@ namespace Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation;
 
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 
-class HeuristicsEagerPropertiesResolver implements EagerPropertiesResolverInterface
+/**
+ * @internal
+ */
+final readonly class HeuristicsEagerPropertiesResolver implements EagerPropertiesResolverInterface
 {
     /**
      * @var array<int,string>
      */
-    private $properties = [];
+    private array $properties;
 
     /**
      * @param array<int,string>|null $properties

@@ -20,7 +20,7 @@ use Rekalogika\Mapper\Transformer\Contracts\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
-final class ObjectToStringTransformer implements TransformerInterface
+final readonly class ObjectToStringTransformer implements TransformerInterface
 {
     public function transform(
         mixed $source,

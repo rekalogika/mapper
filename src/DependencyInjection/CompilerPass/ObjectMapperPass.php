@@ -18,7 +18,10 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodExtraArgumentUtil;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
-final class ObjectMapperPass implements CompilerPassInterface
+/**
+ * @internal
+ */
+final readonly class ObjectMapperPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {

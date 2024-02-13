@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\Debug;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 
-final class TraceableObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
+/**
+ * @internal
+ */
+final readonly class TraceableObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $decorated,

@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\ObjectCache;
 
+/**
+ * @internal
+ */
 interface ObjectCacheFactoryInterface
 {
     public function createObjectCache(): ObjectCache;

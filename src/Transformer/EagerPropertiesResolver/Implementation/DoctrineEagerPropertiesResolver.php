@@ -17,7 +17,10 @@ use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\Mapping\MappingException;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 
-class DoctrineEagerPropertiesResolver implements EagerPropertiesResolverInterface
+/**
+ * @internal
+ */
+final readonly class DoctrineEagerPropertiesResolver implements EagerPropertiesResolverInterface
 {
     public function __construct(private ManagerRegistry $managerRegistry)
     {

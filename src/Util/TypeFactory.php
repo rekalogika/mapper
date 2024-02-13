@@ -20,7 +20,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * Convenience factory to instantiate Type objects
  */
-class TypeFactory
+final class TypeFactory
 {
     private function __construct()
     {

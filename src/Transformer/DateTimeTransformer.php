@@ -25,7 +25,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * Map between DateTime and string. If a string is involved
  */
-final class DateTimeTransformer implements TransformerInterface
+final readonly class DateTimeTransformer implements TransformerInterface
 {
     public function transform(
         mixed $source,

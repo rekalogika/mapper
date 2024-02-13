@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
+/**
+ * @internal
+ */
 final class TraceData
 {
     private string $sourceType;

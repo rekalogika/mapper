@@ -15,6 +15,9 @@ namespace Rekalogika\Mapper\CustomMapper;
 
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
+/**
+ * @internal
+ */
 interface PropertyMapperResolverInterface
 {
     /**

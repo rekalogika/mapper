@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\VarExporter\VarExporter;
 
+/**
+ * @internal
+ */
 final class WarmableMappingFactory implements MappingFactoryInterface
 {
     public const CACHE_FILE = 'rekalogika_mapper_mapping.php';

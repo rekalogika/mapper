@@ -17,8 +17,9 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
 /**
  * @implements \IteratorAggregate<int,ObjectMapperTableEntry>
+ * @internal
  */
-class ObjectMapperTable implements \IteratorAggregate
+final class ObjectMapperTable implements \IteratorAggregate
 {
     /**
      * @var array<class-string,array<class-string,ServiceMethodSpecification>>

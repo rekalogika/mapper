@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 
+/**
+ * @internal
+ */
 final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     /**

@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
+/**
+ * @internal
+ */
 enum ReadMode
 {
     case None;

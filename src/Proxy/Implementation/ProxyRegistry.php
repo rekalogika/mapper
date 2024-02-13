@@ -17,6 +17,9 @@ use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
 use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
 use Rekalogika\Mapper\Proxy\ProxySpecification;
 
+/**
+ * @internal
+ */
 final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInterface
 {
     /** @var ?callable(string): void */

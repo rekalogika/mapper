@@ -19,6 +19,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @immutable
+ * @internal
  */
 final readonly class PropertyMapping
 {

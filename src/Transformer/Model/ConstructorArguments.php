@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Model;
 
-class ConstructorArguments
+/**
+ * @internal
+ */
+final class ConstructorArguments
 {
     /**
      * @var array<string,mixed>

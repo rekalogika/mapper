@@ -17,6 +17,7 @@ use Rekalogika\Mapper\Proxy\ProxySpecification;
 
 /**
  * @immutable
+ * @internal
  */
 final readonly class ObjectToObjectMetadata
 {

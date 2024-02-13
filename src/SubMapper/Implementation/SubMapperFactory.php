@@ -24,7 +24,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-class SubMapperFactory implements SubMapperFactoryInterface
+final readonly class SubMapperFactory implements SubMapperFactoryInterface
 {
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,

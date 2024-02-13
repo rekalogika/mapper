@@ -17,7 +17,10 @@ use Rekalogika\Mapper\CustomMapper\ObjectMapperTable;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
-class ObjectMapperTableFactory implements ObjectMapperTableFactoryInterface
+/**
+ * @internal
+ */
+final class ObjectMapperTableFactory implements ObjectMapperTableFactoryInterface
 {
     private ObjectMapperTable $objectMapperTable;
 

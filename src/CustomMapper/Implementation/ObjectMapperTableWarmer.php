@@ -18,7 +18,10 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\VarExporter\VarExporter;
 
-class ObjectMapperTableWarmer implements CacheWarmerInterface
+/**
+ * @internal
+ */
+final readonly class ObjectMapperTableWarmer implements CacheWarmerInterface
 {
     public function __construct(
         private ObjectMapperTableFactoryInterface $objectMapperTableFactory,

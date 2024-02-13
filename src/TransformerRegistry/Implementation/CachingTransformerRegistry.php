@@ -18,7 +18,10 @@ use Rekalogika\Mapper\Transformer\Contracts\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 
-class CachingTransformerRegistry implements TransformerRegistryInterface
+/**
+ * @internal
+ */
+final class CachingTransformerRegistry implements TransformerRegistryInterface
 {
     /**
      * @var array<string,SearchResult>

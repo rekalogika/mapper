@@ -20,6 +20,7 @@ namespace Rekalogika\Mapper\Transformer\Model;
  * @template TValue
  * @implements \Iterator<TKey,TValue>
  * @implements \ArrayAccess<TKey,TValue>
+ * @internal
  */
 final class HashTable implements
     \ArrayAccess,

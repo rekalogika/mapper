@@ -18,7 +18,10 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Uid\Factory\UuidFactory;
 
-final class RemoveOptionalDefinitionPass implements CompilerPassInterface
+/**
+ * @internal
+ */
+final readonly class RemoveOptionalDefinitionPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {

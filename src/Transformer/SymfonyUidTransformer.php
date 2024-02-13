@@ -23,7 +23,7 @@ use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Uid\Uuid;
 
-final class SymfonyUidTransformer implements TransformerInterface
+final readonly class SymfonyUidTransformer implements TransformerInterface
 {
     public function transform(
         mixed $source,
