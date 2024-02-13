@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.2
+
+* fix(`composer.json`): Change PHP require to `>=8.2`.
+
 ## 0.9.1
 
 * perf(`TypeResolver`): Optimize `getSimpleTypes`.
