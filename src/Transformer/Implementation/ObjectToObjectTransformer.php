@@ -17,9 +17,8 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
-use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
+use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
@@ -54,7 +53,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
         private ContainerInterface $propertyMapperLocator,
         private SubMapperFactoryInterface $subMapperFactory,
-        private ProxyRegistryInterface $proxyRegistry,
+        private ProxyFactoryInterface $proxyFactory,
         ReaderWriter $readerWriter = null,
     ) {
         $this->readerWriter = $readerWriter ?? new ReaderWriter();
@@ -207,37 +206,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         ObjectToObjectMetadata $objectToObjectMetadata,
         Context $context
     ): object {
-        $targetProxyClass = $objectToObjectMetadata->getTargetProxyClass();
         $targetClass = $objectToObjectMetadata->getTargetClass();
 
         // check if class is valid & instantiable
 
         if (!$objectToObjectMetadata->isInstantiable()) {
             throw new ClassNotInstantiableException($targetClass, context: $context);
-        }
-
-        if ($targetProxyClass === null) {
-            throw new LogicException('Target proxy class must not be null.', context: $context);
-        }
-
-        // if proxy class does not exist, create it
-
-        if (!class_exists($targetProxyClass)) {
-            $proxySpecification = $objectToObjectMetadata->getTargetProxySpecification();
-
-            if ($proxySpecification === null) {
-                throw new LogicException('Target proxy specification must not be null.', context: $context);
-            }
-
-            $this->proxyRegistry->registerProxy($proxySpecification);
-
-            // @phpstan-ignore-next-line
-            if (!class_exists($targetProxyClass)) {
-                throw new LogicException(
-                    sprintf('Unable to find target proxy class "%s".', $targetProxyClass),
-                    context: $context
-                );
-            }
         }
 
         // create proxy initializer. this initializer will be executed when the
@@ -271,15 +245,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // instantiate the proxy
 
-        /**
-         * @psalm-suppress UndefinedMethod
-         * @psalm-suppress MixedReturnStatement
-         * @psalm-suppress MixedMethodCall
-         * @var object
-         */
-        $target = $targetProxyClass::createLazyGhost(
-            initializer: $initializer,
-            skippedProperties: $objectToObjectMetadata->getTargetProxySkippedProperties()
+        $target = $this->proxyFactory->createProxy(
+            $targetClass,
+            $initializer,
+            $objectToObjectMetadata->getTargetProxySkippedProperties()
         );
 
         // if the constructor is eager, run it here

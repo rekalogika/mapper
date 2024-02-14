@@ -23,7 +23,7 @@ use Rekalogika\Mapper\Proxy\ProxySpecification;
  *
  * @internal
  */
-final class DoctrineProxyGenerator implements ProxyGeneratorInterface
+final readonly class DoctrineProxyGenerator implements ProxyGeneratorInterface
 {
     public function __construct(
         private ProxyGeneratorInterface $decorated,

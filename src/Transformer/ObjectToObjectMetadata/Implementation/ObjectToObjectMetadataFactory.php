@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
-use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
+use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
@@ -37,7 +37,6 @@ use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
-use Symfony\Component\VarExporter\Internal\Hydrator;
 
 /**
  * @internal
@@ -52,7 +51,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
-        private ProxyGeneratorInterface $proxyGenerator,
+        private ProxyFactoryInterface $proxyFactory,
         private TypeResolverInterface $typeResolver,
     ) {
     }
@@ -223,7 +222,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
                     default => Visibility::None,
                 };
-
             }
 
             // get source property types
@@ -335,8 +333,11 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         // create proxy if possible
 
         try {
-            $proxySpecification = $this->proxyGenerator
-                ->generateProxy($targetClass);
+            // ensure we can create the proxy
+
+            $this->proxyFactory
+                ->createProxy($targetClass, function ($instance) {
+                }, $eagerProperties);
 
             // determine if the constructor contains eager properties. if it
             // does, then the constructor is eager
@@ -363,13 +364,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // skipped properties is the argument used by createLazyGhost()
 
-            $skippedProperties = self::getSkippedProperties(
+            $skippedProperties = ClassUtil::getSkippedProperties(
                 $targetClass,
                 $eagerProperties
             );
 
             $objectToObjectMetadata = $objectToObjectMetadata->withTargetProxy(
-                $proxySpecification,
                 $skippedProperties,
                 $constructorIsEager
             );
@@ -379,37 +379,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         }
 
         return $objectToObjectMetadata;
-    }
-
-    /**
-     * @return array<string,array{string,string,?string,\ReflectionProperty}>
-     */
-    private static function getPropertyScopes(string $class): array
-    {
-        /** @var array<string,array{string,string,?string,\ReflectionProperty}> */
-        return Hydrator::getPropertyScopes($class);
-    }
-
-    /**
-     * @param array<int,string> $eagerProperties
-     * @return array<string,true>
-     */
-    private static function getSkippedProperties(
-        string $class,
-        array $eagerProperties
-    ): array {
-        $propertyScopes = self::getPropertyScopes($class);
-
-        $skippedProperties = [];
-
-        foreach ($propertyScopes as $scope => $data) {
-            $name = $data[1];
-            if (in_array($name, $eagerProperties, true)) {
-                $skippedProperties[$scope] = true;
-            }
-        }
-
-        return $skippedProperties;
     }
 
     /**

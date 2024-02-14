@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
-use Rekalogika\Mapper\Proxy\ProxySpecification;
+use Rekalogika\Mapper\Proxy\ProxyNamer;
 
 /**
  * @immutable
@@ -52,7 +52,6 @@ final readonly class ObjectToObjectMetadata
      * @param class-string $providedTargetClass
      * @param array<int,PropertyMapping> $allPropertyMappings
      * @param array<int,string> $initializableTargetPropertiesNotInSource
-     * @param class-string $targetProxyClass
      * @param array<string,true> $targetProxySkippedProperties
      */
     public function __construct(
@@ -67,8 +66,6 @@ final readonly class ObjectToObjectMetadata
         private int $targetModifiedTime,
         private bool $targetReadOnly,
         private bool $constructorIsEager,
-        private ?string $targetProxyClass = null,
-        private ?string $targetProxyCode = null,
         private array $targetProxySkippedProperties = [],
         private ?string $cannotUseProxyReason = null,
     ) {
@@ -103,7 +100,6 @@ final readonly class ObjectToObjectMetadata
      * @return self
      */
     public function withTargetProxy(
-        ProxySpecification $proxySpecification,
         array $targetProxySkippedProperties,
         bool $constructorIsEager,
     ): self {
@@ -119,8 +115,6 @@ final readonly class ObjectToObjectMetadata
             $this->targetModifiedTime,
             $this->targetReadOnly,
             $constructorIsEager,
-            $proxySpecification->getClass(),
-            $proxySpecification->getCode(),
             $targetProxySkippedProperties,
             cannotUseProxyReason: null
         );
@@ -141,8 +135,6 @@ final readonly class ObjectToObjectMetadata
             $this->targetModifiedTime,
             $this->targetReadOnly,
             $this->constructorIsEager,
-            null,
-            null,
             [],
             cannotUseProxyReason: $reason,
         );
@@ -245,34 +237,27 @@ final readonly class ObjectToObjectMetadata
         return max($this->sourceModifiedTime, $this->targetModifiedTime);
     }
 
+    public function getCannotUseProxyReason(): ?string
+    {
+        return $this->cannotUseProxyReason;
+    }
+
     /**
      * @return class-string|null
      */
     public function getTargetProxyClass(): ?string
     {
-        return $this->targetProxyClass;
-    }
-
-    public function getTargetProxyCode(): ?string
-    {
-        return $this->targetProxyCode;
-    }
-
-    public function getTargetProxySpecification(): ?ProxySpecification
-    {
-        if ($this->targetProxyClass === null || $this->targetProxyCode === null) {
+        if ($this->cannotUseProxyReason !== null) {
             return null;
         }
 
-        return new ProxySpecification(
-            $this->targetProxyClass,
-            $this->targetProxyCode
-        );
+        /** @var class-string */
+        return ProxyNamer::generateProxyClassName($this->targetClass);
     }
 
     public function canUseTargetProxy(): bool
     {
-        return $this->targetProxyClass !== null && $this->targetProxyCode !== null;
+        return $this->cannotUseProxyReason === null;
     }
 
     /**
@@ -286,11 +271,6 @@ final readonly class ObjectToObjectMetadata
     public function isTargetReadOnly(): bool
     {
         return $this->targetReadOnly;
-    }
-
-    public function getCannotUseProxyReason(): ?string
-    {
-        return $this->cannotUseProxyReason;
     }
 
     public function constructorIsEager(): bool

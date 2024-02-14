@@ -63,11 +63,13 @@
         <InternalMethod>
             <errorLevel type="suppress">
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
+                <file name="src/Util/ClassUtil.php" />
             </errorLevel>
         </InternalMethod>
         <InternalClass>
             <errorLevel type="suppress">
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
+                <file name="src/Util/ClassUtil.php" />
             </errorLevel>
         </InternalClass>
         <UndefinedClass>

@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Util;
 
+use Symfony\Component\VarExporter\Internal\Hydrator;
+
 /**
  * @internal
  */
@@ -59,5 +61,39 @@ final readonly class ClassUtil
         }
 
         return $mtime;
+    }
+
+    /**
+     * @return array<string,array{string,string,?string,\ReflectionProperty}>
+     */
+    private static function getPropertyScopes(string $class): array
+    {
+        /**
+         * @var array<string,array{string,string,?string,\ReflectionProperty}>
+         * @psalm-suppress InternalClass
+         */
+        return Hydrator::getPropertyScopes($class);
+    }
+
+    /**
+     * @param array<int,string> $eagerProperties
+     * @return array<string,true>
+     */
+    public static function getSkippedProperties(
+        string $class,
+        array $eagerProperties
+    ): array {
+        $propertyScopes = self::getPropertyScopes($class);
+
+        $skippedProperties = [];
+
+        foreach ($propertyScopes as $scope => $data) {
+            $name = $data[1];
+            if (in_array($name, $eagerProperties, true)) {
+                $skippedProperties[$scope] = true;
+            }
+        }
+
+        return $skippedProperties;
     }
 }

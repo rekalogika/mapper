@@ -31,9 +31,11 @@ use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
+use Rekalogika\Mapper\Proxy\Implementation\ProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyRegistry;
 use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
+use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
 use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
@@ -145,6 +147,7 @@ class MapperFactory
     private ?ProxyGeneratorInterface $proxyGenerator = null;
     private ?ProxyRegistryInterface $proxyRegistry = null;
     private ?ProxyAutoLoaderInterface $proxyAutoLoader = null;
+    private ?ProxyFactoryInterface $proxyFactory = null;
 
     private ?MappingCommand $mappingCommand = null;
     private ?TryCommand $tryCommand = null;
@@ -334,7 +337,7 @@ class MapperFactory
                 objectToObjectMetadataFactory: $this->getObjectToObjectMetadataFactory(),
                 propertyMapperLocator: $this->getPropertyMapperLocator(),
                 subMapperFactory: $this->getSubMapperFactory(),
-                proxyRegistry: $this->getProxyRegistry(),
+                proxyFactory: $this->getProxyFactory(),
             );
         }
 
@@ -494,7 +497,7 @@ class MapperFactory
                 $this->getPropertyReadInfoExtractor(),
                 $this->getPropertyWriteInfoExtractor(),
                 $this->getEagerPropertiesResolver(),
-                $this->getProxyGenerator(),
+                $this->getProxyFactory(),
                 $this->getTypeResolver(),
             );
 
@@ -750,6 +753,18 @@ class MapperFactory
         }
 
         return $this->proxyAutoLoader;
+    }
+
+    protected function getProxyFactory(): ProxyFactoryInterface
+    {
+        if (null === $this->proxyFactory) {
+            $this->proxyFactory = new ProxyFactory(
+                $this->getProxyRegistry(),
+                $this->getProxyGenerator(),
+            );
+        }
+
+        return $this->proxyFactory;
     }
 
     //

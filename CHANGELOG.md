@@ -4,6 +4,7 @@
 
 * fix: Deprecate `MapFromObjectInterface` & `MapToObjectInterface`.
 * refactor(`MainTransformer`): Move to implementation namespace.
+* refactor: Move proxy creation code to `ProxyFactory`.
 
 ## 0.10.0
 
