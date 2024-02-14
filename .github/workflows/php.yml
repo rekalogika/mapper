@@ -62,4 +62,4 @@ jobs:
     - name: Run phpunit
       run: |
         export SYMFONY_DEPRECATIONS_HELPER='max[direct]=0'
-        vendor/bin/phpunit --testdox -v
+        vendor/bin/phpunit --testdox
