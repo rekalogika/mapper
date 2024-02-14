@@ -23,11 +23,15 @@ class PersonToPersonDtoMapper
         Person $person,
         SubMapperInterface $subMapper
     ): PersonDto {
+        $initializer = static function (
+            PersonDto $proxy
+        ) use ($person): void {
+            $proxy->name = $person->getName();
+        };
+
         $personDto = $subMapper->createProxy(
             PersonDto::class,
-            static function (PersonDto $proxy) use ($person) {
-                $proxy->name = $person->getName();
-            },
+            $initializer,
             ['id']
         );
 
