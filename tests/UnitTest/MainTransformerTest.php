@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\UnitTest;
 
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Transformer\Implementation\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Symfony\Component\Clock\DatePoint;
 
-class MainTransformerTest extends AbstractFrameworkTest
+class MainTransformerTest extends FrameworkTestCase
 {
     public function testMapping(): void
     {

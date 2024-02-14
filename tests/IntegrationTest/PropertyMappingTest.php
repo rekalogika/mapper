@@ -17,7 +17,7 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
@@ -28,7 +28,7 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
 
-class PropertyMappingTest extends AbstractFrameworkTest
+class PropertyMappingTest extends FrameworkTestCase
 {
     public function testPropertyMapperRegistration(): void
     {
@@ -66,7 +66,7 @@ class PropertyMappingTest extends AbstractFrameworkTest
     /**
      * @return iterable<array-key,array{class-string,class-string,string,?ServiceMethodSpecification}>
      */
-    public function propertyMapperResolverDataProvider(): iterable
+    public static function propertyMapperResolverDataProvider(): iterable
     {
         yield [
             SomeObject::class,

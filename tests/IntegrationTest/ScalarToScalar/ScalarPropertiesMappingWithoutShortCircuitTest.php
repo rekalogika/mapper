@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest\ScalarToScalar;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 
-class ScalarPropertiesMappingWithoutShortCircuitTest extends AbstractScalarPropertiesMappingTest
+class ScalarPropertiesMappingWithoutShortCircuitTest extends ScalarPropertiesMappingTestCase
 {
     protected function getMapperContext(): Context
     {

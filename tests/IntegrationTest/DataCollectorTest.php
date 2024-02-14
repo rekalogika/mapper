@@ -14,13 +14,13 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Debug\MapperDataCollector;
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainingObject;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObjectDto\ContainingObjectDto;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 
-class DataCollectorTest extends AbstractFrameworkTest
+class DataCollectorTest extends FrameworkTestCase
 {
     public function testDataCollector(): void
     {

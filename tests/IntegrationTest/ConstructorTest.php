@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndMoreArgumentDto;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorDto;
@@ -23,7 +23,7 @@ use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesAndAdditio
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 
-class ConstructorTest extends AbstractFrameworkTest
+class ConstructorTest extends FrameworkTestCase
 {
     public function testConstructor(): void
     {

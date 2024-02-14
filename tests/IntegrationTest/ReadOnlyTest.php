@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\FinalReadOnlyObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\ReadOnlyObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\Source;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
-class ReadOnlyTest extends AbstractFrameworkTest
+class ReadOnlyTest extends FrameworkTestCase
 {
     public function testToFinalReadOnly(): void
     {

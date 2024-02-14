@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Attribute\ObjectWithAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\Attribute\SomeAttribute;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 
-class AttributeTest extends AbstractFrameworkTest
+class AttributeTest extends FrameworkTestCase
 {
     public function testAttribute(): void
     {

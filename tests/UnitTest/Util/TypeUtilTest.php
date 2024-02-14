@@ -40,7 +40,7 @@ class TypeUtilTest extends TestCase
     /**
      * @return iterable<array-key,array{0:mixed,1:string,2?:class-string}>
      */
-    public function typeGuessProvider(): iterable
+    public static function typeGuessProvider(): iterable
     {
         yield [null, 'null'];
         yield [true, 'bool'];
@@ -64,7 +64,7 @@ class TypeUtilTest extends TestCase
     /**
      * @return iterable<array-key,array{0:Type,1:bool}>
      */
-    public function isSimpleTypeProvider(): iterable
+    public static function isSimpleTypeProvider(): iterable
     {
         yield [TypeFactory::null(), true];
         yield [TypeFactory::bool(), true];
@@ -156,7 +156,7 @@ class TypeUtilTest extends TestCase
     /**
      * @return iterable<array-key,array{0:Type,1:string}>
      */
-    public function getTypeStringProvider(): iterable
+    public static function getTypeStringProvider(): iterable
     {
         yield [TypeFactory::null(), 'null'];
         yield [TypeFactory::bool(), 'bool'];

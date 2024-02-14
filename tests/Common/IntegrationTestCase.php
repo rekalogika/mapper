@@ -20,7 +20,7 @@ use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
-abstract class AbstractIntegrationTest extends TestCase
+abstract class IntegrationTestCase extends TestCase
 {
     protected MapperTestFactory $factory;
     protected MapperInterface $mapper;
