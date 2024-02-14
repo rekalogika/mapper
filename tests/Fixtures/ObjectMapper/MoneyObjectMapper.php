@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
 
 use Brick\Money\Money;
 use Rekalogika\Mapper\Attribute\AsObjectMapper;
+use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 
 class MoneyObjectMapper
 {
@@ -31,5 +32,22 @@ class MoneyObjectMapper
     public function mapMoneyDtoToMoney(MoneyDto $moneyDto): Money
     {
         return Money::of($moneyDto->getAmount(), $moneyDto->getCurrency());
+    }
+
+    #[AsObjectMapper]
+    public function mapMoneyToMoneyDtoForProxy(
+        Money $money,
+        SubMapperInterface $subMapper
+    ): MoneyDtoForProxy {
+        return $subMapper->createProxy(
+            MoneyDtoForProxy::class,
+            static function (MoneyDtoForProxy $proxy) use ($money) {
+                /** @psalm-suppress DirectConstructorCall */
+                $proxy->__construct(
+                    $money->getAmount()->__toString(),
+                    $money->getCurrency()->getCurrencyCode(),
+                );
+            },
+        );
     }
 }

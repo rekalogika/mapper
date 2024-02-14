@@ -609,6 +609,7 @@ class MapperFactory
             $this->subMapperFactory = new SubMapperFactory(
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyAccessor(),
+                $this->getProxyFactory(),
             );
         }
 

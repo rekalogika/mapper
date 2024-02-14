@@ -14,10 +14,16 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Brick\Money\Money;
+use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\FinalPersonDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyObjectMapper;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class ObjectMapperTest extends AbstractFrameworkTest
 {
@@ -49,4 +55,49 @@ class ObjectMapperTest extends AbstractFrameworkTest
         $this->assertSame('100.00', $result->getAmount()->__toString());
         $this->assertSame('USD', $result->getCurrency()->getCurrencyCode());
     }
+
+    public function testMoneyToMoneyDtoProxy(): void
+    {
+        $money = Money::of('100.00', 'USD');
+        $result = $this->mapper->map($money, MoneyDtoForProxy::class);
+
+        $this->assertInstanceOf(MoneyDtoForProxy::class, $result);
+        $this->assertInstanceOf(LazyObjectInterface::class, $result);
+
+        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertSame('100.00', $result->getAmount());
+        $this->assertSame('USD', $result->getCurrency());
+        $this->assertTrue($result->isLazyObjectInitialized());
+    }
+
+    public function testProxyWithEagerProperty(): void
+    {
+        $person = new Person('1', 'John Doe');
+        $result = $this->mapper->map($person, PersonDto::class);
+
+        $this->assertInstanceOf(LazyObjectInterface::class, $result);
+        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertTrue($person->isGetIdIsCalled());
+        $this->assertFalse($person->isGetNameIsCalled());
+
+        $this->assertSame('1', $result->id);
+
+        $this->assertTrue($person->isGetIdIsCalled());
+        $this->assertFalse($person->isGetNameIsCalled());
+        $this->assertFalse($result->isLazyObjectInitialized());
+
+        $this->assertSame('John Doe', $result->name);
+
+        $this->assertTrue($person->isGetIdIsCalled());
+        $this->assertTrue($person->isGetNameIsCalled());
+        $this->assertTrue($result->isLazyObjectInitialized());
+    }
+
+    public function testErrorFinalTarget(): void
+    {
+        $person = new Person('1', 'John Doe');
+        $this->expectException(ProxyNotSupportedException::class);
+        $result = $this->mapper->map($person, FinalPersonDto::class);
+    }
+
 }

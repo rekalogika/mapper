@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyToMoneyDtoTransformer;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyObjectMapper;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonToPersonDtoMapper;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
@@ -48,6 +49,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(PropertyMapperWithClassAttributeWithoutExplicitProperty::class);
     $services->set(PropertyMapperWithExtraArguments::class);
     $services->set(MoneyObjectMapper::class);
+    $services->set(PersonToPersonDtoMapper::class);
 
     $services->set(MoneyToMoneyDtoTransformer::class)
         ->tag('rekalogika.mapper.transformer');

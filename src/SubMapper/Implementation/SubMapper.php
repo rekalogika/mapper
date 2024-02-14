@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\SubMapper\Implementation;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\SubMapper\Exception\CacheNotSupportedException;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
@@ -36,6 +37,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyAccessorInterface $propertyAccessor,
+        private ProxyFactoryInterface $proxyFactory,
         private mixed $source,
         private ?Type $targetType,
         private Context $context,
@@ -135,6 +137,19 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             source: $this->source,
             targetType: $this->targetType,
             target: $target
+        );
+    }
+
+    public function createProxy(
+        string $class,
+        $initializer,
+        array $eagerProperties = []
+    ): object {
+        /** @psalm-suppress InvalidArgument */
+        return $this->proxyFactory->createProxy(
+            class: $class,
+            initializer: $initializer,
+            eagerProperties: $eagerProperties
         );
     }
 }

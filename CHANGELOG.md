@@ -1,10 +1,11 @@
-# CHANGELO
+# CHANGELOG
 
 ## 0.10.1
 
 * fix: Deprecate `MapFromObjectInterface` & `MapToObjectInterface`.
 * refactor(`MainTransformer`): Move to implementation namespace.
 * refactor: Move proxy creation code to `ProxyFactory`.
+* feat(`SubMapperInterface`): Add `createProxy()`.
 
 ## 0.10.0
 

@@ -46,4 +46,17 @@ interface SubMapperInterface
      * Add the target to the object cache
      */
     public function cache(mixed $target): void;
+
+    /**
+     * @template T of object
+     * @param class-string<T> $class
+     * @param callable(T):void $initializer
+     * @param array<int,string> $eagerProperties
+     * @return T
+     */
+    public function createProxy(
+        string $class,
+        $initializer,
+        array $eagerProperties = []
+    ): object;
 }

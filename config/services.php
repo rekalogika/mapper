@@ -324,6 +324,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('rekalogika.mapper.property_info'),
             service(PropertyAccessorInterface::class),
+            service('rekalogika.mapper.proxy.factory'),
         ]);
 
     # property mapper

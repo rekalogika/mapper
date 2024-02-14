@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\SubMapper\Implementation;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
+use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -29,6 +30,7 @@ final readonly class SubMapperFactory implements SubMapperFactoryInterface
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyAccessorInterface $propertyAccessor,
+        private ProxyFactoryInterface $proxyFactory,
     ) {
     }
 
@@ -41,6 +43,7 @@ final readonly class SubMapperFactory implements SubMapperFactoryInterface
         $subMapper = new SubMapper(
             propertyTypeExtractor: $this->propertyTypeExtractor,
             propertyAccessor: $this->propertyAccessor,
+            proxyFactory: $this->proxyFactory,
             source: $source,
             targetType: $targetType,
             context: $context,
