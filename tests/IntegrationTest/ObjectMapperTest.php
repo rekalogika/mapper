@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Brick\Money\Money;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\FinalPersonDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
@@ -25,7 +25,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
-class ObjectMapperTest extends AbstractFrameworkTest
+class ObjectMapperTest extends FrameworkTestCase
 {
     public function testService(): void
     {

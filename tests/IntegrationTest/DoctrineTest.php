@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithMultipleIdentifier;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifier;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifierDto;
@@ -23,7 +23,7 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolve
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\DoctrineEagerPropertiesResolver;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
-class DoctrineTest extends AbstractFrameworkTest
+class DoctrineTest extends FrameworkTestCase
 {
     public function testDoctrine(): void
     {

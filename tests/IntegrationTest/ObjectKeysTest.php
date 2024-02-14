@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectKeys\RelationshipMap;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectKeysDto\PersonDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectKeysDto\RelationshipMapDto;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 
-class ObjectKeysTest extends AbstractFrameworkTest
+class ObjectKeysTest extends FrameworkTestCase
 {
     public function testObjectKeys(): void
     {

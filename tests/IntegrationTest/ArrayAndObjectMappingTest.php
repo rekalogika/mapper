@@ -16,11 +16,11 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Serializer\DenormalizerContext;
 use Rekalogika\Mapper\Serializer\NormalizerContext;
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainingObject;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObjectDto\ContainingObjectDto;
 
-class ArrayAndObjectMappingTest extends AbstractFrameworkTest
+class ArrayAndObjectMappingTest extends FrameworkTestCase
 {
     public function testObjectToArrayAndBack(): void
     {

@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\InternalClass\ObjectWithInternalClass;
 use Rekalogika\Mapper\Tests\Fixtures\InternalClass\ObjectWithInternalClassDto;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 
-class InternalClassTest extends AbstractFrameworkTest
+class InternalClassTest extends FrameworkTestCase
 {
     public function testInternalClass(): void
     {

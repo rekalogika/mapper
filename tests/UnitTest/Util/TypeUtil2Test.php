@@ -36,7 +36,7 @@ class TypeUtil2Test extends TestCase
     /**
      * @return iterable<array-key,array{0:Type,1:array<int,string>,2?:bool}>
      */
-    public function getSimpleTypesProvider(): iterable
+    public static function getSimpleTypesProvider(): iterable
     {
         yield [
             TypeFactory::null(),

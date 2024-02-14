@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\MixedType\ObjectWithMixedProperty;
 use Rekalogika\Mapper\Tests\Fixtures\MixedType\ObjectWithMixedPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\MixedType\ObjectWithUntypedPropertyDto;
 
-class MixedTypeTest extends AbstractFrameworkTest
+class MixedTypeTest extends FrameworkTestCase
 {
     public function testMixedType(): void
     {

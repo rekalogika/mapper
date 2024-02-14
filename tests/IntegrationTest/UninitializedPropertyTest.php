@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\UninitializedProperty\ObjectWithInitializedProperty;
 use Rekalogika\Mapper\Tests\Fixtures\UninitializedProperty\ObjectWithUninitializedProperty;
 use Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto\FinalObjectWithInitializedPropertyDto;
@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto\FinalObjectWithUni
 use Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto\ObjectWithInitializedPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto\ObjectWithUninitializedPropertyDto;
 
-class UninitializedPropertyTest extends AbstractFrameworkTest
+class UninitializedPropertyTest extends FrameworkTestCase
 {
     // from initialized
 

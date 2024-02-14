@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Override\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\Override\ObjectWithArrayPropertyDto;
 
-class TransformerOverrideTest extends AbstractFrameworkTest
+class TransformerOverrideTest extends FrameworkTestCase
 {
     public function testTransformerOverride(): void
     {

@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Recursive\ChildObject;
 use Rekalogika\Mapper\Tests\Fixtures\Recursive\ObjectWithRefToItself;
 use Rekalogika\Mapper\Tests\Fixtures\Recursive\ParentObject;
@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ChildObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ObjectWithRefToItselfDto;
 use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ParentObjectDto;
 
-class RecursionTest extends AbstractFrameworkTest
+class RecursionTest extends FrameworkTestCase
 {
     public function testParentChild(): void
     {

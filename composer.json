@@ -54,7 +54,6 @@
         "psalm/plugin-phpunit": "^0.18.4",
         "symfony/framework-bundle": "^6.4 || ^7.0",
         "symfony/http-kernel": "^6.4 || ^7.0",
-        "symfony/phpunit-bridge": "^6.4 || ^7.0",
         "symfony/uid": "^6.4 || ^7.0",
         "symfony/var-dumper": "^6.4 || ^7.0",
         "symfony/yaml": "^6.4 || ^7.0",

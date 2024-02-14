@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectImplementingStringable;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
@@ -31,7 +31,7 @@ use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\Type;
 
-class MappingTest extends AbstractFrameworkTest
+class MappingTest extends FrameworkTestCase
 {
     /**
      * Testing mapping against default mapping table
@@ -74,7 +74,7 @@ class MappingTest extends AbstractFrameworkTest
     /**
      * @return iterable<array-key,array<array-key,mixed>>
      */
-    public function mappingTestProvider(): iterable
+    public static function mappingTestProvider(): iterable
     {
         //
         // scalar

@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Symfony\Component\Clock\DatePoint;
 
-class DateTimeMappingTest extends AbstractFrameworkTest
+class DateTimeMappingTest extends FrameworkTestCase
 {
     /**
      * @param class-string $sourceClass
@@ -35,7 +35,7 @@ class DateTimeMappingTest extends AbstractFrameworkTest
     /**
      * @return iterable<string,array{0:class-string<\DateTimeInterface>,1:class-string<\DateTimeInterface>}>
      */
-    public function dateTimeProvider(): iterable
+    public static function dateTimeProvider(): iterable
     {
         $types = [
             \DateTimeInterface::class,

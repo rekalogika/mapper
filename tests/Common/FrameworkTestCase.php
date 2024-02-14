@@ -24,7 +24,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
-abstract class AbstractFrameworkTest extends TestCase
+abstract class FrameworkTestCase extends TestCase
 {
     private ContainerInterface $container;
     /** @psalm-suppress MissingConstructor */

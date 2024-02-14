@@ -14,12 +14,12 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Brick\Money\Money;
-use Rekalogika\Mapper\Tests\Common\AbstractFrameworkTest;
+use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Money\ObjectWithIntegerBackedMoneyProperty;
 use Rekalogika\Mapper\Tests\Fixtures\Money\ObjectWithMoneyAmountDto;
 
-class CustomTransformerTest extends AbstractFrameworkTest
+class CustomTransformerTest extends FrameworkTestCase
 {
     public function testMoneyToMoneyDto(): void
     {
