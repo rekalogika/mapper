@@ -6,6 +6,7 @@
 * refactor(`MainTransformer`): Move to implementation namespace.
 * refactor: Move proxy creation code to `ProxyFactory`.
 * feat(`SubMapperInterface`): Add `createProxy()`.
+* refactor(`ProxyGeneratorInterface`): Remove `ProxySpecification`.
 
 ## 0.10.0
 
