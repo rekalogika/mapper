@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\Proxy\Implementation;
 use Doctrine\Persistence\ManagerRegistry;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
-use Rekalogika\Mapper\Proxy\ProxySpecification;
 
 /**
  * Prevent proxy creation for Doctrine entities.
@@ -31,14 +30,14 @@ final readonly class DoctrineProxyGenerator implements ProxyGeneratorInterface
     ) {
     }
 
-    public function generateProxy(string $class): ProxySpecification
+    public function generateProxyCode(string $realClass, string $proxyClass): string
     {
-        $manager = $this->managerRegistry->getManagerForClass($class);
+        $manager = $this->managerRegistry->getManagerForClass($realClass);
 
         if ($manager) {
-            throw new ProxyNotSupportedException($class, reason: 'Doctrine entities do not support proxying.');
+            throw new ProxyNotSupportedException($realClass, reason: 'Doctrine entities do not support proxying.');
         }
 
-        return $this->decorated->generateProxy($class);
+        return $this->decorated->generateProxyCode($realClass, $proxyClass);
     }
 }

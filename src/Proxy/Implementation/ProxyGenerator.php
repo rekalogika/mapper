@@ -15,8 +15,6 @@ namespace Rekalogika\Mapper\Proxy\Implementation;
 
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
-use Rekalogika\Mapper\Proxy\ProxyNamer;
-use Rekalogika\Mapper\Proxy\ProxySpecification;
 use Symfony\Component\VarExporter\Exception\LogicException;
 use Symfony\Component\VarExporter\ProxyHelper;
 
@@ -25,28 +23,26 @@ use Symfony\Component\VarExporter\ProxyHelper;
  */
 final readonly class ProxyGenerator implements ProxyGeneratorInterface
 {
-    public function generateProxy(string $class): ProxySpecification
-    {
-        /** @var class-string */
-        $proxyClass = ProxyNamer::generateProxyClassName($class);
-
+    public function generateProxyCode(
+        string $realClass,
+        string $proxyClass
+    ): string {
         try {
-            $proxyCode = $this->generateProxyCode($class);
+            $proxyCode = $this->generateProxySourceCode($realClass, $proxyClass);
         } catch (LogicException $e) {
-            throw new ProxyNotSupportedException($class, previous: $e);
+            throw new ProxyNotSupportedException($realClass, previous: $e);
         }
 
-        return new ProxySpecification($proxyClass, $proxyCode);
+        return $proxyCode;
     }
 
     /**
-     * @param class-string $class
+     * @param class-string $realClass
      * @return string
      */
-    private function generateProxyCode(string $class): string
+    private function generateProxySourceCode(string $realClass, string $proxyClass): string
     {
-        $proxyClass = ProxyNamer::generateProxyClassName($class);
-        $targetReflection = new \ReflectionClass($class);
+        $targetReflection = new \ReflectionClass($realClass);
 
         // get proxy class name & namespace
         $shortName = preg_replace('/.*\\\\/', '', $proxyClass);

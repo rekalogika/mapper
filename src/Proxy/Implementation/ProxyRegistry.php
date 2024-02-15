@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\Proxy\Implementation;
 
 use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
 use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
-use Rekalogika\Mapper\Proxy\ProxySpecification;
 
 /**
  * @internal
@@ -34,18 +33,15 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         }
     }
 
-    public function registerProxy(
-        ProxySpecification $proxySpecification,
-    ): void {
-        $proxyClass = $proxySpecification->getClass();
-
+    public function registerProxy(string $class, string $sourceCode): void
+    {
         $proxyFile = sprintf(
             '%s/%s',
             $this->proxyDirectory,
-            self::getProxyFileName($proxyClass)
+            self::getProxyFileName($class)
         );
 
-        file_put_contents($proxyFile, $proxySpecification->getCode());
+        file_put_contents($proxyFile, $sourceCode);
     }
 
     public function registerAutoloader(): void

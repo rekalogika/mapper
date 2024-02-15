@@ -18,8 +18,8 @@ use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 interface ProxyGeneratorInterface
 {
     /**
-     * @param class-string $class
+     * @param class-string $realClass
      * @throws ProxyNotSupportedException
      */
-    public function generateProxy(string $class): ProxySpecification;
+    public function generateProxyCode(string $realClass, string $proxyClass): string;
 }

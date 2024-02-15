@@ -18,7 +18,5 @@ namespace Rekalogika\Mapper\Proxy;
  */
 interface ProxyRegistryInterface
 {
-    public function registerProxy(
-        ProxySpecification $proxySpecification,
-    ): void;
+    public function registerProxy(string $class, string $sourceCode): void;
 }

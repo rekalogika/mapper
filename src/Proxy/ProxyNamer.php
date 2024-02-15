@@ -20,7 +20,6 @@ class ProxyNamer
 {
     /**
      * @param class-string $class
-     * @return string
      */
     public static function generateProxyClassName(string $class): string
     {

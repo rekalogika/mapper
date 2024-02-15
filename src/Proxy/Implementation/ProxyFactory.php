@@ -45,8 +45,9 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
         $targetProxyClass = ProxyNamer::generateProxyClassName($class);
 
         if (!class_exists($targetProxyClass, false)) {
-            $proxySpecification = $this->proxyGenerator->generateProxy($class);
-            $this->proxyRegistry->registerProxy($proxySpecification);
+            $sourceCode = $this->proxyGenerator
+                ->generateProxyCode($class, $targetProxyClass);
+            $this->proxyRegistry->registerProxy($targetProxyClass, $sourceCode);
 
             if (!class_exists($targetProxyClass)) {
                 throw new LogicException(
