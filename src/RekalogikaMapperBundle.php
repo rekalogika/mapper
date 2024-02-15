@@ -31,7 +31,7 @@ final class RekalogikaMapperBundle extends Bundle
         return \dirname(__DIR__);
     }
 
-    public function build(ContainerBuilder $container)
+    public function build(ContainerBuilder $container): void
     {
         parent::build($container);
 
@@ -44,7 +44,7 @@ final class RekalogikaMapperBundle extends Bundle
         }
     }
 
-    public function boot()
+    public function boot(): void
     {
         /** @var ProxyAutoloaderInterface */
         $autoloader = $this->container?->get('rekalogika.mapper.proxy_autoloader');
@@ -52,7 +52,7 @@ final class RekalogikaMapperBundle extends Bundle
         $autoloader->registerAutoloader();
     }
 
-    public function shutdown()
+    public function shutdown(): void
     {
         /** @var ProxyAutoloaderInterface */
         $autoloader = $this->container?->get('rekalogika.mapper.proxy_autoloader');
