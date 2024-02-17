@@ -91,6 +91,7 @@ final class LazyArray implements CollectionInterface
         throw new \BadMethodCallException('LazyArray is immutable.');
     }
 
+    /** @psalm-suppress InvalidReturnType */
     public function getIterator(): \Traversable
     {
         if ($this->isCacheComplete) {
@@ -108,6 +109,7 @@ final class LazyArray implements CollectionInterface
          */
         foreach ($this->source as $sourceMemberKey => $sourceMemberValue) {
             if (isset($this->cachedData[$sourceMemberKey])) {
+                /** @psalm-suppress InvalidPropertyAssignmentValue */
                 $this->cachedKeyOrder[] = $sourceMemberKey;
                 yield $sourceMemberKey => $this->cachedData[$sourceMemberKey];
 
@@ -115,7 +117,7 @@ final class LazyArray implements CollectionInterface
             }
 
             /**
-             * @var TKey $key
+             * @var TKey|null $key
              * @var TValue $value
              */
             [$key, $value] = $this->transformMember(
@@ -125,14 +127,30 @@ final class LazyArray implements CollectionInterface
                 context: $this->context,
             );
 
-            if ($key !== $sourceMemberKey) {
+            if ($key === null) {
+                /** @psalm-suppress InvalidPropertyAssignmentValue */
+                $this->cachedData[] = $value;
+                $lastKey = \array_key_last($this->cachedData);
+                /** @psalm-suppress InvalidPropertyAssignmentValue */
+                $this->cachedKeyOrder[] = $lastKey;
+
+                yield $lastKey => $value;
+
+                continue;
+            } elseif ($key !== $sourceMemberKey) {
                 throw new LogicException(
-                    'Transformation in keys detected.',
+                    sprintf(
+                        'Transformation in keys detected. Source key: "%s", transformed key: "%s".',
+                        $sourceMemberKey,
+                        $key
+                    ),
                     context: $this->context
                 );
             }
 
+            /** @psalm-suppress InvalidPropertyAssignmentValue */
             $this->cachedData[$key] = $value;
+            /** @psalm-suppress InvalidPropertyAssignmentValue */
             $this->cachedKeyOrder[] = $key;
 
             yield $key => $value;

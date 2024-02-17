@@ -20,7 +20,7 @@ psalm:
 phpunit:
 	$(eval c ?=)
 	rm -rf var
-	$(PHP) vendor/bin/phpunit --testdox $(c)
+	$(PHP) vendor/bin/phpunit $(c)
 
 .PHONY: php-cs-fixer
 php-cs-fixer: tools/php-cs-fixer

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.10.2
+
+* fix: Handle cases where transformed key is different from the original.
+
 ## 0.10.1
 
 * fix: Deprecate `MapFromObjectInterface` & `MapToObjectInterface`.
