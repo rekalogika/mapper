@@ -21,9 +21,6 @@ use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * @internal
- */
 final class RekalogikaMapperBundle extends Bundle
 {
     public function getPath(): string
