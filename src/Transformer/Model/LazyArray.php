@@ -127,7 +127,11 @@ final class LazyArray implements CollectionInterface
 
             if ($key !== $sourceMemberKey) {
                 throw new LogicException(
-                    'Transformation in keys detected.',
+                    sprintf(
+                        'Transformation in keys detected. Source key: %s, transformed key: %s',
+                        $sourceMemberKey,
+                        $key
+                    ),
                     context: $this->context
                 );
             }
