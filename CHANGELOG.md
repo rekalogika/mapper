@@ -3,6 +3,7 @@
 ## 1.1.0
 
 * feat: `PresetTransformer`.
+* fix: Typo in `RemoveOptionalDefinitionPass`
 
 ## 1.0.0
 
