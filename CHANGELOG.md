@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 1.1.0
+
+* feat: `PresetTransformer`.
+
+## 1.0.0
+
+* No changes.
+
 ## 0.10.2
 
 * fix: Handle cases where transformed key is different from the original.

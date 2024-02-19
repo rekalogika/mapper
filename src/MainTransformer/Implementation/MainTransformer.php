@@ -219,6 +219,10 @@ final class MainTransformer implements MainTransformerInterface
                     context: $context
                 );
             } catch (RefuseToTransformException) {
+                if ($targetTypeForTransformer !== null) {
+                    $objectCache->undoPreCache($source, $targetTypeForTransformer);
+                }
+
                 continue;
             }
 
