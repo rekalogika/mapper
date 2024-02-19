@@ -14,12 +14,16 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Symfony\Component\PropertyInfo\Type;
 
 interface TransformerInterface
 {
     public const MIXED = 'mixed';
 
+    /**
+     * @throws RefuseToTransformException
+     */
     public function transform(
         mixed $source,
         mixed $target,

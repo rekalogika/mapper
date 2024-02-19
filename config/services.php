@@ -49,6 +49,7 @@ use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToStringTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\PresetTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\SymfonyUidTransformer;
@@ -120,7 +121,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set(ScalarToScalarTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -350]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -300]);
 
     $services
         ->set(ObjectMapperTransformer::class)
@@ -130,29 +131,33 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.object_mapper.table_factory'),
             service('rekalogika.mapper.object_mapper.resolver'),
         ])
-        ->tag('rekalogika.mapper.transformer', ['priority' => -400]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -350]);
 
     $services
         ->set(DateTimeTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -450]);
+        ->tag('rekalogika.mapper.transformer', ['priority' => -400]);
 
     $services
         ->set(StringToBackedEnumTransformer::class)
+        ->tag('rekalogika.mapper.transformer', ['priority' => -450]);
+
+    $services
+        ->set(SymfonyUidTransformer::class)
         ->tag('rekalogika.mapper.transformer', ['priority' => -500]);
+
+    $services
+        ->set(ObjectToStringTransformer::class)
+        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+
+    $services
+        ->set(PresetTransformer::class)
+        ->tag('rekalogika.mapper.transformer', ['priority' => -600]);
 
     $services
         ->set(ClassMethodTransformer::class)
         ->args([
             service('rekalogika.mapper.sub_mapper.factory'),
         ])
-        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
-
-    $services
-        ->set(SymfonyUidTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -600]);
-
-    $services
-        ->set(ObjectToStringTransformer::class)
         ->tag('rekalogika.mapper.transformer', ['priority' => -650]);
 
     $services

@@ -39,6 +39,7 @@ final class TraceData
     private ?string $callerClass = null;
     private ?string $callerType = null;
     private ?string $callerName = null;
+    private bool $refused = false;
 
     /**
      * @param null|array<int,Type|MixedType> $possibleTargetTypes
@@ -57,7 +58,18 @@ final class TraceData
         $this->existingTargetType = \get_debug_type($existingTargetValue);
     }
 
-    public function finalizeTime(float $time): void
+    public function refusedToTransform(): void
+    {
+        $this->refused = true;
+    }
+
+    public function finalize(float $time, mixed $result): void
+    {
+        $this->finalizeTime($time);
+        $this->finalizeResult($result);
+    }
+
+    private function finalizeTime(float $time): void
     {
         if (count($this->nestedTraceData) === 0) {
             // If this is the last trace data (no nested trace data)
@@ -70,7 +82,7 @@ final class TraceData
         }
     }
 
-    public function finalizeResult(mixed $result): void
+    private function finalizeResult(mixed $result): void
     {
         $this->resultType = \get_debug_type($result);
     }
@@ -94,6 +106,14 @@ final class TraceData
     public function getNestedTraceData(): array
     {
         return $this->nestedTraceData;
+    }
+
+    /**
+     * @return array<int,self>
+     */
+    public function getAcceptedNestedTraceData(): array
+    {
+        return array_filter($this->nestedTraceData, fn (self $traceData) => !$traceData->isRefused());
     }
 
     public function addNestedTraceData(self $traceData): void
@@ -144,7 +164,6 @@ final class TraceData
             return TypeUtil::getTypeStringHtml($this->selectedTargetType);
         }
         return 'mixed';
-
     }
 
     public function getResultType(): string
@@ -226,5 +245,13 @@ final class TraceData
             'type' => $this->callerType,
             'name' => $this->callerName,
         ];
+    }
+
+    /**
+     * Get the value of refused
+     */
+    public function isRefused(): bool
+    {
+        return $this->refused;
     }
 }

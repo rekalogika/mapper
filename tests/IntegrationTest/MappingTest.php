@@ -22,6 +22,7 @@ use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
 use Rekalogika\Mapper\Transformer\Implementation\CopyTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToStringTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\PresetTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\TraversableToArrayAccessTransformer;
@@ -58,11 +59,18 @@ class MappingTest extends FrameworkTestCase
 
         $this->assertNotEmpty($searchResult);
 
-        $first = $searchResult[0] ?? null;
-        $this->assertNotNull($first);
+        $selected = $searchResult[0] ?? null;
+
+        $this->assertNotNull($selected);
+
+        if (\str_contains($selected->getTransformerServiceId(), PresetTransformer::class)) {
+            $selected = $searchResult[1] ?? null;
+        }
+
+        $this->assertNotNull($selected);
 
         $transformer = $transformerRegistry->get(
-            $first->getTransformerServiceId()
+            $selected->getTransformerServiceId()
         );
 
         $this->assertTransformerInstanceOf(

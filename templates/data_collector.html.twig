@@ -93,7 +93,7 @@
                     <tr>
                         <th>Path</th>
                         <th>Source Type</th>
-                        <th>Existing Target Value Type</th>
+                        <th>Existing Target Instance Type</th>
                         <th>Target Type Hint</th>
                         <th>Selected Target Type</th>
                         <th>Target Instance Type</th>
@@ -231,7 +231,7 @@
         </td>
     </tr>
 
-    {% for child in tracedata.nestedTraceData %}
+    {% for child in tracedata.acceptedNestedTraceData %}
         {{ _self.render_row(child, depth + 1) }}
     {% endfor %}
 {% endmacro %}

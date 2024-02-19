@@ -18,6 +18,7 @@ use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
 use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
+use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
@@ -103,21 +104,27 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
                 $caller['type'] ?? null
             );
 
-            // if we are the root transformer, add the trace data to the
-            // context, and collect it
             $context = $context->with($traceData);
-            $this->dataCollector->collectTraceData($traceData);
         }
 
-        $start = microtime(true);
-        /** @var mixed */
-        $result = $this->decorated->transform($source, $target, $sourceType, $targetType, $context);
-        $time = microtime(true) - $start;
+        try {
+            $start = microtime(true);
+            /** @var mixed */
+            $result = $this->decorated->transform($source, $target, $sourceType, $targetType, $context);
+            $time = microtime(true) - $start;
 
-        $traceData->finalizeTime($time);
-        $traceData->finalizeResult($result);
+            $traceData->finalize($time, $result);
 
-        return $result;
+            if (!$parentTraceData) {
+                $this->dataCollector->collectTraceData($traceData);
+            }
+
+            return $result;
+        } catch (RefuseToTransformException $e) {
+            $traceData->refusedToTransform();
+
+            throw $e;
+        }
     }
 
     public function getSupportedTransformation(): iterable

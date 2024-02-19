@@ -77,6 +77,23 @@ final class ObjectCache
         $this->preCache->offsetGet($source)?->offsetSet($targetTypeString, true);
     }
 
+    public function undoPreCache(mixed $source, Type $targetType): void
+    {
+        if (!is_object($source)) {
+            return;
+        }
+
+        if ($this->isBlacklisted($source)) {
+            return;
+        }
+
+        $targetTypeString = $this->typeResolver->getTypeString($targetType);
+
+        if (isset($this->preCache[$source][$targetTypeString])) {
+            unset($this->preCache[$source][$targetTypeString]);
+        }
+    }
+
     public function containsTarget(mixed $source, Type $targetType): bool
     {
         if (!is_object($source)) {
@@ -155,5 +172,13 @@ final class ObjectCache
         if (isset($this->preCache[$source][$targetTypeString])) {
             unset($this->preCache[$source][$targetTypeString]);
         }
+    }
+
+    /**
+     * @return \WeakMap<object,\ArrayObject<string,object>>
+     */
+    public function getInternalMapping(): \WeakMap
+    {
+        return $this->cache;
     }
 }
