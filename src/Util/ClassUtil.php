@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Util;
 
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Symfony\Component\VarExporter\Internal\Hydrator;
 
 /**
@@ -22,6 +23,50 @@ final readonly class ClassUtil
 {
     private function __construct()
     {
+    }
+
+    /**
+     * @template T of object
+     * @param class-string<T> $class
+     * @return class-string<T>
+     */
+    public static function determineRealClassFromPossibleProxy(string $class): string
+    {
+        $inputClass = $class;
+
+        $pos = strrpos($class, '\\__CG__\\');
+
+        if ($pos === false) {
+            $pos = strrpos($class, '\\__PM__\\');
+        }
+
+        if ($pos !== false) {
+            $class = substr($class, $pos + 8);
+        }
+
+        if (!class_exists($class)) {
+            throw new UnexpectedValueException(sprintf(
+                'Trying to resolve the real class from possible proxy class "%s", got "%s", but the class does not exist',
+                $inputClass,
+                $class
+            ));
+        }
+
+        /** @psalm-suppress DocblockTypeContradiction */
+        if (!is_a($inputClass, $class, true)) {
+            /** @psalm-suppress NoValue */
+            throw new UnexpectedValueException(sprintf(
+                'Trying to resolve the real class from possible proxy class "%s", got "%s", but the proxy "%s" is not a subclass of "%s"',
+                $inputClass,
+                $class,
+                $inputClass,
+                $class,
+            ));
+        }
+
+        /** @var class-string<T> $class */
+
+        return $class;
     }
 
     /**
