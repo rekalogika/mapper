@@ -40,17 +40,17 @@ final readonly class PresetTransformer implements TransformerInterface
         }
 
         if (!TypeCheck::isObject($targetType)) {
-            throw new UnexpectedValueException('Target type must be an object type');
+            throw new RefuseToTransformException();
         }
 
         $class = $targetType?->getClassName();
 
         if (!is_string($class) || !class_exists($class)) {
-            throw new UnexpectedValueException('Target type must be a valid class name');
+            throw new RefuseToTransformException();
         }
 
         if (!is_object($source)) {
-            throw new UnexpectedValueException('Source must be an object');
+            throw new RefuseToTransformException();
         }
 
         try {
