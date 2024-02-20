@@ -6,6 +6,7 @@
 * fix: Typo in `RemoveOptionalDefinitionPass`
 * feat: Supports dynamic properties (including `stdClass`) on the target side.
 * fix(`Mapper`): Fix typehint.
+* test: test array cast to object mapping
 
 ## 1.0.0
 

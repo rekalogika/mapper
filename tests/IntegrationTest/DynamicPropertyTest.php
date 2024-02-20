@@ -57,6 +57,24 @@ class DynamicPropertyTest extends FrameworkTestCase
         $this->assertSame(1.1, $target->d);
     }
 
+    public function testArrayCastToObjectToObject(): void
+    {
+        $source = [
+            'a' => 1,
+            'b' => 'string',
+            'c' => true,
+            'd' => 1.1,
+        ];
+
+        $target = $this->mapper->map((object) $source, ObjectWithScalarPropertiesDto::class);
+
+        $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target);
+        $this->assertSame(1, $target->a);
+        $this->assertSame('string', $target->b);
+        $this->assertTrue($target->c);
+        $this->assertSame(1.1, $target->d);
+    }
+
     public function testStdClassWithoutPropertiesToObject(): void
     {
         $source = new \stdClass();
