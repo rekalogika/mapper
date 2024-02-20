@@ -4,13 +4,14 @@
 
 * feat: `PresetTransformer`.
 * fix: Typo in `RemoveOptionalDefinitionPass`
-* feat: Supports dynamic properties (including `stdClass`) on the target side.
+* feat: Supports dynamic properties (including `stdClass`) on the source side.
 * fix(`Mapper`): Fix typehint.
 * test: test array cast to object mapping
 * feat(`Context`): `with()` not accepts multiple argument.
 * build: Deinternalize `ObjectCacheFactory`
 * fix(`PresetMapping`): Support proxied classes, add tests.
 * fix: Disallow proxy for objects with dynamic properties, including `stdClass`.
+* feat: Dynamic properties (`stdClass` & co) on the target side.
 
 ## 1.0.0
 

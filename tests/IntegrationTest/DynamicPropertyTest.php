@@ -15,10 +15,13 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass;
+use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 class DynamicPropertyTest extends FrameworkTestCase
 {
+    // from stdclass to object
+
     public function testStdClassToObject(): void
     {
         $source = new \stdClass();
@@ -85,5 +88,56 @@ class DynamicPropertyTest extends FrameworkTestCase
         $this->assertNull($target->b);
         $this->assertNull($target->c);
         $this->assertNull($target->d);
+    }
+
+    // to stdClass
+
+    public function testObjectToStdClass(): void
+    {
+        $source = new ObjectWithScalarProperties();
+        $target = $this->mapper->map($source, \stdClass::class);
+
+        $this->assertInstanceOf(\stdClass::class, $target);
+
+        $this->assertSame(1, $target->a);
+        $this->assertSame('string', $target->b);
+        $this->assertTrue($target->c);
+        $this->assertSame(1.1, $target->d);
+    }
+
+    public function testObjectToObjectExtendingStdClass(): void
+    {
+        $source = new ObjectWithScalarProperties();
+        $target = $this->mapper->map($source, ObjectExtendingStdClass::class);
+
+        $this->assertInstanceOf(ObjectExtendingStdClass::class, $target);
+
+        /** @psalm-suppress UndefinedPropertyFetch */
+        $this->assertSame(1, $target->a);
+        /** @psalm-suppress UndefinedPropertyFetch */
+        $this->assertSame('string', $target->b);
+        /** @psalm-suppress UndefinedPropertyFetch */
+        $this->assertTrue($target->c);
+        /** @psalm-suppress UndefinedPropertyFetch */
+        $this->assertSame(1.1, $target->d);
+    }
+
+    // stdclass to stdclass
+
+    public function testStdClassToStdClass(): void
+    {
+        $source = new \stdClass();
+        $source->a = 1;
+        $source->b = 'string';
+        $source->c = true;
+        $source->d = 1.1;
+
+        $target = $this->mapper->map($source, \stdClass::class);
+
+        $this->assertInstanceOf(\stdClass::class, $target);
+        $this->assertSame(1, $target->a);
+        $this->assertSame('string', $target->b);
+        $this->assertTrue($target->c);
+        $this->assertSame(1.1, $target->d);
     }
 }

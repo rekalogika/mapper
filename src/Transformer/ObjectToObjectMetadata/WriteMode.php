@@ -23,4 +23,5 @@ enum WriteMode
     case Property;
     case AdderRemover;
     case Constructor;
+    case DynamicProperty;
 }

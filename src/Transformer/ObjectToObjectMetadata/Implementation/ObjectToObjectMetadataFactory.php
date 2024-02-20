@@ -90,7 +90,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             throw new InternalClassUnsupportedException($sourceClass);
         }
 
-        if ($targetReflection->isInternal()) {
+        if (!$targetAllowsDynamicProperties && $targetReflection->isInternal()) {
             throw new InternalClassUnsupportedException($targetClass);
         }
 
@@ -126,7 +126,18 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         $propertyMappings = [];
 
-        foreach ($targetProperties as $targetProperty) {
+        // determine properties to map
+
+        if ($targetAllowsDynamicProperties) {
+            $sourceProperties = $this->listProperties($sourceClass);
+            $propertiesToMap = array_unique(array_merge($sourceProperties, $targetProperties));
+        } else {
+            $propertiesToMap = $targetProperties;
+        }
+
+        // iterate over properties to map
+
+        foreach ($propertiesToMap as $targetProperty) {
             $sourceProperty = $targetProperty;
 
             // determine if a property mapper is defined for the property
@@ -176,9 +187,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // process target read mode
 
             if ($targetReadInfo === null) {
-                $targetReadMode = ReadMode::None;
-                $targetReadName = null;
-                $targetReadVisibility = Visibility::None;
+                // if source allows dynamic properties, including stdClass
+                if ($targetAllowsDynamicProperties) {
+                    $targetReadMode = ReadMode::DynamicProperty;
+                    $targetReadName = $targetProperty;
+                    $targetReadVisibility = Visibility::Public;
+                } else {
+                    $targetReadMode = ReadMode::None;
+                    $targetReadName = null;
+                    $targetReadVisibility = Visibility::None;
+                }
             } else {
                 $targetReadMode = match ($targetReadInfo->getType()) {
                     PropertyReadInfo::TYPE_METHOD => ReadMode::Method,
@@ -223,15 +241,22 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 };
 
                 if ($targetWriteMode === WriteMode::None) {
-                    continue;
+                    if (!$targetAllowsDynamicProperties) {
+                        continue;
+                    }
+                    $targetWriteMode = WriteMode::DynamicProperty;
+                    $targetWriteName = $targetProperty;
+                    $targetWriteVisibility = Visibility::Public;
+
+                } else {
+                    $targetWriteName = $targetWriteInfo->getName();
+                    $targetWriteVisibility = match ($targetWriteInfo->getVisibility()) {
+                        PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
+                        PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
+                        PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
+                        default => Visibility::None,
+                    };
                 }
-                $targetWriteName = $targetWriteInfo->getName();
-                $targetWriteVisibility = match ($targetWriteInfo->getVisibility()) {
-                    PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
-                    PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
-                    PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
-                    default => Visibility::None,
-                };
             }
 
             // get source property types
