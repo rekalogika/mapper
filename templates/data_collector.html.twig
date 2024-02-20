@@ -394,6 +394,8 @@
         -&gt;{{ name }}()
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\ReadMode::Property') -%}
         -&gt;{{ name }}
+    {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\ReadMode::DynamicProperty') -%}
+        -&gt;{{ name }}
     {%- else -%}
         <span class="badge badge-danger">None</span>
     {%- endif -%}
@@ -404,6 +406,8 @@
     {%- if mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Method') -%}
         -&gt;{{ name }}()
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Property') -%}
+        -&gt;{{ name }}
+    {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::DynamicProperty') -%}
         -&gt;{{ name }}
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::AdderRemover') -%}
         -&gt;{{ name }}()
