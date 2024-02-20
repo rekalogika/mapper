@@ -60,6 +60,12 @@ class ReaderWriter
             } elseif ($mode === ReadMode::Method) {
                 /** @psalm-suppress MixedMethodCall */
                 return $source->{$accessorName}();
+            } elseif ($mode === ReadMode::DynamicProperty) {
+                if (isset($source->{$accessorName})) {
+                    return $source->{$accessorName};
+                } else {
+                    return null;
+                }
             }
             return null;
         } catch (\Error $e) {

@@ -81,9 +81,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         $targetReflection = new \ReflectionClass($targetClass);
 
-        // check if source and target classes are internal
+        $sourceAllowsDynamicProperties = $this->allowsDynamicProperties($sourceReflection);
+        $targetAllowsDynamicProperties = $this->allowsDynamicProperties($targetReflection);
 
-        if ($sourceReflection->isInternal()) {
+        // check if source and target classes are internal. we allow stdClass at
+        // the source side
+        if (!$sourceAllowsDynamicProperties && $sourceReflection->isInternal()) {
             throw new InternalClassUnsupportedException($sourceClass);
         }
 
@@ -143,9 +146,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // process source read mode
 
             if ($sourceReadInfo === null) {
-                $sourceReadMode = ReadMode::None;
-                $sourceReadName = null;
-                $sourceReadVisibility = Visibility::None;
+                // if source allows dynamic properties, including stdClass
+                if ($sourceAllowsDynamicProperties) {
+                    $sourceReadMode = ReadMode::DynamicProperty;
+                    $sourceReadName = $sourceProperty;
+                    $sourceReadVisibility = Visibility::Public;
+                } else {
+                    $sourceReadMode = ReadMode::None;
+                    $sourceReadName = null;
+                    $sourceReadVisibility = Visibility::None;
+                }
             } else {
                 $sourceReadMode = match ($sourceReadInfo->getType()) {
                     PropertyReadInfo::TYPE_METHOD => ReadMode::Method,
@@ -320,6 +330,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             sourceClass: $sourceClass,
             targetClass: $targetClass,
             providedTargetClass: $providedTargetClass,
+            sourceAllowsDynamicProperties: $sourceAllowsDynamicProperties,
+            targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
             allPropertyMappings: $propertyMappings,
             instantiable: $instantiable,
             cloneable: $cloneable,
@@ -411,5 +423,19 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         }
 
         return $initializableProperties;
+    }
+
+    /**
+     * @param \ReflectionClass<object> $class
+     */
+    private function allowsDynamicProperties(\ReflectionClass $class): bool
+    {
+        do {
+            if (count($class->getAttributes(\AllowDynamicProperties::class)) > 0) {
+                return true;
+            }
+        } while ($class = $class->getParentClass());
+
+        return false;
     }
 }

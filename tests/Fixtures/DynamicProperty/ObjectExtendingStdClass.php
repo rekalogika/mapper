@@ -11,15 +11,8 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
+namespace Rekalogika\Mapper\Tests\Fixtures\DynamicProperty;
 
-/**
- * @internal
- */
-enum ReadMode
+class ObjectExtendingStdClass extends \stdClass
 {
-    case None;
-    case Method;
-    case Property;
-    case DynamicProperty;
 }

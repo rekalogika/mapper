@@ -4,6 +4,7 @@
 
 * feat: `PresetTransformer`.
 * fix: Typo in `RemoveOptionalDefinitionPass`
+* feat: Supports dynamic properties (including `stdClass`) on the target side.
 
 ## 1.0.0
 
