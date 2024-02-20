@@ -34,7 +34,7 @@ final readonly class Mapper implements MapperInterface
      * @param class-string<T>|T $target
      * @return T
      */
-    public function map(mixed $source, object|string $target, ?Context $context = null): object
+    public function map(object $source, object|string $target, ?Context $context = null): object
     {
         if (is_string($target)) {
             $targetClass = $target;
