@@ -16,6 +16,7 @@
   replace with `ArrayObjectTransformer`.
 * fix: Fix dynamic properties in Symfony profiler panel.
 * fix: Fix `PresetTransformer`.
+* fix: mapping to object extending `stdClass` to property with no setter.
 
 ## 1.0.0
 
