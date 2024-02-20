@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\Context\PresetMapping;
 use Rekalogika\Mapper\Transformer\Exception\PresetMappingNotFound;
 use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
