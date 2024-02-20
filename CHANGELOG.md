@@ -7,6 +7,7 @@
 * feat: Supports dynamic properties (including `stdClass`) on the target side.
 * fix(`Mapper`): Fix typehint.
 * test: test array cast to object mapping
+* feat(`Context`): `with()` not accepts multiple argument.
 
 ## 1.0.0
 
