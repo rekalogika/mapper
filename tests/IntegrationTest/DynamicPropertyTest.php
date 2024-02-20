@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass;
+use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWithProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
@@ -139,5 +140,20 @@ class DynamicPropertyTest extends FrameworkTestCase
         $this->assertSame('string', $target->b);
         $this->assertTrue($target->c);
         $this->assertSame(1.1, $target->d);
+    }
+
+    public function testStdClassToStdClassWithExplicitProperties(): void
+    {
+        $source = new \stdClass();
+        $source->public = 'public';
+        $source->private = 'private';
+        $source->constructor = 'constructor';
+
+        $target = $this->mapper->map($source, ObjectExtendingStdClassWithProperties::class);
+
+        $this->assertInstanceOf(\stdClass::class, $target);
+        $this->assertSame('public', $target->public);
+        $this->assertNull($target->getPrivate());
+        $this->assertEquals('constructor', $target->getConstructor());
     }
 }

@@ -241,13 +241,13 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 };
 
                 if ($targetWriteMode === WriteMode::None) {
-                    if (!$targetAllowsDynamicProperties) {
+                    if ($targetAllowsDynamicProperties && $targetReadInfo === null) {
+                        $targetWriteMode = WriteMode::DynamicProperty;
+                        $targetWriteName = $targetProperty;
+                        $targetWriteVisibility = Visibility::Public;
+                    } else {
                         continue;
                     }
-                    $targetWriteMode = WriteMode::DynamicProperty;
-                    $targetWriteName = $targetProperty;
-                    $targetWriteVisibility = Visibility::Public;
-
                 } else {
                     $targetWriteName = $targetWriteInfo->getName();
                     $targetWriteVisibility = match ($targetWriteInfo->getVisibility()) {
