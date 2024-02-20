@@ -377,9 +377,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $targetWriteVisibility = $propertyMapping->getTargetWriteVisibility();
 
         if (
-            $targetWriteMode !== WriteMode::Method
-            && $targetWriteMode !== WriteMode::Property
-            && $targetWriteMode !== WriteMode::AdderRemover
+            in_array($targetWriteMode, [
+                WriteMode::None,
+                WriteMode::Constructor,
+            ], true)
         ) {
             return;
         }

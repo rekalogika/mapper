@@ -64,9 +64,10 @@ class ReaderWriter
                 if (isset($source->{$accessorName})) {
                     return $source->{$accessorName};
                 }
-                return null;
 
+                return null;
             }
+
             return null;
         } catch (\Error $e) {
             $message = $e->getMessage();
@@ -119,7 +120,14 @@ class ReaderWriter
             } elseif ($readMode === ReadMode::Method) {
                 /** @psalm-suppress MixedMethodCall */
                 return $target->{$accessorName}();
+            } elseif ($readMode === ReadMode::DynamicProperty) {
+                if (isset($target->{$accessorName})) {
+                    return $target->{$accessorName};
+                }
+
+                return null;
             }
+
             return null;
         } catch (\Error $e) {
             $message = $e->getMessage();
@@ -164,6 +172,8 @@ class ReaderWriter
                 $target->{$accessorName}($value);
             } elseif ($writeMode === WriteMode::AdderRemover) {
                 // noop
+            } elseif ($writeMode === WriteMode::DynamicProperty) {
+                $target->{$accessorName} = $value;
             }
         } catch (\Throwable $e) {
             throw new UnableToWriteException(
