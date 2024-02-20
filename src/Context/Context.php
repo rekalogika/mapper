@@ -56,11 +56,14 @@ final readonly class Context implements \IteratorAggregate
         return new self($context);
     }
 
-    public function with(object $value): self
+    public function with(object ...$value): self
     {
-        $class = get_class($value);
         $context = $this->context;
-        $context[$class] = $value;
+
+        foreach ($value as $object) {
+            $class = get_class($object);
+            $context[$class] = $object;
+        }
 
         return self::createFrom($context);
     }
