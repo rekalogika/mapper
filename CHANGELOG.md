@@ -17,6 +17,7 @@
 * fix: Fix dynamic properties in Symfony profiler panel.
 * fix: Fix `PresetTransformer`.
 * fix: mapping to object extending `stdClass` to property with no setter.
+* feat: `stdClass` to `stdClass` mapping should work correctly.
 
 ## 1.0.0
 

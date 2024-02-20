@@ -53,6 +53,7 @@ final readonly class ObjectToObjectMetadata
      * @param array<int,PropertyMapping> $allPropertyMappings
      * @param array<int,string> $initializableTargetPropertiesNotInSource
      * @param array<string,true> $targetProxySkippedProperties
+     * @param array<int,string> $sourceProperties
      */
     public function __construct(
         private string $sourceClass,
@@ -60,6 +61,7 @@ final readonly class ObjectToObjectMetadata
         private string $providedTargetClass,
         private bool $sourceAllowsDynamicProperties,
         private bool $targetAllowsDynamicProperties,
+        private array $sourceProperties,
         array $allPropertyMappings,
         private bool $instantiable,
         private bool $cloneable,
@@ -111,6 +113,7 @@ final readonly class ObjectToObjectMetadata
             providedTargetClass: $this->providedTargetClass,
             sourceAllowsDynamicProperties: $this->sourceAllowsDynamicProperties,
             targetAllowsDynamicProperties: $this->targetAllowsDynamicProperties,
+            sourceProperties: $this->sourceProperties,
             allPropertyMappings: $this->allPropertyMappings,
             instantiable: $this->instantiable,
             cloneable: $this->cloneable,
@@ -133,6 +136,7 @@ final readonly class ObjectToObjectMetadata
             providedTargetClass: $this->providedTargetClass,
             sourceAllowsDynamicProperties: $this->sourceAllowsDynamicProperties,
             targetAllowsDynamicProperties: $this->targetAllowsDynamicProperties,
+            sourceProperties: $this->sourceProperties,
             allPropertyMappings: $this->allPropertyMappings,
             instantiable: $this->instantiable,
             cloneable: $this->cloneable,
@@ -284,13 +288,21 @@ final readonly class ObjectToObjectMetadata
         return $this->constructorIsEager;
     }
 
-    public function getSourceAllowsDynamicProperties(): bool
+    public function sourceAllowsDynamicProperties(): bool
     {
         return $this->sourceAllowsDynamicProperties;
     }
 
-    public function getTargetAllowsDynamicProperties(): bool
+    public function targetAllowsDynamicProperties(): bool
     {
         return $this->targetAllowsDynamicProperties;
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    public function getSourceProperties(): array
+    {
+        return $this->sourceProperties;
     }
 }

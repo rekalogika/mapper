@@ -137,6 +137,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         // iterate over properties to map
 
+        $effectivePropertiesToMap = [];
+
         foreach ($propertiesToMap as $targetProperty) {
             $sourceProperty = $targetProperty;
 
@@ -349,6 +351,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             );
 
             $propertyMappings[] = $propertyMapping;
+            $effectivePropertiesToMap[] = $targetProperty;
         }
 
         $objectToObjectMetadata = new ObjectToObjectMetadata(
@@ -357,6 +360,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             providedTargetClass: $providedTargetClass,
             sourceAllowsDynamicProperties: $sourceAllowsDynamicProperties,
             targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
+            sourceProperties: $effectivePropertiesToMap,
             allPropertyMappings: $propertyMappings,
             instantiable: $instantiable,
             cloneable: $cloneable,

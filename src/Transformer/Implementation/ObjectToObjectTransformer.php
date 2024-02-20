@@ -154,6 +154,21 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // map properties if it is not a proxy
 
         if (!$canUseTargetProxy) {
+            // map dynamic properties if both are stdClass or allow dynamic
+            // properties
+
+            if (
+                $objectToObjectMetadata->sourceAllowsDynamicProperties()
+                && $objectToObjectMetadata->targetAllowsDynamicProperties()
+            ) {
+                $this->mapDynamicProperties(
+                    source: $source,
+                    target: $target,
+                    objectToObjectMetadata: $objectToObjectMetadata,
+                    context: $context
+                );
+            }
+
             $this->readSourceAndWriteTarget(
                 source: $source,
                 target: $target,
@@ -550,6 +565,26 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         );
 
         return $targetPropertyValue;
+    }
+
+    private function mapDynamicProperties(
+        object $source,
+        object $target,
+        ObjectToObjectMetadata $objectToObjectMetadata,
+        Context $context
+    ): void {
+        $sourceProperties = $objectToObjectMetadata->getSourceProperties();
+
+        /** @var mixed $sourcePropertyValue */
+        foreach (get_object_vars($source) as $sourceProperty => $sourcePropertyValue) {
+            if (!in_array($sourceProperty, $sourceProperties, true)) {
+                try {
+                    $target->{$sourceProperty} = $sourcePropertyValue;
+                } catch (\Error) {
+                    // ignore
+                }
+            }
+        }
     }
 
     public function getSupportedTransformation(): iterable
