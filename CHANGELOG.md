@@ -8,6 +8,7 @@
 * fix(`Mapper`): Fix typehint.
 * test: test array cast to object mapping
 * feat(`Context`): `with()` not accepts multiple argument.
+* build: Deinternalize `ObjectCacheFactory`
 
 ## 1.0.0
 
