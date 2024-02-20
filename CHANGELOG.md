@@ -5,6 +5,7 @@
 * feat: `PresetTransformer`.
 * fix: Typo in `RemoveOptionalDefinitionPass`
 * feat: Supports dynamic properties (including `stdClass`) on the target side.
+* fix(`Mapper`): Fix typehint.
 
 ## 1.0.0
 
