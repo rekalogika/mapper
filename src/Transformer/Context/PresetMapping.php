@@ -13,10 +13,11 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Context;
 
-use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\Exception\PresetMappingNotFound;
-use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
 
+/**
+ * Contains preset object to object mapping, used by `PresetTransformer`
+ */
 final readonly class PresetMapping
 {
     /**
@@ -27,7 +28,7 @@ final readonly class PresetMapping
     /**
      * @param iterable<object,iterable<class-string,object>> $mappings
      */
-    public function __construct(iterable $mappings)
+    public function __construct(iterable $mappings = [])
     {
         /**
          * @var \WeakMap<object,\ArrayObject<class-string,object>>
@@ -47,44 +48,23 @@ final readonly class PresetMapping
         $this->mappings = $weakMap;
     }
 
-    public static function fromObjectCache(ObjectCache $objectCache): self
+    public function mergeFrom(self $presetMapping): void
     {
-        $objectCacheWeakMap = $objectCache->getInternalMapping();
-
-        /** @var SplObjectStorageWrapper<object,\ArrayObject<class-string,object>> */
-        $presetMapping = new SplObjectStorageWrapper(new \SplObjectStorage());
-
         /**
          * @var object $source
          * @var \ArrayObject<class-string,object> $classToTargetMapping
          */
-        foreach ($objectCacheWeakMap as $source => $classToTargetMapping) {
-            $newTargetClass = $source::class;
-            /** @var object */
-            $newTarget = $source;
+        foreach ($presetMapping->mappings as $source => $classToTargetMapping) {
+            if (!$this->mappings->offsetExists($source)) {
+                /** @var \ArrayObject<class-string,object> */
+                $arrayObject = new \ArrayObject();
+                $this->mappings->offsetSet($source, $arrayObject);
+            }
 
-            /**
-             * @var string $targetClass
-             * @var object $target
-             */
-            foreach ($classToTargetMapping as $targetClass => $target) {
-                if (!class_exists($targetClass)) {
-                    continue;
-                }
-
-                $newSource = $target;
-
-                if (!$presetMapping->offsetExists($newSource)) {
-                    /** @var \ArrayObject<class-string,object> */
-                    $arrayObject = new \ArrayObject();
-                    $presetMapping->offsetSet($newSource, $arrayObject);
-                }
-
-                $presetMapping->offsetGet($newSource)?->offsetSet($newTargetClass, $newTarget);
+            foreach ($classToTargetMapping as $class => $target) {
+                $this->mappings->offsetGet($source)?->offsetSet($class, $target);
             }
         }
-
-        return new self($presetMapping);
     }
 
     /**
