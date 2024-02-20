@@ -9,6 +9,7 @@
 * test: test array cast to object mapping
 * feat(`Context`): `with()` not accepts multiple argument.
 * build: Deinternalize `ObjectCacheFactory`
+* fix(`PresetMapping`): Support proxied classes, add tests.
 
 ## 1.0.0
 

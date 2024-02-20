@@ -17,7 +17,7 @@ use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
-use Rekalogika\Mapper\Transformer\Context\PresetMapping;
+use Rekalogika\Mapper\Transformer\Context\PresetMappingFactory;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 
@@ -41,11 +41,40 @@ class PresetMappingTest extends FrameworkTestCase
 
         $objectCache->saveTarget($source, $targetType, $target);
 
-        $presetMapping = PresetMapping::fromObjectCache($objectCache);
+        $presetMapping = PresetMappingFactory::fromObjectCache($objectCache);
 
         $result = $presetMapping->findResult($target, $source::class);
 
         $this->assertSame($source, $result);
+    }
+
+    public function testMerge(): void
+    {
+        $objectCache = $this->createObjectCache();
+
+        $source = new ObjectWithScalarProperties();
+        $targetType = TypeFactory::objectOfClass(ObjectWithScalarProperties::class);
+        $target = new ObjectWithScalarPropertiesDto();
+
+        $objectCache->saveTarget($source, $targetType, $target);
+
+        $presetMapping = PresetMappingFactory::fromObjectCache($objectCache);
+
+        $source2 = new ObjectWithScalarProperties();
+        $targetType2 = TypeFactory::objectOfClass(ObjectWithScalarProperties::class);
+        $target2 = new ObjectWithScalarPropertiesDto();
+
+        $objectCache->saveTarget($source2, $targetType2, $target2);
+
+        $presetMapping2 = PresetMappingFactory::fromObjectCache($objectCache);
+
+        $presetMapping->mergeFrom($presetMapping2);
+
+        $result = $presetMapping->findResult($target, $source::class);
+        $this->assertSame($source, $result);
+
+        $result = $presetMapping->findResult($target2, $source2::class);
+        $this->assertSame($source2, $result);
     }
 
 }
