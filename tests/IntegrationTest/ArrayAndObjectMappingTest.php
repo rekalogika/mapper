@@ -13,26 +13,24 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Serializer\DenormalizerContext;
-use Rekalogika\Mapper\Serializer\NormalizerContext;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
-use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainingObject;
-use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObjectDto\ContainingObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\AnotherContainsArray;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsArray;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsObject;
 
 class ArrayAndObjectMappingTest extends FrameworkTestCase
 {
     public function testObjectToArrayAndBack(): void
     {
-        $object = ContainingObject::create();
-        $dto = $this->mapper->map($object, ContainingObjectDto::class);
+        $object = ContainsObject::create();
+        $dto = $this->mapper->map($object, ContainsArray::class);
 
         $this->assertEquals(1, $dto->data['a'] ?? null);
         $this->assertEquals('string', $dto->data['b'] ?? null);
         $this->assertEquals(true, $dto->data['c'] ?? null);
         $this->assertEquals(1.1, $dto->data['d'] ?? null);
 
-        $object = $this->mapper->map($dto, ContainingObject::class);
+        $object = $this->mapper->map($dto, ContainsObject::class);
 
         $this->assertEquals(1, $object->getData()?->a);
         $this->assertEquals('string', $object->getData()?->b);
@@ -40,42 +38,74 @@ class ArrayAndObjectMappingTest extends FrameworkTestCase
         $this->assertEquals(1.1, $object->getData()?->d);
     }
 
-    public function testObjectToArrayWithSerializerGroups(): void
+    public function testArrayToObject(): void
     {
-        $normalizationContext = new NormalizerContext([
-            'groups' => ['groupa', 'groupc'],
-        ]);
-        $context = Context::create($normalizationContext);
-
-        $object = ContainingObject::create();
-        $dto = $this->mapper->map($object, ContainingObjectDto::class, $context);
-
-        $this->assertEquals(1, $dto->data['a'] ?? null);
-        $this->assertNull($dto->data['b'] ?? null);
-        $this->assertEquals(true, $dto->data['c'] ?? null);
-        $this->assertNull($dto->data['d'] ?? null);
-    }
-
-    public function testArrayToObjectWithSerializerGroups(): void
-    {
-        $denormalizationContext = new DenormalizerContext([
-            'groups' => ['groupa', 'groupc'],
-        ]);
-        $context = Context::create($denormalizationContext);
-
-        $dto = new ContainingObjectDto();
-        $dto->data = [
+        $objectWithArray = new ContainsArray();
+        $objectWithArray->data = [
             'a' => 1,
             'b' => 'string',
             'c' => true,
             'd' => 1.1,
         ];
 
-        $object = $this->mapper->map($dto, ContainingObject::class, $context);
+        $object = $this->mapper->map($objectWithArray, ContainsObject::class);
 
         $this->assertEquals(1, $object->getData()?->a);
-        $this->assertNull($object->getData()?->b);
+        $this->assertEquals('string', $object->getData()?->b);
         $this->assertEquals(true, $object->getData()?->c);
+        $this->assertEquals(1.1, $object->getData()?->d);
+    }
+
+    public function testArrayWithIncompletePropertiesToObject(): void
+    {
+        $objectWithArray = new ContainsArray();
+        $objectWithArray->data = [
+            'a' => 1,
+            'b' => 'string',
+        ];
+
+        $object = $this->mapper->map($objectWithArray, ContainsObject::class);
+
+        $this->assertEquals(1, $object->getData()?->a);
+        $this->assertEquals('string', $object->getData()?->b);
+        $this->assertNull($object->getData()?->c);
         $this->assertNull($object->getData()?->d);
+    }
+
+    public function testArrayWithExtraPropertiesToObject(): void
+    {
+        $objectWithArray = new ContainsArray();
+        $objectWithArray->data = [
+            'a' => 1,
+            'b' => 'string',
+            'c' => true,
+            'd' => 1.1,
+            'e' => 'extra',
+        ];
+
+        $object = $this->mapper->map($objectWithArray, ContainsObject::class);
+
+        $this->assertEquals(1, $object->getData()?->a);
+        $this->assertEquals('string', $object->getData()?->b);
+        $this->assertEquals(true, $object->getData()?->c);
+        $this->assertEquals(1.1, $object->getData()?->d);
+    }
+
+    public function testArrayToArray(): void
+    {
+        $objectWithArray = new ContainsArray();
+        $objectWithArray->data = [
+            'a' => 1,
+            'b' => 'string',
+            'c' => true,
+            'd' => 1.1,
+        ];
+
+        $result = $this->mapper->map($objectWithArray, AnotherContainsArray::class);
+
+        $this->assertEquals(1, $result->data['a'] ?? null);
+        $this->assertEquals('string', $result->data['b'] ?? null);
+        $this->assertEquals(true, $result->data['c'] ?? null);
+        $this->assertEquals(1.1, $result->data['d'] ?? null);
     }
 }

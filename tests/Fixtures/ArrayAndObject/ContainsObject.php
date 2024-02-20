@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject;
 
-class ContainingObject
+class ContainsObject
 {
     private ?ObjectWithProperties $data = null;
 

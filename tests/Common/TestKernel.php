@@ -81,8 +81,6 @@ class TestKernel extends Kernel
         yield ObjectToStringTransformer::class;
         yield TraversableToArrayAccessTransformer::class;
         yield TraversableToTraversableTransformer::class;
-        yield ObjectToArrayTransformer::class;
-        yield ArrayToObjectTransformer::class;
         yield ObjectToObjectTransformer::class;
         yield NullTransformer::class;
         yield CopyTransformer::class;

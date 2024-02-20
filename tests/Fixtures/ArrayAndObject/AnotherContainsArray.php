@@ -11,9 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\ArrayAndObjectDto;
+namespace Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject;
 
-class ContainingObjectDto
+class AnotherContainsArray
 {
     /**
      * @var null|array<mixed,mixed>

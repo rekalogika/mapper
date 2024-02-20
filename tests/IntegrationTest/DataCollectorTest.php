@@ -15,17 +15,17 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Debug\MapperDataCollector;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
-use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainingObject;
-use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObjectDto\ContainingObjectDto;
-use Rekalogika\Mapper\Transformer\Implementation\ObjectToArrayTransformer;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsArray;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsObject;
+use Rekalogika\Mapper\Transformer\Implementation\ArrayObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 
 class DataCollectorTest extends FrameworkTestCase
 {
     public function testDataCollector(): void
     {
-        $object = ContainingObject::create();
-        $result = $this->mapper->map($object, ContainingObjectDto::class);
+        $object = ContainsObject::create();
+        $result = $this->mapper->map($object, ContainsArray::class);
         $this->initialize($result);
 
         $dataCollector = $this->get('test.rekalogika.mapper.data_collector');
@@ -46,6 +46,6 @@ class DataCollectorTest extends FrameworkTestCase
 
         $this->assertNotNull($subFirstMapping);
         $this->assertEquals('data', $subFirstMapping->getPath());
-        $this->assertEquals(ObjectToArrayTransformer::class, $subFirstMapping->getTransformerClass());
+        $this->assertEquals(ArrayObjectTransformer::class, $subFirstMapping->getTransformerClass());
     }
 }

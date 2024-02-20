@@ -12,6 +12,8 @@
 * fix(`PresetMapping`): Support proxied classes, add tests.
 * fix: Disallow proxy for objects with dynamic properties, including `stdClass`.
 * feat: Dynamic properties (`stdClass` & co) on the target side.
+* feat: Deprecate `ArrayToObjectTransformer` & `ObjectToArrayTransformer`,
+  replace with `ArrayObjectTransformer`.
 
 ## 1.0.0
 
