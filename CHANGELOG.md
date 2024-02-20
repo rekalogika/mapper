@@ -15,6 +15,7 @@
 * feat: Deprecate `ArrayToObjectTransformer` & `ObjectToArrayTransformer`,
   replace with `ArrayObjectTransformer`.
 * fix: Fix dynamic properties in Symfony profiler panel.
+* fix: Fix `PresetTransformer`.
 
 ## 1.0.0
 
