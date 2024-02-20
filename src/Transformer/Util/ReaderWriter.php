@@ -63,9 +63,9 @@ class ReaderWriter
             } elseif ($mode === ReadMode::DynamicProperty) {
                 if (isset($source->{$accessorName})) {
                     return $source->{$accessorName};
-                } else {
-                    return null;
                 }
+                return null;
+
             }
             return null;
         } catch (\Error $e) {
