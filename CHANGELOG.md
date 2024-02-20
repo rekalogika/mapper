@@ -14,6 +14,7 @@
 * feat: Dynamic properties (`stdClass` & co) on the target side.
 * feat: Deprecate `ArrayToObjectTransformer` & `ObjectToArrayTransformer`,
   replace with `ArrayObjectTransformer`.
+* fix: Fix dynamic properties in Symfony profiler panel.
 
 ## 1.0.0
 
