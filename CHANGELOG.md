@@ -10,6 +10,7 @@
 * feat(`Context`): `with()` not accepts multiple argument.
 * build: Deinternalize `ObjectCacheFactory`
 * fix(`PresetMapping`): Support proxied classes, add tests.
+* fix: Disallow proxy for objects with dynamic properties, including `stdClass`.
 
 ## 1.0.0
 
