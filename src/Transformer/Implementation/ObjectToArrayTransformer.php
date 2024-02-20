@@ -25,6 +25,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 /**
  * Map an object to an array. Uses the Symfony Serializer component as the
  * backend.
+ *
+ * @deprecated Use ArrayObjectTransformer instead
  */
 final readonly class ObjectToArrayTransformer implements TransformerInterface
 {

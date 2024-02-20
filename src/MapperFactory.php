@@ -45,15 +45,18 @@ use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInte
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation\ArrayLikeMetadataFactory;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
+use Rekalogika\Mapper\Transformer\Implementation\ArrayObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ArrayToObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\CopyTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\DateTimeTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\NullToNullTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\NullTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToStringTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\PresetTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\SymfonyUidTransformer;
@@ -111,6 +114,7 @@ class MapperFactory
 
     private ?Serializer $serializer = null;
 
+    private ?NullToNullTransformer $nullToNullTransformer = null;
     private ?NullTransformer $nullTransformer = null;
     private ?ObjectToObjectTransformer $objectToObjectTransformer = null;
     private ?ObjectToStringTransformer $objectToStringTransformer = null;
@@ -119,12 +123,14 @@ class MapperFactory
     private ?StringToBackedEnumTransformer $stringToBackedEnumTransformer = null;
     private ?ArrayToObjectTransformer $arrayToObjectTransformer = null;
     private ?ObjectToArrayTransformer $objectToArrayTransformer = null;
+    private ?ArrayObjectTransformer $arrayObjectTransformer = null;
     private ?DateTimeTransformer $dateTimeTransformer = null;
     private ?TraversableToArrayAccessTransformer $traversableToArrayAccessTransformer = null;
     private ?TraversableToTraversableTransformer $traversableToTraversableTransformer = null;
     private ?CopyTransformer $copyTransformer = null;
     private ?ClassMethodTransformer $classMethodTransformer = null;
     private ?SymfonyUidTransformer $symfonyUidTransformer = null;
+    private ?PresetTransformer $presetTransformer = null;
 
     private CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
@@ -321,6 +327,15 @@ class MapperFactory
     // transformers
     //
 
+    protected function getNullToNullTransformer(): TransformerInterface
+    {
+        if (null === $this->nullToNullTransformer) {
+            $this->nullToNullTransformer = new NullToNullTransformer();
+        }
+
+        return $this->nullToNullTransformer;
+    }
+
     protected function getNullTransformer(): TransformerInterface
     {
         if (null === $this->nullTransformer) {
@@ -385,6 +400,9 @@ class MapperFactory
         return $this->stringToBackedEnumTransformer;
     }
 
+    /**
+     * @deprecated
+     */
     protected function getArrayToObjectTransformer(): TransformerInterface
     {
         if (null === $this->arrayToObjectTransformer) {
@@ -396,6 +414,9 @@ class MapperFactory
         return $this->arrayToObjectTransformer;
     }
 
+    /**
+     * @deprecated
+     */
     protected function getObjectToArrayTransformer(): TransformerInterface
     {
         if (null === $this->objectToArrayTransformer) {
@@ -405,6 +426,20 @@ class MapperFactory
         }
 
         return $this->objectToArrayTransformer;
+    }
+
+    protected function getArrayObjectTransformer(): TransformerInterface
+    {
+        $objectToObjectTransformer = $this->getObjectToObjectTransformer();
+        assert($objectToObjectTransformer instanceof ObjectToObjectTransformer);
+
+        if (null === $this->arrayObjectTransformer) {
+            $this->arrayObjectTransformer = new ArrayObjectTransformer(
+                $objectToObjectTransformer
+            );
+        }
+
+        return $this->arrayObjectTransformer;
     }
 
     protected function getDateTimeTransformer(): TransformerInterface
@@ -473,6 +508,15 @@ class MapperFactory
         return $this->symfonyUidTransformer;
     }
 
+    protected function getPresetTransformer(): PresetTransformer
+    {
+        if (null === $this->presetTransformer) {
+            $this->presetTransformer = new PresetTransformer();
+        }
+
+        return $this->presetTransformer;
+    }
+
     //
     // other services
     //
@@ -525,7 +569,10 @@ class MapperFactory
      */
     protected function getTransformersIterator(): iterable
     {
+        yield 'NullToNullTransformer' => $this->getNullToNullTransformer();
+
         yield from $this->additionalTransformers;
+
         yield 'ScalarToScalarTransformer'
             => $this->getScalarToScalarTransformer();
         yield 'ObjectMapperTransformer'
@@ -534,11 +581,6 @@ class MapperFactory
             => $this->getDateTimeTransformer();
         yield 'StringToBackedEnumTransformer'
             => $this->getStringToBackedEnumTransformer();
-        /**
-         * @psalm-suppress DeprecatedMethod
-         * @phpstan-ignore-next-line
-         */
-        yield 'ClassMethodTransformer' => $this->getClassMethodTransformer();
 
         if (class_exists(UuidFactory::class)) {
             yield 'SymfonyUidTransformer'
@@ -547,14 +589,33 @@ class MapperFactory
 
         yield 'ObjectToStringTransformer'
             => $this->getObjectToStringTransformer();
+
+        yield 'PresetTransformer'
+            => $this->getPresetTransformer();
+
+        /**
+         * @psalm-suppress DeprecatedMethod
+         * @phpstan-ignore-next-line
+         */
+        yield 'ClassMethodTransformer' => $this->getClassMethodTransformer();
+
         yield 'TraversableToArrayAccessTransformer'
             => $this->getTraversableToArrayAccessTransformer();
         yield 'TraversableToTraversableTransformer'
             => $this->getTraversableToTraversableTransformer();
-        yield 'ObjectToArrayTransformer'
-            => $this->getObjectToArrayTransformer();
-        yield 'ArrayToObjectTransformer'
-            => $this->getArrayToObjectTransformer();
+
+        /**
+         * @psalm-suppress DeprecatedMethod
+         * @phpstan-ignore-next-line
+         */
+        yield 'ObjectToArrayTransformer' => $this->getObjectToArrayTransformer();
+
+        /**
+         * @psalm-suppress DeprecatedMethod
+         * @phpstan-ignore-next-line
+         */
+        yield 'ArrayToObjectTransformer' => $this->getArrayToObjectTransformer();
+
         yield 'ObjectToObjectTransformer'
             => $this->getObjectToObjectTransformer();
         yield 'NullTransformer'

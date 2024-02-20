@@ -28,6 +28,8 @@ use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 /**
  * Map an array to an object. Uses the Symfony Serializer component as the
  * backend.
+ *
+ * @deprecated Use ArrayObjectTransformer instead
  */
 final readonly class ArrayToObjectTransformer implements TransformerInterface
 {
