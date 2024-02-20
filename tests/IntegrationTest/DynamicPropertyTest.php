@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
+use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\AnotherObjectExtendingStdClass;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWithProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
@@ -127,18 +128,26 @@ class DynamicPropertyTest extends FrameworkTestCase
 
     public function testStdClassToStdClass(): void
     {
-        $source = new \stdClass();
+        $source = new ObjectExtendingStdClass();
+        /** @psalm-suppress UndefinedPropertyAssignment */
         $source->a = 1;
+        /** @psalm-suppress UndefinedPropertyAssignment */
         $source->b = 'string';
+        /** @psalm-suppress UndefinedPropertyAssignment */
         $source->c = true;
+        /** @psalm-suppress UndefinedPropertyAssignment */
         $source->d = 1.1;
 
-        $target = $this->mapper->map($source, \stdClass::class);
+        $target = $this->mapper->map($source, AnotherObjectExtendingStdClass::class);
 
         $this->assertInstanceOf(\stdClass::class, $target);
+        /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertSame(1, $target->a);
+        /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertSame('string', $target->b);
+        /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertTrue($target->c);
+        /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertSame(1.1, $target->d);
     }
 
@@ -148,6 +157,7 @@ class DynamicPropertyTest extends FrameworkTestCase
         $source->public = 'public';
         $source->private = 'private';
         $source->constructor = 'constructor';
+        $source->dynamic = 'dynamic';
 
         $target = $this->mapper->map($source, ObjectExtendingStdClassWithProperties::class);
 
@@ -155,5 +165,7 @@ class DynamicPropertyTest extends FrameworkTestCase
         $this->assertSame('public', $target->public);
         $this->assertNull($target->getPrivate());
         $this->assertEquals('constructor', $target->getConstructor());
+        /** @psalm-suppress UndefinedPropertyFetch */
+        $this->assertSame('dynamic', $target->dynamic);
     }
 }

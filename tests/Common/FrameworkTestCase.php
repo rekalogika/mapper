@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Debug\MapperDataCollector;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\MapperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -114,5 +115,14 @@ abstract class FrameworkTestCase extends TestCase
         }
 
         return $this->entityManager = $this->doctrineInit();
+    }
+
+    public function getDataCollector(): MapperDataCollector
+    {
+        $result = $this->get('rekalogika.mapper.data_collector');
+
+        $this->assertInstanceOf(MapperDataCollector::class, $result);
+
+        return $result;
     }
 }
