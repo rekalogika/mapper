@@ -80,6 +80,10 @@ final readonly class ClassUtil
             $class = new \ReflectionClass($class);
         }
 
+        if ($class->isInternal()) {
+            return 0;
+        }
+
         $fileName = $class->getFileName();
 
         if ($fileName === false) {

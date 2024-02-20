@@ -251,7 +251,12 @@
         <tbody>
             <tr>
                 <th>Source class</th>
-                <td>{{ metadata.sourceClass|abbr_class }}</td>
+                <td>
+                    {{ metadata.sourceClass|abbr_class }}
+                    {% if metadata.sourceAllowsDynamicProperties %}
+                        <span class="label status-info">Allows dynamic properties</span>
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Wanted target class</th>
@@ -266,6 +271,9 @@
                     {% endif %}
                     {% if not metadata.instantiable %}
                         <span class="label status-error">Not instantiable</span>
+                    {% endif %}
+                    {% if metadata.targetAllowsDynamicProperties %}
+                        <span class="label status-info">Allows dynamic properties</span>
                     {% endif %}
                 </td>
             </tr>

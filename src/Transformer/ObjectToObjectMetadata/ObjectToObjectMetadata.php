@@ -58,6 +58,8 @@ final readonly class ObjectToObjectMetadata
         private string $sourceClass,
         private string $targetClass,
         private string $providedTargetClass,
+        private bool $sourceAllowsDynamicProperties,
+        private bool $targetAllowsDynamicProperties,
         array $allPropertyMappings,
         private bool $instantiable,
         private bool $cloneable,
@@ -104,18 +106,20 @@ final readonly class ObjectToObjectMetadata
         bool $constructorIsEager,
     ): self {
         return new self(
-            $this->sourceClass,
-            $this->targetClass,
-            $this->providedTargetClass,
-            $this->allPropertyMappings,
-            $this->instantiable,
-            $this->cloneable,
-            $this->initializableTargetPropertiesNotInSource,
-            $this->sourceModifiedTime,
-            $this->targetModifiedTime,
-            $this->targetReadOnly,
-            $constructorIsEager,
-            $targetProxySkippedProperties,
+            sourceClass: $this->sourceClass,
+            targetClass: $this->targetClass,
+            providedTargetClass: $this->providedTargetClass,
+            sourceAllowsDynamicProperties: $this->sourceAllowsDynamicProperties,
+            targetAllowsDynamicProperties: $this->targetAllowsDynamicProperties,
+            allPropertyMappings: $this->allPropertyMappings,
+            instantiable: $this->instantiable,
+            cloneable: $this->cloneable,
+            initializableTargetPropertiesNotInSource: $this->initializableTargetPropertiesNotInSource,
+            sourceModifiedTime: $this->sourceModifiedTime,
+            targetModifiedTime: $this->targetModifiedTime,
+            targetReadOnly: $this->targetReadOnly,
+            constructorIsEager: $constructorIsEager,
+            targetProxySkippedProperties: $targetProxySkippedProperties,
             cannotUseProxyReason: null
         );
     }
@@ -124,18 +128,20 @@ final readonly class ObjectToObjectMetadata
         string $reason
     ): self {
         return new self(
-            $this->sourceClass,
-            $this->targetClass,
-            $this->providedTargetClass,
-            $this->allPropertyMappings,
-            $this->instantiable,
-            $this->cloneable,
-            $this->initializableTargetPropertiesNotInSource,
-            $this->sourceModifiedTime,
-            $this->targetModifiedTime,
-            $this->targetReadOnly,
-            $this->constructorIsEager,
-            [],
+            sourceClass: $this->sourceClass,
+            targetClass: $this->targetClass,
+            providedTargetClass: $this->providedTargetClass,
+            sourceAllowsDynamicProperties: $this->sourceAllowsDynamicProperties,
+            targetAllowsDynamicProperties: $this->targetAllowsDynamicProperties,
+            allPropertyMappings: $this->allPropertyMappings,
+            instantiable: $this->instantiable,
+            cloneable: $this->cloneable,
+            initializableTargetPropertiesNotInSource: $this->initializableTargetPropertiesNotInSource,
+            sourceModifiedTime: $this->sourceModifiedTime,
+            targetModifiedTime: $this->targetModifiedTime,
+            targetReadOnly: $this->targetReadOnly,
+            constructorIsEager: $this->constructorIsEager,
+            targetProxySkippedProperties: [],
             cannotUseProxyReason: $reason,
         );
     }
@@ -276,5 +282,15 @@ final readonly class ObjectToObjectMetadata
     public function constructorIsEager(): bool
     {
         return $this->constructorIsEager;
+    }
+
+    public function getSourceAllowsDynamicProperties(): bool
+    {
+        return $this->sourceAllowsDynamicProperties;
+    }
+
+    public function getTargetAllowsDynamicProperties(): bool
+    {
+        return $this->targetAllowsDynamicProperties;
     }
 }

@@ -8,7 +8,8 @@
         failOnRisky="true"
         failOnWarning="false"
         cacheDirectory=".phpunit.cache"
-        beStrictAboutCoverageMetadata="true">
+        beStrictAboutCoverageMetadata="true"
+        displayDetailsOnTestsThatTriggerWarnings="true">
     <testsuites>
         <testsuite name="default">
             <directory>tests</directory>
