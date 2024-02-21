@@ -35,6 +35,32 @@ final readonly class PresetMappingFactory
          * @var \ArrayObject<class-string,object> $classToTargetMapping
          */
         foreach ($objectCacheWeakMap as $source => $classToTargetMapping) {
+            foreach ($classToTargetMapping as $targetClass => $target) {
+                if (!$presetMapping->offsetExists($source)) {
+                    /** @var \ArrayObject<class-string,object> */
+                    $arrayObject = new \ArrayObject();
+                    $presetMapping->offsetSet($source, $arrayObject);
+                }
+
+                $presetMapping->offsetGet($source)?->offsetSet($targetClass, $target);
+            }
+        }
+
+        return new PresetMapping($presetMapping);
+    }
+
+    public static function fromObjectCacheReversed(ObjectCache $objectCache): PresetMapping
+    {
+        $objectCacheWeakMap = $objectCache->getInternalMapping();
+
+        /** @var SplObjectStorageWrapper<object,\ArrayObject<class-string,object>> */
+        $presetMapping = new SplObjectStorageWrapper(new \SplObjectStorage());
+
+        /**
+         * @var object $source
+         * @var \ArrayObject<class-string,object> $classToTargetMapping
+         */
+        foreach ($objectCacheWeakMap as $source => $classToTargetMapping) {
             $newTargetClass = ClassUtil::determineRealClassFromPossibleProxy($source::class);
             /** @var object */
             $newTarget = $source;

@@ -57,7 +57,7 @@ class RememberingMapper implements MapperInterface, ResetInterface
             throw new UnexpectedValueException(sprintf('Expected instance of "%s", got "%s"', $target, get_class($result)));
         }
 
-        $newPresetMapping = PresetMappingFactory::fromObjectCache($objectCache);
+        $newPresetMapping = PresetMappingFactory::fromObjectCacheReversed($objectCache);
         $this->presetMapping->mergeFrom($newPresetMapping);
 
         return $result;
