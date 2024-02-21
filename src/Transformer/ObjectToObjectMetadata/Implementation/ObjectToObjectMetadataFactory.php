@@ -248,6 +248,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                         $targetWriteName = $targetProperty;
                         $targetWriteVisibility = Visibility::Public;
                     } else {
+                        $effectivePropertiesToMap[] = $targetProperty;
+
                         continue;
                     }
                 } else {

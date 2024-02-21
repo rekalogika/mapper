@@ -18,6 +18,7 @@
 * fix: Fix `PresetTransformer`.
 * fix: mapping to object extending `stdClass` to property with no setter.
 * feat: `stdClass` to `stdClass` mapping should work correctly.
+* feat: Mapping to existing values in a dynamic property.
 
 ## 1.0.0
 
