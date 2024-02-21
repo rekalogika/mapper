@@ -24,6 +24,7 @@
 * feat(`PresetMappingFactory`): Add `fromObjectCache()` and `fromObjectCacheReversed()`.
 * chore: Simplify remembering mapper.
 * refactor: Deprecate serializer context.
+* feat: null to `Traversable` or `ArrayAccess` is now handled & returns empty.
 
 ## 1.0.0
 

@@ -20,6 +20,7 @@ use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayPropertyWithStringKey;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithCollectionProperty;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithNullCollectionProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithSplObjectStorageProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyDto;
@@ -30,6 +31,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDtoWith
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithCompatibleHintDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithoutTypeHintDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithNotNullArrayAccessPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
@@ -175,6 +177,20 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
+    }
+
+    public function testNullToNotNullArrayAccessDto(): void
+    {
+        $source = new ObjectWithNullCollectionProperty();
+
+        $result = $this->mapper->map($source, ObjectWithNotNullArrayAccessPropertyDto::class);
+
+        $this->assertInstanceOf(ObjectWithNotNullArrayAccessPropertyDto::class, $result);
+
+        $property = $result->property;
+        $this->assertInstanceOf(LazyArray::class, $property);
+        // @phpstan-ignore-next-line
+        $this->assertInstanceOf(\ArrayAccess::class, $property);
     }
 
     public function testArrayToArrayInterfaceDto(): void
