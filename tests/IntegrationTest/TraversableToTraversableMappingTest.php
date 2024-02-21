@@ -17,7 +17,9 @@ use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithLazyDoctrineCollectionWithPresetCountableProperty;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithNullCollectionProperty;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithNotNullTraversablePropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithTraversablePropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithTraversablePropertyWithoutTypeHintDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
@@ -120,5 +122,16 @@ class TraversableToTraversableMappingTest extends FrameworkTestCase
             $this->assertEquals(true, $item->c);
             $this->assertEquals(1.1, $item->d);
         }
+    }
+
+    public function testNullToNotNullTraversableDto(): void
+    {
+        $source = new ObjectWithNullCollectionProperty();
+        $result = $this->mapper->map($source, ObjectWithNotNullTraversablePropertyDto::class);
+
+        $this->assertInstanceOf(\Traversable::class, $result->property);
+
+        $arrayResult = iterator_to_array($result->property);
+        $this->assertEmpty($arrayResult);
     }
 }

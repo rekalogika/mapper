@@ -51,6 +51,10 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         ?Type $targetType,
         Context $context
     ): mixed {
+        if ($source === null) {
+            $source = [];
+        }
+
         if ($targetType === null) {
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
@@ -221,6 +225,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         $sourceTypes = [
             TypeFactory::objectOfClass(\Traversable::class),
             TypeFactory::array(),
+            TypeFactory::null(),
         ];
 
         $targetTypes = [

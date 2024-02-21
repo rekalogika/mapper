@@ -52,6 +52,8 @@
                 <file name="tests/Fixtures/UninitializedProperty/ObjectWithUninitializedProperty.php" />
                 <file name="tests/Fixtures/UninitializedPropertyDto/FinalObjectWithUninitializedPropertyDto.php" />
                 <file name="tests/Fixtures/UninitializedPropertyDto/ObjectWithUninitializedPropertyDto.php" />
+                <file name="tests/Fixtures/ArrayLikeDto/ObjectWithNotNullArrayAccessPropertyDto.php" />
+                <file name="tests/Fixtures/ArrayLikeDto/ObjectWithNotNullTraversablePropertyDto.php" />
             </errorLevel>
         </MissingConstructor>
         <ArgumentTypeCoercion>
