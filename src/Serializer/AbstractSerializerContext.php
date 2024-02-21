@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 /**
  * @implements \ArrayAccess<string,mixed>
  * @implements \IteratorAggregate<string,mixed>
+ * @deprecated
  */
 abstract class AbstractSerializerContext implements
     \ArrayAccess,

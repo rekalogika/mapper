@@ -23,6 +23,7 @@
   the current value in a dynamic property is a scalar.
 * feat(`PresetMappingFactory`): Add `fromObjectCache()` and `fromObjectCacheReversed()`.
 * chore: Simplify remembering mapper.
+* refactor: Deprecate serializer context.
 
 ## 1.0.0
 

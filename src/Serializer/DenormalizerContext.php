@@ -13,6 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Serializer;
 
+/**
+ * @deprecated
+ * @phpstan-ignore-next-line
+ */
 class DenormalizerContext extends AbstractSerializerContext
 {
 }

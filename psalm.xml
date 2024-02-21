@@ -94,6 +94,11 @@
                 <file name="src/Transformer/MainTransformerAwareTrait.php" />
                 <file name="src/Transformer/Implementation/ClassMethodTransformer.php" />
                 <file name="tests/IntegrationTest/MethodMapperTest.php" />
+                <file name="src/Transformer/Implementation/ArrayToObjectTransformer.php" />
+                <file name="src/Transformer/Implementation/ObjectToArrayTransformer.php" />
+                <file name="src/Serializer/AbstractSerializerContext.php" />
+                <file name="src/Serializer/DenormalizerContext.php" />
+                <file name="src/Serializer/NormalizerContext.php" />
             </errorLevel>
         </DeprecatedClass>
     </issueHandlers>
