@@ -97,7 +97,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // if sourceType and targetType are the same, just return the source
 
-        if (null === $target && TypeCheck::isSomewhatIdentical($sourceType, $targetType)) {
+        if (null === $target && TypeCheck::isSomewhatIdentical($sourceType, $targetType) && !$source instanceof \stdClass) {
             return $source;
         }
 
@@ -579,10 +579,33 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         foreach (get_object_vars($source) as $sourceProperty => $sourcePropertyValue) {
             if (!in_array($sourceProperty, $sourceProperties, true)) {
                 try {
-                    $target->{$sourceProperty} = $sourcePropertyValue;
-                } catch (\Error) {
-                    // ignore
+                    if (isset($target->{$sourceProperty})) {
+                        /** @psalm-suppress MixedAssignment */
+                        $currentTargetPropertyValue = $target->{$sourceProperty};
+                    } else {
+                        $currentTargetPropertyValue = null;
+                    }
+
+
+                    if ($currentTargetPropertyValue === null) {
+                        /** @psalm-suppress MixedAssignment */
+                        $targetPropertyValue = $sourcePropertyValue;
+                    } else {
+                        /** @var mixed */
+                        $targetPropertyValue = $this->getMainTransformer()->transform(
+                            source: $sourcePropertyValue,
+                            target: $currentTargetPropertyValue,
+                            sourceType: null,
+                            targetTypes: [],
+                            context: $context,
+                            path: $sourceProperty,
+                        );
+                    }
+                } catch (\Throwable $e) {
+                    $targetPropertyValue = null;
                 }
+
+                $target->{$sourceProperty} = $targetPropertyValue;
             }
         }
     }

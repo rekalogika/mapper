@@ -53,7 +53,7 @@ final readonly class ObjectToObjectMetadata
      * @param array<int,PropertyMapping> $allPropertyMappings
      * @param array<int,string> $initializableTargetPropertiesNotInSource
      * @param array<string,true> $targetProxySkippedProperties
-     * @param array<int,string> $sourceProperties
+     * @param array<int,string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
      */
     public function __construct(
         private string $sourceClass,

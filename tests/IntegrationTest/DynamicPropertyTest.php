@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\AnotherObjectExtendingStdClass;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass;
+use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWithExplicitScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWithProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
@@ -35,10 +36,10 @@ class DynamicPropertyTest extends FrameworkTestCase
         $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class);
 
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target);
-        $this->assertSame(1, $target->a);
-        $this->assertSame('string', $target->b);
+        $this->assertEquals(1, $target->a);
+        $this->assertEquals('string', $target->b);
         $this->assertTrue($target->c);
-        $this->assertSame(1.1, $target->d);
+        $this->assertEquals(1.1, $target->d);
     }
 
     public function testObjectExtendingStdClassToObject(): void
@@ -56,10 +57,10 @@ class DynamicPropertyTest extends FrameworkTestCase
         $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class);
 
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target);
-        $this->assertSame(1, $target->a);
-        $this->assertSame('string', $target->b);
+        $this->assertEquals(1, $target->a);
+        $this->assertEquals('string', $target->b);
         $this->assertTrue($target->c);
-        $this->assertSame(1.1, $target->d);
+        $this->assertEquals(1.1, $target->d);
     }
 
     public function testArrayCastToObjectToObject(): void
@@ -74,10 +75,10 @@ class DynamicPropertyTest extends FrameworkTestCase
         $target = $this->mapper->map((object) $source, ObjectWithScalarPropertiesDto::class);
 
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target);
-        $this->assertSame(1, $target->a);
-        $this->assertSame('string', $target->b);
+        $this->assertEquals(1, $target->a);
+        $this->assertEquals('string', $target->b);
         $this->assertTrue($target->c);
-        $this->assertSame(1.1, $target->d);
+        $this->assertEquals(1.1, $target->d);
     }
 
     public function testStdClassWithoutPropertiesToObject(): void
@@ -92,6 +93,38 @@ class DynamicPropertyTest extends FrameworkTestCase
         $this->assertNull($target->d);
     }
 
+    public function testStdClassWithExtraPropertyToObject(): void
+    {
+        $source = new \stdClass();
+        $source->a = 1;
+        $source->b = 'string';
+        $source->c = true;
+        $source->d = 1.1;
+        $source->e = 'extra';
+
+        $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class);
+
+        $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target);
+        $this->assertEquals(1, $target->a);
+        $this->assertEquals('string', $target->b);
+        $this->assertTrue($target->c);
+        $this->assertEquals(1.1, $target->d);
+    }
+
+    public function testObjectExtendingStdClassWithExplicitScalarPropertiesToObject(): void
+    {
+        $source = new ObjectExtendingStdClassWithExplicitScalarProperties();
+        /** @psalm-suppress UndefinedPropertyAssignment */
+        $source->e = 'extra';
+        $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class);
+
+        $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target);
+        $this->assertEquals(1, $target->a);
+        $this->assertEquals('string', $target->b);
+        $this->assertTrue($target->c);
+        $this->assertEquals(1.1, $target->d);
+    }
+
     // to stdClass
 
     public function testObjectToStdClass(): void
@@ -101,10 +134,10 @@ class DynamicPropertyTest extends FrameworkTestCase
 
         $this->assertInstanceOf(\stdClass::class, $target);
 
-        $this->assertSame(1, $target->a);
-        $this->assertSame('string', $target->b);
+        $this->assertEquals(1, $target->a);
+        $this->assertEquals('string', $target->b);
         $this->assertTrue($target->c);
-        $this->assertSame(1.1, $target->d);
+        $this->assertEquals(1.1, $target->d);
     }
 
     public function testObjectToObjectExtendingStdClass(): void
@@ -115,13 +148,13 @@ class DynamicPropertyTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectExtendingStdClass::class, $target);
 
         /** @psalm-suppress UndefinedPropertyFetch */
-        $this->assertSame(1, $target->a);
+        $this->assertEquals(1, $target->a);
         /** @psalm-suppress UndefinedPropertyFetch */
-        $this->assertSame('string', $target->b);
+        $this->assertEquals('string', $target->b);
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertTrue($target->c);
         /** @psalm-suppress UndefinedPropertyFetch */
-        $this->assertSame(1.1, $target->d);
+        $this->assertEquals(1.1, $target->d);
     }
 
     // stdclass to stdclass
@@ -142,13 +175,13 @@ class DynamicPropertyTest extends FrameworkTestCase
 
         $this->assertInstanceOf(\stdClass::class, $target);
         /** @psalm-suppress UndefinedPropertyFetch */
-        $this->assertSame(1, $target->a);
+        $this->assertEquals(1, $target->a);
         /** @psalm-suppress UndefinedPropertyFetch */
-        $this->assertSame('string', $target->b);
+        $this->assertEquals('string', $target->b);
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertTrue($target->c);
         /** @psalm-suppress UndefinedPropertyFetch */
-        $this->assertSame(1.1, $target->d);
+        $this->assertEquals(1.1, $target->d);
     }
 
     public function testStdClassToStdClassWithExplicitProperties(): void
@@ -162,10 +195,41 @@ class DynamicPropertyTest extends FrameworkTestCase
         $target = $this->mapper->map($source, ObjectExtendingStdClassWithProperties::class);
 
         $this->assertInstanceOf(\stdClass::class, $target);
-        $this->assertSame('public', $target->public);
+        $this->assertEquals('public', $target->public);
         $this->assertNull($target->getPrivate());
         $this->assertEquals('constructor', $target->getConstructor());
         /** @psalm-suppress UndefinedPropertyFetch */
-        $this->assertSame('dynamic', $target->dynamic);
+        $this->assertEquals('dynamic', $target->dynamic);
+    }
+
+    public function testStdClassToStdClassWithExistingValue(): void
+    {
+        $source = new \stdClass();
+        $source->property = new ObjectWithScalarProperties();
+
+        $target = new \stdClass();
+        $targetProperty = new ObjectWithScalarPropertiesDto();
+        $target->property = $targetProperty;
+
+        $this->mapper->map($source, $target);
+
+        $this->assertSame($targetProperty, $target->property);
+    }
+
+    public function testStdClassToStdClassWithExistingNullValue(): void
+    {
+        $source = new \stdClass();
+        $source->property = new ObjectWithScalarProperties();
+
+        $target = new \stdClass();
+        $target->property = null;
+
+        $this->mapper->map($source, $target);
+
+        /**
+         * @psalm-suppress TypeDoesNotContainType
+         * @phpstan-ignore-next-line
+         */
+        $this->assertInstanceOf(ObjectWithScalarProperties::class, $target->property);
     }
 }
