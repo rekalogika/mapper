@@ -19,6 +19,8 @@
 * fix: mapping to object extending `stdClass` to property with no setter.
 * feat: `stdClass` to `stdClass` mapping should work correctly.
 * feat: Mapping to existing values in a dynamic property.
+* perf(`ObjectToObjectTransformer`): Prevent delegating to `MainTransformer` if
+  the current value in a dynamic property is a scalar.
 
 ## 1.0.0
 

@@ -587,7 +587,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     }
 
 
-                    if ($currentTargetPropertyValue === null) {
+                    if (
+                        $currentTargetPropertyValue === null
+                        || is_scalar($currentTargetPropertyValue)
+                    ) {
                         /** @psalm-suppress MixedAssignment */
                         $targetPropertyValue = $sourcePropertyValue;
                     } else {
