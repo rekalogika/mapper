@@ -36,12 +36,29 @@ class PresetMappingTest extends FrameworkTestCase
         $objectCache = $this->createObjectCache();
 
         $source = new ObjectWithScalarProperties();
-        $targetType = TypeFactory::objectOfClass(ObjectWithScalarProperties::class);
+        $targetType = TypeFactory::objectOfClass(ObjectWithScalarPropertiesDto::class);
         $target = new ObjectWithScalarPropertiesDto();
 
         $objectCache->saveTarget($source, $targetType, $target);
 
         $presetMapping = PresetMappingFactory::fromObjectCache($objectCache);
+
+        $result = $presetMapping->findResult($source, ObjectWithScalarPropertiesDto::class);
+
+        $this->assertSame($target, $result);
+    }
+
+    public function testFromObjectCacheReversed(): void
+    {
+        $objectCache = $this->createObjectCache();
+
+        $source = new ObjectWithScalarProperties();
+        $targetType = TypeFactory::objectOfClass(ObjectWithScalarProperties::class);
+        $target = new ObjectWithScalarPropertiesDto();
+
+        $objectCache->saveTarget($source, $targetType, $target);
+
+        $presetMapping = PresetMappingFactory::fromObjectCacheReversed($objectCache);
 
         $result = $presetMapping->findResult($target, $source::class);
 
@@ -58,7 +75,7 @@ class PresetMappingTest extends FrameworkTestCase
 
         $objectCache->saveTarget($source, $targetType, $target);
 
-        $presetMapping = PresetMappingFactory::fromObjectCache($objectCache);
+        $presetMapping = PresetMappingFactory::fromObjectCacheReversed($objectCache);
 
         $source2 = new ObjectWithScalarProperties();
         $targetType2 = TypeFactory::objectOfClass(ObjectWithScalarProperties::class);
@@ -66,7 +83,7 @@ class PresetMappingTest extends FrameworkTestCase
 
         $objectCache->saveTarget($source2, $targetType2, $target2);
 
-        $presetMapping2 = PresetMappingFactory::fromObjectCache($objectCache);
+        $presetMapping2 = PresetMappingFactory::fromObjectCacheReversed($objectCache);
 
         $presetMapping->mergeFrom($presetMapping2);
 
