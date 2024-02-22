@@ -24,7 +24,7 @@ use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Symfony\Component\PropertyInfo\Type;
 
-final class TypeUtil
+final readonly class TypeUtil
 {
     private function __construct()
     {

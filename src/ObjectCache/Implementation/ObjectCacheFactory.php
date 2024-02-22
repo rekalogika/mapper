@@ -17,7 +17,7 @@ use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
-final class ObjectCacheFactory implements ObjectCacheFactoryInterface
+final readonly class ObjectCacheFactory implements ObjectCacheFactoryInterface
 {
     public function __construct(
         private TypeResolverInterface $typeResolver

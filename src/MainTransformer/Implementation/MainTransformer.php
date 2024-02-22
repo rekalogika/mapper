@@ -34,11 +34,12 @@ use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
-final class MainTransformer implements MainTransformerInterface
+final class MainTransformer implements MainTransformerInterface, ResetInterface
 {
     public static int $manualGcInterval = 500;
     private static int $runCounter = 1;
@@ -49,6 +50,11 @@ final class MainTransformer implements MainTransformerInterface
         private TypeResolverInterface $typeResolver,
         private bool $debug = false,
     ) {
+    }
+
+    public function reset(): void
+    {
+        self::$runCounter = 1;
     }
 
     private function processTransformer(

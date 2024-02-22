@@ -15,11 +15,12 @@ namespace Rekalogika\Mapper\Debug;
 
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
-final class TraceableMappingFactory implements MappingFactoryInterface
+final class TraceableMappingFactory implements MappingFactoryInterface, ResetInterface
 {
     private bool $mappingCollected = false;
 
@@ -27,6 +28,11 @@ final class TraceableMappingFactory implements MappingFactoryInterface
         private MappingFactoryInterface $decorated,
         private MapperDataCollector $dataCollector
     ) {
+    }
+
+    public function reset(): void
+    {
+        $this->mappingCollected = false;
     }
 
     public function getMapping(): Mapping
