@@ -25,6 +25,7 @@
 * chore: Simplify remembering mapper.
 * refactor: Deprecate serializer context.
 * feat: null to `Traversable` or `ArrayAccess` is now handled & returns empty.
+* chore: Add `readonly` or implement `ResetInterface` to applicable classes.
 
 ## 1.0.0
 
