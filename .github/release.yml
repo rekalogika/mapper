@@ -1,0 +1,7 @@
+changelog:
+  labels:
+    - "*"
+  exclude:
+    labels:
+      - dependencies
+      - minor
