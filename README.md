@@ -77,6 +77,9 @@ a few keystrokes.
 * Handles recursion and circular references.
 * Inheritance support. Maps to abstract classes and interfaces using an
   inheritance map attribute.
+* Maps to and from `stdClass`, objects extending `stdClass`, and other objects
+  with dynamic properties (`#[AllowDynamicProperties]`).
+* Maps an object to an array, and vice versa.
 
 ### Custom Mapping
 
@@ -87,6 +90,8 @@ a few keystrokes.
   ones.
 * Match classes using attributes in your transformers, in addition to using
   class names.
+* Preset mapping. Provide a table of predetermined mappings that the mapper can
+  use.
 
 ### Object Lazy-Loading
 
