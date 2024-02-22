@@ -26,7 +26,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 /**
  * @internal
  */
-class ReaderWriter
+final readonly class ReaderWriter
 {
     /**
      * @throws UninitializedSourcePropertyException

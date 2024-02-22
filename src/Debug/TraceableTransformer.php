@@ -33,8 +33,6 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
 {
     use MainTransformerAwareTrait;
 
-    private bool $withMainTransformerCalled = false;
-
     public function __construct(
         private TransformerInterface $decorated,
         private MapperDataCollector $dataCollector
@@ -48,17 +46,14 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
 
     public function withMainTransformer(MainTransformerInterface $mainTransformer): static
     {
-        if ($this->withMainTransformerCalled) {
+        if (!$this->decorated instanceof MainTransformerAwareInterface) {
             return $this;
         }
 
-        $this->withMainTransformerCalled = true;
+        $clone = clone $this;
+        $clone->decorated = $this->decorated->withMainTransformer($mainTransformer);
 
-        if ($this->decorated instanceof MainTransformerAwareInterface) {
-            $this->decorated = $this->decorated->withMainTransformer($mainTransformer);
-        }
-
-        return $this;
+        return $clone;
     }
 
     public function transform(

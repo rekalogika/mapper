@@ -18,11 +18,12 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Symfony\Bundle\FrameworkBundle\DataCollector\AbstractDataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
-final class MapperDataCollector extends AbstractDataCollector
+final class MapperDataCollector extends AbstractDataCollector implements ResetInterface
 {
     public function getName(): string
     {
@@ -134,5 +135,15 @@ final class MapperDataCollector extends AbstractDataCollector
             fn (TraceData $traceData) => $traceData->getTime(),
             $this->getMappings()
         ));
+    }
+
+    public function reset(): void
+    {
+        $this->data = [];
+        $this->totalMappings = null;
+        $this->totalMappingsIncludingSubMappings = null;
+        $this->totalTime = null;
+
+        parent::reset();
     }
 }
