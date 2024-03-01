@@ -21,5 +21,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.data_collector', MapperDataCollector::class)
         ->tag('data_collector', [
             'id' => 'rekalogika_mapper',
-        ]);
+        ])
+        ->tag('kernel.reset', ['method' => 'reset']);
 };

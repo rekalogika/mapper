@@ -74,6 +74,7 @@ final readonly class DebugPass implements CompilerPassInterface
             ->setArguments([
                 $decoratedService,
                 $dataCollector,
-            ]);
+            ])
+            ->addTag('kernel.reset', ['method' => 'reset']);
     }
 }
