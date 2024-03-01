@@ -454,7 +454,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$transformerRegistry' => service('rekalogika.mapper.transformer_registry'),
             '$debug' => param('kernel.debug'),
-        ]);
+        ])
+        ->tag('kernel.reset', ['method' => 'reset']);
 
     $services
         ->set('rekalogika.mapper.mapper', Mapper::class)

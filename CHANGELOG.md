@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.1.1
+
+* fix: Fix missing `kernel.reset` tags.
+
 ## 1.1.0
 
 * feat: `PresetTransformer`.
