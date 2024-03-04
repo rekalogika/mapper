@@ -44,11 +44,15 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
     ): object {
         $targetProxyClass = ProxyNamer::generateProxyClassName($class);
 
-        if (!class_exists($targetProxyClass, false)) {
+        if (!class_exists($targetProxyClass)) {
             $sourceCode = $this->proxyGenerator
                 ->generateProxyCode($class, $targetProxyClass);
             $this->proxyRegistry->registerProxy($targetProxyClass, $sourceCode);
 
+            // @phpstan-ignore-next-line
+            eval($sourceCode);
+
+            // @phpstan-ignore-next-line
             if (!class_exists($targetProxyClass)) {
                 throw new LogicException(
                     sprintf('Unable to find target proxy class "%s".', $targetProxyClass),

@@ -3,6 +3,7 @@
 ## 1.1.1
 
 * fix: Fix missing `kernel.reset` tags.
+* fix: Proxy generation under `opcache` and/or `classmap-authoritative`
 
 ## 1.1.0
 
