@@ -41,6 +41,11 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
             self::getProxyFileName($class)
         );
 
+        $sourceCode = sprintf(
+            '<?php declare(strict_types=1);' . "\n\n" . '%s',
+            $sourceCode
+        );
+
         file_put_contents($proxyFile, $sourceCode);
     }
 
