@@ -49,6 +49,8 @@ final class RekalogikaMapperExtension extends Extension
 
         if ($debug) {
             $loader->load('debug.php');
+        } else {
+            $loader->load('non-debug.php');
         }
 
         // autoconfiguration

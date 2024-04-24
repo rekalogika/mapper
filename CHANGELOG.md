@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.1.2
+
+* fix: property info caching if another bundle is decorating cache ([#47](https://github.com/rekalogika/mapper/issues/47))
+
 ## 1.1.1
 
 * fix: Fix missing `kernel.reset` tags.

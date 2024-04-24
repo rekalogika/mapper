@@ -98,19 +98,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
         ]);
 
-    $services
-        ->set('rekalogika.mapper.cache.property_info')
-        ->parent('cache.system')
-        ->tag('cache.pool');
-
-    $services
-        ->set('rekalogika.mapper.property_info.cache', PropertyInfoCacheExtractor::class)
-        ->decorate('rekalogika.mapper.property_info')
-        ->args([
-            service('rekalogika.mapper.property_info.cache.inner'),
-            service('rekalogika.mapper.cache.property_info')
-        ]);
-
     # transformers
 
     $services
