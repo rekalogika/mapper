@@ -27,11 +27,6 @@ final readonly class DebugPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        // remove property info cache
-
-        $container->removeDefinition('rekalogika.mapper.cache.property_info');
-        $container->removeDefinition('rekalogika.mapper.property_info.cache');
-
         // decorates all transformers using TraceableTransformer
 
         $dataCollector = new Reference('rekalogika.mapper.data_collector');
