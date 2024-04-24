@@ -55,6 +55,7 @@
         "psalm/plugin-phpunit": "^0.18.4",
         "symfony/framework-bundle": "^6.4 || ^7.0",
         "symfony/http-kernel": "^6.4 || ^7.0",
+        "symfony/runtime": "^6.4 || ^7.0",
         "symfony/uid": "^6.4 || ^7.0",
         "symfony/var-dumper": "^6.4 || ^7.0",
         "symfony/yaml": "^6.4 || ^7.0",
@@ -73,6 +74,9 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "symfony/runtime": true
+        }
     }
 }
