@@ -3,6 +3,7 @@ parameters:
     paths:
         - src
         - tests
+        - config
     checkBenevolentUnionTypes: true
     checkExplicitMixedMissingReturn: true
     checkFunctionNameCase: true

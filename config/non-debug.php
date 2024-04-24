@@ -19,8 +19,6 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
 
-    dump(123);
-
     $services
         ->set('rekalogika.mapper.cache.property_info')
         ->parent('cache.system')
