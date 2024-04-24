@@ -73,7 +73,12 @@ final class ObjectMapperTable implements \IteratorAggregate
             }
         } while ($sourceClassReflection = $sourceClassReflection->getParentClass());
 
-        foreach (class_implements($targetClass) as $interface) {
+        $interfaces = class_implements($sourceClass);
+        if ($interfaces === false) {
+            return null;
+        }
+
+        foreach ($interfaces as $interface) {
             if (isset($propertyMappers[$interface])) {
                 return $propertyMappers[$interface];
             }

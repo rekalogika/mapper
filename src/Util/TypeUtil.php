@@ -416,11 +416,21 @@ final readonly class TypeUtil
         $class = is_object($objectOrClass) ? $objectOrClass::class : $objectOrClass;
         $classes[] = $class;
 
-        foreach (class_parents($class) as $parentClass) {
+        $parents = class_parents($class);
+        if ($parents === false) {
+            $parents = [];
+        }
+
+        foreach ($parents as $parentClass) {
             $classes[] = $parentClass;
         }
 
-        foreach (class_implements($class) as $interface) {
+        $interfaces = class_implements($class);
+        if ($interfaces === false) {
+            $interfaces = [];
+        }
+
+        foreach ($interfaces as $interface) {
             $classes[] = $interface;
         }
 
