@@ -38,9 +38,12 @@ class TestKernel extends Kernel
     /**
      * @param array<string,mixed> $config
      */
-    public function __construct(private array $config = [])
-    {
-        parent::__construct('test', true);
+    public function __construct(
+        private array $config = [],
+        string $env = 'test',
+        bool $debug = true
+    ) {
+        parent::__construct($env, $debug);
     }
 
     public function registerBundles(): iterable
