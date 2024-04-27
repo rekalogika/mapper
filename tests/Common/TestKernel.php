@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Common;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Rekalogika\Mapper\IterableMapperInterface;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\RekalogikaMapperBundle;
@@ -69,6 +70,7 @@ class TestKernel extends Kernel
     public static function getServiceIds(): iterable
     {
         yield MapperInterface::class;
+        yield IterableMapperInterface::class;
 
         yield 'rekalogika.mapper.property_info';
         // yield 'rekalogika.mapper.cache.property_info';
