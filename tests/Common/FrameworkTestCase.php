@@ -20,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Debug\MapperDataCollector;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
+use Rekalogika\Mapper\IterableMapperInterface;
 use Rekalogika\Mapper\MapperInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
@@ -30,6 +31,8 @@ abstract class FrameworkTestCase extends TestCase
     private ContainerInterface $container;
     /** @psalm-suppress MissingConstructor */
     protected MapperInterface $mapper;
+    /** @psalm-suppress MissingConstructor */
+    protected IterableMapperInterface $iterableMapper;
 
     public function setUp(): void
     {
@@ -39,6 +42,11 @@ abstract class FrameworkTestCase extends TestCase
 
         $this->mapper = new MapperDecorator(
             $this->get(MapperInterface::class),
+            $this->getMapperContext()
+        );
+
+        $this->iterableMapper = new IterableMapperDecorator(
+            $this->get(IterableMapperInterface::class),
             $this->getMapperContext()
         );
     }

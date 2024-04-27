@@ -20,6 +20,7 @@ use Rekalogika\Mapper\CustomMapper\Implementation\ObjectMapperTableFactory;
 use Rekalogika\Mapper\CustomMapper\Implementation\PropertyMapperResolver;
 use Rekalogika\Mapper\CustomMapper\Implementation\WarmableObjectMapperTableFactory;
 use Rekalogika\Mapper\Implementation\Mapper;
+use Rekalogika\Mapper\IterableMapperInterface;
 use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Mapping\Implementation\MappingCacheWarmer;
@@ -64,7 +65,6 @@ use Rekalogika\Mapper\TypeResolver\Implementation\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\PropertyInfo\PropertyInfoCacheExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
@@ -451,6 +451,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->alias(MapperInterface::class, 'rekalogika.mapper.mapper');
+
+    $services
+        ->alias(IterableMapperInterface::class, 'rekalogika.mapper.mapper');
 
     # console command
 

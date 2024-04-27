@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.0
+
+* feat: add `IterableMapperInterface` for mapping iterables
+
 ## 1.1.2
 
 * fix: property info caching if another bundle is decorating cache ([#47](https://github.com/rekalogika/mapper/issues/47))
