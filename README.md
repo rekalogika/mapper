@@ -19,23 +19,25 @@ composer require rekalogika/mapper
 ```php
 use App\Entity\Book;
 use Rekalogika\Mapper\MapperInterface;
-use Rekalogika\Mapper\IterableMapperInterface;
+
+// map a single object:
 
 /** @var MapperInterface $mapper */
-/** @var IterableMapperInterface $mapper */
 /** @var Book $book */
-/** @var iterable<Book> $books */
 
-$bookDto = $mapper->map($book, BookDto::class);
+$result = $mapper->map($book, BookDto::class);
 
-// or map to an existing object
+// map a single object to an existing object:
 
 $bookDto = new BookDto();
 $mapper->map($book, $bookDto);
 
-// map iterable of books
+// map an iterable of objects:
 
-$bookDtos = $mapper->mapIterable($books, BookDto::class);
+/** @var IterableMapperInterface $iterableMapper */
+/** @var iterable<Book> $books */
+
+$bookDtos = $iterableMapper->mapIterable($books, BookDto::class);
 ```
 
 ## Why Use a Mapper?
