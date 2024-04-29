@@ -3,6 +3,7 @@
 ## 1.2.0
 
 * feat: add `IterableMapperInterface` for mapping iterables
+* feat: add `IterableMapperInterface` getter to the non-framework factory
 
 ## 1.1.2
 

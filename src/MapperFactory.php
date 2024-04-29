@@ -139,6 +139,7 @@ class MapperFactory
     private ?ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory = null;
     private ?MainTransformerInterface $mainTransformer = null;
     private ?MapperInterface $mapper = null;
+    private ?IterableMapperInterface $iterableMapper = null;
     private ?MappingFactoryInterface $mappingFactory = null;
     private ?ObjectCacheFactoryInterface $objectCacheFactory = null;
     private ?SubMapperFactoryInterface $subMapperFactory = null;
@@ -225,6 +226,15 @@ class MapperFactory
         }
 
         return $this->mapper;
+    }
+
+    public function getIterableMapper(): IterableMapperInterface
+    {
+        if (null === $this->iterableMapper) {
+            $this->iterableMapper = new Mapper($this->getMainTransformer());
+        }
+
+        return $this->iterableMapper;
     }
 
     //
