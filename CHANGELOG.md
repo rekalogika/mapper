@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.1
+
+* test: add tests for mapping to objects with existing value
+
 ## 1.2.0
 
 * feat: add `IterableMapperInterface` for mapping iterables
