@@ -38,7 +38,7 @@ final readonly class AdderRemoverProxy implements
     /**
      * @return \ArrayAccess<TKey,TValue>|array<TKey,TValue>
      */
-    private function getValue(): mixed
+    private function getCollection(): mixed
     {
         if ($this->getterMethodName === null) {
             throw new LogicException('Getter method is not available');
@@ -58,7 +58,7 @@ final readonly class AdderRemoverProxy implements
 
     public function getIterator(): \Traversable
     {
-        $value = $this->getValue();
+        $value = $this->getCollection();
 
         if ($value instanceof \Traversable) {
             return $value;
@@ -71,13 +71,13 @@ final readonly class AdderRemoverProxy implements
 
     public function offsetExists(mixed $offset): bool
     {
-        return isset($this->getValue()[$offset]);
+        return isset($this->getCollection()[$offset]);
     }
 
     /** @psalm-suppress MixedInferredReturnType */
     public function offsetGet(mixed $offset): mixed
     {
-        return $this->getValue()[$offset];
+        return $this->getCollection()[$offset];
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
@@ -96,13 +96,15 @@ final readonly class AdderRemoverProxy implements
             throw new LogicException('Remover method is not available');
         }
 
+        $value = $this->getCollection()[$offset];
+
         /** @psalm-suppress MixedMethodCall */
-        $this->hostObject->{$this->removerMethodName}($offset);
+        $this->hostObject->{$this->removerMethodName}($value);
     }
 
     public function count(): int
     {
-        $value = $this->getValue();
+        $value = $this->getCollection();
 
         if ($value instanceof \Countable) {
             return $value->count();

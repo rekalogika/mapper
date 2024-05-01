@@ -254,6 +254,9 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // process target setter write mode
 
+            $targetRemoverWriteName = null;
+            $targetRemoverWriteVisibility = Visibility::None;
+
             if ($targetSetterWriteInfo === null) {
                 $targetSetterWriteMode = WriteMode::None;
                 $targetSetterWriteName = null;
@@ -261,7 +264,14 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             } elseif ($targetSetterWriteInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
                 $targetSetterWriteMode = WriteMode::AdderRemover;
                 $targetSetterWriteName = $targetSetterWriteInfo->getAdderInfo()->getName();
+                $targetRemoverWriteName = $targetSetterWriteInfo->getRemoverInfo()->getName();
                 $targetSetterWriteVisibility = match ($targetSetterWriteInfo->getAdderInfo()->getVisibility()) {
+                    PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
+                    PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
+                    PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
+                    default => Visibility::None,
+                };
+                $targetRemoverWriteVisibility = match ($targetSetterWriteInfo->getRemoverInfo()->getVisibility()) {
                     PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
                     PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
                     PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
@@ -376,7 +386,9 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 targetReadVisibility: $targetReadVisibility,
                 targetSetterWriteMode: $targetSetterWriteMode,
                 targetSetterWriteName: $targetSetterWriteName,
+                targetRemoverWriteName: $targetRemoverWriteName,
                 targetSetterWriteVisibility: $targetSetterWriteVisibility,
+                targetRemoverWriteVisibility: $targetRemoverWriteVisibility,
                 targetConstructorWriteMode: $targetConstructorWriteMode,
                 targetConstructorWriteName: $targetConstructorWriteName,
                 targetScalarType: $targetPropertyScalarType,

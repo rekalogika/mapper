@@ -51,7 +51,9 @@ final readonly class PropertyMapping
         private Visibility $targetReadVisibility,
         private WriteMode $targetSetterWriteMode,
         private ?string $targetSetterWriteName,
+        private ?string $targetRemoverWriteName,
         private Visibility $targetSetterWriteVisibility,
+        private Visibility $targetRemoverWriteVisibility,
         private WriteMode $targetConstructorWriteMode,
         private ?string $targetConstructorWriteName,
         private ?string $targetScalarType,
@@ -185,5 +187,15 @@ final readonly class PropertyMapping
     public function targetAllowsDelete(): bool
     {
         return $this->targetAllowsDelete;
+    }
+
+    public function getTargetRemoverWriteName(): ?string
+    {
+        return $this->targetRemoverWriteName;
+    }
+
+    public function getTargetRemoverWriteVisibility(): Visibility
+    {
+        return $this->targetRemoverWriteVisibility;
     }
 }
