@@ -115,9 +115,11 @@ a few keystrokes.
 ### Arrays and Array-Like Objects
 
 * Handles the mapping between `array` or array-like objects.
-* Handles adder methods on the target side.
+* Handles adder and remover methods on the target side.
 * Handles non-string & non-integer keys in array-like objects, including
   `SplObjectStorage`.
+* Option to remove existing items from the target if they are not present in the
+  source.
 
 ### Array-Like Lazy-Loading
 
