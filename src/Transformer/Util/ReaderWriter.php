@@ -101,9 +101,10 @@ final readonly class ReaderWriter
             && $propertyMapping->getTargetSetterWriteVisibility() === Visibility::Public
         ) {
             return new AdderRemoverProxy(
-                $target,
-                $propertyMapping->getTargetSetterWriteName(),
-                null
+                hostObject: $target,
+                getterMethodName: $propertyMapping->getTargetReadName(),
+                adderMethodName: $propertyMapping->getTargetSetterWriteName(),
+                removerMethodName: null
             );
         }
 
