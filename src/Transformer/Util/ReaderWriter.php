@@ -97,12 +97,12 @@ final readonly class ReaderWriter
         Context $context
     ): mixed {
         if (
-            $propertyMapping->getTargetWriteMode() === WriteMode::AdderRemover
-            && $propertyMapping->getTargetWriteVisibility() === Visibility::Public
+            $propertyMapping->getTargetSetterWriteMode() === WriteMode::AdderRemover
+            && $propertyMapping->getTargetSetterWriteVisibility() === Visibility::Public
         ) {
             return new AdderRemoverProxy(
                 $target,
-                $propertyMapping->getTargetWriteName(),
+                $propertyMapping->getTargetSetterWriteName(),
                 null
             );
         }
@@ -157,13 +157,13 @@ final readonly class ReaderWriter
         mixed $value,
         Context $context
     ): void {
-        if ($propertyMapping->getTargetWriteVisibility() !== Visibility::Public) {
+        if ($propertyMapping->getTargetSetterWriteVisibility() !== Visibility::Public) {
             return;
         }
 
         try {
-            $accessorName = $propertyMapping->getTargetWriteName();
-            $writeMode = $propertyMapping->getTargetWriteMode();
+            $accessorName = $propertyMapping->getTargetSetterWriteName();
+            $writeMode = $propertyMapping->getTargetSetterWriteMode();
 
             if ($writeMode === WriteMode::Property) {
                 $target->{$accessorName} = $value;

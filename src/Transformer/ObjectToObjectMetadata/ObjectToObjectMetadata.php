@@ -79,9 +79,11 @@ final readonly class ObjectToObjectMetadata
         $propertyPropertyMappings = [];
 
         foreach ($allPropertyMappings as $propertyMapping) {
-            if ($propertyMapping->getTargetWriteMode() === WriteMode::Constructor) {
+            if ($propertyMapping->getTargetConstructorWriteMode() === WriteMode::Constructor) {
                 $constructorPropertyMappings[] = $propertyMapping;
-            } else {
+            }
+
+            if ($propertyMapping->getTargetSetterWriteMode() !== WriteMode::None) {
                 $propertyPropertyMappings[] = $propertyMapping;
 
                 if ($propertyMapping->isSourceLazy()) {

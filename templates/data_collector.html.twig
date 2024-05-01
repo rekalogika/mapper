@@ -321,7 +321,7 @@
                 </th>
             </tr>
             {% for mapping in metadata.constructorPropertyMappings %}
-                {{ _self.render_o2o_property_mapping(mapping, helper) }}
+                {{ _self.render_o2o_constructor_mapping(mapping, helper) }}
             {% endfor %}
         {% endif %}
 
@@ -357,6 +357,38 @@
     </table>
 {% endmacro %}
 
+{% macro render_o2o_constructor_mapping(mapping, helper) %}
+    <tr>
+        <td>
+            {{ mapping.targetProperty }}
+        </td>
+        <td>
+            {{ helper.typeToHtml(mapping.sourceTypes)|raw }}
+        </td>
+        <td>
+            {{ helper.typeToHtml(mapping.targetTypes)|raw }}
+        </td>
+        <td style="white-space: nowrap">
+            {{ _self.render_o2o_property_mapping_read_mode(mapping.sourceReadMode, mapping.sourceReadName, mapping.sourceReadVisibility) }}
+        </td>
+        <td style="white-space: nowrap">
+            N/A
+        </td>
+        <td style="white-space: nowrap">
+            {{ _self.render_o2o_property_mapping_write_mode(mapping.targetConstructorWriteMode, mapping.targetConstructorWriteName, null) }}
+        </td>
+        <td>
+            {% if mapping.targetScalarType %}
+                <span class="badge badge-success">{{ mapping.targetScalarType }}</span>
+            {% endif %}
+
+            {% if mapping.targetCanAcceptNull %}
+                <span class="badge badge-success">nullable</span>
+            {% endif %}
+        </td>
+    </tr>
+{% endmacro %}
+
 {% macro render_o2o_property_mapping(mapping, helper) %}
     <tr>
         <td>
@@ -375,7 +407,7 @@
             {{ _self.render_o2o_property_mapping_read_mode(mapping.targetReadMode, mapping.targetReadName, mapping.targetReadVisibility) }}
         </td>
         <td style="white-space: nowrap">
-            {{ _self.render_o2o_property_mapping_write_mode(mapping.targetWriteMode, mapping.targetWriteName, mapping.targetWriteVisibility) }}
+            {{ _self.render_o2o_property_mapping_write_mode(mapping.targetSetterWriteMode, mapping.targetSetterWriteName, mapping.targetSetterWriteVisibility) }}
         </td>
         <td>
             {% if mapping.targetScalarType %}
@@ -404,13 +436,13 @@
 
 {% macro render_o2o_property_mapping_write_mode(mode, name, visibility) %}
     {%- if mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Method') -%}
-        -&gt;{{ name }}()
+        -&gt;{{ name }}(...)
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Property') -%}
         -&gt;{{ name }}
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::DynamicProperty') -%}
         -&gt;{{ name }}
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::AdderRemover') -%}
-        -&gt;{{ name }}()
+        -&gt;{{ name }}(...)
     {%- elseif mode == constant('Rekalogika\\Mapper\\Transformer\\ObjectToObjectMetadata\\WriteMode::Constructor') -%}
         -&gt;__construct(...)
     {%- else -%}

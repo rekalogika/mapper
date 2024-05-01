@@ -153,8 +153,10 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 ->getReadInfo($sourceClass, $sourceProperty);
             $targetReadInfo = $this->propertyReadInfoExtractor
                 ->getReadInfo($targetClass, $targetProperty);
-            $targetWriteInfo = $this->propertyWriteInfoExtractor
-                ->getWriteInfo($targetClass, $targetProperty);
+            $targetConstructorWriteInfo = $this
+                ->getConstructorWriteInfo($targetClass, $targetProperty);
+            $targetSetterWriteInfo = $this
+                ->getSetterWriteInfo($targetClass, $targetProperty);
 
             // process source read mode
 
@@ -216,45 +218,59 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 };
             }
 
-            // process target write mode
+            // skip if target is not writable
+
+            if ($targetConstructorWriteInfo === null && $targetSetterWriteInfo === null) {
+                continue;
+            }
+
+            // process target constructor write info
 
             if (
-                $targetWriteInfo === null
+                $targetConstructorWriteInfo === null
+                || $targetConstructorWriteInfo->getType() !== PropertyWriteInfo::TYPE_CONSTRUCTOR
             ) {
-                continue;
-            } elseif ($targetWriteInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
-                $targetWriteMode = WriteMode::AdderRemover;
-                $targetWriteName = $targetWriteInfo->getAdderInfo()->getName();
-                $targetWriteVisibility = match ($targetWriteInfo->getAdderInfo()->getVisibility()) {
+                $targetConstructorWriteMode = WriteMode::None;
+                $targetConstructorWriteName = null;
+            } else {
+                $targetConstructorWriteMode = WriteMode::Constructor;
+                $targetConstructorWriteName = $targetConstructorWriteInfo->getName();
+            }
+
+            // process target setter write mode
+
+            if ($targetSetterWriteInfo === null) {
+                $targetSetterWriteMode = WriteMode::None;
+                $targetSetterWriteName = null;
+                $targetSetterWriteVisibility = Visibility::None;
+            } elseif ($targetSetterWriteInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
+                $targetSetterWriteMode = WriteMode::AdderRemover;
+                $targetSetterWriteName = $targetSetterWriteInfo->getAdderInfo()->getName();
+                $targetSetterWriteVisibility = match ($targetSetterWriteInfo->getAdderInfo()->getVisibility()) {
                     PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
                     PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
                     PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
                     default => Visibility::None,
                 };
-            } elseif ($targetWriteInfo->getType() === PropertyWriteInfo::TYPE_CONSTRUCTOR) {
-                $targetWriteMode = WriteMode::Constructor;
-                $targetWriteName = $targetWriteInfo->getName();
-                $targetWriteVisibility = Visibility::None;
             } else {
-                $targetWriteMode = match ($targetWriteInfo->getType()) {
+                $targetSetterWriteMode = match ($targetSetterWriteInfo->getType()) {
                     PropertyWriteInfo::TYPE_METHOD => WriteMode::Method,
                     PropertyWriteInfo::TYPE_PROPERTY => WriteMode::Property,
                     default => WriteMode::None,
                 };
 
-                if ($targetWriteMode === WriteMode::None) {
+                if ($targetSetterWriteMode === WriteMode::None) {
                     if ($targetAllowsDynamicProperties && $targetReadInfo === null) {
-                        $targetWriteMode = WriteMode::DynamicProperty;
-                        $targetWriteName = $targetProperty;
-                        $targetWriteVisibility = Visibility::Public;
+                        $targetSetterWriteMode = WriteMode::DynamicProperty;
+                        $targetSetterWriteName = $targetProperty;
+                        $targetSetterWriteVisibility = Visibility::Public;
                     } else {
-                        $effectivePropertiesToMap[] = $targetProperty;
-
-                        continue;
+                        $targetSetterWriteName = null;
+                        $targetSetterWriteVisibility = Visibility::None;
                     }
                 } else {
-                    $targetWriteName = $targetWriteInfo->getName();
-                    $targetWriteVisibility = match ($targetWriteInfo->getVisibility()) {
+                    $targetSetterWriteName = $targetSetterWriteInfo->getName();
+                    $targetSetterWriteVisibility = match ($targetSetterWriteInfo->getVisibility()) {
                         PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
                         PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
                         PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
@@ -343,9 +359,11 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 targetReadMode: $targetReadMode,
                 targetReadName: $targetReadName,
                 targetReadVisibility: $targetReadVisibility,
-                targetWriteMode: $targetWriteMode,
-                targetWriteName: $targetWriteName,
-                targetWriteVisibility: $targetWriteVisibility,
+                targetSetterWriteMode: $targetSetterWriteMode,
+                targetSetterWriteName: $targetSetterWriteName,
+                targetSetterWriteVisibility: $targetSetterWriteVisibility,
+                targetConstructorWriteMode: $targetConstructorWriteMode,
+                targetConstructorWriteName: $targetConstructorWriteName,
                 targetScalarType: $targetPropertyScalarType,
                 propertyMapper: $serviceMethodSpecification,
                 sourceLazy: $sourceLazy,
@@ -468,5 +486,37 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         } while ($class = $class->getParentClass());
 
         return false;
+    }
+
+    private function getConstructorWriteInfo(
+        string $class,
+        string $property,
+    ): ?PropertyWriteInfo {
+        $writeInfo = $this->propertyWriteInfoExtractor
+            ->getWriteInfo($class, $property, [
+                'enable_getter_setter_extraction' => false,
+                'enable_magic_methods_extraction' => false,
+                'enable_adder_remover_extraction' => false,
+            ]);
+
+        if ($writeInfo === null) {
+            return null;
+        }
+
+        if ($writeInfo->getType() === PropertyWriteInfo::TYPE_CONSTRUCTOR) {
+            return $writeInfo;
+        }
+
+        return null;
+    }
+
+    private function getSetterWriteInfo(
+        string $class,
+        string $property,
+    ): ?PropertyWriteInfo {
+        return $this->propertyWriteInfoExtractor
+            ->getWriteInfo($class, $property, [
+                'enable_constructor_extraction' => false,
+            ]);
     }
 }

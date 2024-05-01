@@ -49,9 +49,11 @@ final readonly class PropertyMapping
         private ReadMode $targetReadMode,
         private ?string $targetReadName,
         private Visibility $targetReadVisibility,
-        private WriteMode $targetWriteMode,
-        private ?string $targetWriteName,
-        private Visibility $targetWriteVisibility,
+        private WriteMode $targetSetterWriteMode,
+        private ?string $targetSetterWriteName,
+        private Visibility $targetSetterWriteVisibility,
+        private WriteMode $targetConstructorWriteMode,
+        private ?string $targetConstructorWriteName,
         private ?string $targetScalarType,
         private ?ServiceMethodSpecification $propertyMapper,
         private bool $sourceLazy,
@@ -134,14 +136,29 @@ final readonly class PropertyMapping
         return $this->targetReadName;
     }
 
-    public function getTargetWriteMode(): WriteMode
+    public function getTargetSetterWriteMode(): WriteMode
     {
-        return $this->targetWriteMode;
+        return $this->targetSetterWriteMode;
     }
 
-    public function getTargetWriteName(): ?string
+    public function getTargetSetterWriteName(): ?string
     {
-        return $this->targetWriteName;
+        return $this->targetSetterWriteName;
+    }
+
+    public function getTargetSetterWriteVisibility(): Visibility
+    {
+        return $this->targetSetterWriteVisibility;
+    }
+
+    public function getTargetConstructorWriteMode(): WriteMode
+    {
+        return $this->targetConstructorWriteMode;
+    }
+
+    public function getTargetConstructorWriteName(): ?string
+    {
+        return $this->targetConstructorWriteName;
     }
 
     public function getSourceReadVisibility(): Visibility
@@ -152,11 +169,6 @@ final readonly class PropertyMapping
     public function getTargetReadVisibility(): Visibility
     {
         return $this->targetReadVisibility;
-    }
-
-    public function getTargetWriteVisibility(): Visibility
-    {
-        return $this->targetWriteVisibility;
     }
 
     public function isSourceLazy(): bool
