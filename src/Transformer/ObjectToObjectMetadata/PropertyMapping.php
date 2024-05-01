@@ -58,6 +58,7 @@ final readonly class PropertyMapping
         private ?ServiceMethodSpecification $propertyMapper,
         private bool $sourceLazy,
         private bool $targetCanAcceptNull,
+        private bool $targetAllowsDelete,
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
@@ -179,5 +180,10 @@ final readonly class PropertyMapping
     public function targetCanAcceptNull(): bool
     {
         return $this->targetCanAcceptNull;
+    }
+
+    public function targetAllowsDelete(): bool
+    {
+        return $this->targetAllowsDelete;
     }
 }

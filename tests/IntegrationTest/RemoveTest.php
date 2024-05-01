@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Tests\Fixtures\Remove\MemberDto;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\MemberRepository;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArray;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDto;
+use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayWithoutAllowDeleteAttribute;
 
 /** @psalm-suppress MissingConstructor */
 class RemoveTest extends FrameworkTestCase
@@ -63,6 +64,7 @@ class RemoveTest extends FrameworkTestCase
         $objectWithArray->members[] = $this->repository->get('1');
         $objectWithArray->members[] = $this->repository->get('2');
         $objectWithArray->members[] = $this->repository->get('3');
+        $this->assertCount(3, $objectWithArray->members);
 
         $this->mapper->map($objectWithArrayDto, $objectWithArray);
 
@@ -71,5 +73,29 @@ class RemoveTest extends FrameworkTestCase
         $this->assertSame('2', $objectWithArray->members[1]->getId());
         $this->assertSame($this->repository->get('1'), $objectWithArray->members[0]);
         $this->assertSame($this->repository->get('2'), $objectWithArray->members[1]);
+    }
+
+    public function testNoRemovalWithoutAllowDeleteAttribute(): void
+    {
+        $objectWithArrayDto = new ObjectWithArrayDto();
+        $objectWithArrayDto->members[] = new MemberDto('1');
+        $objectWithArrayDto->members[] = new MemberDto('2');
+        // 3 is missing, and this should remove 3 from the target object
+
+        $objectWithArray = new ObjectWithArrayWithoutAllowDeleteAttribute();
+        $objectWithArray->members[] = $this->repository->get('1');
+        $objectWithArray->members[] = $this->repository->get('2');
+        $objectWithArray->members[] = $this->repository->get('3');
+        $this->assertCount(3, $objectWithArray->members);
+
+        $this->mapper->map($objectWithArrayDto, $objectWithArray);
+
+        $this->assertCount(3, $objectWithArray->members);
+        $this->assertSame('1', $objectWithArray->members[0]->getId());
+        $this->assertSame('2', $objectWithArray->members[1]->getId());
+        $this->assertSame('3', $objectWithArray->members[2]->getId());
+        $this->assertSame($this->repository->get('1'), $objectWithArray->members[0]);
+        $this->assertSame($this->repository->get('2'), $objectWithArray->members[1]);
+        $this->assertSame($this->repository->get('3'), $objectWithArray->members[2]);
     }
 }

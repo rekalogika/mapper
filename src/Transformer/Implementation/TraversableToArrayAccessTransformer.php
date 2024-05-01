@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Implementation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ReadableCollection;
+use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
@@ -99,6 +100,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 context: $context,
             );
         }
+
         return $this->eagerTransform(
             source: $source,
             target: $target,
@@ -147,6 +149,14 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             target: $target,
         );
 
+        // determine if target allows deletion
+
+        $allowDelete = $context(AllowDelete::class) !== null;
+
+        if ($allowDelete) {
+            $context = $context->without(AllowDelete::class);
+        }
+
         // Transform the source
 
         $transformed = $this->transformTraversableSource(
@@ -156,11 +166,32 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             context: $context,
         );
 
+        if ($allowDelete) {
+            $values = [];
+        } else {
+            $values = null;
+        }
+
         foreach ($transformed as $key => $value) {
             if ($key === null) {
                 $target[] = $value;
             } else {
                 $target[$key] = $value;
+            }
+
+            if (is_array($values)) {
+                $values[] = $value;
+            }
+        }
+
+        // if target allows delete, remove values in the target that are not in
+        // the values array
+
+        if (is_array($values) && is_iterable($target)) {
+            foreach ($target as $key => $value) {
+                if (!in_array($value, $values, true)) {
+                    unset($target[$key]);
+                }
             }
         }
 

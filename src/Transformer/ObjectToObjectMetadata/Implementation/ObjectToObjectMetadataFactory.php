@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
+use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
@@ -142,10 +143,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         foreach ($propertiesToMap as $targetProperty) {
             $sourceProperty = $targetProperty;
 
-            // determine if a property mapper is defined for the property
-
             $serviceMethodSpecification = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
+
+            // get reflection for target property
+
+            try {
+                $targetPropertyReflection = $targetReflection->getProperty($targetProperty);
+            } catch (\ReflectionException) {
+                $targetPropertyReflection = null;
+            }
 
             // get read & write info for source and target properties
 
@@ -157,6 +164,14 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 ->getConstructorWriteInfo($targetClass, $targetProperty);
             $targetSetterWriteInfo = $this
                 ->getSetterWriteInfo($targetClass, $targetProperty);
+
+            // determine if target allows delete
+
+            if ($targetPropertyReflection === null) {
+                $targetAllowsDelete = false;
+            } else {
+                $targetAllowsDelete = count($targetPropertyReflection->getAttributes(AllowDelete::class)) > 0;
+            }
 
             // process source read mode
 
@@ -368,6 +383,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 propertyMapper: $serviceMethodSpecification,
                 sourceLazy: $sourceLazy,
                 targetCanAcceptNull: $targetCanAcceptNull,
+                targetAllowsDelete: $targetAllowsDelete,
             );
 
             $propertyMappings[] = $propertyMapping;

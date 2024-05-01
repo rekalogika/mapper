@@ -11,15 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\Remove;
+namespace Rekalogika\Mapper\Attribute;
 
-use Rekalogika\Mapper\Attribute\AllowDelete;
-
-class ObjectWithArray
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD)]
+final readonly class AllowDelete
 {
-    /**
-     * @var array<int,Member>
-     */
-    #[AllowDelete]
-    public array $members = [];
 }

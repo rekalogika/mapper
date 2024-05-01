@@ -13,13 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\Remove;
 
-use Rekalogika\Mapper\Attribute\AllowDelete;
-
-class ObjectWithArray
+class ObjectWithArrayWithoutAllowDeleteAttribute
 {
     /**
      * @var array<int,Member>
      */
-    #[AllowDelete]
     public array $members = [];
 }
