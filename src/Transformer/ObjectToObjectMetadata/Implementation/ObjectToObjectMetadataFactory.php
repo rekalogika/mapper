@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
+use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
@@ -142,10 +143,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         foreach ($propertiesToMap as $targetProperty) {
             $sourceProperty = $targetProperty;
 
-            // determine if a property mapper is defined for the property
-
             $serviceMethodSpecification = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
+
+            // get reflection for target property
+
+            try {
+                $targetPropertyReflection = $targetReflection->getProperty($targetProperty);
+            } catch (\ReflectionException) {
+                $targetPropertyReflection = null;
+            }
 
             // get read & write info for source and target properties
 
@@ -157,6 +164,14 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 ->getConstructorWriteInfo($targetClass, $targetProperty);
             $targetSetterWriteInfo = $this
                 ->getSetterWriteInfo($targetClass, $targetProperty);
+
+            // determine if target allows delete
+
+            if ($targetPropertyReflection === null) {
+                $targetAllowsDelete = false;
+            } else {
+                $targetAllowsDelete = count($targetPropertyReflection->getAttributes(AllowDelete::class)) > 0;
+            }
 
             // process source read mode
 
@@ -239,6 +254,9 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // process target setter write mode
 
+            $targetRemoverWriteName = null;
+            $targetRemoverWriteVisibility = Visibility::None;
+
             if ($targetSetterWriteInfo === null) {
                 $targetSetterWriteMode = WriteMode::None;
                 $targetSetterWriteName = null;
@@ -246,7 +264,14 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             } elseif ($targetSetterWriteInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
                 $targetSetterWriteMode = WriteMode::AdderRemover;
                 $targetSetterWriteName = $targetSetterWriteInfo->getAdderInfo()->getName();
+                $targetRemoverWriteName = $targetSetterWriteInfo->getRemoverInfo()->getName();
                 $targetSetterWriteVisibility = match ($targetSetterWriteInfo->getAdderInfo()->getVisibility()) {
+                    PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
+                    PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
+                    PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
+                    default => Visibility::None,
+                };
+                $targetRemoverWriteVisibility = match ($targetSetterWriteInfo->getRemoverInfo()->getVisibility()) {
                     PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
                     PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
                     PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
@@ -361,13 +386,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 targetReadVisibility: $targetReadVisibility,
                 targetSetterWriteMode: $targetSetterWriteMode,
                 targetSetterWriteName: $targetSetterWriteName,
+                targetRemoverWriteName: $targetRemoverWriteName,
                 targetSetterWriteVisibility: $targetSetterWriteVisibility,
+                targetRemoverWriteVisibility: $targetRemoverWriteVisibility,
                 targetConstructorWriteMode: $targetConstructorWriteMode,
                 targetConstructorWriteName: $targetConstructorWriteName,
                 targetScalarType: $targetPropertyScalarType,
                 propertyMapper: $serviceMethodSpecification,
                 sourceLazy: $sourceLazy,
                 targetCanAcceptNull: $targetCanAcceptNull,
+                targetAllowsDelete: $targetAllowsDelete,
             );
 
             $propertyMappings[] = $propertyMapping;

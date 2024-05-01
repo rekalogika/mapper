@@ -19,25 +19,65 @@ use Rekalogika\Mapper\Exception\LogicException;
  * @template TKey of array-key
  * @template TValue
  * @implements \ArrayAccess<TKey,TValue>
+ * @implements \IteratorAggregate<TKey,TValue>
  * @internal
  */
-final readonly class AdderRemoverProxy implements \ArrayAccess
+final readonly class AdderRemoverProxy implements
+    \ArrayAccess,
+    \IteratorAggregate,
+    \Countable
 {
     public function __construct(
         private object $hostObject,
+        private ?string $getterMethodName,
         private ?string $adderMethodName,
         private ?string $removerMethodName,
     ) {
     }
 
-    public function offsetExists(mixed $offset): bool
+    /**
+     * @return \ArrayAccess<TKey,TValue>|array<TKey,TValue>
+     */
+    private function getCollection(): mixed
     {
-        throw new LogicException('Not implemented');
+        if ($this->getterMethodName === null) {
+            throw new LogicException('Getter method is not available');
+        }
+
+        /** @psalm-suppress MixedMethodCall */
+        $result = $this->hostObject->{$this->getterMethodName}();
+
+        if (!is_array($result) && !$result instanceof \ArrayAccess) {
+            throw new LogicException('Value is not an array or ArrayAccess');
+        }
+
+        /** @var \ArrayAccess<TKey,TValue>|array<TKey,TValue> $result */
+
+        return $result;
     }
 
+    public function getIterator(): \Traversable
+    {
+        $value = $this->getCollection();
+
+        if ($value instanceof \Traversable) {
+            return $value;
+        } elseif (is_array($value)) {
+            return new \ArrayIterator($value);
+        }
+
+        throw new LogicException('Value is not traversable or array');
+    }
+
+    public function offsetExists(mixed $offset): bool
+    {
+        return isset($this->getCollection()[$offset]);
+    }
+
+    /** @psalm-suppress MixedInferredReturnType */
     public function offsetGet(mixed $offset): mixed
     {
-        throw new LogicException('Not implemented');
+        return $this->getCollection()[$offset];
     }
 
     public function offsetSet(mixed $offset, mixed $value): void
@@ -56,7 +96,20 @@ final readonly class AdderRemoverProxy implements \ArrayAccess
             throw new LogicException('Remover method is not available');
         }
 
+        $value = $this->getCollection()[$offset];
+
         /** @psalm-suppress MixedMethodCall */
-        $this->hostObject->{$this->removerMethodName}($offset);
+        $this->hostObject->{$this->removerMethodName}($value);
+    }
+
+    public function count(): int
+    {
+        $value = $this->getCollection();
+
+        if ($value instanceof \Countable) {
+            return $value->count();
+        }
+
+        throw new LogicException('Value is not countable');
     }
 }

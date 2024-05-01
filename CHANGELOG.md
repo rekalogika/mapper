@@ -1,8 +1,12 @@
 # CHANGELOG
 
-## 1.2.1
+
+## 1.3.0
 
 * test: add tests for mapping to objects with existing value
+* fix: fix: Setter does not get called if the property is also in the
+  constructor
+* feat: option to remove missing members from the target object
 
 ## 1.2.0
 

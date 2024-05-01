@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Psr\Container\ContainerInterface;
+use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
@@ -546,6 +547,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         $guessedSourceType = TypeGuesser::guessTypeFromVariable($sourcePropertyValue);
         $sourceType = $propertyMapping->getCompatibleSourceType($guessedSourceType);
+
+        // add AllowDelete to context if target allows deletion
+
+        if ($propertyMapping->targetAllowsDelete()) {
+            $context = $context->with(new AllowDelete());
+        }
 
         // transform the value
 

@@ -23,6 +23,8 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructo
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithExtraArguments;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithoutClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\RememberingMapper\RememberingMapper;
+use Rekalogika\Mapper\Tests\Fixtures\Remove\MemberDtoToMemberMapper;
+use Rekalogika\Mapper\Tests\Fixtures\Remove\MemberRepository;
 use Rekalogika\Mapper\Tests\Fixtures\TransformerOverride\OverrideTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -52,6 +54,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->set(PropertyMapperWithExtraArguments::class);
     $services->set(MoneyObjectMapper::class);
     $services->set(PersonToPersonDtoMapper::class);
+    $services->set(MemberRepository::class);
+    $services
+        ->set(MemberDtoToMemberMapper::class)
+        ->args([
+            '$memberRepository' => service(MemberRepository::class),
+        ]);
 
     $services->set(MoneyToMoneyDtoTransformer::class)
         ->tag('rekalogika.mapper.transformer');

@@ -51,13 +51,16 @@ final readonly class PropertyMapping
         private Visibility $targetReadVisibility,
         private WriteMode $targetSetterWriteMode,
         private ?string $targetSetterWriteName,
+        private ?string $targetRemoverWriteName,
         private Visibility $targetSetterWriteVisibility,
+        private Visibility $targetRemoverWriteVisibility,
         private WriteMode $targetConstructorWriteMode,
         private ?string $targetConstructorWriteName,
         private ?string $targetScalarType,
         private ?ServiceMethodSpecification $propertyMapper,
         private bool $sourceLazy,
         private bool $targetCanAcceptNull,
+        private bool $targetAllowsDelete,
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
@@ -179,5 +182,20 @@ final readonly class PropertyMapping
     public function targetCanAcceptNull(): bool
     {
         return $this->targetCanAcceptNull;
+    }
+
+    public function targetAllowsDelete(): bool
+    {
+        return $this->targetAllowsDelete;
+    }
+
+    public function getTargetRemoverWriteName(): ?string
+    {
+        return $this->targetRemoverWriteName;
+    }
+
+    public function getTargetRemoverWriteVisibility(): Visibility
+    {
+        return $this->targetRemoverWriteVisibility;
     }
 }
