@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyInSetterAndConstructor\ParentObject
 
 class PropertyInSetterAndConstructorTest extends FrameworkTestCase
 {
-    public function testIssue57(): void
+    public function testPropertyInSetterAndConstructor(): void
     {
         $dto = new ParentObjectDto();
         $dto->name = 'dto-name';
@@ -34,7 +34,7 @@ class PropertyInSetterAndConstructorTest extends FrameworkTestCase
         $this->assertSame('dto-a', $entity->getChild()->getA());
     }
 
-    public function testIssue57Preinitialized(): void
+    public function testPropertyInSetterAndConstructorPreInitialized(): void
     {
         $dto = new ParentObjectDto();
         $dto->name = 'dto-name';
