@@ -188,10 +188,23 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // the values array
 
         if (is_array($values) && is_iterable($target)) {
+            /**
+             * @psalm-suppress RedundantConditionGivenDocblockType
+             */
+            $isList = is_array($target) && array_is_list($target);
+
             foreach ($target as $key => $value) {
                 if (!in_array($value, $values, true)) {
                     unset($target[$key]);
                 }
+            }
+
+            // renumber array if it is a list
+
+            /** @psalm-suppress RedundantConditionGivenDocblockType */
+            if (is_array($target) && $isList) {
+                /** @psalm-suppress RedundantFunctionCall */
+                $target = array_values($target);
             }
         }
 
