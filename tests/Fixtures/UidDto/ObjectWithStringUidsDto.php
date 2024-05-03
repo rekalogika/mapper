@@ -17,4 +17,5 @@ class ObjectWithStringUidsDto
 {
     public ?string $uuid = null;
     public ?string $ulid = null;
+    public ?string $ramseyUuid = null;
 }

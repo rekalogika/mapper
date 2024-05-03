@@ -1,5 +1,8 @@
 # CHANGELOG
 
+## 1.4.0
+
+* feat: `ramsey/uuid` support
 
 ## 1.3.0
 
