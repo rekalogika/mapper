@@ -51,6 +51,7 @@ use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\PresetTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\RamseyUuidTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\SymfonyUidTransformer;
@@ -128,6 +129,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set(SymfonyUidTransformer::class)
+        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+
+    $services
+        ->set(RamseyUuidTransformer::class)
         ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
 
     $services

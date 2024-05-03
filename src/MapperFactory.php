@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
+use Ramsey\Uuid\UuidInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
@@ -57,6 +58,7 @@ use Rekalogika\Mapper\Transformer\Implementation\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\PresetTransformer;
+use Rekalogika\Mapper\Transformer\Implementation\RamseyUuidTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\SymfonyUidTransformer;
@@ -130,6 +132,7 @@ class MapperFactory
     private ?CopyTransformer $copyTransformer = null;
     private ?ClassMethodTransformer $classMethodTransformer = null;
     private ?SymfonyUidTransformer $symfonyUidTransformer = null;
+    private ?RamseyUuidTransformer $ramseyUuidTransformer = null;
     private ?PresetTransformer $presetTransformer = null;
 
     private CacheItemPoolInterface $propertyInfoExtractorCache;
@@ -518,6 +521,15 @@ class MapperFactory
         return $this->symfonyUidTransformer;
     }
 
+    protected function getRamseyUuidTransformer(): RamseyUuidTransformer
+    {
+        if (null === $this->ramseyUuidTransformer) {
+            $this->ramseyUuidTransformer = new RamseyUuidTransformer();
+        }
+
+        return $this->ramseyUuidTransformer;
+    }
+
     protected function getPresetTransformer(): PresetTransformer
     {
         if (null === $this->presetTransformer) {
@@ -595,6 +607,11 @@ class MapperFactory
         if (class_exists(UuidFactory::class)) {
             yield 'SymfonyUidTransformer'
                 => $this->getSymfonyUidTransformer();
+        }
+
+        if (interface_exists(UuidInterface::class)) {
+            yield 'RamseyUuidTransformer'
+                => $this->getRamseyUuidTransformer();
         }
 
         yield 'ObjectToStringTransformer'

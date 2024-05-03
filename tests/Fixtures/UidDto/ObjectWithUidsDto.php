@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\UidDto;
 
+use Ramsey\Uuid\UuidInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Uid\Uuid;
 
@@ -20,4 +21,5 @@ class ObjectWithUidsDto
 {
     public ?Uuid $uuid = null;
     public ?Ulid $ulid = null;
+    public ?UuidInterface $ramseyUuid = null;
 }

@@ -30,6 +30,7 @@ class UidTest extends FrameworkTestCase
 
         $this->assertEquals('c4e0d7e0-7f1a-4b1e-8e3c-2b4b1b9a0b5a', $dto->uuid);
         $this->assertEquals('01F9Z3ZJZ1QJXZJXZJXZJXZJXZ', $dto->ulid);
+        $this->assertEquals('c4e0d7e0-7f1a-4b1e-8e3c-2b4b1b9a0b5a', $dto->ramseyUuid);
     }
 
     public function testStringToUuid(): void
@@ -40,7 +41,7 @@ class UidTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithUidsDto::class, $dto);
         $this->assertEquals(Uuid::fromString('6ba7b810-9dad-11d1-80b4-00c04fd430c8'), $dto->uuid);
         $this->assertEquals(Ulid::fromString('01F9Z3ZQZJQJZJZJZJZJZJZJZJ'), $dto->ulid);
-
+        $this->assertEquals('6ba7b810-9dad-11d1-80b4-00c04fd430c8', $dto->ramseyUuid?->toString());
     }
 
     public function testUuidToUuid(): void
@@ -51,6 +52,7 @@ class UidTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithUidsDto::class, $dto);
         $this->assertEquals(Uuid::fromString('c4e0d7e0-7f1a-4b1e-8e3c-2b4b1b9a0b5a'), $dto->uuid);
         $this->assertEquals(Ulid::fromString('01F9Z3ZJZ1QJXZJXZJXZJXZJXZ'), $dto->ulid);
+        $this->assertEquals('c4e0d7e0-7f1a-4b1e-8e3c-2b4b1b9a0b5a', $dto->ramseyUuid?->toString());
     }
 
 }
