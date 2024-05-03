@@ -149,7 +149,6 @@ a few keystrokes.
 * Auto-detect static factory method.
 * Use our own interface for proxy objects.
 * `MapFrom` and `MapTo` attributes.
-* Support `ramsey/uuid`
 * Improve non-framework usage.
 * Warm up proxies on build time from the list of classes provided by the user.
 * Lazy-loading using Doctrine `Collection` type hint on the target side.
