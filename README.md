@@ -89,6 +89,8 @@ a few keystrokes.
 * Maps to and from `stdClass`, objects extending `stdClass`, and other objects
   with dynamic properties (`#[AllowDynamicProperties]`).
 * Maps an object to an array, and vice versa.
+* Support for third-party objects: Doctrine Collections, Symfony Uid, Ramsey
+  UUID.
 
 ### Custom Mapping
 
@@ -110,7 +112,7 @@ a few keystrokes.
 * Attempts to detect identifier properties on the source side. Those properties
   will be mapped eagerly to the target side, as they should not trigger the
   hydration of the source. As an example, API Platform will be able to generate
-  IRIs without causing the hydration of the entire object graph.
+  IRIs without causing Doctrine to hydrate the entire object graph.
 
 ### Arrays and Array-Like Objects
 
