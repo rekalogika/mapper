@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.5.0
+
+* feat: utilize `InheritanceMap` on the source side to determine the target
+  class
+
 ## 1.4.0
 
 * feat: `ramsey/uuid` support
