@@ -4,6 +4,7 @@
 
 * feat: utilize `InheritanceMap` on the source side to determine the target
   class
+* fix: uuid packages are now not required
 
 ## 1.4.0
 
