@@ -57,30 +57,86 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
     ) {
     }
 
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     * @return class-string
+     */
+    private function resolveTargetClass(
+        string $sourceClass,
+        string $targetClass
+    ): string {
+        $sourceReflection = new \ReflectionClass($sourceClass);
+        $targetReflection = new \ReflectionClass($targetClass);
+
+        $targetAttributes = $targetReflection->getAttributes(InheritanceMap::class);
+
+        if (count($targetAttributes) > 0) {
+            // if the target has an InheritanceMap, we try to resolve the target
+            // class using the InheritanceMap
+
+            $inheritanceMap = $targetAttributes[0]->newInstance();
+
+            $resolvedTargetClass = $inheritanceMap->getTargetClassFromSourceClass($sourceClass);
+
+            if ($resolvedTargetClass === null) {
+                throw new SourceClassNotInInheritanceMapException($sourceClass, $targetClass);
+            }
+
+            return $resolvedTargetClass;
+        } elseif ($targetReflection->isAbstract() || $targetReflection->isInterface()) {
+            // if target doesn't have an inheritance map, but is also abstract
+            // or an interface, we try to find the InheritanceMap from the
+            // source
+
+            $parents = class_parents($sourceClass, true);
+            if ($parents === false) {
+                $parents = [];
+            }
+
+            $interfaces = class_implements($sourceClass, true);
+            if ($interfaces === false) {
+                $interfaces = [];
+            }
+
+            $sourceClasses = [
+                $sourceClass,
+                ...$parents,
+                ...$interfaces,
+            ];
+
+            foreach ($sourceClasses as $currentSourceClass) {
+                $sourceReflection = new \ReflectionClass($currentSourceClass);
+                $sourceAttributes = $sourceReflection->getAttributes(InheritanceMap::class);
+
+                if (count($sourceAttributes) > 0) {
+                    $inheritanceMap = $sourceAttributes[0]->newInstance();
+
+                    $resolvedTargetClass = $inheritanceMap->getSourceClassFromTargetClass($sourceClass);
+
+                    if ($resolvedTargetClass === null) {
+                        throw new SourceClassNotInInheritanceMapException($currentSourceClass, $targetClass);
+                    }
+
+                    return $resolvedTargetClass;
+                }
+            }
+        }
+
+        return $targetClass;
+    }
+
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
     ): ObjectToObjectMetadata {
         $providedTargetClass = $targetClass;
-
         $sourceReflection = new \ReflectionClass($sourceClass);
-        $providedTargetReflection = new \ReflectionClass($providedTargetClass);
 
-        // check inheritance map
-
-        $attributes = $providedTargetReflection->getAttributes(InheritanceMap::class);
-
-        if (count($attributes) > 0) {
-            $inheritanceMap = $attributes[0]->newInstance();
-
-            $targetClass = $inheritanceMap->getTargetClassFromSourceClass($sourceClass);
-
-            if ($targetClass === null) {
-                throw new SourceClassNotInInheritanceMapException($sourceClass, $providedTargetClass);
-            }
-        }
-
+        $targetClass = $this->resolveTargetClass($sourceClass, $providedTargetClass);
         $targetReflection = new \ReflectionClass($targetClass);
+
+        // dynamic properties
 
         $sourceAllowsDynamicProperties = $this->allowsDynamicProperties($sourceReflection);
         $targetAllowsDynamicProperties = $this->allowsDynamicProperties($targetReflection);

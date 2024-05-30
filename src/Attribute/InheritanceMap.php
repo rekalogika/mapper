@@ -40,4 +40,13 @@ final readonly class InheritanceMap
     {
         return $this->map[$sourceClass] ?? null;
     }
+
+    /**
+     * @param class-string $targetClass
+     * @return class-string|null
+     */
+    public function getSourceClassFromTargetClass(string $targetClass): ?string
+    {
+        return array_search($targetClass, $this->map, true) ?: null;
+    }
 }
