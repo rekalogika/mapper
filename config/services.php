@@ -11,6 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
+use Ramsey\Uuid\UuidInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
@@ -69,6 +70,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
+use Symfony\Component\Uid\Factory\UuidFactory;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
@@ -127,13 +129,17 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set(StringToBackedEnumTransformer::class)
         ->tag('rekalogika.mapper.transformer', ['priority' => -500]);
 
-    $services
-        ->set(SymfonyUidTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+    if (class_exists(UuidFactory::class)) {
+        $services
+            ->set(SymfonyUidTransformer::class)
+            ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+    }
 
-    $services
-        ->set(RamseyUuidTransformer::class)
-        ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+    if (interface_exists(UuidInterface::class)) {
+        $services
+            ->set(RamseyUuidTransformer::class)
+            ->tag('rekalogika.mapper.transformer', ['priority' => -550]);
+    }
 
     $services
         ->set(ObjectToStringTransformer::class)
