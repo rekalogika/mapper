@@ -3,6 +3,7 @@
 ## 1.5.1
 
 * build: add github-actions to dependabot
+* build: update php-cs-fixer
 
 ## 1.5.0
 
