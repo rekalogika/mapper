@@ -4,6 +4,8 @@
 
 * build: add github-actions to dependabot
 * build: update php-cs-fixer
+* refactor: use `ClassUtil::getAllClassesFromObject()` for `class_parents()` +
+  `class_implements()`
 
 ## 1.5.0
 
