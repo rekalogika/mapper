@@ -15,9 +15,12 @@ namespace Rekalogika\Mapper\CustomMapper\Implementation;
 
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
+use Rekalogika\Mapper\Util\ClassUtil;
 
 /**
  * @internal
+ *
+ * Not in hot path, no caching needed.
  */
 final class PropertyMapperResolver implements PropertyMapperResolverInterface
 {
@@ -52,28 +55,14 @@ final class PropertyMapperResolver implements PropertyMapperResolverInterface
         string $targetClass,
         string $property
     ): ?ServiceMethodSpecification {
-        if (!isset($this->propertyMappers[$targetClass][$property])) {
-            return null;
-        }
+        $sourceClasses = ClassUtil::getAllClassesFromObject($sourceClass);
+        $targetClasses = ClassUtil::getAllClassesFromObject($targetClass);
 
-        $propertyMappers = $this->propertyMappers[$targetClass][$property];
-
-        $sourceClassReflection = new \ReflectionClass($sourceClass);
-
-        do {
-            if (isset($propertyMappers[$sourceClassReflection->getName()])) {
-                return $propertyMappers[$sourceClassReflection->getName()];
-            }
-        } while ($sourceClassReflection = $sourceClassReflection->getParentClass());
-
-        $interfaces = class_implements($sourceClass);
-        if ($interfaces === false) {
-            return null;
-        }
-
-        foreach ($interfaces as $interface) {
-            if (isset($propertyMappers[$interface])) {
-                return $propertyMappers[$interface];
+        foreach ($sourceClasses as $sourceClass) {
+            foreach ($targetClasses as $targetClass) {
+                if (isset($this->propertyMappers[$targetClass][$property][$sourceClass])) {
+                    return $this->propertyMappers[$targetClass][$property][$sourceClass];
+                }
             }
         }
 
