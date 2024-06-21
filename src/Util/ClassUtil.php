@@ -145,4 +145,31 @@ final readonly class ClassUtil
 
         return $skippedProperties;
     }
+
+
+    /**
+     * @param object|class-string $objectOrClass
+     * @return array<int,class-string>
+     */
+    public static function getAllClassesFromObject(
+        object|string $objectOrClass
+    ): array {
+        $class = is_object($objectOrClass) ? $objectOrClass::class : $objectOrClass;
+
+        $parents = class_parents($class, true);
+        if ($parents === false) {
+            $parents = [];
+        }
+
+        $interfaces = class_implements($class, true);
+        if ($interfaces === false) {
+            $interfaces = [];
+        }
+
+        return [
+            $class,
+            ...array_values($parents),
+            ...array_values($interfaces),
+        ];
+    }
 }

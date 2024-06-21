@@ -89,21 +89,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // or an interface, we try to find the InheritanceMap from the
             // source
 
-            $parents = class_parents($sourceClass, true);
-            if ($parents === false) {
-                $parents = [];
-            }
-
-            $interfaces = class_implements($sourceClass, true);
-            if ($interfaces === false) {
-                $interfaces = [];
-            }
-
-            $sourceClasses = [
-                $sourceClass,
-                ...$parents,
-                ...$interfaces,
-            ];
+            $sourceClasses = ClassUtil::getAllClassesFromObject($sourceClass);
 
             foreach ($sourceClasses as $currentSourceClass) {
                 $sourceReflection = new \ReflectionClass($currentSourceClass);

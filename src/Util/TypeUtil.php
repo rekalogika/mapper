@@ -114,7 +114,7 @@ final readonly class TypeUtil
                     /** @var class-string */
                     $typeClass = $type->getClassName();
 
-                    foreach (self::getAllClassesFromObject($typeClass) as $class) {
+                    foreach (ClassUtil::getAllClassesFromObject($typeClass) as $class) {
                         $newTypes[] = new Type(
                             builtinType: $type->getBuiltinType(),
                             nullable: $type->isNullable(),
@@ -402,39 +402,6 @@ final readonly class TypeUtil
         }
 
         return $typeStrings;
-    }
-
-    /**
-     * @param object|class-string $objectOrClass
-     * @return array<int,class-string>
-     */
-    private static function getAllClassesFromObject(
-        object|string $objectOrClass
-    ): array {
-        $classes = [];
-
-        $class = is_object($objectOrClass) ? $objectOrClass::class : $objectOrClass;
-        $classes[] = $class;
-
-        $parents = class_parents($class);
-        if ($parents === false) {
-            $parents = [];
-        }
-
-        foreach ($parents as $parentClass) {
-            $classes[] = $parentClass;
-        }
-
-        $interfaces = class_implements($class);
-        if ($interfaces === false) {
-            $interfaces = [];
-        }
-
-        foreach ($interfaces as $interface) {
-            $classes[] = $interface;
-        }
-
-        return $classes;
     }
 
     /**
