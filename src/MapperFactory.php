@@ -156,7 +156,7 @@ class MapperFactory
     private ?EagerPropertiesResolverInterface $eagerPropertiesResolver = null;
     private ?ProxyGeneratorInterface $proxyGenerator = null;
     private ?ProxyRegistryInterface $proxyRegistry = null;
-    private ?ProxyAutoLoaderInterface $proxyAutoLoader = null;
+    private ?ProxyAutoloaderInterface $proxyAutoLoader = null;
     private ?ProxyFactoryInterface $proxyFactory = null;
 
     private ?MappingCommand $mappingCommand = null;
@@ -833,7 +833,7 @@ class MapperFactory
         return $this->proxyRegistry;
     }
 
-    protected function getProxyAutoLoader(): ProxyAutoLoaderInterface
+    protected function getProxyAutoLoader(): ProxyAutoloaderInterface
     {
         if (null === $this->proxyAutoLoader) {
             $proxyRegistry = $this->getProxyRegistry();
