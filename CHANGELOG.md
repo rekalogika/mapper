@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.2
+
+* refactor(`ObjectMapperTable`): simplification
+
 ## 1.5.1
 
 * build: add github-actions to dependabot
