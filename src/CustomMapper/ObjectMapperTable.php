@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\CustomMapper;
 
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
+use Rekalogika\Mapper\Util\ClassUtil;
 
 /**
  * @implements \IteratorAggregate<int,ObjectMapperTableEntry>
@@ -63,24 +64,11 @@ final class ObjectMapperTable implements \IteratorAggregate
             return null;
         }
 
-        $propertyMappers = $this->objectMappers[$targetClass];
+        $sourceClasses = ClassUtil::getAllClassesFromObject($sourceClass);
 
-        $sourceClassReflection = new \ReflectionClass($sourceClass);
-
-        do {
-            if (isset($propertyMappers[$sourceClassReflection->getName()])) {
-                return $propertyMappers[$sourceClassReflection->getName()];
-            }
-        } while ($sourceClassReflection = $sourceClassReflection->getParentClass());
-
-        $interfaces = class_implements($sourceClass);
-        if ($interfaces === false) {
-            return null;
-        }
-
-        foreach ($interfaces as $interface) {
-            if (isset($propertyMappers[$interface])) {
-                return $propertyMappers[$interface];
+        foreach ($sourceClasses as $sourceClass) {
+            if (isset($this->objectMappers[$targetClass][$sourceClass])) {
+                return $this->objectMappers[$targetClass][$sourceClass];
             }
         }
 
