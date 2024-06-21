@@ -18,6 +18,8 @@ use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObject;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
@@ -149,6 +151,57 @@ class PropertyMappingTest extends FrameworkTestCase
     {
         $object = new SomeObject();
         $dto = $this->mapper->map($object, SomeObjectDto::class);
+
+        $this->assertEquals(SomeObject::class .  '::propertyA', $dto->propertyA);
+        $this->assertEquals(SomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertNull($dto->propertyC);
+        $this->assertEquals(SomeObject::class .  '::propertyD', $dto->propertyD);
+        $this->assertEquals(sprintf(
+            'I have "%s" and "%s" that I can use to transform source property "%s"',
+            Context::class,
+            MainTransformer::class,
+            SomeObject::class,
+        ), $dto->propertyE);
+    }
+
+    public function testPropertyMappingChildToParent(): void
+    {
+        $object = new ChildOfSomeObject();
+        $dto = $this->mapper->map($object, SomeObjectDto::class);
+
+        $this->assertEquals(ChildOfSomeObject::class .  '::propertyA', $dto->propertyA);
+        $this->assertEquals(ChildOfSomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertNull($dto->propertyC);
+        $this->assertEquals(ChildOfSomeObject::class .  '::propertyD', $dto->propertyD);
+        $this->assertEquals(sprintf(
+            'I have "%s" and "%s" that I can use to transform source property "%s"',
+            Context::class,
+            MainTransformer::class,
+            ChildOfSomeObject::class,
+        ), $dto->propertyE);
+    }
+
+    public function testPropertyMappingChildToChild(): void
+    {
+        $object = new ChildOfSomeObject();
+        $dto = $this->mapper->map($object, ChildOfSomeObjectDto::class);
+
+        $this->assertEquals(ChildOfSomeObject::class .  '::propertyA', $dto->propertyA);
+        $this->assertEquals(ChildOfSomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertNull($dto->propertyC);
+        $this->assertEquals(ChildOfSomeObject::class .  '::propertyD', $dto->propertyD);
+        $this->assertEquals(sprintf(
+            'I have "%s" and "%s" that I can use to transform source property "%s"',
+            Context::class,
+            MainTransformer::class,
+            ChildOfSomeObject::class,
+        ), $dto->propertyE);
+    }
+
+    public function testPropertyMappingParentToChild(): void
+    {
+        $object = new SomeObject();
+        $dto = $this->mapper->map($object, ChildOfSomeObjectDto::class);
 
         $this->assertEquals(SomeObject::class .  '::propertyA', $dto->propertyA);
         $this->assertEquals(SomeObject::class .  '::propertyB', $dto->propertyB);
