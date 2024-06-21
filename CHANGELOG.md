@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.1
+
+* build: add github-actions to dependabot
+
 ## 1.5.0
 
 * feat: utilize `InheritanceMap` on the source side to determine the target
