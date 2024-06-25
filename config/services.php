@@ -11,6 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\UuidInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
@@ -204,7 +205,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.mapping_factory', MappingFactory::class)
         ->args([
             tagged_iterator('rekalogika.mapper.transformer', 'key'),
-            service('rekalogika.mapper.type_resolver')
+            service('rekalogika.mapper.type_resolver'),
+            service(LoggerInterface::class)->nullOnInvalid()
         ]);
 
     $services

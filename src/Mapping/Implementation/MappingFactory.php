@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Mapping\Implementation;
 
+use Psr\Log\LoggerInterface;
+use Rekalogika\Mapper\Exception\InvalidClassException;
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
@@ -33,7 +35,8 @@ final class MappingFactory implements MappingFactoryInterface
      */
     public function __construct(
         private iterable $transformers,
-        private TypeResolverInterface $typeResolver
+        private TypeResolverInterface $typeResolver,
+        private ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -66,7 +69,61 @@ final class MappingFactory implements MappingFactoryInterface
         string $id,
         TransformerInterface $transformer
     ): void {
-        foreach ($transformer->getSupportedTransformation() as $typeMapping) {
+        try {
+            $supportedTransformation = $transformer->getSupportedTransformation();
+        } catch (InvalidClassException $e) {
+            // if we get invalid class exception here, we ignore the transformer
+
+            $this->logger?->warning(
+                'Transformer "{transformer}" has a mapping involving an invalid class "{class}", ignoring the transformer.',
+                [
+                    'transformer' => get_class($transformer),
+                    'class' => $e->getClass(),
+                ],
+            );
+
+            return;
+        }
+
+        // convert to iterator, so that we can catch an exception and able to
+        // continue the iteration
+
+        if (is_array($supportedTransformation)) {
+            $supportedTransformation = new \ArrayIterator($supportedTransformation);
+        } else {
+            $supportedTransformation = new \IteratorIterator($supportedTransformation);
+        }
+
+        try {
+            $supportedTransformation->rewind();
+        } catch (InvalidClassException $e) {
+            $this->logger?->warning(
+                'Transformer "{transformer}" has a mapping involving an invalid class "{class}", ignoring the invalid mapping.',
+                [
+                    'transformer' => get_class($transformer),
+                    'class' => $e->getClass(),
+                ],
+            );
+
+            // if the error happens here, we ignore
+        }
+
+        while ($supportedTransformation->valid()) {
+            try {
+                $typeMapping = $supportedTransformation->current();
+            } catch (InvalidClassException $e) {
+                $this->logger?->warning(
+                    'Transformer "{transformer}" has a mapping involving an invalid class "{class}", ignoring the invalid mapping.',
+                    [
+                        'transformer' => get_class($transformer),
+                        'class' => $e->getClass(),
+                    ],
+                );
+
+                // if the error happens here, we continue to the next mapping
+                continue;
+            }
+
             $sourceTypes = $this->getSimpleTypes($typeMapping->getSourceType());
             $targetTypes = $this->getSimpleTypes($typeMapping->getTargetType());
             $isVariantTargetType = $typeMapping->isVariantTargetType();
@@ -91,7 +148,12 @@ final class MappingFactory implements MappingFactoryInterface
                     );
                 }
             }
+
+            $supportedTransformation->next();
         }
+
+        // foreach ($supportedTransformation as $typeMapping) {
+        // }
     }
 
     /**

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Util;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Exception\InvalidClassException;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -289,7 +290,7 @@ final class TypeFactory
         }
 
         if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
-            throw new InvalidArgumentException(sprintf('"%s" is not a valid class.', $class));
+            throw new InvalidClassException($class);
         }
 
         return self::$instancesOfObjectOfClass[$class] = new Type(
