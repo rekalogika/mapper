@@ -149,11 +149,21 @@ final class MappingFactory implements MappingFactoryInterface
                 }
             }
 
-            $supportedTransformation->next();
-        }
+            try {
+                $supportedTransformation->next();
+            } catch (InvalidClassException $e) {
+                $this->logger?->warning(
+                    'Transformer "{transformer}" has a mapping involving an invalid class "{class}", skipping mapping definition from this transformer.',
+                    [
+                        'transformer' => get_class($transformer),
+                        'class' => $e->getClass(),
+                    ],
+                );
 
-        // foreach ($supportedTransformation as $typeMapping) {
-        // }
+                // if the error happens here, we ignore
+                continue;
+            }
+        }
     }
 
     /**
