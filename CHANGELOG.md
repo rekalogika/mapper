@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.5.4
+
+* fix: exclude `symfony/property-info` version 7.1.2 and 6.4.9,
+  https://github.com/symfony/symfony/issues/57634
+
 ## 1.5.2
 
 * refactor(`ObjectMapperTable`): simplification

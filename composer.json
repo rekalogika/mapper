@@ -34,7 +34,7 @@
         "symfony/console": "^6.4 || ^7.0",
         "symfony/dependency-injection": "^6.4 || ^7.0",
         "symfony/property-access": "^6.4 || ^7.0",
-        "symfony/property-info": "^6.4 || ^7.0",
+        "symfony/property-info": "^6.4 || ^7.0, !=7.1.2, !=6.4.9",
         "symfony/serializer": "^6.4 || ^7.0",
         "symfony/service-contracts": "^3.0",
         "symfony/var-exporter": "^6.4.1 || ^6.5 || ^7.0.1 || ^7.1"
