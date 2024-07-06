@@ -74,7 +74,7 @@ final class ObjectCache
             $this->preCache[$source] = $arrayObject;
         }
 
-        $this->preCache->offsetGet($source)?->offsetSet($targetTypeString, true);
+        $this->preCache->offsetGet($source)->offsetSet($targetTypeString, true);
     }
 
     public function undoPreCache(mixed $source, Type $targetType): void
@@ -165,7 +165,7 @@ final class ObjectCache
             $this->cache[$source] = $arrayObject;
         }
 
-        $this->cache->offsetGet($source)?->offsetSet($targetTypeString, $target);
+        $this->cache->offsetGet($source)->offsetSet($targetTypeString, $target);
 
         // remove precache
 
