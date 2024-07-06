@@ -62,7 +62,7 @@ final readonly class PresetMapping
             }
 
             foreach ($classToTargetMapping as $class => $target) {
-                $this->mappings->offsetGet($source)?->offsetSet($class, $target);
+                $this->mappings->offsetGet($source)->offsetSet($class, $target);
             }
         }
     }
