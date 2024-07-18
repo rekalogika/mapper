@@ -132,7 +132,7 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
         }
 
         return $this->totalTime = array_sum(array_map(
-            fn (TraceData $traceData) => $traceData->getTime(),
+            fn (TraceData $traceData): float => $traceData->getTime(),
             $this->getMappings()
         ));
     }

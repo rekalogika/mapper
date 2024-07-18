@@ -467,7 +467,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // ensure we can create the proxy
 
             $this->proxyFactory
-                ->createProxy($targetClass, function ($instance) {
+                ->createProxy($targetClass, function ($instance): void {
                 }, $eagerProperties);
 
             // determine if the constructor contains eager properties. if it

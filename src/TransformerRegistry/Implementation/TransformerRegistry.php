@@ -148,7 +148,7 @@ final class TransformerRegistry implements TransformerRegistryInterface
             }
         }
 
-        usort($searchResultEntries, fn (SearchResultEntry $a, SearchResultEntry $b) => $a->getMappingOrder() <=> $b->getMappingOrder());
+        usort($searchResultEntries, fn (SearchResultEntry $a, SearchResultEntry $b): int => $a->getMappingOrder() <=> $b->getMappingOrder());
 
         return new SearchResult($searchResultEntries);
     }

@@ -59,7 +59,7 @@ class TestKernel extends Kernel
         $confDir = $this->getProjectDir() . '/tests/Resources/';
         $loader->load($confDir . '*' . '.yaml', 'glob');
 
-        $loader->load(function (ContainerBuilder $container) {
+        $loader->load(function (ContainerBuilder $container): void {
             $container->loadFromExtension('rekalogika_mapper', $this->config);
         });
     }
