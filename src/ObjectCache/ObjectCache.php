@@ -52,7 +52,6 @@ final class ObjectCache
      * cache will yield an exception. If the target is finally cached, it is
      * no longer in precached status.
      *
-     * @param mixed $source
      * @param Type $targetType
      * @return void
      */
