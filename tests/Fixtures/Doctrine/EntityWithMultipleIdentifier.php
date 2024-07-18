@@ -18,22 +18,16 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 class EntityWithMultipleIdentifier
 {
-    #[ORM\Id]
-    #[ORM\Column(name: 'id1', type: 'string', length: 255)]
-    private string $id1;
+    public function __construct(
+        #[ORM\Id]
+        #[ORM\Column(name: 'id1', type: 'string', length: 255)]
+        private string $id1,
 
-    #[ORM\Id]
-    #[ORM\Column(name: 'id2', type: 'string', length: 255)]
-    private string $id2;
-
-    #[ORM\Column]
-    private string $name;
-
-    public function __construct(string $id1, string $id2, string $name)
+        #[ORM\Id]
+        #[ORM\Column(name: 'id2', type: 'string', length: 255)]
+        private string $id2, #[ORM\Column]
+        private string $name)
     {
-        $this->id1 = $id1;
-        $this->id2 = $id2;
-        $this->name = $name;
     }
 
     public function getId1(): string

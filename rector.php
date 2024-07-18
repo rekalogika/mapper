@@ -12,6 +12,7 @@ use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
+use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php80\Rector\FunctionLike\MixedTypeRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
@@ -38,6 +39,7 @@ return RectorConfig::configure()
     // uncomment to reach your current PHP version
     // ->withPhpSets(php82: true)
     ->withRules([
+        ClassPropertyAssignToConstructorPromotionRector::class,
         MixedTypeRector::class,
         ReadOnlyClassRector::class,
         ReadOnlyPropertyRector::class,
