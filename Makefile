@@ -29,3 +29,8 @@ php-cs-fixer: tools/php-cs-fixer
 .PHONY: tools/php-cs-fixer
 tools/php-cs-fixer:
 	phive install php-cs-fixer
+
+.PHONY: rector
+rector:
+	$(PHP) vendor/bin/rector process > rector.log
+	make php-cs-fixer

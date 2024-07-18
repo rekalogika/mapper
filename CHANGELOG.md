@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.5
+
+* build: add rector
+
 ## 1.5.4
 
 * fix: exclude `symfony/property-info` version 7.1.2 and 6.4.9,
