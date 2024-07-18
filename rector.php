@@ -10,6 +10,7 @@ use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
+use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
@@ -37,7 +38,7 @@ return RectorConfig::configure()
         // symfonyCodeQuality: true,
         // doctrineCodeQuality: true,
     )
-    ->withDeadCodeLevel(20)
+    ->withDeadCodeLevel(25)
     ->withPhpSets(php82: true)
     ->withRules([
         AddOverrideAttributeToOverriddenMethodsRector::class,
@@ -60,4 +61,8 @@ return RectorConfig::configure()
 
         // makes code unreadable
         DisallowedShortTernaryRuleFixerRector::class,
+
+        RemoveAlwaysTrueIfConditionRector::class => [
+            __DIR__ . '/src/Proxy/Implementation/ProxyFactory.php',
+        ],
     ]);
