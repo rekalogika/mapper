@@ -30,7 +30,7 @@ return RectorConfig::configure()
         // deadCode: true,
         // codeQuality: true,
         // codingStyle: true,
-        // typeDeclarations: true,
+        typeDeclarations: true,
         // privatization: true,
         // instanceOf: true,
         // strictBooleans: true,
@@ -39,7 +39,6 @@ return RectorConfig::configure()
     )
     // uncomment to reach your current PHP version
     ->withPhpSets(php82: true)
-    ->withTypeCoverageLevel(10)
     ->withRules([
         AddOverrideAttributeToOverriddenMethodsRector::class,
     ])
