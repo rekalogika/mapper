@@ -11,16 +11,14 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
+use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Strict\Rector\Ternary\DisallowedShortTernaryRuleFixerRector;
 
 return RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/packages',
-        __DIR__ . '/tests/bin',
-        __DIR__ . '/tests/config',
-        __DIR__ . '/tests/public',
-        __DIR__ . '/tests/src',
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
     ])
     ->withPreparedSets(
         // deadCode: true,
@@ -34,8 +32,9 @@ return RectorConfig::configure()
         // doctrineCodeQuality: true,
     )
     // uncomment to reach your current PHP version
-    ->withPhpSets(php82: true)
+    // ->withPhpSets(php82: true)
     ->withRules([
+        ReadOnlyPropertyRector::class,
         AddOverrideAttributeToOverriddenMethodsRector::class,
     ])
     ->withSkip([

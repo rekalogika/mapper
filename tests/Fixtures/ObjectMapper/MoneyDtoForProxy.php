@@ -16,8 +16,8 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
 class MoneyDtoForProxy
 {
     public function __construct(
-        private string $amount,
-        private string $currency,
+        private readonly string $amount,
+        private readonly string $currency,
     ) {
     }
 

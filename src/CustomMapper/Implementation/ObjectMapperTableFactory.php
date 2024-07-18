@@ -22,7 +22,7 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
  */
 final class ObjectMapperTableFactory implements ObjectMapperTableFactoryInterface
 {
-    private ObjectMapperTable $objectMapperTable;
+    private readonly ObjectMapperTable $objectMapperTable;
 
     public function __construct()
     {

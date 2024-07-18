@@ -28,8 +28,8 @@ final class CachingObjectMapperResolver implements ObjectMapperResolverInterface
     private array $objectMapperCache = [];
 
     public function __construct(
-        private ObjectMapperResolverInterface $objectMapperResolver,
-        private CacheItemPoolInterface $cacheItemPool
+        private readonly ObjectMapperResolverInterface $objectMapperResolver,
+        private readonly CacheItemPoolInterface $cacheItemPool
     ) {
     }
 

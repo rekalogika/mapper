@@ -34,9 +34,9 @@ final class MappingFactory implements MappingFactoryInterface
      * @param iterable<string,TransformerInterface> $transformers
      */
     public function __construct(
-        private iterable $transformers,
-        private TypeResolverInterface $typeResolver,
-        private ?LoggerInterface $logger = null,
+        private readonly iterable $transformers,
+        private readonly TypeResolverInterface $typeResolver,
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 

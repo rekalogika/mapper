@@ -19,8 +19,8 @@ use Rekalogika\Mapper\MapperInterface;
 final class MapperDecorator implements MapperInterface
 {
     public function __construct(
-        private MapperInterface $decorated,
-        private Context $defaultContext
+        private readonly MapperInterface $decorated,
+        private readonly Context $defaultContext
     ) {
     }
 

@@ -32,7 +32,7 @@ final class ObjectMapperResolver implements ObjectMapperResolverInterface
     private array $objectMapperCache = [];
 
     public function __construct(
-        private ObjectMapperTableFactoryInterface $objectMapperTableFactory
+        private readonly ObjectMapperTableFactoryInterface $objectMapperTableFactory
     ) {
     }
 

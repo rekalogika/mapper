@@ -32,8 +32,8 @@ final class WarmableObjectMapperTableFactory implements
     private ?ObjectMapperTable $objectMapperTableCache = null;
 
     public function __construct(
-        private ObjectMapperTableFactoryInterface $decorated,
-        private KernelInterface $kernel,
+        private readonly ObjectMapperTableFactoryInterface $decorated,
+        private readonly KernelInterface $kernel,
     ) {
     }
 

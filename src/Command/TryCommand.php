@@ -32,8 +32,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class TryCommand extends Command
 {
     public function __construct(
-        private TransformerRegistryInterface $transformerRegistry,
-        private TypeResolverInterface $typeResolver
+        private readonly TransformerRegistryInterface $transformerRegistry,
+        private readonly TypeResolverInterface $typeResolver
     ) {
         parent::__construct();
     }

@@ -24,8 +24,8 @@ use Symfony\Component\VarExporter\LazyObjectInterface;
  */
 final class TraceData
 {
-    private string $sourceType;
-    private string $existingTargetType;
+    private readonly string $sourceType;
+    private readonly string $existingTargetType;
     private ?string $resultType = null;
     private ?float $time = null;
 
@@ -46,13 +46,13 @@ final class TraceData
      * @param class-string<TransformerInterface> $transformerClass
      */
     public function __construct(
-        private ?string $path,
+        private readonly ?string $path,
         mixed $source,
         mixed $existingTargetValue,
-        private ?array $possibleTargetTypes,
-        private ?Type $selectedTargetType,
-        private string $transformerClass,
-        private bool $sourceTypeGuessed,
+        private readonly ?array $possibleTargetTypes,
+        private readonly ?Type $selectedTargetType,
+        private readonly string $transformerClass,
+        private readonly bool $sourceTypeGuessed,
     ) {
         $this->sourceType = \get_debug_type($source);
         $this->existingTargetType = \get_debug_type($existingTargetValue);

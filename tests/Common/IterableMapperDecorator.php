@@ -19,8 +19,8 @@ use Rekalogika\Mapper\IterableMapperInterface;
 final class IterableMapperDecorator implements IterableMapperInterface
 {
     public function __construct(
-        private IterableMapperInterface $decorated,
-        private Context $defaultContext
+        private readonly IterableMapperInterface $decorated,
+        private readonly Context $defaultContext
     ) {
     }
 

@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Attribute\AsObjectMapper;
 class MemberDtoToMemberMapper
 {
     public function __construct(
-        private MemberRepository $memberRepository,
+        private readonly MemberRepository $memberRepository,
     ) {
     }
 

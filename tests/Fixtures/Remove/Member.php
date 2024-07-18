@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Remove;
 class Member
 {
     public function __construct(
-        private string $id,
+        private readonly string $id,
     ) {
     }
 

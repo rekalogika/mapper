@@ -32,9 +32,9 @@ use Symfony\Component\PropertyInfo\Type;
 final class TransformerRegistry implements TransformerRegistryInterface
 {
     public function __construct(
-        private ContainerInterface $transformersLocator,
-        private TypeResolverInterface $typeResolver,
-        private MappingFactoryInterface $mappingFactory,
+        private readonly ContainerInterface $transformersLocator,
+        private readonly TypeResolverInterface $typeResolver,
+        private readonly MappingFactoryInterface $mappingFactory,
     ) {
     }
 

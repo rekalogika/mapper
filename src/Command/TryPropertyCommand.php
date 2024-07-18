@@ -32,9 +32,9 @@ use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 final class TryPropertyCommand extends Command
 {
     public function __construct(
-        private TransformerRegistryInterface $transformerRegistry,
-        private TypeResolverInterface $typeResolver,
-        private PropertyInfoExtractorInterface $propertyInfoExtractor,
+        private readonly TransformerRegistryInterface $transformerRegistry,
+        private readonly TypeResolverInterface $typeResolver,
+        private readonly PropertyInfoExtractorInterface $propertyInfoExtractor,
     ) {
         parent::__construct();
     }

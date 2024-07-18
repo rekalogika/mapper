@@ -45,10 +45,10 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
     private static int $runCounter = 1;
 
     public function __construct(
-        private ObjectCacheFactoryInterface $objectCacheFactory,
-        private TransformerRegistryInterface $transformerRegistry,
-        private TypeResolverInterface $typeResolver,
-        private bool $debug = false,
+        private readonly ObjectCacheFactoryInterface $objectCacheFactory,
+        private readonly TransformerRegistryInterface $transformerRegistry,
+        private readonly TypeResolverInterface $typeResolver,
+        private readonly bool $debug = false,
     ) {
     }
 

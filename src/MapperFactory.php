@@ -135,7 +135,7 @@ class MapperFactory
     private ?RamseyUuidTransformer $ramseyUuidTransformer = null;
     private ?PresetTransformer $presetTransformer = null;
 
-    private CacheItemPoolInterface $propertyInfoExtractorCache;
+    private readonly CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
     private ?TypeResolverInterface $typeResolver = null;
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
@@ -168,11 +168,11 @@ class MapperFactory
      * @param array<string,TransformerInterface> $additionalTransformers
      */
     public function __construct(
-        private array $additionalTransformers = [],
+        private readonly array $additionalTransformers = [],
         private ?ReflectionExtractor $reflectionExtractor = null,
         private ?PhpStanExtractor $phpStanExtractor = null,
-        private ?NormalizerInterface $normalizer = null,
-        private ?DenormalizerInterface $denormalizer = null,
+        private readonly ?NormalizerInterface $normalizer = null,
+        private readonly ?DenormalizerInterface $denormalizer = null,
         ?CacheItemPoolInterface $propertyInfoExtractorCache = null,
     ) {
         $this->propertyInfoExtractorCache = $propertyInfoExtractorCache ?? new ArrayAdapter();

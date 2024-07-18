@@ -29,8 +29,8 @@ final class WarmableMappingFactory implements MappingFactoryInterface
     private ?Mapping $mapping = null;
 
     public function __construct(
-        private MappingFactoryInterface $realMappingFactory,
-        private KernelInterface $kernel,
+        private readonly MappingFactoryInterface $realMappingFactory,
+        private readonly KernelInterface $kernel,
     ) {
     }
 

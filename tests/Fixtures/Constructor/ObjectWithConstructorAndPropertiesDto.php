@@ -16,8 +16,8 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Constructor;
 class ObjectWithConstructorAndPropertiesDto
 {
     public function __construct(
-        private int $a = 1,
-        private string $b = 'string',
+        private readonly int $a = 1,
+        private readonly string $b = 'string',
     ) {
     }
 

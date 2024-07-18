@@ -26,8 +26,8 @@ use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 final class MoneyDto implements MapToObjectInterface, MapFromObjectInterface
 {
     public function __construct(
-        private string $amount,
-        private string $currency,
+        private readonly string $amount,
+        private readonly string $currency,
     ) {
     }
 

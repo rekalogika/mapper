@@ -32,7 +32,7 @@ final class ObjectCache
     private \WeakMap $preCache;
 
     public function __construct(
-        private TypeResolverInterface $typeResolver
+        private readonly TypeResolverInterface $typeResolver
     ) {
         /** @psalm-suppress MixedPropertyTypeCoercion */
         $this->cache = new \WeakMap();

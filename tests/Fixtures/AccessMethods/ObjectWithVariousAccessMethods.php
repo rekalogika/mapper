@@ -28,7 +28,7 @@ class ObjectWithVariousAccessMethods
     public string $unsetPublicProperty;
 
     // @phpstan-ignore-next-line
-    private string $unsetPrivatePropertyWithGetter;
+    private readonly string $unsetPrivatePropertyWithGetter;
 
     public function getPrivateProperty(): string
     {
