@@ -77,8 +77,6 @@ final readonly class Path implements \Stringable
             return null;
         }
 
-        $result = $this->path[$lastKey] ?? null;
-
-        return $result;
+        return $this->path[$lastKey] ?? null;
     }
 }
