@@ -16,11 +16,11 @@ namespace Rekalogika\Mapper\Tests\Common;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\IterableMapperInterface;
 
-final class IterableMapperDecorator implements IterableMapperInterface
+final readonly class IterableMapperDecorator implements IterableMapperInterface
 {
     public function __construct(
-        private readonly IterableMapperInterface $decorated,
-        private readonly Context $defaultContext
+        private IterableMapperInterface $decorated,
+        private Context $defaultContext
     ) {
     }
 

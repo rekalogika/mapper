@@ -15,6 +15,7 @@ use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php80\Rector\FunctionLike\MixedTypeRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
+use Rector\Php82\Rector\Class_\ReadOnlyClassRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Strict\Rector\Ternary\DisallowedShortTernaryRuleFixerRector;
 
@@ -38,6 +39,7 @@ return RectorConfig::configure()
     // ->withPhpSets(php82: true)
     ->withRules([
         MixedTypeRector::class,
+        ReadOnlyClassRector::class,
         ReadOnlyPropertyRector::class,
         RemoveUnusedVariableInCatchRector::class,
         ClassOnObjectRector::class,

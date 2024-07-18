@@ -23,11 +23,11 @@ use Rekalogika\Mapper\SubMapper\SubMapperInterface;
  * @deprecated
  * @psalm-suppress DeprecatedInterface
  */
-final class MoneyDto implements MapToObjectInterface, MapFromObjectInterface
+final readonly class MoneyDto implements MapToObjectInterface, MapFromObjectInterface
 {
     public function __construct(
-        private readonly string $amount,
-        private readonly string $currency,
+        private string $amount,
+        private string $currency,
     ) {
     }
 

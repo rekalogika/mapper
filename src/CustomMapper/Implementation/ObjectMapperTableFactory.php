@@ -20,9 +20,9 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 /**
  * @internal
  */
-final class ObjectMapperTableFactory implements ObjectMapperTableFactoryInterface
+final readonly class ObjectMapperTableFactory implements ObjectMapperTableFactoryInterface
 {
-    private readonly ObjectMapperTable $objectMapperTable;
+    private ObjectMapperTable $objectMapperTable;
 
     public function __construct()
     {

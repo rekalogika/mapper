@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
 
-final class MoneyDto
+final readonly class MoneyDto
 {
     public function __construct(
-        private readonly string $amount,
-        private readonly string $currency,
+        private string $amount,
+        private string $currency,
     ) {
     }
 
