@@ -11,6 +11,7 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
+use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
 use Rector\Php81\Rector\Property\ReadOnlyPropertyRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
@@ -36,6 +37,7 @@ return RectorConfig::configure()
     // ->withPhpSets(php82: true)
     ->withRules([
         ReadOnlyPropertyRector::class,
+        RemoveUnusedVariableInCatchRector::class,
         ClassOnObjectRector::class,
 
         AddOverrideAttributeToOverriddenMethodsRector::class,

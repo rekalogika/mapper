@@ -356,7 +356,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 $constructorArguments->addUnsetSourceProperty($sourceProperty);
 
                 continue;
-            } catch (UnsupportedPropertyMappingException $e) {
+            } catch (UnsupportedPropertyMappingException) {
                 continue;
             }
         }
@@ -408,9 +408,9 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 target: $target,
                 context: $context
             );
-        } catch (UninitializedSourcePropertyException $e) {
+        } catch (UninitializedSourcePropertyException) {
             return;
-        } catch (UnsupportedPropertyMappingException $e) {
+        } catch (UnsupportedPropertyMappingException) {
             return;
         }
 
@@ -606,7 +606,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                             path: $sourceProperty,
                         );
                     }
-                } catch (\Throwable $e) {
+                } catch (\Throwable) {
                     $targetPropertyValue = null;
                 }
 

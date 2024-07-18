@@ -101,7 +101,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
                 if (is_scalar($targetPropertyValue)) {
                     $targetPropertyValue = null;
                 }
-            } catch (ExceptionInterface $e) {
+            } catch (ExceptionInterface) {
                 $targetPropertyValue = null;
             }
         } else {
