@@ -30,8 +30,6 @@ final class TypeFactory
     /**
      * Convert a string type notation to a Type object. Currently does not do
      * anything fancy. Just supports the built-in types and class names.
-     *
-     * @return Type|MixedType
      */
     public static function fromString(string $string): Type|MixedType
     {

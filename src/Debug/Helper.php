@@ -21,7 +21,6 @@ final readonly class Helper
 {
     /**
      * @param Type|array<int,Type|MixedType> $type
-     * @return string
      */
     public function typeToHtml(Type|MixedType|array|null $type): string
     {

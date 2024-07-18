@@ -229,7 +229,6 @@ final readonly class TypeUtil
 
     /**
      * @param null|Type|MixedType|array<array-key,Type|MixedType> $type
-     * @return string
      */
     public static function getDebugType(null|Type|MixedType|array $type): string
     {
@@ -253,9 +252,6 @@ final readonly class TypeUtil
         return TypeUtil::getTypeString($type);
     }
 
-    /**
-     * @return string
-     */
     #[Friend(
         TypeResolver::class,
         TransformerReturnsUnexpectedValueException::class,
@@ -309,7 +305,6 @@ final readonly class TypeUtil
 
     /**
      * @param Type|MixedType|array<int,Type|MixedType> $type
-     * @return string
      */
     public static function getTypeStringHtml(Type|MixedType|array $type): string
     {

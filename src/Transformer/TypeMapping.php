@@ -39,17 +39,11 @@ final readonly class TypeMapping
         }
     }
 
-    /**
-     * @return Type|MixedType
-     */
     public function getSourceType(): Type|MixedType
     {
         return $this->sourceType;
     }
 
-    /**
-     * @return Type|MixedType
-     */
     public function getTargetType(): Type|MixedType
     {
         return $this->targetType;

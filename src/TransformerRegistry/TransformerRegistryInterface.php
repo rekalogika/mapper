@@ -27,7 +27,6 @@ interface TransformerRegistryInterface
     /**
      * @param array<array-key,Type|MixedType> $sourceTypes
      * @param array<array-key,Type|MixedType> $targetTypes
-     * @return SearchResult
      */
     public function findBySourceAndTargetTypes(
         array $sourceTypes,

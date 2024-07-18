@@ -51,8 +51,6 @@ final class ObjectCache
      * yet. If the object is still in precached status, obtaining it from the
      * cache will yield an exception. If the target is finally cached, it is
      * no longer in precached status.
-     *
-     * @return void
      */
     public function preCache(mixed $source, Type $targetType): void
     {

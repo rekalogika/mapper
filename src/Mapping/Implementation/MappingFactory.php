@@ -51,7 +51,6 @@ final class MappingFactory implements MappingFactoryInterface
 
     /**
      * @param iterable<string,TransformerInterface> $transformers
-     * @return Mapping
      */
     private function createMapping(iterable $transformers): Mapping
     {

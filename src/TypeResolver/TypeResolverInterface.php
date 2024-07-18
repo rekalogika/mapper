@@ -23,8 +23,6 @@ interface TypeResolverInterface
 {
     /**
      * Gets the string representation of a Type.
-     *
-     * @return string
      */
     public function getTypeString(Type|MixedType $type): string;
 

@@ -212,7 +212,6 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     }
 
     /**
-     * @return \ArrayAccess|array
      * @phpstan-ignore-next-line
      */
     private function instantiateArrayAccessOrArray(

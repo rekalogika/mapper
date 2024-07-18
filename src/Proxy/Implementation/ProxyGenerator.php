@@ -38,7 +38,6 @@ final readonly class ProxyGenerator implements ProxyGeneratorInterface
 
     /**
      * @param class-string $realClass
-     * @return string
      */
     private function generateProxySourceCode(string $realClass, string $proxyClass): string
     {
