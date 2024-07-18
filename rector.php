@@ -37,7 +37,7 @@ return RectorConfig::configure()
         // symfonyCodeQuality: true,
         // doctrineCodeQuality: true,
     )
-    ->withDeadCodeLevel(17)
+    ->withDeadCodeLevel(20)
     ->withPhpSets(php82: true)
     ->withRules([
         AddOverrideAttributeToOverriddenMethodsRector::class,
@@ -45,6 +45,9 @@ return RectorConfig::configure()
     ->withSkip([
         // static analysis tools don't like this
         RemoveUnusedVariableAssignRector::class,
+
+        // static analysis tools don't like this
+        RemoveNonExistingVarAnnotationRector::class,
 
         // cognitive burden to many people
         SimplifyIfElseToTernaryRector::class,
