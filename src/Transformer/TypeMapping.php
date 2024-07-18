@@ -18,10 +18,6 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeMapping
 {
-    /**
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
-     */
     public function __construct(
         private Type|MixedType $sourceType,
         private Type|MixedType $targetType,

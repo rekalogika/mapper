@@ -73,7 +73,6 @@ final readonly class TypeUtil
     /**
      * Gets all the possible simple types from a Type
      *
-     * @param Type $type
      * @return array<int,Type>
      */
     #[Friend(TypeResolver::class)]
@@ -255,7 +254,6 @@ final readonly class TypeUtil
     }
 
     /**
-     * @param Type|MixedType $type
      * @return string
      */
     #[Friend(
@@ -405,7 +403,6 @@ final readonly class TypeUtil
     }
 
     /**
-     * @param Type|MixedType $type
      * @return array<int,Type>
      */
     private static function getAttributesFromType(

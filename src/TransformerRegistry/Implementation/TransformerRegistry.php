@@ -64,8 +64,6 @@ final class TransformerRegistry implements TransformerRegistryInterface
 
     /**
      * @todo cache this
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
      * @return array<int,MappingEntry>
      */
     private function getMappingBySourceAndTargetType(

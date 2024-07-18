@@ -69,7 +69,6 @@ final readonly class PresetMapping
 
     /**
      * @template T of object
-     * @param object $source
      * @param class-string<T> $targetClass
      * @return T
      * @throws PresetMappingNotFound
