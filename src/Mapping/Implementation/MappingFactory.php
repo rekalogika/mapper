@@ -77,7 +77,7 @@ final class MappingFactory implements MappingFactoryInterface
             $this->logger?->warning(
                 'Transformer "{transformer}" has a mapping involving an invalid class "{class}", ignoring the transformer.',
                 [
-                    'transformer' => get_class($transformer),
+                    'transformer' => $transformer::class,
                     'class' => $e->getClass(),
                 ],
             );
@@ -100,7 +100,7 @@ final class MappingFactory implements MappingFactoryInterface
             $this->logger?->warning(
                 'Transformer "{transformer}" has a mapping involving an invalid class "{class}", ignoring the invalid mapping.',
                 [
-                    'transformer' => get_class($transformer),
+                    'transformer' => $transformer::class,
                     'class' => $e->getClass(),
                 ],
             );
@@ -115,7 +115,7 @@ final class MappingFactory implements MappingFactoryInterface
                 $this->logger?->warning(
                     'Transformer "{transformer}" has a mapping involving an invalid class "{class}", ignoring the invalid mapping.',
                     [
-                        'transformer' => get_class($transformer),
+                        'transformer' => $transformer::class,
                         'class' => $e->getClass(),
                     ],
                 );
@@ -139,7 +139,7 @@ final class MappingFactory implements MappingFactoryInterface
 
                     $mapping->addEntry(
                         id: $id,
-                        class: get_class($transformer),
+                        class: $transformer::class,
                         sourceType: $sourceType,
                         targetType: $targetType,
                         sourceTypeString: $sourceTypeString,
@@ -155,7 +155,7 @@ final class MappingFactory implements MappingFactoryInterface
                 $this->logger?->warning(
                     'Transformer "{transformer}" has a mapping involving an invalid class "{class}", skipping mapping definition from this transformer.',
                     [
-                        'transformer' => get_class($transformer),
+                        'transformer' => $transformer::class,
                         'class' => $e->getClass(),
                     ],
                 );

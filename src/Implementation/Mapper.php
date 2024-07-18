@@ -51,7 +51,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
             $target = null;
         } else {
             /** @var T $target */
-            $targetClass = get_class($target);
+            $targetClass = $target::class;
             $targetType = TypeFactory::objectOfClass($targetClass);
         }
 

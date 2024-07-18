@@ -154,7 +154,7 @@ final class ObjectCache
         ) {
             throw new LogicException(sprintf(
                 'Target object for source object "%s" and target type "%s" already exists',
-                get_class($source),
+                $source::class,
                 $targetTypeString
             ));
         }

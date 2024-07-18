@@ -33,7 +33,7 @@ class TransformerReturnsUnexpectedValueException extends UnexpectedValueExceptio
             'Trying to map source type "%s" to target type "%s", but the assigned transformer "%s" returns an unexpected type "%s".',
             \get_debug_type($source),
             TypeUtil::getTypeString($targetType),
-            \get_class($transformer),
+            $transformer::class,
             get_debug_type($target),
         );
 
