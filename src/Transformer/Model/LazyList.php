@@ -58,7 +58,9 @@ final class LazyList implements ListInterface
     public function offsetGet(mixed $offset): mixed
     {
         if (!$this->isCached) {
-            foreach($this->getIterator() as $i);
+            foreach($this->getIterator() as $i) {
+                // do nothing
+            }
         }
 
         return $this->cachedData[$offset];

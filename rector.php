@@ -12,6 +12,7 @@ use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
+use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
 use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
@@ -38,7 +39,7 @@ return RectorConfig::configure()
         // symfonyCodeQuality: true,
         // doctrineCodeQuality: true,
     )
-    ->withDeadCodeLevel(25)
+    ->withDeadCodeLevel(35)
     ->withPhpSets(php82: true)
     ->withRules([
         AddOverrideAttributeToOverriddenMethodsRector::class,
@@ -64,5 +65,9 @@ return RectorConfig::configure()
 
         RemoveAlwaysTrueIfConditionRector::class => [
             __DIR__ . '/src/Proxy/Implementation/ProxyFactory.php',
+        ],
+
+        RemoveUnusedPrivatePropertyRector::class => [
+            __DIR__ . '/tests/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php',
         ],
     ]);

@@ -83,7 +83,9 @@ class TraversableToTraversableMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(TraversableCountableWrapper::class, $result->property);
 
         $this->expectException(\LogicException::class);
-        foreach ($result->property as $item);
+        foreach ($result->property as $item) {
+            // do nothing
+        }
     }
 
     public function testExtraLazy(): void
@@ -99,7 +101,9 @@ class TraversableToTraversableMappingTest extends FrameworkTestCase
         $this->assertEquals(31337, $result->property->count());
 
         $this->expectException(\LogicException::class);
-        foreach ($result->property as $item);
+        foreach ($result->property as $item) {
+            // do nothing
+        }
     }
 
     //
