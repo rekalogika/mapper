@@ -38,16 +38,8 @@ return RectorConfig::configure()
         // doctrineCodeQuality: true,
     )
     // uncomment to reach your current PHP version
-    // ->withPhpSets(php82: true)
+    ->withPhpSets(php82: true)
     ->withRules([
-        IfIssetToCoalescingRector::class,
-        ClassPropertyAssignToConstructorPromotionRector::class,
-        MixedTypeRector::class,
-        ReadOnlyClassRector::class,
-        ReadOnlyPropertyRector::class,
-        RemoveUnusedVariableInCatchRector::class,
-        ClassOnObjectRector::class,
-
         AddOverrideAttributeToOverriddenMethodsRector::class,
     ])
     ->withSkip([

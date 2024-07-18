@@ -134,8 +134,6 @@ class MapperFactory
     private ?SymfonyUidTransformer $symfonyUidTransformer = null;
     private ?RamseyUuidTransformer $ramseyUuidTransformer = null;
     private ?PresetTransformer $presetTransformer = null;
-
-    private readonly CacheItemPoolInterface $propertyInfoExtractorCache;
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
     private ?TypeResolverInterface $typeResolver = null;
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
@@ -173,9 +171,8 @@ class MapperFactory
         private ?PhpStanExtractor $phpStanExtractor = null,
         private readonly ?NormalizerInterface $normalizer = null,
         private readonly ?DenormalizerInterface $denormalizer = null,
-        ?CacheItemPoolInterface $propertyInfoExtractorCache = null,
+        private readonly CacheItemPoolInterface $propertyInfoExtractorCache = new ArrayAdapter()
     ) {
-        $this->propertyInfoExtractorCache = $propertyInfoExtractorCache ?? new ArrayAdapter();
     }
 
     /**

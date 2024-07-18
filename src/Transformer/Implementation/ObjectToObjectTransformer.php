@@ -408,9 +408,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 target: $target,
                 context: $context
             );
-        } catch (UninitializedSourcePropertyException) {
-            return;
-        } catch (UnsupportedPropertyMappingException) {
+        } catch (UninitializedSourcePropertyException|UnsupportedPropertyMappingException) {
             return;
         }
 

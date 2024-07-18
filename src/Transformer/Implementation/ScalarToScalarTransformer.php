@@ -34,19 +34,13 @@ final readonly class ScalarToScalarTransformer implements TransformerInterface
         }
 
         $targetTypeBuiltIn = $targetType?->getBuiltinType();
-
-        switch ($targetTypeBuiltIn) {
-            case Type::BUILTIN_TYPE_INT:
-                return (int) $source;
-            case Type::BUILTIN_TYPE_FLOAT:
-                return (float) $source;
-            case Type::BUILTIN_TYPE_STRING:
-                return (string) $source;
-            case Type::BUILTIN_TYPE_BOOL:
-                return (bool) $source;
-        }
-
-        throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given.', get_debug_type($targetType)), context: $context);
+        return match ($targetTypeBuiltIn) {
+            Type::BUILTIN_TYPE_INT => (int) $source,
+            Type::BUILTIN_TYPE_FLOAT => (float) $source,
+            Type::BUILTIN_TYPE_STRING => (string) $source,
+            Type::BUILTIN_TYPE_BOOL => (bool) $source,
+            default => throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given.', get_debug_type($targetType)), context: $context),
+        };
     }
 
     public function getSupportedTransformation(): iterable
