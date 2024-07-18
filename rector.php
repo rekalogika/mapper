@@ -11,6 +11,7 @@ use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUselessReturnTagRector;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
+use Rector\Php70\Rector\StmtsAwareInterface\IfIssetToCoalescingRector;
 use Rector\Php80\Rector\Catch_\RemoveUnusedVariableInCatchRector;
 use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php80\Rector\FuncCall\ClassOnObjectRector;
@@ -39,6 +40,7 @@ return RectorConfig::configure()
     // uncomment to reach your current PHP version
     // ->withPhpSets(php82: true)
     ->withRules([
+        IfIssetToCoalescingRector::class,
         ClassPropertyAssignToConstructorPromotionRector::class,
         MixedTypeRector::class,
         ReadOnlyClassRector::class,

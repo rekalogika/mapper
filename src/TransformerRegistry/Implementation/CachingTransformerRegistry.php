@@ -41,11 +41,7 @@ final class CachingTransformerRegistry implements TransformerRegistryInterface
 
     public function get(string $id): TransformerInterface
     {
-        if (isset($this->transformers[$id])) {
-            return $this->transformers[$id];
-        }
-
-        return $this->transformers[$id] = $this->decorated->get($id);
+        return $this->transformers[$id] ?? ($this->transformers[$id] = $this->decorated->get($id));
     }
 
     public function findBySourceAndTargetTypes(
