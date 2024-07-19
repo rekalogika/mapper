@@ -16,9 +16,9 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ObjectKeys;
 class Person
 {
     public function __construct(
-        private string $name,
-        private Gender $gender,
-        private \DateTimeInterface $birthDate,
+        private readonly string $name,
+        private readonly Gender $gender,
+        private readonly \DateTimeInterface $birthDate,
     ) {
     }
 

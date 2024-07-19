@@ -16,8 +16,11 @@ namespace Rekalogika\Mapper\Tests\Fixtures\DynamicProperty;
 class ObjectExtendingStdClassWithExplicitScalarProperties extends \stdClass
 {
     private int $a = 1;
+
     private string $b = 'string';
+
     private bool $c = true;
+
     private float $d = 1.1;
 
     public function getA(): int

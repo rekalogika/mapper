@@ -25,8 +25,8 @@ final class TraceableMappingFactory implements MappingFactoryInterface, ResetInt
     private bool $mappingCollected = false;
 
     public function __construct(
-        private MappingFactoryInterface $decorated,
-        private MapperDataCollector $dataCollector
+        private readonly MappingFactoryInterface $decorated,
+        private readonly MapperDataCollector $dataCollector
     ) {
     }
 

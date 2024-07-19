@@ -24,21 +24,30 @@ use Symfony\Component\VarExporter\LazyObjectInterface;
  */
 final class TraceData
 {
-    private string $sourceType;
-    private string $existingTargetType;
+    private readonly string $sourceType;
+
+    private readonly string $existingTargetType;
+
     private ?string $resultType = null;
+
     private ?float $time = null;
 
     /** @var array<int,self> */
     private array $nestedTraceData = [];
 
     private ?string $callerFile = null;
+
     private ?int $callerLine = null;
+
     private ?string $callerFunction = null;
+
     /** @var class-string */
     private ?string $callerClass = null;
+
     private ?string $callerType = null;
+
     private ?string $callerName = null;
+
     private bool $refused = false;
 
     /**
@@ -46,13 +55,13 @@ final class TraceData
      * @param class-string<TransformerInterface> $transformerClass
      */
     public function __construct(
-        private ?string $path,
+        private readonly ?string $path,
         mixed $source,
         mixed $existingTargetValue,
-        private ?array $possibleTargetTypes,
-        private ?Type $selectedTargetType,
-        private string $transformerClass,
-        private bool $sourceTypeGuessed,
+        private readonly ?array $possibleTargetTypes,
+        private readonly ?Type $selectedTargetType,
+        private readonly string $transformerClass,
+        private readonly bool $sourceTypeGuessed,
     ) {
         $this->sourceType = \get_debug_type($source);
         $this->existingTargetType = \get_debug_type($existingTargetValue);
@@ -71,14 +80,14 @@ final class TraceData
 
     private function finalizeTime(float $time): void
     {
-        if (count($this->nestedTraceData) === 0) {
+        if ($this->nestedTraceData === []) {
             // If this is the last trace data (no nested trace data)
             $this->time = $time;
         } else {
             // If this is not the last trace data (has nested trace data), we
             // don't use the given time, but we calculate the time from the
             // nested trace data
-            $this->time = array_sum(array_map(fn (self $traceData) => $traceData->getTime(), $this->nestedTraceData));
+            $this->time = array_sum(array_map(fn (self $traceData): float => $traceData->getTime(), $this->nestedTraceData));
         }
     }
 
@@ -113,7 +122,7 @@ final class TraceData
      */
     public function getAcceptedNestedTraceData(): array
     {
-        return array_filter($this->nestedTraceData, fn (self $traceData) => !$traceData->isRefused());
+        return array_filter($this->nestedTraceData, fn (self $traceData): bool => !$traceData->isRefused());
     }
 
     public function addNestedTraceData(self $traceData): void
@@ -149,6 +158,7 @@ final class TraceData
         if ($this->possibleTargetTypes === null) {
             return "__unknown__";
         }
+
         return TypeUtil::getTypeStringHtml($this->possibleTargetTypes);
         ;
     }
@@ -163,6 +173,7 @@ final class TraceData
         if ($this->selectedTargetType !== null) {
             return TypeUtil::getTypeStringHtml($this->selectedTargetType);
         }
+
         return 'mixed';
     }
 

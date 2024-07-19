@@ -55,8 +55,7 @@ final readonly class TypeResolver implements TypeResolverInterface
     public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {
-            $type = ['mixed'];
-            return $type;
+            return ['mixed'];
         }
 
         return array_merge(

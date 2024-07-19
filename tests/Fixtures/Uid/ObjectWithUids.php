@@ -21,7 +21,9 @@ use Symfony\Component\Uid\Uuid;
 class ObjectWithUids
 {
     public Uuid $uuid;
+
     public Ulid $ulid;
+
     public UuidInterface $ramseyUuid;
 
     public function __construct()

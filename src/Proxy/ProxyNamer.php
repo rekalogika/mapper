@@ -18,7 +18,7 @@ namespace Rekalogika\Mapper\Proxy;
  */
 final readonly class ProxyNamer
 {
-    public function __construct()
+    private function __construct()
     {
     }
 

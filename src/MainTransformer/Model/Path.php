@@ -42,13 +42,13 @@ final readonly class Path implements \Stringable
             if (str_contains($path, '[')) {
                 // remove [ and ]
                 $path = str_replace(['[', ']'], '', $path);
-                $result .= "[{$path}]";
+                $result .= sprintf('[%s]', $path);
             } elseif (str_contains($path, '(')) {
                 // remove ( and )
                 $path = str_replace(['(', ')'], '', $path);
-                $result .= "({$path})";
+                $result .= sprintf('(%s)', $path);
             } else {
-                $result .= ".{$path}";
+                $result .= '.' . $path;
             }
         }
 
@@ -77,8 +77,6 @@ final readonly class Path implements \Stringable
             return null;
         }
 
-        $result = $this->path[$lastKey] ?? null;
-
-        return $result;
+        return $this->path[$lastKey] ?? null;
     }
 }

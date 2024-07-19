@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Adder;
 class Comment
 {
     public function __construct(
-        private string $content
+        private readonly string $content
     ) {
     }
 

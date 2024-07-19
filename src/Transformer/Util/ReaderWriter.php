@@ -61,11 +61,7 @@ final readonly class ReaderWriter
                 /** @psalm-suppress MixedMethodCall */
                 return $source->{$accessorName}();
             } elseif ($mode === ReadMode::DynamicProperty) {
-                if (isset($source->{$accessorName})) {
-                    return $source->{$accessorName};
-                }
-
-                return null;
+                return $source->{$accessorName} ?? null;
             }
 
             return null;
@@ -129,11 +125,7 @@ final readonly class ReaderWriter
                 /** @psalm-suppress MixedMethodCall */
                 return $target->{$accessorName}();
             } elseif ($readMode === ReadMode::DynamicProperty) {
-                if (isset($target->{$accessorName})) {
-                    return $target->{$accessorName};
-                }
-
-                return null;
+                return $target->{$accessorName} ?? null;
             }
 
             return null;

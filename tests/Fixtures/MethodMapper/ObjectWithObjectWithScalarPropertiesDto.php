@@ -39,7 +39,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
     ): static {
         assert($source instanceof ObjectWithObjectWithScalarProperties);
 
-        $self = new static();
+        $self = new self();
 
         $self->objectWithScalarProperties = $mapper->map(
             $source->objectWithScalarProperties,
@@ -58,6 +58,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
         if ($target === ObjectWithObjectWithScalarProperties::class) {
             $target = new $target();
         }
+
         assert($target instanceof ObjectWithObjectWithScalarProperties);
         assert($this->objectWithScalarProperties instanceof ObjectWithScalarPropertiesDto);
 

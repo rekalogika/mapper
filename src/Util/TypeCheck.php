@@ -221,10 +221,6 @@ final readonly class TypeCheck
             && $type1->isNullable() === $type2->isNullable();
     }
 
-    /**
-     * @param Type|MixedType $typeToCheck
-     * @param Type|MixedType $type
-     */
     public static function isTypeInstanceOf(
         Type|MixedType $typeToCheck,
         Type|MixedType $type

@@ -23,7 +23,7 @@ use Symfony\Component\PropertyInfo\Type;
 final class CachingTypeResolver implements TypeResolverInterface
 {
     public function __construct(
-        private TypeResolverInterface $decorated,
+        private readonly TypeResolverInterface $decorated,
     ) {
         /** @psalm-suppress PropertyTypeCoercion */
         $this->typeStringCache = new \WeakMap();

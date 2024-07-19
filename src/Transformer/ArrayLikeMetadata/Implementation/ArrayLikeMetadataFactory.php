@@ -32,7 +32,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
     ): ArrayLikeMetadata {
         $targetMemberKeyTypes = $targetType->getCollectionKeyTypes();
 
-        if (count($targetMemberKeyTypes) === 0) {
+        if ($targetMemberKeyTypes === []) {
             $targetMemberKeyTypes = [
                 TypeFactory::int(),
                 TypeFactory::string(),
@@ -45,17 +45,13 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
         $isTargetArray = TypeCheck::isArray($targetType);
 
         $sourceClass = $sourceType->getClassName();
-        if ($sourceClass !== null) {
-            if (!class_exists($sourceClass) && !interface_exists($sourceClass)) {
-                throw new InvalidArgumentException(sprintf('Source class "%s" does not exist', $sourceClass));
-            }
+        if ($sourceClass !== null && (!class_exists($sourceClass) && !interface_exists($sourceClass))) {
+            throw new InvalidArgumentException(sprintf('Source class "%s" does not exist', $sourceClass));
         }
 
         $targetClass = $targetType->getClassName();
-        if ($targetClass !== null) {
-            if (!class_exists($targetClass) && !interface_exists($targetClass)) {
-                throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $targetClass));
-            }
+        if ($targetClass !== null && (!class_exists($targetClass) && !interface_exists($targetClass))) {
+            throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $targetClass));
         }
 
         $sourceMemberKeyTypeCanBeInt = false;
@@ -86,7 +82,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             }
         }
 
-        $targetMemberValueIsUntyped = count($targetMemberValueTypes) === 0;
+        $targetMemberValueIsUntyped = $targetMemberValueTypes === [];
 
         // determine if target can be lazy
 

@@ -19,7 +19,7 @@ use Symfony\Component\PropertyInfo\Type;
 abstract class AbstractTransformerDecorator implements TransformerInterface
 {
     public function __construct(
-        private TransformerInterface $decorated,
+        private readonly TransformerInterface $decorated,
     ) {
     }
 

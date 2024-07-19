@@ -32,9 +32,9 @@ use Symfony\Component\PropertyInfo\Type;
 final class TransformerRegistry implements TransformerRegistryInterface
 {
     public function __construct(
-        private ContainerInterface $transformersLocator,
-        private TypeResolverInterface $typeResolver,
-        private MappingFactoryInterface $mappingFactory,
+        private readonly ContainerInterface $transformersLocator,
+        private readonly TypeResolverInterface $typeResolver,
+        private readonly MappingFactoryInterface $mappingFactory,
     ) {
     }
 
@@ -64,8 +64,6 @@ final class TransformerRegistry implements TransformerRegistryInterface
 
     /**
      * @todo cache this
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
      * @return array<int,MappingEntry>
      */
     private function getMappingBySourceAndTargetType(
@@ -96,7 +94,6 @@ final class TransformerRegistry implements TransformerRegistryInterface
         foreach ($mapping as $mappingEntry) {
             if ($mappingEntry->isVariantTargetType()) {
                 // if variant
-
                 $searchResultEntry = new SearchResultEntry(
                     mappingOrder: $mappingEntry->getOrder(),
                     sourceType: $sourceType,
@@ -104,27 +101,20 @@ final class TransformerRegistry implements TransformerRegistryInterface
                     transformerServiceId: $mappingEntry->getId(),
                     variantTargetType: $mappingEntry->isVariantTargetType()
                 );
-
                 $searchResultEntries[] = $searchResultEntry;
-            } else {
+            } elseif (TypeCheck::isSomewhatIdentical(
+                $targetType,
+                $mappingEntry->getTargetType()
+            )) {
                 // if invariant, check if target type is somewhat identical
-
-                if (
-                    TypeCheck::isSomewhatIdentical(
-                        $targetType,
-                        $mappingEntry->getTargetType()
-                    )
-                ) {
-                    $searchResultEntry = new SearchResultEntry(
-                        mappingOrder: $mappingEntry->getOrder(),
-                        sourceType: $sourceType,
-                        targetType: $targetType,
-                        transformerServiceId: $mappingEntry->getId(),
-                        variantTargetType: $mappingEntry->isVariantTargetType()
-                    );
-
-                    $searchResultEntries[] = $searchResultEntry;
-                }
+                $searchResultEntry = new SearchResultEntry(
+                    mappingOrder: $mappingEntry->getOrder(),
+                    sourceType: $sourceType,
+                    targetType: $targetType,
+                    transformerServiceId: $mappingEntry->getId(),
+                    variantTargetType: $mappingEntry->isVariantTargetType()
+                );
+                $searchResultEntries[] = $searchResultEntry;
             }
         }
 
@@ -148,12 +138,7 @@ final class TransformerRegistry implements TransformerRegistryInterface
             }
         }
 
-        usort($searchResultEntries, function (
-            SearchResultEntry $a,
-            SearchResultEntry $b
-        ) {
-            return $a->getMappingOrder() <=> $b->getMappingOrder();
-        });
+        usort($searchResultEntries, fn (SearchResultEntry $a, SearchResultEntry $b): int => $a->getMappingOrder() <=> $b->getMappingOrder());
 
         return new SearchResult($searchResultEntries);
     }

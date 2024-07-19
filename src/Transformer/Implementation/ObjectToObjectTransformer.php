@@ -112,7 +112,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         if (
             $objectToObjectMetadata->isTargetReadOnly()
-            || !$context(MapperOptions::class)?->readTargetValue
+            || $context(MapperOptions::class)?->readTargetValue !== true
         ) {
             $target = null;
         }
@@ -356,7 +356,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 $constructorArguments->addUnsetSourceProperty($sourceProperty);
 
                 continue;
-            } catch (UnsupportedPropertyMappingException $e) {
+            } catch (UnsupportedPropertyMappingException) {
                 continue;
             }
         }
@@ -408,9 +408,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 target: $target,
                 context: $context
             );
-        } catch (UninitializedSourcePropertyException $e) {
-            return;
-        } catch (UnsupportedPropertyMappingException $e) {
+        } catch (UninitializedSourcePropertyException|UnsupportedPropertyMappingException) {
             return;
         }
 
@@ -436,7 +434,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     ): mixed {
         // if a custom property mapper is set, then use it
 
-        if ($serviceMethodSpecification = $propertyMapping->getPropertyMapper()) {
+        if (($serviceMethodSpecification = $propertyMapping->getPropertyMapper()) !== null) {
             $serviceMethodRunner = ServiceMethodRunner::create(
                 serviceLocator: $this->propertyMapperLocator,
                 mainTransformer: $this->getMainTransformer(),
@@ -470,7 +468,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // null, so that we don't have to go through the main transformer for
         // this common task.
 
-        if ($context(MapperOptions::class)?->objectToObjectScalarShortCircuit) {
+        if ($context(MapperOptions::class)?->objectToObjectScalarShortCircuit === true) {
             // if source is null & target accepts null, we set the
             // target to null
 
@@ -606,7 +604,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                             path: $sourceProperty,
                         );
                     }
-                } catch (\Throwable $e) {
+                } catch (\Throwable) {
                     $targetPropertyValue = null;
                 }
 

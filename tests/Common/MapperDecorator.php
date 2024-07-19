@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Common;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MapperInterface;
 
-final class MapperDecorator implements MapperInterface
+final readonly class MapperDecorator implements MapperInterface
 {
     public function __construct(
         private MapperInterface $decorated,

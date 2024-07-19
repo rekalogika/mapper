@@ -23,9 +23,6 @@ interface TypeResolverInterface
 {
     /**
      * Gets the string representation of a Type.
-     *
-     * @param Type|MixedType $type
-     * @return string
      */
     public function getTypeString(Type|MixedType $type): string;
 
@@ -53,7 +50,6 @@ interface TypeResolverInterface
      *
      * Note: IteratorAggregate extends Traversable
      *
-     * @param Type|MixedType $type
      * @return array<int,string>
      */
     public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array;
@@ -68,7 +64,6 @@ interface TypeResolverInterface
      *
      * Note: IteratorAggregate extends Traversable
      *
-     * @param Type|MixedType $type
      * @return array<int,string>
      */
     public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array;

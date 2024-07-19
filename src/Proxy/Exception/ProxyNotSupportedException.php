@@ -17,7 +17,7 @@ use Rekalogika\Mapper\Exception\RuntimeException;
 
 class ProxyNotSupportedException extends RuntimeException
 {
-    private string $reason;
+    private readonly string $reason;
 
     /**
      * @param class-string $class

@@ -19,8 +19,12 @@ use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
 class ObjectWithEnumStringablePropertyDto
 {
     public ?string $stringable = null;
+
     public ?string $backedEnum = null;
+
     public ?string $unitEnum = null;
+
     public ?SomeBackedEnum $stringBackedEnum = null;
+
     // public ?SomeEnum $stringUnitEnum = null;
 }

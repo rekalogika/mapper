@@ -31,6 +31,7 @@ class SimpleEntity
         if ($this->id === null) {
             throw new \LogicException('The identifier is not set.');
         }
+
         return $this->id;
     }
 

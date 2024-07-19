@@ -28,6 +28,7 @@ class RecursionTest extends FrameworkTestCase
         $parent = new ParentObject();
         $child = new ChildObject();
         $parent->child = $child;
+
         $child->parent = $parent;
 
         $result = $this->mapper->map($parent, ParentObjectDto::class);

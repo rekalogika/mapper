@@ -49,6 +49,7 @@ class DateTimeMappingTest extends FrameworkTestCase
                 if ($sourceClass === \DateTimeInterface::class) {
                     continue;
                 }
+
                 yield sprintf("%s to %s", $sourceClass, $targetClass) => [$sourceClass, $targetClass];
             }
         }

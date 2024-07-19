@@ -58,10 +58,10 @@ final readonly class TypeUtil
                 return false;
             }
 
-            $keyTypeIsSimple = count($keyTypes) === 0
+            $keyTypeIsSimple = $keyTypes === []
                 || self::isSimpleType($keyTypes[0]);
 
-            $valueTypeIsSimple = count($valueTypes) === 0
+            $valueTypeIsSimple = $valueTypes === []
                 || self::isSimpleType($valueTypes[0]);
 
             return $keyTypeIsSimple && $valueTypeIsSimple;
@@ -73,7 +73,6 @@ final readonly class TypeUtil
     /**
      * Gets all the possible simple types from a Type
      *
-     * @param Type $type
      * @return array<int,Type>
      */
     #[Friend(TypeResolver::class)]
@@ -174,11 +173,11 @@ final readonly class TypeUtil
                 $valueTypes[] = null;
             }
 
-            if (count($keyTypes) === 0) {
+            if ($keyTypes === []) {
                 $keyTypes = [null];
             }
 
-            if (count($valueTypes) === 0) {
+            if ($valueTypes === []) {
                 $valueTypes = [null];
             }
 
@@ -230,7 +229,6 @@ final readonly class TypeUtil
 
     /**
      * @param null|Type|MixedType|array<array-key,Type|MixedType> $type
-     * @return string
      */
     public static function getDebugType(null|Type|MixedType|array $type): string
     {
@@ -239,7 +237,7 @@ final readonly class TypeUtil
         }
 
         if (is_array($type)) {
-            if (count($type) === 0) {
+            if ($type === []) {
                 return 'mixed';
             }
 
@@ -254,10 +252,6 @@ final readonly class TypeUtil
         return TypeUtil::getTypeString($type);
     }
 
-    /**
-     * @param Type|MixedType $type
-     * @return string
-     */
     #[Friend(
         TypeResolver::class,
         TransformerReturnsUnexpectedValueException::class,
@@ -281,11 +275,12 @@ final readonly class TypeUtil
         if ($type->isCollection()) {
             $keyTypes = $type->getCollectionKeyTypes();
 
-            if ($keyTypes) {
+            if ($keyTypes !== []) {
                 $keyTypesString = [];
                 foreach ($keyTypes as $keyType) {
                     $keyTypesString[] = self::getTypeString($keyType);
                 }
+
                 $keyTypesString = implode('|', $keyTypesString);
             } else {
                 $keyTypesString = 'mixed';
@@ -293,11 +288,12 @@ final readonly class TypeUtil
 
             $valueTypes = $type->getCollectionValueTypes();
 
-            if ($valueTypes) {
+            if ($valueTypes !== []) {
                 $valueTypesString = [];
                 foreach ($valueTypes as $valueType) {
                     $valueTypesString[] = self::getTypeString($valueType);
                 }
+
                 $valueTypesString = implode('|', $valueTypesString);
             } else {
                 $valueTypesString = 'mixed';
@@ -311,12 +307,11 @@ final readonly class TypeUtil
 
     /**
      * @param Type|MixedType|array<int,Type|MixedType> $type
-     * @return string
      */
     public static function getTypeStringHtml(Type|MixedType|array $type): string
     {
         if (\is_array($type)) {
-            if (count($type) === 0) {
+            if ($type === []) {
                 return 'mixed';
             }
 
@@ -351,11 +346,12 @@ final readonly class TypeUtil
         if ($type->isCollection()) {
             $keyTypes = $type->getCollectionKeyTypes();
 
-            if ($keyTypes) {
+            if ($keyTypes !== []) {
                 $keyTypesString = [];
                 foreach ($keyTypes as $keyType) {
                     $keyTypesString[] = self::getTypeStringHtml($keyType);
                 }
+
                 $keyTypesString = implode('|', $keyTypesString);
             } else {
                 $keyTypesString = 'mixed';
@@ -363,11 +359,12 @@ final readonly class TypeUtil
 
             $valueTypes = $type->getCollectionValueTypes();
 
-            if ($valueTypes) {
+            if ($valueTypes !== []) {
                 $valueTypesString = [];
                 foreach ($valueTypes as $valueType) {
                     $valueTypesString[] = self::getTypeStringHtml($valueType);
                 }
+
                 $valueTypesString = implode('|', $valueTypesString);
             } else {
                 $valueTypesString = 'mixed';
@@ -405,7 +402,6 @@ final readonly class TypeUtil
     }
 
     /**
-     * @param Type|MixedType $type
      * @return array<int,Type>
      */
     private static function getAttributesFromType(

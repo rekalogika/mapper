@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\RecursiveDto;
 class ObjectWithRefToItselfDto
 {
     public ?self $ref = null;
+
     public ?string $string = null;
 }

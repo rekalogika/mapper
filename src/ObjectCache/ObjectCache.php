@@ -32,7 +32,7 @@ final class ObjectCache
     private \WeakMap $preCache;
 
     public function __construct(
-        private TypeResolverInterface $typeResolver
+        private readonly TypeResolverInterface $typeResolver
     ) {
         /** @psalm-suppress MixedPropertyTypeCoercion */
         $this->cache = new \WeakMap();
@@ -51,10 +51,6 @@ final class ObjectCache
      * yet. If the object is still in precached status, obtaining it from the
      * cache will yield an exception. If the target is finally cached, it is
      * no longer in precached status.
-     *
-     * @param mixed $source
-     * @param Type $targetType
-     * @return void
      */
     public function preCache(mixed $source, Type $targetType): void
     {
@@ -154,7 +150,7 @@ final class ObjectCache
         ) {
             throw new LogicException(sprintf(
                 'Target object for source object "%s" and target type "%s" already exists',
-                get_class($source),
+                $source::class,
                 $targetTypeString
             ));
         }

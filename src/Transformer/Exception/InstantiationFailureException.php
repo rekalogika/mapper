@@ -29,7 +29,7 @@ class InstantiationFailureException extends NotMappableValueException
         \Throwable $previous,
         Context $context,
     ) {
-        if (count($constructorArguments) === 0) {
+        if ($constructorArguments === []) {
             $message = sprintf(
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
                 \get_debug_type($source),
@@ -40,11 +40,11 @@ class InstantiationFailureException extends NotMappableValueException
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" using constructor arguments: %s.',
                 \get_debug_type($source),
                 $targetClass,
-                self::formatConstructorArguments($constructorArguments)
+                $this->formatConstructorArguments($constructorArguments)
             );
         }
 
-        if (count($unsetSourceProperties) > 0) {
+        if ($unsetSourceProperties !== []) {
             $message .= sprintf(
                 ' Note that the following properties are not set in the source object: %s.',
                 implode(', ', $unsetSourceProperties)
@@ -66,7 +66,7 @@ class InstantiationFailureException extends NotMappableValueException
     /**
      * @param array<string,mixed> $constructorArguments
      */
-    private static function formatConstructorArguments(array $constructorArguments): string
+    private function formatConstructorArguments(array $constructorArguments): string
     {
         $formattedArguments = [];
         /** @var mixed $argumentValue */

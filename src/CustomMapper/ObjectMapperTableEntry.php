@@ -23,7 +23,6 @@ final readonly class ObjectMapperTableEntry
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
-     * @param ServiceMethodSpecification $serviceMethodSpecification
      */
     public function __construct(
         private string $sourceClass,

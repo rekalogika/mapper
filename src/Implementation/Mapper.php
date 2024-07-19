@@ -51,7 +51,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
             $target = null;
         } else {
             /** @var T $target */
-            $targetClass = get_class($target);
+            $targetClass = $target::class;
             $targetType = TypeFactory::objectOfClass($targetClass);
         }
 
@@ -68,7 +68,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
             throw new UnexpectedValueException(sprintf('The mapper returned null, expecting "%s".', $targetClass));
         }
 
-        if (!is_object($target) || !is_a($target, $targetClass)) {
+        if (!is_object($target) || !$target instanceof $targetClass) {
             throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
         }
 
@@ -107,7 +107,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
                 context: $context ?? Context::create(),
             );
 
-            if (!is_object($result) || !is_a($result, $target)) {
+            if (!is_object($result) || !$result instanceof $target) {
                 throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
             }
 

@@ -32,9 +32,9 @@ use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
 final class TryPropertyCommand extends Command
 {
     public function __construct(
-        private TransformerRegistryInterface $transformerRegistry,
-        private TypeResolverInterface $typeResolver,
-        private PropertyInfoExtractorInterface $propertyInfoExtractor,
+        private readonly TransformerRegistryInterface $transformerRegistry,
+        private readonly TypeResolverInterface $typeResolver,
+        private readonly PropertyInfoExtractorInterface $propertyInfoExtractor,
     ) {
         parent::__construct();
     }
@@ -70,21 +70,21 @@ final class TryPropertyCommand extends Command
         $sourceTypes = $this->propertyInfoExtractor
             ->getTypes($sourceClass, $sourceProperty);
 
-        if ($sourceTypes === null || count($sourceTypes) === 0) {
+        if ($sourceTypes === null || $sourceTypes === []) {
             $sourceTypes = [MixedType::instance()];
         }
 
         $targetTypes = $this->propertyInfoExtractor
             ->getTypes($targetClass, $targetProperty);
 
-        if ($targetTypes === null || count($targetTypes) === 0) {
+        if ($targetTypes === null || $targetTypes === []) {
             $targetTypes = [MixedType::instance()];
         }
 
         $rows[] = [
             'Source Type',
             implode('|', array_map(
-                fn ($type) => $this->typeResolver->getTypeString($type),
+                fn ($type): string => $this->typeResolver->getTypeString($type),
                 $sourceTypes,
             )),
         ];
@@ -92,7 +92,7 @@ final class TryPropertyCommand extends Command
         $rows[] = [
             'Target Type',
             implode('|', array_map(
-                fn ($type) => $this->typeResolver->getTypeString($type),
+                fn ($type): string => $this->typeResolver->getTypeString($type),
                 $targetTypes,
             )),
         ];
@@ -125,7 +125,7 @@ final class TryPropertyCommand extends Command
 
         $io->section('<info>Applicable Transformers</info>');
 
-        if (count($rows) === 0) {
+        if ($rows === []) {
             $io->error('No applicable transformers found.');
 
             return Command::SUCCESS;

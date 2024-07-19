@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Recursive;
 class ObjectWithRefToItself
 {
     public ?self $ref = null;
+
     public ?string $string = 'string';
 }

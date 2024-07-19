@@ -16,8 +16,8 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Basic;
 class Person
 {
     public function __construct(
-        private string $name,
-        private int $age
+        private readonly string $name,
+        private readonly int $age
     ) {
     }
 

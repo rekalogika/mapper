@@ -23,20 +23,21 @@ use Symfony\Component\PropertyInfo\Type;
 final class MappingEntry
 {
     private static int $counter = 0;
-    private int $order;
+
+    private readonly int $order;
 
     public function __construct(
-        private string $id,
-        private string $class,
-        private Type|MixedType $sourceType,
-        private Type|MixedType $targetType,
-        private string $sourceTypeString,
-        private string $targetTypeString,
-        private bool $variantTargetType,
+        private readonly string $id,
+        private readonly string $class,
+        private readonly Type|MixedType $sourceType,
+        private readonly Type|MixedType $targetType,
+        private readonly string $sourceTypeString,
+        private readonly string $targetTypeString,
+        private readonly bool $variantTargetType,
     ) {
         $this->order = ++self::$counter;
 
-        if ($variantTargetType === true) {
+        if ($variantTargetType) {
             if ($targetType instanceof MixedType) {
                 throw new InvalidArgumentException(
                     'Variant target type cannot be MixedType',

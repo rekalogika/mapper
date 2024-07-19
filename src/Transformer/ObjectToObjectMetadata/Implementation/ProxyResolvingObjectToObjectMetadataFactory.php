@@ -31,11 +31,9 @@ final readonly class ProxyResolvingObjectToObjectMetadataFactory implements Obje
         string $sourceClass,
         string $targetClass,
     ): ObjectToObjectMetadata {
-        $metadata = $this->decorated->createObjectToObjectMetadata(
+        return $this->decorated->createObjectToObjectMetadata(
             ClassUtil::determineRealClassFromPossibleProxy($sourceClass),
             $targetClass,
         );
-
-        return $metadata;
     }
 }

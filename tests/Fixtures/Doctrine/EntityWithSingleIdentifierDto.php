@@ -16,7 +16,9 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Doctrine;
 class EntityWithSingleIdentifierDto
 {
     public ?string $myIdentifier = null;
+
     public ?string $name = null;
+
     public ?self $parent = null;
 
     /**

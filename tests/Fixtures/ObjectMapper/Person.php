@@ -16,11 +16,12 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
 class Person
 {
     private bool $getIdIsCalled = false;
+
     private bool $getNameIsCalled = false;
 
     public function __construct(
-        private string $id,
-        private string $name,
+        private readonly string $id,
+        private readonly string $name,
     ) {
     }
 

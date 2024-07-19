@@ -32,7 +32,7 @@ final readonly class DebugPass implements CompilerPassInterface
         $dataCollector = new Reference('rekalogika.mapper.data_collector');
         $taggedServices = $container->findTaggedServiceIds('rekalogika.mapper.transformer');
 
-        foreach ($taggedServices as $serviceId => $tags) {
+        foreach (array_keys($taggedServices) as $serviceId) {
             $decoratedServiceId = 'debug.' . $serviceId;
 
             $service = $container->getDefinition($serviceId);

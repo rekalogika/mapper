@@ -26,10 +26,10 @@ class ObjectWithPrivateConstructorDto
     }
 
     private function __construct(
-        private int $a,
-        private string $b,
-        private bool $c,
-        private float $d,
+        private readonly int $a,
+        private readonly string $b,
+        private readonly bool $c,
+        private readonly float $d,
     ) {
     }
 

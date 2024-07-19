@@ -103,7 +103,6 @@ final readonly class ObjectToObjectMetadata
 
     /**
      * @param array<string,true> $targetProxySkippedProperties
-     * @return self
      */
     public function withTargetProxy(
         array $targetProxySkippedProperties,

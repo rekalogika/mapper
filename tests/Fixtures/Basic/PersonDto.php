@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Basic;
 class PersonDto
 {
     public ?string $name = null;
+
     public ?int $age = null;
 }

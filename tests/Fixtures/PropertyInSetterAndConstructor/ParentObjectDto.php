@@ -17,5 +17,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\PropertyInSetterAndConstructor;
 class ParentObjectDto
 {
     public string $name;
+
     public ChildObjectDto $child;
 }

@@ -16,19 +16,23 @@ namespace Rekalogika\Mapper\Tests\Fixtures\AccessMethods;
 class ObjectWithVariousAccessMethods
 {
     private string $privatePropertyWithGetterSetter = 'privateProperty';
+
     // @phpstan-ignore-next-line
     private string $privatePropertyWithoutGetterSetter = 'privatePropertyWithoutGetterSetter';
+
     public string $publicPropertyWithGetterSetter = 'publicProperty';
+
     public string $publicPropertyWithoutGetterSetter = 'publicPropertyWithoutGetterSetter';
 
 
     public bool $publicPropertySetterAccessed = false;
+
     public bool $publicPropertyGetterAccessed = false;
 
     public string $unsetPublicProperty;
 
     // @phpstan-ignore-next-line
-    private string $unsetPrivatePropertyWithGetter;
+    private readonly string $unsetPrivatePropertyWithGetter;
 
     public function getPrivateProperty(): string
     {

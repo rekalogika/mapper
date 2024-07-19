@@ -15,18 +15,12 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Doctrine;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 class EntityWithSingleIdentifier
 {
-    #[ORM\Id]
-    #[ORM\Column(name: 'my_identifier', type: 'string', length: 255)]
-    private string $myIdentifier;
-
-    #[ORM\Column]
-    private string $name;
-
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[ORM\JoinColumn(name: 'parent_id', referencedColumnName: 'my_identifier')]
     private ?self $parent = null;
@@ -37,10 +31,13 @@ class EntityWithSingleIdentifier
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'parent')]
     private Collection $children;
 
-    public function __construct(string $myIdentifier, string $name)
-    {
-        $this->myIdentifier = $myIdentifier;
-        $this->name = $name;
+    public function __construct(
+        #[ORM\Id]
+        #[ORM\Column(name: 'my_identifier', type: Types::STRING, length: 255)]
+        private string $myIdentifier,
+        #[ORM\Column]
+        private string $name
+    ) {
         $this->children = new ArrayCollection();
     }
 

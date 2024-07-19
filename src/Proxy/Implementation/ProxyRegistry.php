@@ -21,8 +21,8 @@ use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
  */
 final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInterface
 {
-    /** @var ?callable(string): void */
-    private $autoloader = null;
+    /** @var ?\Closure(string): void */
+    private ?\Closure $autoloader = null;
 
     public function __construct(
         private string $proxyDirectory,

@@ -47,7 +47,7 @@ class PersonToPersonDtoMapper
     ): FinalPersonDto {
         $personDto = $subMapper->createProxy(
             FinalPersonDto::class,
-            static function (FinalPersonDto $proxy) use ($person) {
+            static function (FinalPersonDto $proxy) use ($person): void {
                 $proxy->name = $person->getName();
             },
             ['id']

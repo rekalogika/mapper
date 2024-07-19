@@ -18,16 +18,12 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeMapping
 {
-    /**
-     * @param Type|MixedType $sourceType
-     * @param Type|MixedType $targetType
-     */
     public function __construct(
         private Type|MixedType $sourceType,
         private Type|MixedType $targetType,
         private bool $variantTargetType = false,
     ) {
-        if ($variantTargetType === true) {
+        if ($variantTargetType) {
             if ($targetType instanceof MixedType) {
                 throw new InvalidArgumentException(
                     'Variant target type cannot be MixedType',
@@ -43,17 +39,11 @@ final readonly class TypeMapping
         }
     }
 
-    /**
-     * @return Type|MixedType
-     */
     public function getSourceType(): Type|MixedType
     {
         return $this->sourceType;
     }
 
-    /**
-     * @return Type|MixedType
-     */
     public function getTargetType(): Type|MixedType
     {
         return $this->targetType;

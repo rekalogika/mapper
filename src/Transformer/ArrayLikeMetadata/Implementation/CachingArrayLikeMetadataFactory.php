@@ -29,8 +29,8 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
     private array $cache = [];
 
     public function __construct(
-        private ArrayLikeMetadataFactoryInterface $decorated,
-        private CacheItemPoolInterface $cacheItemPool,
+        private readonly ArrayLikeMetadataFactoryInterface $decorated,
+        private readonly CacheItemPoolInterface $cacheItemPool,
     ) {
     }
 

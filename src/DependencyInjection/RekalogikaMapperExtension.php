@@ -63,16 +63,16 @@ final class RekalogikaMapperExtension extends Extension
 
         $container->registerAttributeForAutoconfiguration(
             AsPropertyMapper::class,
-            self::propertyMapperConfigurator(...)
+            $this->propertyMapperConfigurator(...)
         );
 
         $container->registerAttributeForAutoconfiguration(
             AsObjectMapper::class,
-            self::objectMapperConfigurator(...)
+            $this->objectMapperConfigurator(...)
         );
     }
 
-    private static function propertyMapperConfigurator(
+    private function propertyMapperConfigurator(
         ChildDefinition $definition,
         AsPropertyMapper $attribute,
         \ReflectionMethod $reflector,
@@ -197,7 +197,7 @@ final class RekalogikaMapperExtension extends Extension
         $definition->addTag('rekalogika.mapper.property_mapper', $tagAttributes);
     }
 
-    private static function objectMapperConfigurator(
+    private function objectMapperConfigurator(
         ChildDefinition $definition,
         AsObjectMapper $attribute,
         \ReflectionMethod $reflector,

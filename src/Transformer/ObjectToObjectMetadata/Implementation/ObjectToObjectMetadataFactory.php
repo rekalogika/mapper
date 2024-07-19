@@ -71,7 +71,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         $targetAttributes = $targetReflection->getAttributes(InheritanceMap::class);
 
-        if (count($targetAttributes) > 0) {
+        if ($targetAttributes !== []) {
             // if the target has an InheritanceMap, we try to resolve the target
             // class using the InheritanceMap
 
@@ -95,7 +95,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 $sourceReflection = new \ReflectionClass($currentSourceClass);
                 $sourceAttributes = $sourceReflection->getAttributes(InheritanceMap::class);
 
-                if (count($sourceAttributes) > 0) {
+                if ($sourceAttributes !== []) {
                     $inheritanceMap = $sourceAttributes[0]->newInstance();
 
                     $resolvedTargetClass = $inheritanceMap->getSourceClassFromTargetClass($sourceClass);
@@ -212,7 +212,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             if ($targetPropertyReflection === null) {
                 $targetAllowsDelete = false;
             } else {
-                $targetAllowsDelete = count($targetPropertyReflection->getAttributes(AllowDelete::class)) > 0;
+                $targetAllowsDelete = $targetPropertyReflection->getAttributes(AllowDelete::class) !== [];
             }
 
             // process source read mode
@@ -359,6 +359,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     if ($simpleType instanceof MixedType) {
                         continue;
                     }
+
                     $sourcePropertyTypes[] = $simpleType;
                 }
             }
@@ -376,6 +377,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     if ($simpleType instanceof MixedType) {
                         continue;
                     }
+
                     $targetPropertyTypes[] = $simpleType;
                 }
             }
@@ -467,7 +469,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // ensure we can create the proxy
 
             $this->proxyFactory
-                ->createProxy($targetClass, function ($instance) {
+                ->createProxy($targetClass, function ($instance): void {
                 }, $eagerProperties);
 
             // determine if the constructor contains eager properties. if it
@@ -536,7 +538,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         $initializableProperties = [];
 
         foreach ($properties as $property) {
-            if ($this->propertyInitializableExtractor->isInitializable($class, $property)) {
+            if ($this->propertyInitializableExtractor->isInitializable($class, $property) === true) {
                 $initializableProperties[] = $property;
             }
         }
@@ -550,7 +552,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
     private function allowsDynamicProperties(\ReflectionClass $class): bool
     {
         do {
-            if (count($class->getAttributes(\AllowDynamicProperties::class)) > 0) {
+            if ($class->getAttributes(\AllowDynamicProperties::class) !== []) {
                 return true;
             }
         } while ($class = $class->getParentClass());

@@ -41,7 +41,7 @@ class MoneyObjectMapper
     ): MoneyDtoForProxy {
         return $subMapper->createProxy(
             MoneyDtoForProxy::class,
-            static function (MoneyDtoForProxy $proxy) use ($money) {
+            static function (MoneyDtoForProxy $proxy) use ($money): void {
                 /** @psalm-suppress DirectConstructorCall */
                 $proxy->__construct(
                     $money->getAmount()->__toString(),

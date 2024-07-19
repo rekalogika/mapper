@@ -30,9 +30,9 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
     private array $cache = [];
 
     public function __construct(
-        private ObjectToObjectMetadataFactoryInterface $decorated,
-        private CacheItemPoolInterface $cacheItemPool,
-        private bool $debug,
+        private readonly ObjectToObjectMetadataFactoryInterface $decorated,
+        private readonly CacheItemPoolInterface $cacheItemPool,
+        private readonly bool $debug,
     ) {
     }
 

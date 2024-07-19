@@ -42,13 +42,14 @@ use Symfony\Contracts\Service\ResetInterface;
 final class MainTransformer implements MainTransformerInterface, ResetInterface
 {
     public static int $manualGcInterval = 500;
+
     private static int $runCounter = 1;
 
     public function __construct(
-        private ObjectCacheFactoryInterface $objectCacheFactory,
-        private TransformerRegistryInterface $transformerRegistry,
-        private TypeResolverInterface $typeResolver,
-        private bool $debug = false,
+        private readonly ObjectCacheFactoryInterface $objectCacheFactory,
+        private readonly TransformerRegistryInterface $transformerRegistry,
+        private readonly TypeResolverInterface $typeResolver,
+        private readonly bool $debug = false,
     ) {
     }
 
@@ -77,7 +78,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
     ): mixed {
         // if MapperOptions is not provided, use the default options
 
-        if (!($mapperOptions = $context(MapperOptions::class))) {
+        if (($mapperOptions = $context(MapperOptions::class)) === null) {
             $mapperOptions = new MapperOptions();
             $context = $context->with($mapperOptions);
         }
@@ -97,25 +98,23 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         // also not provided, then the target type is mixed.
 
         if ($target === null) {
-            if (count($targetTypes) === 0) {
+            if ($targetTypes === []) {
                 $targetTypes = [MixedType::instance()];
             }
-        } else {
-            if (count($targetTypes) === 0) {
-                $targetTypes = [TypeGuesser::guessTypeFromVariable($target)];
-            }
+        } elseif ($targetTypes === []) {
+            $targetTypes = [TypeGuesser::guessTypeFromVariable($target)];
         }
 
         // get or create object cache
 
-        if (!($objectCache = $context(ObjectCache::class))) {
+        if (($objectCache = $context(ObjectCache::class)) === null) {
             $objectCache = $this->objectCacheFactory->createObjectCache();
             $context = $context->with($objectCache);
         }
 
         // initialize path it it doesn't exist
 
-        if ($pathContext = $context(Path::class)) {
+        if (($pathContext = $context(Path::class)) !== null) {
             // append path
 
             if ($path === null) {
@@ -170,12 +169,8 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
             // the target type of the search entry, if not continue to the next
             // search entry
 
-            if ($target !== null) {
-                if (
-                    !TypeCheck::isVariableInstanceOf($target, $searchResultEntry->getTargetType())
-                ) {
-                    continue;
-                }
+            if ($target !== null && !TypeCheck::isVariableInstanceOf($target, $searchResultEntry->getTargetType())) {
+                continue;
             }
 
             // TransformerInterface doesn't accept MixedType, so we need to

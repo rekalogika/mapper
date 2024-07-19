@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Recursive;
 class ChildObject
 {
     public ?ParentObject $parent = null;
+
     public string $string = 'child';
 }

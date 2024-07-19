@@ -71,7 +71,6 @@ final readonly class ClassUtil
 
     /**
      * @param class-string|\ReflectionClass<object> $class
-     * @return int
      */
     public static function getLastModifiedTime(
         string|\ReflectionClass $class

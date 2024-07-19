@@ -44,9 +44,7 @@ final readonly class CopyTransformer implements TransformerInterface
             return $source;
         }
 
-        $result = clone $source;
-
-        return $result;
+        return clone $source;
     }
 
     public function getSupportedTransformation(): iterable

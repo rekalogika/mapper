@@ -25,8 +25,8 @@ class RememberingMapper implements MapperInterface, ResetInterface
     private PresetMapping $presetMapping;
 
     public function __construct(
-        private MapperInterface $decorated,
-        private ObjectCacheFactoryInterface $objectCacheFactory
+        private readonly MapperInterface $decorated,
+        private readonly ObjectCacheFactoryInterface $objectCacheFactory
     ) {
         $this->presetMapping = new PresetMapping();
     }

@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
 final class FinalPersonDto
 {
     public ?string $id = null;
+
     public ?string $name = null;
 }

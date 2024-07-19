@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\LazyObject;
 class ObjectWithIdDto
 {
     public ?string $id = null;
+
     public ?string $name = null;
 }

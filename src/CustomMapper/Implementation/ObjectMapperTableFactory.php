@@ -20,7 +20,7 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 /**
  * @internal
  */
-final class ObjectMapperTableFactory implements ObjectMapperTableFactoryInterface
+final readonly class ObjectMapperTableFactory implements ObjectMapperTableFactoryInterface
 {
     private ObjectMapperTable $objectMapperTable;
 

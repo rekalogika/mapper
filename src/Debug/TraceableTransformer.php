@@ -65,7 +65,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
     ): mixed {
         $path = $context(Path::class)?->getLast();
 
-        if ($debugContext = $context(DebugContext::class)) {
+        if (($debugContext = $context(DebugContext::class)) !== null) {
             $possibleTargetTypes = $debugContext->getTargetTypes();
             $sourceTypeGuessed = $debugContext->isSourceTypeGuessed();
         } else {
@@ -84,7 +84,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         );
 
         // add trace data to parent trace data
-        if ($parentTraceData = $context(TraceData::class)) {
+        if (($parentTraceData = $context(TraceData::class)) !== null) {
             $parentTraceData->addNestedTraceData($traceData);
             $context = $context->with($traceData);
         } else {
@@ -110,7 +110,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
 
             $traceData->finalize($time, $result);
 
-            if (!$parentTraceData) {
+            if ($parentTraceData === null) {
                 $this->dataCollector->collectTraceData($traceData);
             }
 

@@ -29,7 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class MappingCommand extends Command
 {
     public function __construct(
-        private MappingFactoryInterface $mappingFactory
+        private readonly MappingFactoryInterface $mappingFactory
     ) {
         parent::__construct();
     }
