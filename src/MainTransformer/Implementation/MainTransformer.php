@@ -100,10 +100,8 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
             if (count($targetTypes) === 0) {
                 $targetTypes = [MixedType::instance()];
             }
-        } else {
-            if (count($targetTypes) === 0) {
-                $targetTypes = [TypeGuesser::guessTypeFromVariable($target)];
-            }
+        } elseif (count($targetTypes) === 0) {
+            $targetTypes = [TypeGuesser::guessTypeFromVariable($target)];
         }
 
         // get or create object cache

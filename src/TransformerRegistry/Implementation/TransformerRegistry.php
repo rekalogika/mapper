@@ -94,7 +94,6 @@ final class TransformerRegistry implements TransformerRegistryInterface
         foreach ($mapping as $mappingEntry) {
             if ($mappingEntry->isVariantTargetType()) {
                 // if variant
-
                 $searchResultEntry = new SearchResultEntry(
                     mappingOrder: $mappingEntry->getOrder(),
                     sourceType: $sourceType,
@@ -102,27 +101,20 @@ final class TransformerRegistry implements TransformerRegistryInterface
                     transformerServiceId: $mappingEntry->getId(),
                     variantTargetType: $mappingEntry->isVariantTargetType()
                 );
-
                 $searchResultEntries[] = $searchResultEntry;
-            } else {
+            } elseif (TypeCheck::isSomewhatIdentical(
+                $targetType,
+                $mappingEntry->getTargetType()
+            )) {
                 // if invariant, check if target type is somewhat identical
-
-                if (
-                    TypeCheck::isSomewhatIdentical(
-                        $targetType,
-                        $mappingEntry->getTargetType()
-                    )
-                ) {
-                    $searchResultEntry = new SearchResultEntry(
-                        mappingOrder: $mappingEntry->getOrder(),
-                        sourceType: $sourceType,
-                        targetType: $targetType,
-                        transformerServiceId: $mappingEntry->getId(),
-                        variantTargetType: $mappingEntry->isVariantTargetType()
-                    );
-
-                    $searchResultEntries[] = $searchResultEntry;
-                }
+                $searchResultEntry = new SearchResultEntry(
+                    mappingOrder: $mappingEntry->getOrder(),
+                    sourceType: $sourceType,
+                    targetType: $targetType,
+                    transformerServiceId: $mappingEntry->getId(),
+                    variantTargetType: $mappingEntry->isVariantTargetType()
+                );
+                $searchResultEntries[] = $searchResultEntry;
             }
         }
 
