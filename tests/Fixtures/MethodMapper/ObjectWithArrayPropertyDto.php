@@ -29,6 +29,7 @@ final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
      */
     public ?array $property = null;
 
+    #[\Override]
     public static function mapFromObject(
         object $source,
         SubMapperInterface $mapper,

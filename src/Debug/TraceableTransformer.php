@@ -39,11 +39,13 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
     ) {
     }
 
+    #[\Override]
     public function getDecorated(): TransformerInterface
     {
         return $this->decorated;
     }
 
+    #[\Override]
     public function withMainTransformer(MainTransformerInterface $mainTransformer): static
     {
         if (!$this->decorated instanceof MainTransformerAwareInterface) {
@@ -56,6 +58,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         return $clone;
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -122,6 +125,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         }
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         return $this->decorated->getSupportedTransformation();

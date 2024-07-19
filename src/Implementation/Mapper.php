@@ -35,6 +35,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
      * @param class-string<T>|T $target
      * @return T
      */
+    #[\Override]
     public function map(object $source, object|string $target, ?Context $context = null): object
     {
         if (is_string($target)) {
@@ -81,6 +82,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
      * @param class-string<T> $target
      * @return iterable<T>
      */
+    #[\Override]
     public function mapIterable(
         iterable $source,
         string $target,

@@ -47,6 +47,7 @@ class TestKernel extends Kernel
         parent::__construct($env, $debug);
     }
 
+    #[\Override]
     public function registerBundles(): iterable
     {
         yield new FrameworkBundle();
@@ -54,6 +55,7 @@ class TestKernel extends Kernel
         yield new RekalogikaMapperBundle();
     }
 
+    #[\Override]
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
         $confDir = $this->getProjectDir() . '/tests/Resources/';

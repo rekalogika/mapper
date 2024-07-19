@@ -41,6 +41,7 @@ final readonly class HeuristicsEagerPropertiesResolver implements EagerPropertie
         ];
     }
 
+    #[\Override]
     public function getEagerProperties(string $sourceClass): array
     {
         $reflectionClass = new \ReflectionClass($sourceClass);

@@ -20,6 +20,7 @@ use Doctrine\Common\Collections\AbstractLazyCollection;
  */
 class LazyDoctrineCollection extends AbstractLazyCollection
 {
+    #[\Override]
     protected function doInitialize()
     {
         throw new \LogicException("Not expected to be initialized");

@@ -28,6 +28,7 @@ abstract class AbstractTransformerDecorator implements TransformerInterface
         return $this->decorated;
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -44,6 +45,7 @@ abstract class AbstractTransformerDecorator implements TransformerInterface
         );
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         return $this->decorated->getSupportedTransformation();

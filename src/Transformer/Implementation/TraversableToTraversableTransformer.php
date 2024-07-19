@@ -37,6 +37,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
     ) {
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -102,6 +103,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         return $target;
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         $sourceTypes = [

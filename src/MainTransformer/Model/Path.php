@@ -33,6 +33,7 @@ final readonly class Path implements \Stringable
         return new self();
     }
 
+    #[\Override]
     public function __toString(): string
     {
         $result = '';

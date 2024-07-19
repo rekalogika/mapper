@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable;
 
 class ObjectImplementingStringable implements \Stringable
 {
+    #[\Override]
     public function __toString(): string
     {
         return 'foo';

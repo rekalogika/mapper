@@ -25,6 +25,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class PresetTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -59,6 +60,7 @@ final readonly class PresetTransformer implements TransformerInterface
         }
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(TypeFactory::object(), TypeFactory::object(), true);

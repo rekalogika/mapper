@@ -53,6 +53,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
     ) {
     }
 
+    #[\Override]
     public function reset(): void
     {
         self::$runCounter = 1;
@@ -68,6 +69,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         return $transformer;
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,

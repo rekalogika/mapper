@@ -27,6 +27,7 @@ use Symfony\Component\PropertyInfo\Type;
  */
 final readonly class DateTimeTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -77,6 +78,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
         throw new InvalidArgumentException(sprintf('Target must be DateTime, DateTimeImmutable, or DatePoint, "%s" given', get_debug_type($targetType)), context: $context);
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         // from string

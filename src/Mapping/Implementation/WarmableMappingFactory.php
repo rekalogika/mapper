@@ -46,6 +46,7 @@ final class WarmableMappingFactory implements MappingFactoryInterface
         return $this->getMappingFromInnerFactory();
     }
 
+    #[\Override]
     public function getMapping(): Mapping
     {
         if ($this->mapping !== null) {

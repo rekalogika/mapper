@@ -27,6 +27,7 @@ final readonly class TraceableObjectToObjectMetadataFactory implements ObjectToO
     ) {
     }
 
+    #[\Override]
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,

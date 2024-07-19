@@ -41,6 +41,7 @@ final class ObjectMapperTransformer implements
     ) {
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -93,6 +94,7 @@ final class ObjectMapperTransformer implements
         );
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         $objectMapperTable = $this->objectMapperTableFactory

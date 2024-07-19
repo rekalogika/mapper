@@ -23,6 +23,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class StringToBackedEnumTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -49,6 +50,7 @@ final readonly class StringToBackedEnumTransformer implements TransformerInterfa
         throw new InvalidArgumentException(sprintf('Target must be an enum class-string, "%s" given', get_debug_type($target)), context: $context);
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(

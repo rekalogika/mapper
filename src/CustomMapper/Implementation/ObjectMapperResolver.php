@@ -46,6 +46,7 @@ final class ObjectMapperResolver implements ObjectMapperResolverInterface
             ->createObjectMapperTable();
     }
 
+    #[\Override]
     public function getObjectMapper(
         string $sourceClass,
         string $targetClass

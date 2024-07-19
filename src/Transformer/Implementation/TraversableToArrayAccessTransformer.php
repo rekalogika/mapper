@@ -45,6 +45,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     ) {
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -264,6 +265,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         throw new InvalidArgumentException(sprintf('We do not know how to create an instance of "%s"', $class));
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         $sourceTypes = [

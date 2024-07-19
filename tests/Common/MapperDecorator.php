@@ -29,6 +29,7 @@ final readonly class MapperDecorator implements MapperInterface
      * @param class-string<T>|T $target
      * @return T
      */
+    #[\Override]
     public function map(
         object $source,
         object|string $target,

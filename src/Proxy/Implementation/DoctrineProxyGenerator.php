@@ -30,6 +30,7 @@ final readonly class DoctrineProxyGenerator implements ProxyGeneratorInterface
     ) {
     }
 
+    #[\Override]
     public function generateProxyCode(string $realClass, string $proxyClass): string
     {
         $manager = $this->managerRegistry->getManagerForClass($realClass);

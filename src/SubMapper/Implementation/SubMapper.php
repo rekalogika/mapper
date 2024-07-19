@@ -44,6 +44,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
     ) {
     }
 
+    #[\Override]
     public function map(
         ?object $source,
         object|string $target,
@@ -83,6 +84,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)), context: $context);
     }
 
+    #[\Override]
     public function mapForProperty(
         ?object $source,
         string|object $containing,
@@ -127,6 +129,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         return $result;
     }
 
+    #[\Override]
     public function cache(mixed $target): void
     {
         if ($this->targetType === null) {
@@ -140,6 +143,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         );
     }
 
+    #[\Override]
     public function createProxy(
         string $class,
         $initializer,

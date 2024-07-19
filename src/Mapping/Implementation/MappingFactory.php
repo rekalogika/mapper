@@ -40,6 +40,7 @@ final class MappingFactory implements MappingFactoryInterface
     ) {
     }
 
+    #[\Override]
     public function getMapping(): Mapping
     {
         if ($this->mapping === null) {

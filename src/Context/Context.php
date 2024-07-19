@@ -29,6 +29,7 @@ final readonly class Context implements \IteratorAggregate
     ) {
     }
 
+    #[\Override]
     public function getIterator(): \Traversable
     {
         foreach ($this->context as $object) {

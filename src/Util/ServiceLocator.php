@@ -29,11 +29,13 @@ final readonly class ServiceLocator implements ContainerInterface
     ) {
     }
 
+    #[\Override]
     public function get(string $id): mixed
     {
         return $this->services[$id] ?? throw new ServiceNotFoundException($id);
     }
 
+    #[\Override]
     public function has(string $id): bool
     {
         return isset($this->services[$id]);

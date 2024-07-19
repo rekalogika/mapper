@@ -23,6 +23,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class NullTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -61,6 +62,7 @@ final readonly class NullTransformer implements TransformerInterface
         throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given.', get_debug_type($targetType)), context: $context);
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(TypeFactory::null(), TypeFactory::string());

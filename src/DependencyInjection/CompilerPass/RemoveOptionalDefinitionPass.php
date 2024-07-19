@@ -23,6 +23,7 @@ use Symfony\Component\Uid\Factory\UuidFactory;
  */
 final readonly class RemoveOptionalDefinitionPass implements CompilerPassInterface
 {
+    #[\Override]
     public function process(ContainerBuilder $container): void
     {
         if (!class_exists(UuidFactory::class)) {

@@ -22,6 +22,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class ObjectToStringTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -40,6 +41,7 @@ final readonly class ObjectToStringTransformer implements TransformerInterface
         throw new InvalidArgumentException(sprintf('Source must be instance of "\Stringable" or "\UnitEnum", "%s" given', get_debug_type($source)), context: $context);
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(

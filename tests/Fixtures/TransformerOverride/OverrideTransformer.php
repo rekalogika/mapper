@@ -30,6 +30,7 @@ class OverrideTransformer extends AbstractTransformerDecorator
         parent::__construct($transformer);
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(

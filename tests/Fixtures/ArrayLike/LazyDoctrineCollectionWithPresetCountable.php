@@ -20,11 +20,13 @@ use Doctrine\Common\Collections\AbstractLazyCollection;
  */
 class LazyDoctrineCollectionWithPresetCountable extends AbstractLazyCollection
 {
+    #[\Override]
     protected function doInitialize()
     {
         throw new \LogicException("Not expected to be initialized");
     }
 
+    #[\Override]
     public function count(): int
     {
         return 31337;

@@ -37,6 +37,7 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
      * @param callable(T):void $initializer
      * @return T
      */
+    #[\Override]
     public function createProxy(
         string $class,
         $initializer,

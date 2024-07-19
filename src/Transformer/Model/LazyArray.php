@@ -56,11 +56,13 @@ final class LazyArray implements CollectionInterface
         $this->mainTransformer = $mainTransformer;
     }
 
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->cachedData[$offset]) || isset($this->source[$offset]);
     }
 
+    #[\Override]
     public function offsetGet(mixed $offset): mixed
     {
         if (isset($this->cachedData[$offset])) {
@@ -81,17 +83,20 @@ final class LazyArray implements CollectionInterface
         return $this->cachedData[$key] = $value;
     }
 
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         throw new \BadMethodCallException('LazyArray is immutable.');
     }
 
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         throw new \BadMethodCallException('LazyArray is immutable.');
     }
 
     /** @psalm-suppress InvalidReturnType */
+    #[\Override]
     public function getIterator(): \Traversable
     {
         if ($this->isCacheComplete) {
@@ -159,6 +164,7 @@ final class LazyArray implements CollectionInterface
         $this->isCacheComplete = true;
     }
 
+    #[\Override]
     public function count(): int
     {
         return count($this->source);

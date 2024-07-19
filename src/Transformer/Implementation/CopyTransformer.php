@@ -23,6 +23,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class CopyTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -47,6 +48,7 @@ final readonly class CopyTransformer implements TransformerInterface
         return clone $source;
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(MixedType::instance(), MixedType::instance());

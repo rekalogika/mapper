@@ -22,31 +22,37 @@ use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 
 class MapperTestFactory extends MapperFactory
 {
+    #[\Override]
     public function getTransformersIterator(): iterable
     {
         return parent::getTransformersIterator();
     }
 
+    #[\Override]
     public function getTypeResolver(): TypeResolverInterface
     {
         return parent::getTypeResolver();
     }
 
+    #[\Override]
     public function getMainTransformer(): MainTransformerInterface
     {
         return parent::getMainTransformer();
     }
 
+    #[\Override]
     public function getMappingFactory(): MappingFactoryInterface
     {
         return parent::getMappingFactory();
     }
 
+    #[\Override]
     public function getTransformerRegistry(): TransformerRegistryInterface
     {
         return parent::getTransformerRegistry();
     }
 
+    #[\Override]
     public function getScalarToScalarTransformer(): TransformerInterface
     {
         return parent::getScalarToScalarTransformer();

@@ -27,6 +27,7 @@ final class ObjectMapperTable implements \IteratorAggregate
      */
     private array $objectMappers = [];
 
+    #[\Override]
     public function getIterator(): \Traversable
     {
         foreach ($this->objectMappers as $targetClass => $propertyMappers) {

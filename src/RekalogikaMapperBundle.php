@@ -23,11 +23,13 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 final class RekalogikaMapperBundle extends Bundle
 {
+    #[\Override]
     public function getPath(): string
     {
         return \dirname(__DIR__);
     }
 
+    #[\Override]
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);
@@ -41,6 +43,7 @@ final class RekalogikaMapperBundle extends Bundle
         }
     }
 
+    #[\Override]
     public function boot(): void
     {
         /** @var ProxyAutoloaderInterface */
@@ -49,6 +52,7 @@ final class RekalogikaMapperBundle extends Bundle
         $autoloader->registerAutoloader();
     }
 
+    #[\Override]
     public function shutdown(): void
     {
         /** @var ProxyAutoloaderInterface */

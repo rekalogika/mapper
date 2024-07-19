@@ -40,16 +40,19 @@ abstract class AbstractSerializerContext implements
         return $this->context;
     }
 
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->context[$offset]);
     }
 
+    #[\Override]
     public function offsetGet(mixed $offset): mixed
     {
         return $this->context[$offset] ?? null;
     }
 
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if (null === $offset) {
@@ -59,16 +62,19 @@ abstract class AbstractSerializerContext implements
         $this->context[$offset] = $value;
     }
 
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         unset($this->context[$offset]);
     }
 
+    #[\Override]
     public function getIterator(): \Traversable
     {
         yield from $this->context;
     }
 
+    #[\Override]
     public function count(): int
     {
         return \count($this->context);

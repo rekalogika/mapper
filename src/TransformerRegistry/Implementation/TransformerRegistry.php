@@ -43,6 +43,7 @@ final class TransformerRegistry implements TransformerRegistryInterface
      */
     private array $transformers = [];
 
+    #[\Override]
     public function get(string $id): TransformerInterface
     {
         if (isset($this->transformers[$id])) {
@@ -121,6 +122,7 @@ final class TransformerRegistry implements TransformerRegistryInterface
         return new SearchResult($searchResultEntries);
     }
 
+    #[\Override]
     public function findBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,

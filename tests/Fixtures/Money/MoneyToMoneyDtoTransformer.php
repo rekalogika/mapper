@@ -30,6 +30,7 @@ class MoneyToMoneyDtoTransformer implements TransformerInterface
     // The TypeFactory methods are convenience methods for creating the
     // PropertyInfo Type objects.
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
 
@@ -57,6 +58,7 @@ class MoneyToMoneyDtoTransformer implements TransformerInterface
     // The TypeCheck class is a convenience class for verifying the type
     // specified by a Type object.
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,

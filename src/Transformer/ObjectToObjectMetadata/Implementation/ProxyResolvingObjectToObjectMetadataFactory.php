@@ -27,6 +27,7 @@ final readonly class ProxyResolvingObjectToObjectMetadataFactory implements Obje
     ) {
     }
 
+    #[\Override]
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,

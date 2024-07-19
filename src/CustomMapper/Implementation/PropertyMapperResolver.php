@@ -50,6 +50,7 @@ final class PropertyMapperResolver implements PropertyMapperResolverInterface
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
+    #[\Override]
     public function getPropertyMapper(
         string $sourceClass,
         string $targetClass,

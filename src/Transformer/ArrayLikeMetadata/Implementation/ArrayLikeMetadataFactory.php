@@ -26,6 +26,7 @@ use Symfony\Component\PropertyInfo\Type;
  */
 final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryInterface
 {
+    #[\Override]
     public function createArrayLikeMetadata(
         Type $sourceType,
         Type $targetType

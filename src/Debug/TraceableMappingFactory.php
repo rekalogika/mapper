@@ -30,11 +30,13 @@ final class TraceableMappingFactory implements MappingFactoryInterface, ResetInt
     ) {
     }
 
+    #[\Override]
     public function reset(): void
     {
         $this->mappingCollected = false;
     }
 
+    #[\Override]
     public function getMapping(): Mapping
     {
         if ($this->mappingCollected) {

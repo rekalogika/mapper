@@ -28,6 +28,7 @@ final readonly class DynamicPropertiesProxyGenerator implements ProxyGeneratorIn
     ) {
     }
 
+    #[\Override]
     public function generateProxyCode(string $realClass, string $proxyClass): string
     {
         $reflection = new \ReflectionClass($realClass);
