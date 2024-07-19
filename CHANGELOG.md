@@ -3,6 +3,7 @@
 ## 1.5.5
 
 * build: add rector
+* build: add `Override` attributes where applicable
 
 ## 1.5.4
 
