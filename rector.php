@@ -40,7 +40,7 @@ return RectorConfig::configure()
         // symfonyCodeQuality: true,
         // doctrineCodeQuality: true,
     )
-    ->withCodeQualityLevel(50)
+    ->withCodeQualityLevel(57)
     ->withPhpSets(php82: true)
     ->withRules([
         AddOverrideAttributeToOverriddenMethodsRector::class,

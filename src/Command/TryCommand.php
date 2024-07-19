@@ -129,7 +129,7 @@ final class TryCommand extends Command
         $io->writeln('');
         $io->section('<info>Applicable Transformers</info>');
 
-        if (count($rows) === 0) {
+        if ($rows === []) {
             $io->error('No applicable transformers found.');
 
             return Command::SUCCESS;

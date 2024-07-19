@@ -58,10 +58,10 @@ final readonly class TypeUtil
                 return false;
             }
 
-            $keyTypeIsSimple = count($keyTypes) === 0
+            $keyTypeIsSimple = $keyTypes === []
                 || self::isSimpleType($keyTypes[0]);
 
-            $valueTypeIsSimple = count($valueTypes) === 0
+            $valueTypeIsSimple = $valueTypes === []
                 || self::isSimpleType($valueTypes[0]);
 
             return $keyTypeIsSimple && $valueTypeIsSimple;
@@ -173,11 +173,11 @@ final readonly class TypeUtil
                 $valueTypes[] = null;
             }
 
-            if (count($keyTypes) === 0) {
+            if ($keyTypes === []) {
                 $keyTypes = [null];
             }
 
-            if (count($valueTypes) === 0) {
+            if ($valueTypes === []) {
                 $valueTypes = [null];
             }
 
@@ -237,7 +237,7 @@ final readonly class TypeUtil
         }
 
         if (is_array($type)) {
-            if (count($type) === 0) {
+            if ($type === []) {
                 return 'mixed';
             }
 
@@ -309,7 +309,7 @@ final readonly class TypeUtil
     public static function getTypeStringHtml(Type|MixedType|array $type): string
     {
         if (\is_array($type)) {
-            if (count($type) === 0) {
+            if ($type === []) {
                 return 'mixed';
             }
 

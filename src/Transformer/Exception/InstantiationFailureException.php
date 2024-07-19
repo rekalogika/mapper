@@ -29,7 +29,7 @@ class InstantiationFailureException extends NotMappableValueException
         \Throwable $previous,
         Context $context,
     ) {
-        if (count($constructorArguments) === 0) {
+        if ($constructorArguments === []) {
             $message = sprintf(
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
                 \get_debug_type($source),
@@ -44,7 +44,7 @@ class InstantiationFailureException extends NotMappableValueException
             );
         }
 
-        if (count($unsetSourceProperties) > 0) {
+        if ($unsetSourceProperties !== []) {
             $message .= sprintf(
                 ' Note that the following properties are not set in the source object: %s.',
                 implode(', ', $unsetSourceProperties)

@@ -71,7 +71,7 @@ final class TraceData
 
     private function finalizeTime(float $time): void
     {
-        if (count($this->nestedTraceData) === 0) {
+        if ($this->nestedTraceData === []) {
             // If this is the last trace data (no nested trace data)
             $this->time = $time;
         } else {

@@ -97,10 +97,10 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         // also not provided, then the target type is mixed.
 
         if ($target === null) {
-            if (count($targetTypes) === 0) {
+            if ($targetTypes === []) {
                 $targetTypes = [MixedType::instance()];
             }
-        } elseif (count($targetTypes) === 0) {
+        } elseif ($targetTypes === []) {
             $targetTypes = [TypeGuesser::guessTypeFromVariable($target)];
         }
 

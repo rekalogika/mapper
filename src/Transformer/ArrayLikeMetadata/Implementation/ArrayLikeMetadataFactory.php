@@ -32,7 +32,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
     ): ArrayLikeMetadata {
         $targetMemberKeyTypes = $targetType->getCollectionKeyTypes();
 
-        if (count($targetMemberKeyTypes) === 0) {
+        if ($targetMemberKeyTypes === []) {
             $targetMemberKeyTypes = [
                 TypeFactory::int(),
                 TypeFactory::string(),
@@ -82,7 +82,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             }
         }
 
-        $targetMemberValueIsUntyped = count($targetMemberValueTypes) === 0;
+        $targetMemberValueIsUntyped = $targetMemberValueTypes === [];
 
         // determine if target can be lazy
 

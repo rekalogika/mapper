@@ -70,14 +70,14 @@ final class TryPropertyCommand extends Command
         $sourceTypes = $this->propertyInfoExtractor
             ->getTypes($sourceClass, $sourceProperty);
 
-        if ($sourceTypes === null || count($sourceTypes) === 0) {
+        if ($sourceTypes === null || $sourceTypes === []) {
             $sourceTypes = [MixedType::instance()];
         }
 
         $targetTypes = $this->propertyInfoExtractor
             ->getTypes($targetClass, $targetProperty);
 
-        if ($targetTypes === null || count($targetTypes) === 0) {
+        if ($targetTypes === null || $targetTypes === []) {
             $targetTypes = [MixedType::instance()];
         }
 
@@ -125,7 +125,7 @@ final class TryPropertyCommand extends Command
 
         $io->section('<info>Applicable Transformers</info>');
 
-        if (count($rows) === 0) {
+        if ($rows === []) {
             $io->error('No applicable transformers found.');
 
             return Command::SUCCESS;
