@@ -58,7 +58,7 @@ final readonly class MoneyDto implements MapToObjectInterface, MapFromObjectInte
             throw new \InvalidArgumentException('Source must be instance of ' . Money::class);
         }
 
-        return new static(
+        return new self(
             $source->getAmount()->__toString(),
             $source->getCurrency()->getCurrencyCode(),
         );

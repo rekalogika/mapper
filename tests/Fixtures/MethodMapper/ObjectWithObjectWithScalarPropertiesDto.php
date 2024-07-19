@@ -39,7 +39,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
     ): static {
         assert($source instanceof ObjectWithObjectWithScalarProperties);
 
-        $self = new static();
+        $self = new self();
 
         $self->objectWithScalarProperties = $mapper->map(
             $source->objectWithScalarProperties,
