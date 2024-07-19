@@ -170,12 +170,8 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
             // the target type of the search entry, if not continue to the next
             // search entry
 
-            if ($target !== null) {
-                if (
-                    !TypeCheck::isVariableInstanceOf($target, $searchResultEntry->getTargetType())
-                ) {
-                    continue;
-                }
+            if ($target !== null && !TypeCheck::isVariableInstanceOf($target, $searchResultEntry->getTargetType())) {
+                continue;
             }
 
             // TransformerInterface doesn't accept MixedType, so we need to
