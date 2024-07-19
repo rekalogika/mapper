@@ -7,6 +7,7 @@ use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
 use Rector\CodeQuality\Rector\If_\CombineIfRector;
 use Rector\CodeQuality\Rector\If_\SimplifyIfElseToTernaryRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
+use Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
 use Rector\CodingStyle\Rector\Stmt\NewlineAfterStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
@@ -33,7 +34,7 @@ return RectorConfig::configure()
     ->withPreparedSets(
         deadCode: true,
         codeQuality: true,
-        // codingStyle: true,
+        codingStyle: true,
         typeDeclarations: true,
         // privatization: true,
         // instanceOf: true,
@@ -43,7 +44,6 @@ return RectorConfig::configure()
     )
     ->withPhpSets(php82: true)
     ->withRules([
-        NewlineAfterStatementRector::class,
         AddOverrideAttributeToOverriddenMethodsRector::class,
     ])
     ->withSkip([
@@ -75,5 +75,9 @@ return RectorConfig::configure()
 
         RemoveUnusedPrivateMethodParameterRector::class => [
             __DIR__ . '/src/DependencyInjection/RekalogikaMapperExtension.php',
+        ],
+
+        MakeInheritedMethodVisibilitySameAsParentRector::class => [
+            __DIR__ . '/tests/Common/MapperTestFactory.php',
         ],
     ]);

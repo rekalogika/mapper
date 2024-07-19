@@ -26,7 +26,7 @@ class RemoveTest extends FrameworkTestCase
 {
     private MemberRepository $repository;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 

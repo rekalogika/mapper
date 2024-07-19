@@ -33,6 +33,7 @@ class DoctrineTest extends FrameworkTestCase
         $em->flush();
 
         $em->clear();
+
         $entity = $em->find(EntityWithSingleIdentifier::class, 'my-identifier');
         $this->assertNotNull($entity);
         $this->assertSame('my-identifier', $entity->getMyIdentifier());
