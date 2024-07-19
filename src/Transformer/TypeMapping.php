@@ -23,7 +23,7 @@ final readonly class TypeMapping
         private Type|MixedType $targetType,
         private bool $variantTargetType = false,
     ) {
-        if ($variantTargetType === true) {
+        if ($variantTargetType) {
             if ($targetType instanceof MixedType) {
                 throw new InvalidArgumentException(
                     'Variant target type cannot be MixedType',

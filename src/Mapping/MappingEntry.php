@@ -36,7 +36,7 @@ final class MappingEntry
     ) {
         $this->order = ++self::$counter;
 
-        if ($variantTargetType === true) {
+        if ($variantTargetType) {
             if ($targetType instanceof MixedType) {
                 throw new InvalidArgumentException(
                     'Variant target type cannot be MixedType',
