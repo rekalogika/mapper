@@ -42,6 +42,7 @@ use Symfony\Contracts\Service\ResetInterface;
 final class MainTransformer implements MainTransformerInterface, ResetInterface
 {
     public static int $manualGcInterval = 500;
+
     private static int $runCounter = 1;
 
     public function __construct(

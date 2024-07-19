@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\RecursiveDto;
 class ChildObjectDto
 {
     public ?ParentObjectDto $parent = null;
+
     public ?string $string = null;
 }

@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\LazyObject;
 final class ObjectWithIdFinalDto
 {
     public ?string $id = null;
+
     public ?string $name = null;
 }

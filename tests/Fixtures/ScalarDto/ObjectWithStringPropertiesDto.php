@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ScalarDto;
 class ObjectWithStringPropertiesDto
 {
     public ?string $a = null;
+
     public ?string $b = null;
+
     public ?string $c = null;
+
     public ?string $d = null;
 }

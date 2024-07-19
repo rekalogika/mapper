@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValueDto;
 final class RootObjectDto
 {
     public ?string $id = null;
+
     public ?InnerObjectDto $innerObject = null;
 }

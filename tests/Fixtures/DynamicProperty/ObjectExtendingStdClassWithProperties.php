@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\DynamicProperty;
 class ObjectExtendingStdClassWithProperties extends \stdClass
 {
     public ?string $public = null;
+
     private ?string $private = null;
 
     public function __construct(private readonly ?string $constructor = null)

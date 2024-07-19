@@ -20,6 +20,8 @@ use Symfony\Component\Uid\Uuid;
 class ObjectWithUidsDto
 {
     public ?Uuid $uuid = null;
+
     public ?Ulid $ulid = null;
+
     public ?UuidInterface $ramseyUuid = null;
 }

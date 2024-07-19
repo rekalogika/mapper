@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValue;
 final class RootObject
 {
     private string $id = '_';
+
     private InnerObject $innerObject;
 
     public function __construct()

@@ -16,6 +16,8 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ObjectKeysDto;
 class PersonDto
 {
     public ?string $name = null;
+
     public ?string $gender = null;
+
     public ?string $birthDate = null;
 }

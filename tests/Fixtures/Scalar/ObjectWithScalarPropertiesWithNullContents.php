@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Scalar;
 class ObjectWithScalarPropertiesWithNullContents
 {
     public ?int $a = null;
+
     public ?string $b = null;
+
     public ?bool $c = null;
+
     public ?float $d = null;
 }

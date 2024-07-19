@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ScalarDto;
 class ObjectWithBoolPropertiesDto
 {
     public ?bool $a = null;
+
     public ?bool $b = null;
+
     public ?bool $c = null;
+
     public ?bool $d = null;
 }

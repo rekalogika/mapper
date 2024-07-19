@@ -29,8 +29,10 @@ use Symfony\Component\VarExporter\LazyObjectInterface;
 abstract class FrameworkTestCase extends TestCase
 {
     private ContainerInterface $container;
+
     /** @psalm-suppress MissingConstructor */
     protected MapperInterface $mapper;
+
     /** @psalm-suppress MissingConstructor */
     protected IterableMapperInterface $iterableMapper;
 

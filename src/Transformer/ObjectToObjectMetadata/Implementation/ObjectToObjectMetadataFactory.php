@@ -359,6 +359,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     if ($simpleType instanceof MixedType) {
                         continue;
                     }
+
                     $sourcePropertyTypes[] = $simpleType;
                 }
             }
@@ -376,6 +377,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     if ($simpleType instanceof MixedType) {
                         continue;
                     }
+
                     $targetPropertyTypes[] = $simpleType;
                 }
             }

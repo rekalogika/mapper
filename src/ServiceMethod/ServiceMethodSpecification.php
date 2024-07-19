@@ -19,7 +19,9 @@ namespace Rekalogika\Mapper\ServiceMethod;
 final readonly class ServiceMethodSpecification
 {
     public const ARGUMENT_CONTEXT = 'context';
+
     public const ARGUMENT_MAIN_TRANSFORMER = 'main_transformer';
+
     public const ARGUMENT_SUB_MAPPER = 'sub_mapper';
 
     /**

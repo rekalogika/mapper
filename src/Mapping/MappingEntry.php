@@ -23,6 +23,7 @@ use Symfony\Component\PropertyInfo\Type;
 final class MappingEntry
 {
     private static int $counter = 0;
+
     private readonly int $order;
 
     public function __construct(

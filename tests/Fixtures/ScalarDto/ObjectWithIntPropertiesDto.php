@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ScalarDto;
 class ObjectWithIntPropertiesDto
 {
     public ?int $a = null;
+
     public ?int $b = null;
+
     public ?int $c = null;
+
     public ?int $d = null;
 }

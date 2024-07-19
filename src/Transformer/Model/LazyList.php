@@ -36,6 +36,7 @@ final class LazyList implements ListInterface
      * @var array<int,TValue>
      */
     private array $cachedData = [];
+
     private bool $isCached = false;
 
     /**

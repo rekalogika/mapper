@@ -16,8 +16,12 @@ namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 class SomeObjectDto
 {
     public ?string $propertyA = null;
+
     public ?string $propertyB = null;
+
     public ?string $propertyC = null;
+
     public ?string $propertyD = null;
+
     public ?string $propertyE = null;
 }

@@ -22,6 +22,7 @@ class ObjectWithConstructorAndPropertiesDto
     }
 
     private ?bool $c = null;
+
     private ?float $d = null;
 
     public function getA(): int

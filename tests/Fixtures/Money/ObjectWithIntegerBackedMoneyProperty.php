@@ -18,6 +18,7 @@ use Brick\Money\Money;
 class ObjectWithIntegerBackedMoneyProperty
 {
     private int $amount = 0;
+
     private string $currency = 'USD';
 
     public function setAmount(Money $amount): void

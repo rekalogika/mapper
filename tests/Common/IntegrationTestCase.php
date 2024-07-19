@@ -23,9 +23,13 @@ use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 abstract class IntegrationTestCase extends TestCase
 {
     protected MapperTestFactory $factory;
+
     protected MapperInterface $mapper;
+
     protected MainTransformerInterface $mainTransformer;
+
     protected TypeResolverInterface $typeResolver;
+
     protected TransformerRegistryInterface $transformerRegistry;
 
     public function setUp(): void

@@ -117,49 +117,91 @@ class MapperFactory
     private ?Serializer $serializer = null;
 
     private ?NullToNullTransformer $nullToNullTransformer = null;
+
     private ?NullTransformer $nullTransformer = null;
+
     private ?ObjectToObjectTransformer $objectToObjectTransformer = null;
+
     private ?ObjectToStringTransformer $objectToStringTransformer = null;
+
     private ?ScalarToScalarTransformer $scalarToScalarTransformer = null;
+
     private ?ObjectMapperTransformer $objectMapperTransformer = null;
+
     private ?StringToBackedEnumTransformer $stringToBackedEnumTransformer = null;
+
     private ?ArrayToObjectTransformer $arrayToObjectTransformer = null;
+
     private ?ObjectToArrayTransformer $objectToArrayTransformer = null;
+
     private ?ArrayObjectTransformer $arrayObjectTransformer = null;
+
     private ?DateTimeTransformer $dateTimeTransformer = null;
+
     private ?TraversableToArrayAccessTransformer $traversableToArrayAccessTransformer = null;
+
     private ?TraversableToTraversableTransformer $traversableToTraversableTransformer = null;
+
     private ?CopyTransformer $copyTransformer = null;
+
     private ?ClassMethodTransformer $classMethodTransformer = null;
+
     private ?SymfonyUidTransformer $symfonyUidTransformer = null;
+
     private ?RamseyUuidTransformer $ramseyUuidTransformer = null;
+
     private ?PresetTransformer $presetTransformer = null;
+
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
+
     private ?TypeResolverInterface $typeResolver = null;
+
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
+
     private ?ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory = null;
+
     private ?MainTransformerInterface $mainTransformer = null;
+
     private ?MapperInterface $mapper = null;
+
     private ?IterableMapperInterface $iterableMapper = null;
+
     private ?MappingFactoryInterface $mappingFactory = null;
+
     private ?ObjectCacheFactoryInterface $objectCacheFactory = null;
+
     private ?SubMapperFactoryInterface $subMapperFactory = null;
+
     private ?TransformerRegistryInterface $transformerRegistry = null;
+
     private ?PropertyMapperResolverInterface $propertyMapperResolver = null;
+
     private ?ObjectMapperTableFactoryInterface $objectMapperTableFactory = null;
+
     private ?ObjectMapperResolverInterface $objectMapperResolver = null;
+
     private ?PropertyReadInfoExtractorInterface $propertyReadInfoExtractor = null;
+
     private ?PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor = null;
+
     private ?PropertyAccessorInterface $propertyAccessor = null;
+
     private ?EagerPropertiesResolverInterface $eagerPropertiesResolver = null;
+
     private ?ProxyGeneratorInterface $proxyGenerator = null;
+
     private ?ProxyRegistryInterface $proxyRegistry = null;
+
     private ?ProxyAutoloaderInterface $proxyAutoLoader = null;
+
     private ?ProxyFactoryInterface $proxyFactory = null;
 
     private ?MappingCommand $mappingCommand = null;
+
     private ?TryCommand $tryCommand = null;
+
     private ?TryPropertyCommand $tryPropertyCommand = null;
+
     private ?Application $application = null;
 
     /**

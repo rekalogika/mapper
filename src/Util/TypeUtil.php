@@ -280,6 +280,7 @@ final readonly class TypeUtil
                 foreach ($keyTypes as $keyType) {
                     $keyTypesString[] = self::getTypeString($keyType);
                 }
+
                 $keyTypesString = implode('|', $keyTypesString);
             } else {
                 $keyTypesString = 'mixed';
@@ -292,6 +293,7 @@ final readonly class TypeUtil
                 foreach ($valueTypes as $valueType) {
                     $valueTypesString[] = self::getTypeString($valueType);
                 }
+
                 $valueTypesString = implode('|', $valueTypesString);
             } else {
                 $valueTypesString = 'mixed';
@@ -349,6 +351,7 @@ final readonly class TypeUtil
                 foreach ($keyTypes as $keyType) {
                     $keyTypesString[] = self::getTypeStringHtml($keyType);
                 }
+
                 $keyTypesString = implode('|', $keyTypesString);
             } else {
                 $keyTypesString = 'mixed';
@@ -361,6 +364,7 @@ final readonly class TypeUtil
                 foreach ($valueTypes as $valueType) {
                     $valueTypesString[] = self::getTypeStringHtml($valueType);
                 }
+
                 $valueTypesString = implode('|', $valueTypesString);
             } else {
                 $valueTypesString = 'mixed';

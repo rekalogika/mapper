@@ -253,6 +253,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 if ($metadata->targetMemberKeyCanBeOtherThanIntOrString()) {
                     return new HashTable();
                 }
+
                 return new \ArrayObject();
 
             case $class === Collection::class:

@@ -16,7 +16,10 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Scalar;
 class ObjectWithScalarProperties
 {
     public int $a = 1;
+
     public string $b = 'string';
+
     public bool $c = true;
+
     public float $d = 1.1;
 }

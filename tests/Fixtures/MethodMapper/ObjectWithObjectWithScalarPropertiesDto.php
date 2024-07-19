@@ -58,6 +58,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
         if ($target === ObjectWithObjectWithScalarProperties::class) {
             $target = new $target();
         }
+
         assert($target instanceof ObjectWithObjectWithScalarProperties);
         assert($this->objectWithScalarProperties instanceof ObjectWithScalarPropertiesDto);
 

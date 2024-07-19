@@ -25,20 +25,29 @@ use Symfony\Component\VarExporter\LazyObjectInterface;
 final class TraceData
 {
     private readonly string $sourceType;
+
     private readonly string $existingTargetType;
+
     private ?string $resultType = null;
+
     private ?float $time = null;
 
     /** @var array<int,self> */
     private array $nestedTraceData = [];
 
     private ?string $callerFile = null;
+
     private ?int $callerLine = null;
+
     private ?string $callerFunction = null;
+
     /** @var class-string */
     private ?string $callerClass = null;
+
     private ?string $callerType = null;
+
     private ?string $callerName = null;
+
     private bool $refused = false;
 
     /**
@@ -149,6 +158,7 @@ final class TraceData
         if ($this->possibleTargetTypes === null) {
             return "__unknown__";
         }
+
         return TypeUtil::getTypeStringHtml($this->possibleTargetTypes);
         ;
     }
@@ -163,6 +173,7 @@ final class TraceData
         if ($this->selectedTargetType !== null) {
             return TypeUtil::getTypeStringHtml($this->selectedTargetType);
         }
+
         return 'mixed';
     }
 

@@ -19,5 +19,6 @@ namespace Rekalogika\Mapper\Proxy;
 interface ProxyAutoloaderInterface
 {
     public function registerAutoloader(): void;
+
     public function unregisterAutoloader(): void;
 }

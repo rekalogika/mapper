@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\LazyObject;
 class ObjectWithIdAndNameMustBeCalled
 {
     private bool $idCalled = false;
+
     private bool $nameCalled = false;
 
     public function getId(): string
