@@ -434,7 +434,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     ): mixed {
         // if a custom property mapper is set, then use it
 
-        if ($serviceMethodSpecification = $propertyMapping->getPropertyMapper()) {
+        if (($serviceMethodSpecification = $propertyMapping->getPropertyMapper()) !== null) {
             $serviceMethodRunner = ServiceMethodRunner::create(
                 serviceLocator: $this->propertyMapperLocator,
                 mainTransformer: $this->getMainTransformer(),

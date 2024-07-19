@@ -275,7 +275,7 @@ final readonly class TypeUtil
         if ($type->isCollection()) {
             $keyTypes = $type->getCollectionKeyTypes();
 
-            if ($keyTypes) {
+            if ($keyTypes !== []) {
                 $keyTypesString = [];
                 foreach ($keyTypes as $keyType) {
                     $keyTypesString[] = self::getTypeString($keyType);
@@ -287,7 +287,7 @@ final readonly class TypeUtil
 
             $valueTypes = $type->getCollectionValueTypes();
 
-            if ($valueTypes) {
+            if ($valueTypes !== []) {
                 $valueTypesString = [];
                 foreach ($valueTypes as $valueType) {
                     $valueTypesString[] = self::getTypeString($valueType);
@@ -344,7 +344,7 @@ final readonly class TypeUtil
         if ($type->isCollection()) {
             $keyTypes = $type->getCollectionKeyTypes();
 
-            if ($keyTypes) {
+            if ($keyTypes !== []) {
                 $keyTypesString = [];
                 foreach ($keyTypes as $keyType) {
                     $keyTypesString[] = self::getTypeStringHtml($keyType);
@@ -356,7 +356,7 @@ final readonly class TypeUtil
 
             $valueTypes = $type->getCollectionValueTypes();
 
-            if ($valueTypes) {
+            if ($valueTypes !== []) {
                 $valueTypesString = [];
                 foreach ($valueTypes as $valueType) {
                     $valueTypesString[] = self::getTypeStringHtml($valueType);

@@ -77,7 +77,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
     ): mixed {
         // if MapperOptions is not provided, use the default options
 
-        if (!($mapperOptions = $context(MapperOptions::class))) {
+        if (($mapperOptions = $context(MapperOptions::class)) === null) {
             $mapperOptions = new MapperOptions();
             $context = $context->with($mapperOptions);
         }
@@ -108,14 +108,14 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
 
         // get or create object cache
 
-        if (!($objectCache = $context(ObjectCache::class))) {
+        if (($objectCache = $context(ObjectCache::class)) === null) {
             $objectCache = $this->objectCacheFactory->createObjectCache();
             $context = $context->with($objectCache);
         }
 
         // initialize path it it doesn't exist
 
-        if ($pathContext = $context(Path::class)) {
+        if (($pathContext = $context(Path::class)) !== null) {
             // append path
 
             if ($path === null) {
