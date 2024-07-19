@@ -40,7 +40,7 @@ class InstantiationFailureException extends NotMappableValueException
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" using constructor arguments: %s.',
                 \get_debug_type($source),
                 $targetClass,
-                self::formatConstructorArguments($constructorArguments)
+                $this->formatConstructorArguments($constructorArguments)
             );
         }
 
@@ -66,7 +66,7 @@ class InstantiationFailureException extends NotMappableValueException
     /**
      * @param array<string,mixed> $constructorArguments
      */
-    private static function formatConstructorArguments(array $constructorArguments): string
+    private function formatConstructorArguments(array $constructorArguments): string
     {
         $formattedArguments = [];
         /** @var mixed $argumentValue */
