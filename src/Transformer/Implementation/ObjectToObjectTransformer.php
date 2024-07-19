@@ -112,7 +112,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         if (
             $objectToObjectMetadata->isTargetReadOnly()
-            || !$context(MapperOptions::class)?->readTargetValue
+            || $context(MapperOptions::class)?->readTargetValue !== true
         ) {
             $target = null;
         }
@@ -468,7 +468,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // null, so that we don't have to go through the main transformer for
         // this common task.
 
-        if ($context(MapperOptions::class)?->objectToObjectScalarShortCircuit) {
+        if ($context(MapperOptions::class)?->objectToObjectScalarShortCircuit === true) {
             // if source is null & target accepts null, we set the
             // target to null
 

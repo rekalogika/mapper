@@ -538,7 +538,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         $initializableProperties = [];
 
         foreach ($properties as $property) {
-            if ($this->propertyInitializableExtractor->isInitializable($class, $property)) {
+            if ($this->propertyInitializableExtractor->isInitializable($class, $property) === true) {
                 $initializableProperties[] = $property;
             }
         }
