@@ -31,7 +31,7 @@ return RectorConfig::configure()
     ])
     ->withPreparedSets(
         deadCode: true,
-        // codeQuality: true,
+        codeQuality: true,
         // codingStyle: true,
         typeDeclarations: true,
         // privatization: true,
@@ -40,7 +40,6 @@ return RectorConfig::configure()
         // symfonyCodeQuality: true,
         // doctrineCodeQuality: true,
     )
-    ->withCodeQualityLevel(70)
     ->withPhpSets(php82: true)
     ->withRules([
         AddOverrideAttributeToOverriddenMethodsRector::class,
