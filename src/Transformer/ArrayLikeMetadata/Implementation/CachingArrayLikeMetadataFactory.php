@@ -34,6 +34,7 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
     ) {
     }
 
+    #[\Override]
     public function createArrayLikeMetadata(
         Type $sourceType,
         Type $targetType

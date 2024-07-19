@@ -41,6 +41,7 @@ final readonly class MoneyDto implements MapToObjectInterface, MapFromObjectInte
         return $this->currency;
     }
 
+    #[\Override]
     public function mapToObject(
         object|string $target,
         SubMapperInterface $mapper,
@@ -49,6 +50,7 @@ final readonly class MoneyDto implements MapToObjectInterface, MapFromObjectInte
         return Money::of($this->amount, $this->currency);
     }
 
+    #[\Override]
     public static function mapFromObject(
         object $source,
         SubMapperInterface $mapper,

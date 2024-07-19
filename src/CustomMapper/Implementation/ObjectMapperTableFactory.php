@@ -29,6 +29,7 @@ final readonly class ObjectMapperTableFactory implements ObjectMapperTableFactor
         $this->objectMapperTable = new ObjectMapperTable();
     }
 
+    #[\Override]
     public function createObjectMapperTable(): ObjectMapperTable
     {
         return $this->objectMapperTable;

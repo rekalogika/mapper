@@ -61,11 +61,13 @@ final class HashTable implements
         ));
     }
 
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->keys[$this->generateId($offset)]);
     }
 
+    #[\Override]
     public function offsetGet(mixed $offset): mixed
     {
         $id = $this->generateId($offset);
@@ -80,6 +82,7 @@ final class HashTable implements
         return $this->values[$id];
     }
 
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         $id = $this->generateId($offset);
@@ -89,6 +92,7 @@ final class HashTable implements
         $this->values[$id] = $value;
     }
 
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         $id = $this->generateId($offset);
@@ -96,34 +100,40 @@ final class HashTable implements
         unset($this->keys[$id], $this->values[$id]);
     }
 
+    #[\Override]
     public function count(): int
     {
         return \count($this->keys);
     }
 
+    #[\Override]
     public function current(): mixed
     {
         // @phpstan-ignore-next-line
         return current($this->values);
     }
 
+    #[\Override]
     public function next(): void
     {
         next($this->values);
         next($this->keys);
     }
 
+    #[\Override]
     public function key(): mixed
     {
         // @phpstan-ignore-next-line
         return current($this->keys);
     }
 
+    #[\Override]
     public function valid(): bool
     {
         return key($this->keys) !== null;
     }
 
+    #[\Override]
     public function rewind(): void
     {
         reset($this->values);

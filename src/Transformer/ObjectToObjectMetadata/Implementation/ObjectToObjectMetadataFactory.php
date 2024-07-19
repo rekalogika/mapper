@@ -112,6 +112,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         return $targetClass;
     }
 
+    #[\Override]
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,

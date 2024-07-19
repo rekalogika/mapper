@@ -30,6 +30,7 @@ final readonly class TraversableCountableWrapper implements \IteratorAggregate, 
     ) {
     }
 
+    #[\Override]
     public function getIterator(): \Traversable
     {
         return $this->traversable;
@@ -38,6 +39,7 @@ final readonly class TraversableCountableWrapper implements \IteratorAggregate, 
     /**
      * @return int<0,max>
      */
+    #[\Override]
     public function count(): int
     {
         if (is_int($this->countable)) {

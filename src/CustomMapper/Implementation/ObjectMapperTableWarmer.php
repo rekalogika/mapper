@@ -29,11 +29,13 @@ final readonly class ObjectMapperTableWarmer implements CacheWarmerInterface
     ) {
     }
 
+    #[\Override]
     public function isOptional(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $mapping = VarExporter::export($this->objectMapperTableFactory->createObjectMapperTable());

@@ -32,6 +32,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
 
 
 
+    #[\Override]
     public static function mapFromObject(
         object $source,
         SubMapperInterface $mapper,
@@ -50,6 +51,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
         return $self;
     }
 
+    #[\Override]
     public function mapToObject(
         object|string $target,
         SubMapperInterface $mapper,

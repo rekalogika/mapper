@@ -35,6 +35,7 @@ final readonly class ArrayObjectTransformer implements
     ) {
     }
 
+    #[\Override]
     public function withMainTransformer(MainTransformerInterface $mainTransformer): static
     {
         $objectToObjectTransformer = $this->objectToObjectTransformer
@@ -43,6 +44,7 @@ final readonly class ArrayObjectTransformer implements
         return new self($objectToObjectTransformer);
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -78,6 +80,7 @@ final readonly class ArrayObjectTransformer implements
         return $result;
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(TypeFactory::array(), TypeFactory::object(), true);

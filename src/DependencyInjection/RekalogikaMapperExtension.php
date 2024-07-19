@@ -30,6 +30,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
  */
 final class RekalogikaMapperExtension extends Extension
 {
+    #[\Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));

@@ -23,6 +23,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
  */
 final readonly class PropertyMapperPass implements CompilerPassInterface
 {
+    #[\Override]
     public function process(ContainerBuilder $container): void
     {
         $propertyMapperResolver = $container

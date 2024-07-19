@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Context\MapperOptions;
 
 class ScalarPropertiesMappingWithShortCircuitTest extends ScalarPropertiesMappingTestCase
 {
+    #[\Override]
     protected function getMapperContext(): Context
     {
         return Context::create(

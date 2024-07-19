@@ -36,6 +36,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
     ) {
     }
 
+    #[\Override]
     public function createObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,

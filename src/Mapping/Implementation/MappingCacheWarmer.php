@@ -25,11 +25,13 @@ final readonly class MappingCacheWarmer implements CacheWarmerInterface
     ) {
     }
 
+    #[\Override]
     public function isOptional(): bool
     {
         return false;
     }
 
+    #[\Override]
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $this->warmableMappingFactory->warmUp();

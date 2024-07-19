@@ -22,6 +22,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 class InvalidTransformer implements TransformerInterface
 {
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         /**
@@ -37,6 +38,7 @@ class InvalidTransformer implements TransformerInterface
         );
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,

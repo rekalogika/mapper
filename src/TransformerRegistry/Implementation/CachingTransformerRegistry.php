@@ -39,11 +39,13 @@ final class CachingTransformerRegistry implements TransformerRegistryInterface
      */
     private array $transformers = [];
 
+    #[\Override]
     public function get(string $id): TransformerInterface
     {
         return $this->transformers[$id] ?? ($this->transformers[$id] = $this->decorated->get($id));
     }
 
+    #[\Override]
     public function findBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,

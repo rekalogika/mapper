@@ -33,6 +33,7 @@ final class CachingObjectMapperResolver implements ObjectMapperResolverInterface
     ) {
     }
 
+    #[\Override]
     public function getObjectMapper(
         string $sourceClass,
         string $targetClass

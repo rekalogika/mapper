@@ -35,22 +35,26 @@ final readonly class SplObjectStorageWrapper implements
     ) {
     }
 
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return $this->wrapped->contains($offset);
     }
 
+    #[\Override]
     public function offsetGet(mixed $offset): mixed
     {
         return $this->wrapped->offsetGet($offset);
     }
 
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         assert($offset !== null);
         $this->wrapped->offsetSet($offset, $value);
     }
 
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         $this->wrapped->offsetUnset($offset);
@@ -59,6 +63,7 @@ final readonly class SplObjectStorageWrapper implements
     /**
      * @return \Traversable<TKey,TValue>
      */
+    #[\Override]
     public function getIterator(): \Traversable
     {
         foreach ($this->wrapped as $key) {
@@ -66,6 +71,7 @@ final readonly class SplObjectStorageWrapper implements
         }
     }
 
+    #[\Override]
     public function count(): int
     {
         return $this->wrapped->count();

@@ -25,6 +25,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class RamseyUuidTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -84,6 +85,7 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
         );
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(

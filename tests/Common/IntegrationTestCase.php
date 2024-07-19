@@ -32,6 +32,7 @@ abstract class IntegrationTestCase extends TestCase
 
     protected TransformerRegistryInterface $transformerRegistry;
 
+    #[\Override]
     protected function setUp(): void
     {
         $this->factory = new MapperTestFactory(

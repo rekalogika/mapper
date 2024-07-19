@@ -39,6 +39,7 @@ final class TryPropertyCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -49,6 +50,7 @@ final class TryPropertyCommand extends Command
             ->setHelp("The <info>%command.name%</info> displays the mapping result by providing the class and property name of the source and target.");
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

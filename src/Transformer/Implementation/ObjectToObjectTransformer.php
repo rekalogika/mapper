@@ -60,6 +60,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $this->readerWriter = $readerWriter ?? new ReaderWriter();
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -613,6 +614,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         }
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(TypeFactory::object(), TypeFactory::object(), true);

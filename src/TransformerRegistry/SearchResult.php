@@ -28,21 +28,25 @@ final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
     ) {
     }
 
+    #[\Override]
     public function count(): int
     {
         return count($this->entries);
     }
 
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->entries[$offset]);
     }
 
+    #[\Override]
     public function offsetGet(mixed $offset): SearchResultEntry
     {
         return $this->entries[$offset];
     }
 
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($offset === null) {
@@ -52,11 +56,13 @@ final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
         }
     }
 
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         unset($this->entries[$offset]);
     }
 
+    #[\Override]
     public function getIterator(): \Traversable
     {
         yield from $this->entries;

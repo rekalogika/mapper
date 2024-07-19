@@ -24,6 +24,7 @@ final readonly class IterableMapperDecorator implements IterableMapperInterface
     ) {
     }
 
+    #[\Override]
     public function mapIterable(iterable $source, string $target, ?Context $context = null): iterable
     {
         return $this->decorated->mapIterable($source, $target, $context ?? $this->defaultContext);

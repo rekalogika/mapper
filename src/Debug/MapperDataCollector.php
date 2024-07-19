@@ -25,16 +25,19 @@ use Symfony\Contracts\Service\ResetInterface;
  */
 final class MapperDataCollector extends AbstractDataCollector implements ResetInterface
 {
+    #[\Override]
     public function getName(): string
     {
         return 'rekalogika_mapper';
     }
 
+    #[\Override]
     public static function getTemplate(): string
     {
         return "@RekalogikaMapper/data_collector.html.twig";
     }
 
+    #[\Override]
     public function collect(
         Request $request,
         Response $response,
@@ -137,6 +140,7 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
         ));
     }
 
+    #[\Override]
     public function reset(): void
     {
         $this->data = [];

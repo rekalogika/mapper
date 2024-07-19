@@ -39,6 +39,7 @@ final class CachingTypeResolver implements TypeResolverInterface
      */
     private \WeakMap $typeStringCache;
 
+    #[\Override]
     public function getTypeString(Type|MixedType $type): string
     {
         $result = $this->typeStringCache[$type] ?? null;
@@ -59,6 +60,7 @@ final class CachingTypeResolver implements TypeResolverInterface
      */
     private array $simpleTypesCache = [];
 
+    #[\Override]
     public function getSimpleTypes(array|Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {
@@ -86,6 +88,7 @@ final class CachingTypeResolver implements TypeResolverInterface
      */
     private \WeakMap $isSimpleTypeCache;
 
+    #[\Override]
     public function isSimpleType(Type $type): bool
     {
         if ($result = $this->isSimpleTypeCache[$type] ?? null) {
@@ -105,6 +108,7 @@ final class CachingTypeResolver implements TypeResolverInterface
      */
     private array $applicableTypeStringsCache = [];
 
+    #[\Override]
     public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array
     {
         $typeString = $this->getTypeString($type);
@@ -119,6 +123,7 @@ final class CachingTypeResolver implements TypeResolverInterface
         return $applicableTypeStrings;
     }
 
+    #[\Override]
     public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array
     {
         return $this->decorated->getAcceptedTransformerOutputTypeStrings($type);

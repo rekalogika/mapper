@@ -38,6 +38,7 @@ final class TryCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -46,6 +47,7 @@ final class TryCommand extends Command
             ->setHelp("The <info>%command.name%</info> displays the mapping result from a source type and a target type.");
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);

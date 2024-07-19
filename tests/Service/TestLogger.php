@@ -26,6 +26,7 @@ class TestLogger implements LoggerInterface
         return str_contains((string)$message, 'has a mapping involving an invalid class');
     }
 
+    #[\Override]
     public function emergency(string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
@@ -33,6 +34,7 @@ class TestLogger implements LoggerInterface
         }
     }
 
+    #[\Override]
     public function alert(string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
@@ -40,6 +42,7 @@ class TestLogger implements LoggerInterface
         }
     }
 
+    #[\Override]
     public function critical(string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
@@ -47,6 +50,7 @@ class TestLogger implements LoggerInterface
         }
     }
 
+    #[\Override]
     public function error(string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
@@ -54,6 +58,7 @@ class TestLogger implements LoggerInterface
         }
     }
 
+    #[\Override]
     public function warning(string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
@@ -61,6 +66,7 @@ class TestLogger implements LoggerInterface
         }
     }
 
+    #[\Override]
     public function notice(string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
@@ -68,6 +74,7 @@ class TestLogger implements LoggerInterface
         }
     }
 
+    #[\Override]
     public function info(string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
@@ -75,6 +82,7 @@ class TestLogger implements LoggerInterface
         }
     }
 
+    #[\Override]
     public function debug(string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
@@ -82,6 +90,7 @@ class TestLogger implements LoggerInterface
         }
     }
 
+    #[\Override]
     public function log($level, string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {

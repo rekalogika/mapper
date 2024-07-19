@@ -40,6 +40,7 @@ final class ClassMethodTransformer implements
     ) {
     }
 
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -99,6 +100,7 @@ final class ClassMethodTransformer implements
         return $result;
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(

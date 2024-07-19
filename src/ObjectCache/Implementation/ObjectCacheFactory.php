@@ -24,6 +24,7 @@ final readonly class ObjectCacheFactory implements ObjectCacheFactoryInterface
     ) {
     }
 
+    #[\Override]
     public function createObjectCache(): ObjectCache
     {
         return new ObjectCache($this->typeResolver);

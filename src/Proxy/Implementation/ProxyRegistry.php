@@ -33,6 +33,7 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         }
     }
 
+    #[\Override]
     public function registerProxy(string $class, string $sourceCode): void
     {
         $proxyFile = sprintf(
@@ -49,6 +50,7 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         file_put_contents($proxyFile, $sourceCode);
     }
 
+    #[\Override]
     public function registerAutoloader(): void
     {
         if (null !== $this->autoloader) {
@@ -72,6 +74,7 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         spl_autoload_register($this->autoloader);
     }
 
+    #[\Override]
     public function unregisterAutoloader(): void
     {
         if (null !== $this->autoloader) {

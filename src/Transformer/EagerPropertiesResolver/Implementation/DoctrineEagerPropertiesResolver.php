@@ -26,6 +26,7 @@ final readonly class DoctrineEagerPropertiesResolver implements EagerPropertiesR
     {
     }
 
+    #[\Override]
     public function getEagerProperties(string $sourceClass): array
     {
         $manager = $this->managerRegistry->getManagerForClass($sourceClass);

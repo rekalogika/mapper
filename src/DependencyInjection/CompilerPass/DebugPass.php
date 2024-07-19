@@ -25,6 +25,7 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 final readonly class DebugPass implements CompilerPassInterface
 {
+    #[\Override]
     public function process(ContainerBuilder $container): void
     {
         // decorates all transformers using TraceableTransformer

@@ -34,6 +34,7 @@ final class MappingCommand extends Command
         parent::__construct();
     }
 
+    #[\Override]
     protected function configure(): void
     {
         $this
@@ -43,6 +44,7 @@ final class MappingCommand extends Command
             ->setHelp("The <info>%command.name%</info> command dumps the mapping table for the mapper.");
     }
 
+    #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var string|null */

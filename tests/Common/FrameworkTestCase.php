@@ -36,6 +36,7 @@ abstract class FrameworkTestCase extends TestCase
     /** @psalm-suppress MissingConstructor */
     protected IterableMapperInterface $iterableMapper;
 
+    #[\Override]
     protected function setUp(): void
     {
         $kernel = new TestKernel();

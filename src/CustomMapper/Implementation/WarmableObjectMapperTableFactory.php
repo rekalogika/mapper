@@ -37,6 +37,7 @@ final class WarmableObjectMapperTableFactory implements
     ) {
     }
 
+    #[\Override]
     public function createObjectMapperTable(): ObjectMapperTable
     {
         if ($this->objectMapperTableCache !== null) {
@@ -72,6 +73,7 @@ final class WarmableObjectMapperTableFactory implements
         return $this->decorated->createObjectMapperTable();
     }
 
+    #[\Override]
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $mapping = VarExporter::export($this->decorated->createObjectMapperTable());
@@ -80,6 +82,7 @@ final class WarmableObjectMapperTableFactory implements
         return [];
     }
 
+    #[\Override]
     public function isOptional(): bool
     {
         return false;

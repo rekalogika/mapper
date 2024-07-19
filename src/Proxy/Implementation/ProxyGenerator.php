@@ -23,6 +23,7 @@ use Symfony\Component\VarExporter\ProxyHelper;
  */
 final readonly class ProxyGenerator implements ProxyGeneratorInterface
 {
+    #[\Override]
     public function generateProxyCode(
         string $realClass,
         string $proxyClass

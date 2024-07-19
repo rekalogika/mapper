@@ -27,6 +27,7 @@ final readonly class ChainEagerPropertiesResolver implements EagerPropertiesReso
     {
     }
 
+    #[\Override]
     public function getEagerProperties(string $sourceClass): array
     {
         foreach ($this->resolvers as $resolver) {

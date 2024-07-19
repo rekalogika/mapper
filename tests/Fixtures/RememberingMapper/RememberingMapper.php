@@ -31,12 +31,14 @@ class RememberingMapper implements MapperInterface, ResetInterface
         $this->presetMapping = new PresetMapping();
     }
 
+    #[\Override]
     public function reset(): void
     {
         $this->presetMapping = new PresetMapping();
     }
 
     /** @psalm-suppress InvalidReturnType */
+    #[\Override]
     public function map(object $source, object|string $target, ?Context $context = null): object
     {
         $objectCache = $this->objectCacheFactory->createObjectCache();

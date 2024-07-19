@@ -51,11 +51,13 @@ final class LazyList implements ListInterface
         $this->mainTransformer = $mainTransformer;
     }
 
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->cachedData[$offset]) || isset($this->source[$offset]);
     }
 
+    #[\Override]
     public function offsetGet(mixed $offset): mixed
     {
         if (!$this->isCached) {
@@ -67,16 +69,19 @@ final class LazyList implements ListInterface
         return $this->cachedData[$offset];
     }
 
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         throw new \BadMethodCallException('LazyArray is immutable.');
     }
 
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         throw new \BadMethodCallException('LazyArray is immutable.');
     }
 
+    #[\Override]
     public function getIterator(): \Traversable
     {
         if ($this->isCached) {
@@ -111,6 +116,7 @@ final class LazyList implements ListInterface
         $this->isCached = true;
     }
 
+    #[\Override]
     public function count(): int
     {
         return count($this->source);

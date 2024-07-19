@@ -56,6 +56,7 @@ final readonly class AdderRemoverProxy implements
         return $result;
     }
 
+    #[\Override]
     public function getIterator(): \Traversable
     {
         $value = $this->getCollection();
@@ -69,17 +70,20 @@ final readonly class AdderRemoverProxy implements
         throw new LogicException('Value is not traversable or array');
     }
 
+    #[\Override]
     public function offsetExists(mixed $offset): bool
     {
         return isset($this->getCollection()[$offset]);
     }
 
     /** @psalm-suppress MixedInferredReturnType */
+    #[\Override]
     public function offsetGet(mixed $offset): mixed
     {
         return $this->getCollection()[$offset];
     }
 
+    #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
         if ($this->adderMethodName === null) {
@@ -90,6 +94,7 @@ final readonly class AdderRemoverProxy implements
         $this->hostObject->{$this->adderMethodName}($value);
     }
 
+    #[\Override]
     public function offsetUnset(mixed $offset): void
     {
         if ($this->removerMethodName === null) {
@@ -102,6 +107,7 @@ final readonly class AdderRemoverProxy implements
         $this->hostObject->{$this->removerMethodName}($value);
     }
 
+    #[\Override]
     public function count(): int
     {
         $value = $this->getCollection();
