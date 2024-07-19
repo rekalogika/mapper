@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\Doctrine;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -20,10 +21,10 @@ class EntityWithMultipleIdentifier
 {
     public function __construct(
         #[ORM\Id]
-        #[ORM\Column(name: 'id1', type: 'string', length: 255)]
+        #[ORM\Column(name: 'id1', type: Types::STRING, length: 255)]
         private string $id1,
         #[ORM\Id]
-        #[ORM\Column(name: 'id2', type: 'string', length: 255)]
+        #[ORM\Column(name: 'id2', type: Types::STRING, length: 255)]
         private string $id2,
         #[ORM\Column]
         private string $name
