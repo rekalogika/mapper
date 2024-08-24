@@ -40,7 +40,7 @@ class ObjectToObjectMetadataFactoryTest extends FrameworkTestCase
         $factory = $this->get('rekalogika.mapper.object_to_object_metadata_factory');
         $this->assertInstanceOf(ObjectToObjectMetadataFactoryInterface::class, $factory);
 
-        // @phpstan-ignore-next-line
+        // @phpstan-ignore ekinoBannedCode.expression
         eval(<<<'PHP'
 namespace Proxies\__CG__\Rekalogika\Mapper\Tests\Fixtures\Scalar;
 

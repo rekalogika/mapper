@@ -91,7 +91,7 @@ class TestLogger implements LoggerInterface
     }
 
     #[\Override]
-    public function log($level, string|\Stringable $message, array $context = []): void
+    public function log(mixed $level, string|\Stringable $message, array $context = []): void
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->log($level, $message, $context);

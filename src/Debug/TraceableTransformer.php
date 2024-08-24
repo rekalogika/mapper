@@ -91,7 +91,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
             $parentTraceData->addNestedTraceData($traceData);
             $context = $context->with($traceData);
         } else {
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore ekinoBannedCode.function
             $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
             $caller = $backtrace[2];
             $traceData->setCaller(

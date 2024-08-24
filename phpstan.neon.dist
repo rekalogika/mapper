@@ -16,6 +16,8 @@ parameters:
     #     constants: true
     ignoreErrors:
         - '#ContainerBuilder::registerAttributeForAutoconfiguration#'
+    banned_code:
+        non_ignorable: false
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
