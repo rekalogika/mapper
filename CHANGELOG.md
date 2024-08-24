@@ -4,6 +4,7 @@
 
 * build: add rector
 * build: add `Override` attributes where applicable
+* chore: satisfy static analysis
 
 ## 1.5.4
 

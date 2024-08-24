@@ -50,7 +50,7 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
                 ->generateProxyCode($class, $targetProxyClass);
             $this->proxyRegistry->registerProxy($targetProxyClass, $sourceCode);
 
-            // @phpstan-ignore-next-line
+            // @phpstan-ignore ekinoBannedCode.expression
             eval($sourceCode);
 
             // @phpstan-ignore-next-line

@@ -69,31 +69,31 @@ final class MappingCommand extends Command
             $variantTargetType = $entry->isVariantTargetType();
 
             if ($sourceOption !== null) {
-                if (preg_match('/' . preg_quote($sourceOption) . '/i', $entry->getSourceTypeString()) === 0) {
+                if (preg_match('/' . preg_quote($sourceOption, '/') . '/i', $entry->getSourceTypeString()) === 0) {
                     continue;
                 }
 
-                $sourceType = preg_replace('/(' . preg_quote($sourceOption) . ')/i', '<bg=yellow>$1</>', $sourceType);
+                $sourceType = preg_replace('/(' . preg_quote($sourceOption, '/') . ')/i', '<bg=yellow>$1</>', $sourceType);
             }
 
             if ($targetOption !== null) {
-                if (preg_match('/' . preg_quote($targetOption) . '/i', $entry->getTargetTypeString()) === 0) {
+                if (preg_match('/' . preg_quote($targetOption, '/') . '/i', $entry->getTargetTypeString()) === 0) {
                     continue;
                 }
 
-                $targetType = preg_replace('/(' . preg_quote($targetOption) . ')/i', '<bg=yellow>$1</>', $targetType);
+                $targetType = preg_replace('/(' . preg_quote($targetOption, '/') . ')/i', '<bg=yellow>$1</>', $targetType);
             }
 
             if ($classOption !== null) {
                 if (
-                    preg_match('/' . preg_quote($classOption) . '/i', $entry->getClass()) === 0
-                    && preg_match('/' . preg_quote($classOption) . '/i', $entry->getId()) === 0
+                    preg_match('/' . preg_quote($classOption, '/') . '/i', $entry->getClass()) === 0
+                    && preg_match('/' . preg_quote($classOption, '/') . '/i', $entry->getId()) === 0
                 ) {
                     continue;
                 }
 
                 // $class = preg_replace('/(' . preg_quote($classOption) . ')/i', '<bg=yellow>$1</>', $class);
-                $id = preg_replace('/(' . preg_quote($classOption) . ')/i', '<bg=yellow>$1</>', $id);
+                $id = preg_replace('/(' . preg_quote($classOption, '/') . ')/i', '<bg=yellow>$1</>', $id);
             }
 
             $rows[] = [
