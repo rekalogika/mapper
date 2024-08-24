@@ -30,6 +30,6 @@ class ObjectWithDateTime
 
     public function getDatePoint(): DatePoint
     {
-        return new DatePoint('2024-01-01');
+        return new DatePoint(self::DATETIME);
     }
 }
