@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
+use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTime;
+use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeDto;
 use Symfony\Component\Clock\DatePoint;
 
 class DateTimeMappingTest extends FrameworkTestCase
@@ -53,5 +55,34 @@ class DateTimeMappingTest extends FrameworkTestCase
                 yield sprintf("%s to %s", $sourceClass, $targetClass) => [$sourceClass, $targetClass];
             }
         }
+    }
+
+    public function testObjectWithDateTime(): void
+    {
+        $source = new ObjectWithDateTime();
+        $target = $this->mapper->map($source, ObjectWithDateTimeDto::class);
+
+        $this->assertInstanceOf(ObjectWithDateTimeDto::class, $target);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $target->dateTimeImmutable);
+        $this->assertInstanceOf(\DateTime::class, $target->dateTime);
+        $this->assertInstanceOf(DatePoint::class, $target->datePoint);
+        $this->assertEquals('2024-01-01 00:00:00', $target->dateTimeImmutable->format('Y-m-d H:i:s'));
+        $this->assertEquals('2024-01-01 00:00:00', $target->dateTime->format('Y-m-d H:i:s'));
+        $this->assertEquals('2024-01-01 00:00:00', $target->datePoint->format('Y-m-d H:i:s'));
+    }
+
+    public function testObjectWithDateTimeWithTargetHavingExistingValues(): void
+    {
+        $source = new ObjectWithDateTime();
+        $target = ObjectWithDateTimeDto::getInitialized();
+        $target = $this->mapper->map($source, $target);
+
+        $this->assertInstanceOf(ObjectWithDateTimeDto::class, $target);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $target->dateTimeImmutable);
+        $this->assertInstanceOf(\DateTime::class, $target->dateTime);
+        $this->assertInstanceOf(DatePoint::class, $target->datePoint);
+        $this->assertEquals('2024-01-01 00:00:00', $target->dateTimeImmutable->format('Y-m-d H:i:s'));
+        $this->assertEquals('2024-01-01 00:00:00', $target->dateTime->format('Y-m-d H:i:s'));
+        $this->assertEquals('2024-01-01 00:00:00', $target->datePoint->format('Y-m-d H:i:s'));
     }
 }
