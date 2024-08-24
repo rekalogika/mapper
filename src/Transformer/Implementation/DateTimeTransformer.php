@@ -50,15 +50,6 @@ final readonly class DateTimeTransformer implements TransformerInterface
             return $target;
         }
 
-        // if target is immutable, just create new from source
-        if ($target instanceof \DateTimeImmutable) {
-            return \DateTimeImmutable::createFromInterface($source);
-        }
-
-        if ($target !== null) {
-            throw new InvalidArgumentException(sprintf('Target must be null unless it is a DateTime, "%s" given', get_debug_type($target)), context: $context);
-        }
-
         if (TypeCheck::isObjectOfType($targetType, \DateTime::class)) {
             return \DateTime::createFromInterface($source);
         }
