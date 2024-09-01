@@ -16,7 +16,9 @@ parameters:
     #     constants: true
     ignoreErrors:
         - '#ContainerBuilder::registerAttributeForAutoconfiguration#'
-        - '#Property .* is never assigned .+ so it can be removed from the property type.#'
+        -
+            message: '#Property .* is never assigned .+ so it can be removed from the property type.#'
+            reportUnmatched: false
     banned_code:
         non_ignorable: false
 includes:
