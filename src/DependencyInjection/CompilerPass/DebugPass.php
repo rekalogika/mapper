@@ -36,16 +36,10 @@ final readonly class DebugPass implements CompilerPassInterface
         foreach (array_keys($taggedServices) as $serviceId) {
             $decoratedServiceId = 'debug.' . $serviceId;
 
-            $service = $container->getDefinition($serviceId);
-            /** @var array<string,mixed> */
-            $tagAttributes = $service->getTag('rekalogika.mapper.transformer')[0] ?? [];
-            $service->clearTag('rekalogika.mapper.transformer');
-
             $container->register($decoratedServiceId, TraceableTransformer::class)
                 ->setDecoratedService($serviceId)
-                ->addTag('rekalogika.mapper.transformer', $tagAttributes)
                 ->setArguments([
-                    $service,
+                    new Reference($decoratedServiceId . '.inner'),
                     $dataCollector,
                 ]);
         }
@@ -53,22 +47,20 @@ final readonly class DebugPass implements CompilerPassInterface
         // decorates ObjectToObjectMetadataFactory
 
         $serviceId = 'rekalogika.mapper.object_to_object_metadata_factory.cache';
-        $decoratedService = $container->getDefinition($serviceId);
         $container->register('debug.' . $serviceId, TraceableObjectToObjectMetadataFactory::class)
             ->setDecoratedService($serviceId)
             ->setArguments([
-                $decoratedService,
+                new Reference('debug.' . $serviceId . '.inner'),
                 $dataCollector,
             ]);
 
         // decorates mapping factory
 
         $serviceId = 'rekalogika.mapper.mapping_factory';
-        $decoratedService = $container->getDefinition($serviceId);
         $container->register('debug.' . $serviceId, TraceableMappingFactory::class)
             ->setDecoratedService($serviceId, null, 50)
             ->setArguments([
-                $decoratedService,
+                new Reference('debug.' . $serviceId . '.inner'),
                 $dataCollector,
             ])
             ->addTag('kernel.reset', ['method' => 'reset']);
