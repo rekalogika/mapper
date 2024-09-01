@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.6
+
+* fix: compatibility with `symfony/dependency-injection` 7.1.4
+
 ## 1.5.5
 
 * build: add rector
