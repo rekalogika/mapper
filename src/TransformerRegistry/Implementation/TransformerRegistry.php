@@ -35,8 +35,7 @@ final class TransformerRegistry implements TransformerRegistryInterface
         private readonly ContainerInterface $transformersLocator,
         private readonly TypeResolverInterface $typeResolver,
         private readonly MappingFactoryInterface $mappingFactory,
-    ) {
-    }
+    ) {}
 
     /**
      * @var array<string,TransformerInterface>
@@ -53,10 +52,10 @@ final class TransformerRegistry implements TransformerRegistryInterface
         $transformer = $this->transformersLocator->get($id);
 
         if (!$transformer instanceof TransformerInterface) {
-            throw new LogicException(sprintf(
+            throw new LogicException(\sprintf(
                 'Transformer with id "%s" must implement %s',
                 $id,
-                TransformerInterface::class
+                TransformerInterface::class,
             ));
         }
 
@@ -87,7 +86,7 @@ final class TransformerRegistry implements TransformerRegistryInterface
     ): SearchResult {
         $mapping = $this->getMappingBySourceAndTargetType(
             $sourceType,
-            $targetType
+            $targetType,
         );
 
         $searchResultEntries = [];
@@ -100,12 +99,12 @@ final class TransformerRegistry implements TransformerRegistryInterface
                     sourceType: $sourceType,
                     targetType: $targetType,
                     transformerServiceId: $mappingEntry->getId(),
-                    variantTargetType: $mappingEntry->isVariantTargetType()
+                    variantTargetType: $mappingEntry->isVariantTargetType(),
                 );
                 $searchResultEntries[] = $searchResultEntry;
             } elseif (TypeCheck::isSomewhatIdentical(
                 $targetType,
-                $mappingEntry->getTargetType()
+                $mappingEntry->getTargetType(),
             )) {
                 // if invariant, check if target type is somewhat identical
                 $searchResultEntry = new SearchResultEntry(
@@ -113,7 +112,7 @@ final class TransformerRegistry implements TransformerRegistryInterface
                     sourceType: $sourceType,
                     targetType: $targetType,
                     transformerServiceId: $mappingEntry->getId(),
-                    variantTargetType: $mappingEntry->isVariantTargetType()
+                    variantTargetType: $mappingEntry->isVariantTargetType(),
                 );
                 $searchResultEntries[] = $searchResultEntry;
             }
@@ -140,7 +139,7 @@ final class TransformerRegistry implements TransformerRegistryInterface
             }
         }
 
-        usort($searchResultEntries, fn (SearchResultEntry $a, SearchResultEntry $b): int => $a->getMappingOrder() <=> $b->getMappingOrder());
+        usort($searchResultEntries, fn(SearchResultEntry $a, SearchResultEntry $b): int => $a->getMappingOrder() <=> $b->getMappingOrder());
 
         return new SearchResult($searchResultEntries);
     }

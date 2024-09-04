@@ -24,9 +24,9 @@ class PropertyMapperWithExtraArguments
     public function mapPropertyE(
         SomeObject $object,
         Context $context,
-        MainTransformerInterface $mainTransformer
+        MainTransformerInterface $mainTransformer,
     ): string {
-        return sprintf(
+        return \sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             $context::class,
             $mainTransformer::class,

@@ -27,9 +27,9 @@ class TransformerReturnsUnexpectedValueException extends UnexpectedValueExceptio
         Type|MixedType $targetType,
         mixed $target,
         TransformerInterface $transformer,
-        Context $context
+        Context $context,
     ) {
-        $message = sprintf(
+        $message = \sprintf(
             'Trying to map source type "%s" to target type "%s", but the assigned transformer "%s" returns an unexpected type "%s".',
             get_debug_type($source),
             TypeUtil::getTypeString($targetType),

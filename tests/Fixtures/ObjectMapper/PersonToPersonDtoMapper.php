@@ -21,10 +21,10 @@ class PersonToPersonDtoMapper
     #[AsObjectMapper]
     public function mapPersonToPersonDto(
         Person $person,
-        SubMapperInterface $subMapper
+        SubMapperInterface $subMapper,
     ): PersonDto {
         $initializer = static function (
-            PersonDto $proxy
+            PersonDto $proxy,
         ) use ($person): void {
             $proxy->name = $person->getName();
         };
@@ -32,7 +32,7 @@ class PersonToPersonDtoMapper
         $personDto = $subMapper->createProxy(
             PersonDto::class,
             $initializer,
-            ['id']
+            ['id'],
         );
 
         $personDto->id = $person->getId();
@@ -43,14 +43,14 @@ class PersonToPersonDtoMapper
     #[AsObjectMapper]
     public function mapPersonToFinalPersonDto(
         Person $person,
-        SubMapperInterface $subMapper
+        SubMapperInterface $subMapper,
     ): FinalPersonDto {
         $personDto = $subMapper->createProxy(
             FinalPersonDto::class,
             static function (FinalPersonDto $proxy) use ($person): void {
                 $proxy->name = $person->getName();
             },
-            ['id']
+            ['id'],
         );
 
         $personDto->id = $person->getId();

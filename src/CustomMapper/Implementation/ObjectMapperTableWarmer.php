@@ -26,8 +26,7 @@ final readonly class ObjectMapperTableWarmer implements CacheWarmerInterface
     public function __construct(
         private ObjectMapperTableFactoryInterface $objectMapperTableFactory,
         private KernelInterface $kernel,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function isOptional(): bool

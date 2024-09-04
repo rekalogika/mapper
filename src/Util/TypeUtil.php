@@ -26,9 +26,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeUtil
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Simple Type is a type that is not nullable, and does not have more
@@ -102,7 +100,7 @@ final readonly class TypeUtil
             foreach ($types as $type) {
                 if (TypeCheck::isIterable($type)) {
                     throw new InvalidArgumentException(
-                        'Iterable are not supported in source or target specification. Use Traversable or array instead.'
+                        'Iterable are not supported in source or target specification. Use Traversable or array instead.',
                     );
                 }
 
@@ -160,11 +158,11 @@ final readonly class TypeUtil
 
             $keyTypes = self::getTypePermutations(
                 $type->getCollectionKeyTypes(),
-                $withParents
+                $withParents,
             );
             $valueTypes = self::getTypePermutations(
                 $type->getCollectionValueTypes(),
-                $withParents
+                $withParents,
             );
 
             // 'mixed' key and value types
@@ -187,12 +185,12 @@ final readonly class TypeUtil
                     if (TypeCheck::isIterable($type)) {
                         $permutations[] = TypeFactory::arrayWithKeyValue(
                             $keyType,
-                            $valueType
+                            $valueType,
                         );
                         $permutations[] = TypeFactory::objectWithKeyValue(
                             \Traversable::class,
                             $keyType,
-                            $valueType
+                            $valueType,
                         );
                     } else {
                         $permutations[] = new Type(
@@ -256,7 +254,7 @@ final readonly class TypeUtil
         TypeResolver::class,
         TransformerReturnsUnexpectedValueException::class,
         TypeUtilTest::class,
-        TraceData::class
+        TraceData::class,
     )]
     public static function getTypeString(Type|MixedType $type): string
     {
@@ -299,7 +297,7 @@ final readonly class TypeUtil
                 $valueTypesString = 'mixed';
             }
 
-            $typeString .= sprintf('<%s,%s>', $keyTypesString, $valueTypesString);
+            $typeString .= \sprintf('<%s,%s>', $keyTypesString, $valueTypesString);
         }
 
         return $typeString;
@@ -335,10 +333,10 @@ final readonly class TypeUtil
                 $typeString = 'object';
             } else {
                 $shortClassName = preg_replace('/^.*\\\\/', '', $typeString) ?? $typeString;
-                $typeString = sprintf(
+                $typeString = \sprintf(
                     '<abbr title="%s">%s</abbr>',
                     htmlspecialchars($typeString),
-                    htmlspecialchars($shortClassName)
+                    htmlspecialchars($shortClassName),
                 );
             }
         }
@@ -370,7 +368,7 @@ final readonly class TypeUtil
                 $valueTypesString = 'mixed';
             }
 
-            $typeString .= sprintf('&lt;%s,%s&gt;', $keyTypesString, $valueTypesString);
+            $typeString .= \sprintf('&lt;%s,%s&gt;', $keyTypesString, $valueTypesString);
         }
 
         return $typeString;
@@ -382,7 +380,7 @@ final readonly class TypeUtil
     #[Friend(TypeResolver::class, TypeUtil2Test::class)]
     public static function getAllTypeStrings(
         Type $type,
-        bool $withParents = false
+        bool $withParents = false,
     ): array {
         $simpleTypes = self::getSimpleTypes($type, $withParents);
 
@@ -405,7 +403,7 @@ final readonly class TypeUtil
      * @return array<int,Type>
      */
     private static function getAttributesFromType(
-        Type|MixedType $type
+        Type|MixedType $type,
     ): array {
         if ($type instanceof MixedType) {
             return [];
@@ -424,7 +422,7 @@ final readonly class TypeUtil
         $attributes = (new \ReflectionClass($class))
             ->getAttributes(
                 MapperAttributeInterface::class,
-                \ReflectionAttribute::IS_INSTANCEOF
+                \ReflectionAttribute::IS_INSTANCEOF,
             );
 
         $attributeTypes = [];
@@ -442,7 +440,7 @@ final readonly class TypeUtil
      */
     #[Friend(TypeResolver::class)]
     public static function getAttributesTypeStrings(
-        Type|MixedType $type
+        Type|MixedType $type,
     ): array {
         $attributes = self::getAttributesFromType($type);
 

@@ -29,7 +29,7 @@ final readonly class CopyTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if ($targetType !== null && !TypeCheck::isVariableInstanceOf($source, $targetType)) {
             throw new RefuseToTransformException();

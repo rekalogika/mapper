@@ -37,8 +37,7 @@ final class MappingFactory implements MappingFactoryInterface
         private readonly iterable $transformers,
         private readonly TypeResolverInterface $typeResolver,
         private readonly ?LoggerInterface $logger = null,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function getMapping(): Mapping
@@ -67,7 +66,7 @@ final class MappingFactory implements MappingFactoryInterface
     private function addMapping(
         Mapping $mapping,
         string $id,
-        TransformerInterface $transformer
+        TransformerInterface $transformer,
     ): void {
         try {
             $supportedTransformation = $transformer->getSupportedTransformation();

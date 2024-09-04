@@ -41,9 +41,8 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
     public function collect(
         Request $request,
         Response $response,
-        ?\Throwable $exception = null
-    ): void {
-    }
+        ?\Throwable $exception = null,
+    ): void {}
 
     public function collectTraceData(TraceData $traceData): void
     {
@@ -52,7 +51,7 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
     }
 
     public function collectObjectToObjectMetadata(
-        ObjectToObjectMetadata $objectToObjectMetadata
+        ObjectToObjectMetadata $objectToObjectMetadata,
     ): void {
         $key = hash('xxh128', serialize($objectToObjectMetadata));
         /** @psalm-suppress MixedArrayAssignment */
@@ -135,8 +134,8 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
         }
 
         return $this->totalTime = array_sum(array_map(
-            fn (TraceData $traceData): float => $traceData->getTime(),
-            $this->getMappings()
+            fn(TraceData $traceData): float => $traceData->getTime(),
+            $this->getMappings(),
         ));
     }
 

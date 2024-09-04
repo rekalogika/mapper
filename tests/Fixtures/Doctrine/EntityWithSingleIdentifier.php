@@ -36,7 +36,7 @@ class EntityWithSingleIdentifier
         #[ORM\Column(name: 'my_identifier', type: Types::STRING, length: 255)]
         private string $myIdentifier,
         #[ORM\Column]
-        private string $name
+        private string $name,
     ) {
         $this->children = new ArrayCollection();
     }

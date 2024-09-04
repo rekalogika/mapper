@@ -22,6 +22,6 @@ interface ArrayLikeMetadataFactoryInterface
 {
     public function createArrayLikeMetadata(
         Type $sourceType,
-        Type $targetType
+        Type $targetType,
     ): ArrayLikeMetadata;
 }

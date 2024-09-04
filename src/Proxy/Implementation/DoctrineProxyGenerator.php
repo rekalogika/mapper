@@ -26,9 +26,8 @@ final readonly class DoctrineProxyGenerator implements ProxyGeneratorInterface
 {
     public function __construct(
         private ProxyGeneratorInterface $decorated,
-        private ManagerRegistry $managerRegistry
-    ) {
-    }
+        private ManagerRegistry $managerRegistry,
+    ) {}
 
     #[\Override]
     public function generateProxyCode(string $realClass, string $proxyClass): string

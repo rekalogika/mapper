@@ -48,7 +48,7 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
                         $serviceId,
                         $method,
                         ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
-                    ]
+                    ],
                 );
             }
         }

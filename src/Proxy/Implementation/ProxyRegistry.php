@@ -36,15 +36,15 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
     #[\Override]
     public function registerProxy(string $class, string $sourceCode): void
     {
-        $proxyFile = sprintf(
+        $proxyFile = \sprintf(
             '%s/%s',
             $this->proxyDirectory,
-            self::getProxyFileName($class)
+            self::getProxyFileName($class),
         );
 
-        $sourceCode = sprintf(
+        $sourceCode = \sprintf(
             '<?php declare(strict_types=1);' . "\n\n" . '%s',
-            $sourceCode
+            $sourceCode,
         );
 
         file_put_contents($proxyFile, $sourceCode);
@@ -60,10 +60,10 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         $proxyDirectory = $this->proxyDirectory;
 
         $this->autoloader = static function (string $class) use ($proxyDirectory): void {
-            $proxyFile = sprintf(
+            $proxyFile = \sprintf(
                 '%s/%s',
                 $proxyDirectory,
-                self::getProxyFileName($class)
+                self::getProxyFileName($class),
             );
 
             if (file_exists($proxyFile)) {
@@ -86,6 +86,6 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
 
     private static function getProxyFileName(string $proxyClass): string
     {
-        return sprintf('%s.php', hash('xxh128', $proxyClass));
+        return \sprintf('%s.php', hash('xxh128', $proxyClass));
     }
 }

@@ -35,9 +35,8 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
 
     public function __construct(
         private TransformerInterface $decorated,
-        private MapperDataCollector $dataCollector
-    ) {
-    }
+        private MapperDataCollector $dataCollector,
+    ) {}
 
     #[\Override]
     public function getDecorated(): TransformerInterface
@@ -64,7 +63,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         $path = $context(Path::class)?->getLast();
 
@@ -83,7 +82,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
             possibleTargetTypes: $possibleTargetTypes,
             selectedTargetType: $targetType,
             transformerClass: $this->decorated::class,
-            sourceTypeGuessed: $sourceTypeGuessed
+            sourceTypeGuessed: $sourceTypeGuessed,
         );
 
         // add trace data to parent trace data
@@ -99,7 +98,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
                 $caller['line'] ?? null,
                 $caller['function'],
                 $caller['class'] ?? null,
-                $caller['type'] ?? null
+                $caller['type'] ?? null,
             );
 
             $context = $context->with($traceData);

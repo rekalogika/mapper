@@ -33,7 +33,7 @@ final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
     public static function mapFromObject(
         object $source,
         SubMapperInterface $mapper,
-        Context $context
+        Context $context,
     ): static {
         \assert($source instanceof ObjectWithCollectionProperty);
 
@@ -44,7 +44,7 @@ final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
             $source->property,
             ObjectWithArrayPropertyDto::class,
             'property',
-            $context
+            $context,
         );
 
         $result->property = $property;

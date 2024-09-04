@@ -64,7 +64,7 @@ final readonly class TypeResolver implements TypeResolverInterface
 
         return array_merge(
             TypeUtil::getAllTypeStrings($type, true),
-            TypeUtil::getAttributesTypeStrings($type)
+            TypeUtil::getAttributesTypeStrings($type),
         );
     }
 

@@ -24,6 +24,6 @@ interface MapToObjectInterface
     public function mapToObject(
         object|string $target,
         SubMapperInterface $mapper,
-        Context $context
+        Context $context,
     ): object;
 }

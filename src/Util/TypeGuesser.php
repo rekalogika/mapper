@@ -18,9 +18,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeGuesser
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function guessTypeFromVariable(mixed $variable): Type
     {
@@ -48,7 +46,7 @@ final readonly class TypeGuesser
             return TypeFactory::resource();
         }
 
-        throw new InvalidArgumentException(sprintf(
+        throw new InvalidArgumentException(\sprintf(
             'Cannot determine type of variable "%s"',
             get_debug_type($variable),
         ));

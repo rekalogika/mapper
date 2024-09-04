@@ -34,8 +34,7 @@ final class WarmableObjectMapperTableFactory implements
     public function __construct(
         private readonly ObjectMapperTableFactoryInterface $decorated,
         private readonly KernelInterface $kernel,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function createObjectMapperTable(): ObjectMapperTable

@@ -213,9 +213,8 @@ class MapperFactory
         private ?PhpStanExtractor $phpStanExtractor = null,
         private readonly ?NormalizerInterface $normalizer = null,
         private readonly ?DenormalizerInterface $denormalizer = null,
-        private readonly CacheItemPoolInterface $propertyInfoExtractorCache = new ArrayAdapter()
-    ) {
-    }
+        private readonly CacheItemPoolInterface $propertyInfoExtractorCache = new ArrayAdapter(),
+    ) {}
 
     /**
      * @param class-string $sourceClass
@@ -228,7 +227,7 @@ class MapperFactory
         string $property,
         object $service,
         string $method,
-        array $extraArguments = []
+        array $extraArguments = [],
     ): void {
         $this->propertyMappers[] = [
             'sourceClass' => $sourceClass,
@@ -250,7 +249,7 @@ class MapperFactory
         string $targetClass,
         object $service,
         string $method,
-        array $extraArguments = []
+        array $extraArguments = [],
     ): void {
         $this->objectMappers[] = [
             'sourceClass' => $sourceClass,
@@ -459,7 +458,7 @@ class MapperFactory
     {
         if (null === $this->arrayToObjectTransformer) {
             $this->arrayToObjectTransformer = new ArrayToObjectTransformer(
-                $this->getDenormalizer()
+                $this->getDenormalizer(),
             );
         }
 
@@ -473,7 +472,7 @@ class MapperFactory
     {
         if (null === $this->objectToArrayTransformer) {
             $this->objectToArrayTransformer = new ObjectToArrayTransformer(
-                $this->getNormalizer()
+                $this->getNormalizer(),
             );
         }
 
@@ -487,7 +486,7 @@ class MapperFactory
 
         if (null === $this->arrayObjectTransformer) {
             $this->arrayObjectTransformer = new ArrayObjectTransformer(
-                $objectToObjectTransformer
+                $objectToObjectTransformer,
             );
         }
 
@@ -798,7 +797,7 @@ class MapperFactory
     {
         if (null === $this->objectMapperResolver) {
             $this->objectMapperResolver = new ObjectMapperResolver(
-                $this->getObjectMapperTableFactory()
+                $this->getObjectMapperTableFactory(),
             );
         }
 
@@ -903,7 +902,7 @@ class MapperFactory
     {
         if (null === $this->mappingCommand) {
             $this->mappingCommand = new MappingCommand(
-                $this->getMappingFactory()
+                $this->getMappingFactory(),
             );
         }
 
@@ -915,7 +914,7 @@ class MapperFactory
         if (null === $this->tryCommand) {
             $this->tryCommand = new TryCommand(
                 $this->getTransformerRegistry(),
-                $this->getTypeResolver()
+                $this->getTypeResolver(),
             );
         }
 

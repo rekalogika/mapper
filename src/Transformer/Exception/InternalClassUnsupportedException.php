@@ -26,9 +26,9 @@ class InternalClassUnsupportedException extends NotMappableValueException
         Context $context = null,
     ) {
         parent::__construct(
-            message: sprintf(
+            message: \sprintf(
                 'Trying to map an internal class "%s" which is not supported.',
-                $class
+                $class,
             ),
             previous: $previous,
             context: $context,

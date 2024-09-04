@@ -37,7 +37,7 @@ final readonly class HeuristicsEagerPropertiesResolver implements EagerPropertie
             'uuid',
             'UUID',
             'Uuid',
-            'identifier'
+            'identifier',
         ];
     }
 

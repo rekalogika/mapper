@@ -31,10 +31,10 @@ trait ContextAwareExceptionTrait
             $path = '(root)';
         }
 
-        $message = sprintf('%s Mapping path: "%s".', $message, $path);
+        $message = \sprintf('%s Mapping path: "%s".', $message, $path);
 
         if ($previous !== null) {
-            $message = sprintf('%s Previous message: %s.', $message, $previous->getMessage());
+            $message = \sprintf('%s Previous message: %s.', $message, $previous->getMessage());
         }
 
         parent::__construct($message, $code, $previous);

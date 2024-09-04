@@ -24,10 +24,10 @@ final class ObjectMapperNotFoundException extends UnexpectedValueException
         string $sourceClass,
         string $targetClass,
     ) {
-        parent::__construct(sprintf(
+        parent::__construct(\sprintf(
             'Object mapper not found for source class "%s" and target class "%s".',
             $sourceClass,
-            $targetClass
+            $targetClass,
         ));
     }
 }

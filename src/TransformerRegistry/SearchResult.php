@@ -24,9 +24,8 @@ final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
      * @param array<int,SearchResultEntry> $entries
      */
     public function __construct(
-        private array $entries
-    ) {
-    }
+        private array $entries,
+    ) {}
 
     #[\Override]
     public function count(): int

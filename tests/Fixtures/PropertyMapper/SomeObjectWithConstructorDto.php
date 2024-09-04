@@ -18,6 +18,5 @@ class SomeObjectWithConstructorDto
     public function __construct(
         public string $propertyA,
         public string $propertyB,
-    ) {
-    }
+    ) {}
 }

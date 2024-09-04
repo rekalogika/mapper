@@ -35,9 +35,8 @@ final readonly class ArrayToObjectTransformer implements TransformerInterface
 {
     public function __construct(
         private DenormalizerInterface $denormalizer,
-        private ?string $denormalizerFormat = null
-    ) {
-    }
+        private ?string $denormalizerFormat = null,
+    ) {}
 
     #[\Override]
     public function transform(
@@ -45,10 +44,10 @@ final readonly class ArrayToObjectTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if (!\is_array($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be array, "%s" given', get_debug_type($source)), context: $context);
+            throw new InvalidArgumentException(\sprintf('Source must be array, "%s" given', get_debug_type($source)), context: $context);
         }
 
         if (!TypeCheck::isObject($targetType)) {
@@ -59,7 +58,7 @@ final readonly class ArrayToObjectTransformer implements TransformerInterface
 
         if ($target !== null) {
             if (!\is_object($target)) {
-                throw new InvalidArgumentException(sprintf('Target must be an object, "%s" given', get_debug_type($target)), context: $context);
+                throw new InvalidArgumentException(\sprintf('Target must be an object, "%s" given', get_debug_type($target)), context: $context);
             }
 
             $targetClass = $target::class;
@@ -72,7 +71,7 @@ final readonly class ArrayToObjectTransformer implements TransformerInterface
             $source,
             $targetClass,
             $this->denormalizerFormat,
-            $denormalizerContext
+            $denormalizerContext,
         );
     }
 

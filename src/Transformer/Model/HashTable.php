@@ -55,9 +55,9 @@ final class HashTable implements
             return 'null';
         }
 
-        throw new \InvalidArgumentException(sprintf(
+        throw new \InvalidArgumentException(\sprintf(
             'Unsupported variable typ "%s"',
-            get_debug_type($variable)
+            get_debug_type($variable),
         ));
     }
 
@@ -73,9 +73,9 @@ final class HashTable implements
         $id = $this->generateId($offset);
 
         if (!isset($this->keys[$id])) {
-            throw new \OutOfBoundsException(sprintf(
+            throw new \OutOfBoundsException(\sprintf(
                 'Offset "%s" does not exist',
-                $id
+                $id,
             ));
         }
 

@@ -28,7 +28,7 @@ class TypeUtilTest extends TestCase
     public function testTypeGuess(
         mixed $object,
         string $builtInType,
-        ?string $className = null
+        ?string $className = null,
     ): void {
         $typeResolver = new TypeResolver();
         $type = TypeGuesser::guessTypeFromVariable($object);
@@ -78,31 +78,31 @@ class TypeUtilTest extends TestCase
         yield [
             TypeFactory::arrayWithKeyValue(
                 TypeFactory::string(),
-                TypeFactory::int()
+                TypeFactory::int(),
             ),
-            true
+            true,
         ];
 
         yield [
             TypeFactory::objectWithKeyValue(
                 \Traversable::class,
                 TypeFactory::string(),
-                TypeFactory::int()
+                TypeFactory::int(),
             ),
-            true
+            true,
         ];
 
         yield [
             new Type(
                 builtinType: 'iterable',
                 collectionKeyType: [
-                    TypeFactory::string()
+                    TypeFactory::string(),
                 ],
                 collectionValueType: [
-                    TypeFactory::int()
+                    TypeFactory::int(),
                 ],
             ),
-            false
+            false,
         ];
 
         yield [
@@ -110,13 +110,13 @@ class TypeUtilTest extends TestCase
                 builtinType: 'object',
                 class: \Traversable::class,
                 collectionKeyType: [
-                    TypeFactory::string()
+                    TypeFactory::string(),
                 ],
                 collectionValueType: [
-                    TypeFactory::int()
+                    TypeFactory::int(),
                 ],
             ),
-            true
+            true,
         ];
 
         yield [
@@ -126,13 +126,13 @@ class TypeUtilTest extends TestCase
                 collection: true,
                 collectionKeyType: [
                     TypeFactory::string(),
-                    TypeFactory::int()
+                    TypeFactory::int(),
                 ],
                 collectionValueType: [
-                    TypeFactory::int()
+                    TypeFactory::int(),
                 ],
             ),
-            false
+            false,
         ];
 
         yield [
@@ -141,7 +141,7 @@ class TypeUtilTest extends TestCase
                 class: \Traversable::class,
                 nullable: true,
             ),
-            false
+            false,
         ];
     }
 
@@ -171,24 +171,24 @@ class TypeUtilTest extends TestCase
 
         yield [
             TypeFactory::objectOfClass(\Traversable::class),
-            \Traversable::class
+            \Traversable::class,
         ];
 
         yield [
             TypeFactory::objectWithKeyValue(
                 \Traversable::class,
                 TypeFactory::string(),
-                TypeFactory::int()
+                TypeFactory::int(),
             ),
-            \Traversable::class . '<string,int>'
+            \Traversable::class . '<string,int>',
         ];
 
         yield [
             TypeFactory::arrayWithKeyValue(
                 TypeFactory::string(),
-                TypeFactory::int()
+                TypeFactory::int(),
             ),
-            'array<string,int>'
+            'array<string,int>',
         ];
 
         yield [
@@ -213,7 +213,7 @@ class TypeUtilTest extends TestCase
                     ),
                 ],
             ),
-            'Traversable<string,Traversable<string,int>>'
+            'Traversable<string,Traversable<string,int>>',
         ];
 
         yield [
@@ -236,7 +236,7 @@ class TypeUtilTest extends TestCase
                     ),
                 ],
             ),
-            'Traversable<mixed,Traversable<string,int>>'
+            'Traversable<mixed,Traversable<string,int>>',
         ];
     }
 }

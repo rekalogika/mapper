@@ -26,6 +26,6 @@ interface SubMapperFactoryInterface
         MainTransformerInterface $mainTransformer,
         mixed $source,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): SubMapperInterface;
 }

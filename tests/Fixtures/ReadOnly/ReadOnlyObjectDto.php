@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ReadOnly;
 readonly class ReadOnlyObjectDto
 {
     public function __construct(
-        public string $name
-    ) {
-    }
+        public string $name,
+    ) {}
 }

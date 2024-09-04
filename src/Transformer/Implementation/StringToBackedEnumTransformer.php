@@ -29,10 +29,10 @@ final readonly class StringToBackedEnumTransformer implements TransformerInterfa
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if (!\is_string($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be string, "%s" given', get_debug_type($source)), context: $context);
+            throw new InvalidArgumentException(\sprintf('Source must be string, "%s" given', get_debug_type($source)), context: $context);
         }
 
         $class = $targetType?->getClassName();
@@ -47,7 +47,7 @@ final readonly class StringToBackedEnumTransformer implements TransformerInterfa
             return $class::from($source);
         }
 
-        throw new InvalidArgumentException(sprintf('Target must be an enum class-string, "%s" given', get_debug_type($target)), context: $context);
+        throw new InvalidArgumentException(\sprintf('Target must be an enum class-string, "%s" given', get_debug_type($target)), context: $context);
     }
 
     #[\Override]

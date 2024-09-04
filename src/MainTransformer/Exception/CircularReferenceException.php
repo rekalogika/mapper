@@ -25,13 +25,13 @@ class CircularReferenceException extends RuntimeException implements ExceptionIn
         mixed $source,
         Type $targetType,
         Context $context = null,
-        ?\Throwable $previous = null
+        ?\Throwable $previous = null,
     ) {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Circular reference detected when trying to get the object of type "%s" transformed to "%s".',
                 get_debug_type($source),
-                TypeUtil::getDebugType($targetType)
+                TypeUtil::getDebugType($targetType),
             ),
             context: $context,
             previous: $previous,

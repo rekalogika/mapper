@@ -86,7 +86,7 @@ final class TryPropertyCommand extends Command
         $rows[] = [
             'Source Type',
             implode('|', array_map(
-                fn ($type): string => $this->typeResolver->getTypeString($type),
+                fn($type): string => $this->typeResolver->getTypeString($type),
                 $sourceTypes,
             )),
         ];
@@ -94,7 +94,7 @@ final class TryPropertyCommand extends Command
         $rows[] = [
             'Target Type',
             implode('|', array_map(
-                fn ($type): string => $this->typeResolver->getTypeString($type),
+                fn($type): string => $this->typeResolver->getTypeString($type),
                 $targetTypes,
             )),
         ];

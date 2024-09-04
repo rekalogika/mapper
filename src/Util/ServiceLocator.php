@@ -25,9 +25,8 @@ final readonly class ServiceLocator implements ContainerInterface
      * @param array<array-key,mixed> $services
      */
     public function __construct(
-        private array $services = []
-    ) {
-    }
+        private array $services = [],
+    ) {}
 
     #[\Override]
     public function get(string $id): mixed

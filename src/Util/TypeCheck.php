@@ -19,9 +19,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeCheck
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Checks if the name is a valid class, interface, or enum
@@ -223,7 +221,7 @@ final readonly class TypeCheck
 
     public static function isTypeInstanceOf(
         Type|MixedType $typeToCheck,
-        Type|MixedType $type
+        Type|MixedType $type,
     ): bool {
         // instanceof mixed
         if ($type instanceof MixedType) {
@@ -262,11 +260,11 @@ final readonly class TypeCheck
         }
 
         if (!self::nameExists($className)) {
-            throw new LogicException(sprintf('Class "%s" does not exist', $className));
+            throw new LogicException(\sprintf('Class "%s" does not exist', $className));
         }
 
         if (!self::nameExists($typeToCheckClassName)) {
-            throw new LogicException(sprintf('Class "%s" does not exist', $typeToCheckClassName));
+            throw new LogicException(\sprintf('Class "%s" does not exist', $typeToCheckClassName));
         }
 
         return is_a($typeToCheckClassName, $className, true);
@@ -313,7 +311,7 @@ final readonly class TypeCheck
 
                 return $variable instanceof $class;
             default:
-                throw new LogicException(sprintf('Unknown builtin type "%s"', $builtinType));
+                throw new LogicException(\sprintf('Unknown builtin type "%s"', $builtinType));
         }
     }
 }

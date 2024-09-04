@@ -20,6 +20,5 @@ class ObjectWithScalarConstructorArgumentDto
         public ?string $b = null,
         public ?bool $c = null,
         public ?float $d = null,
-    ) {
-    }
+    ) {}
 }

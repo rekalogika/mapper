@@ -32,8 +32,7 @@ final readonly class AdderRemoverProxy implements
         private ?string $getterMethodName,
         private ?string $adderMethodName,
         private ?string $removerMethodName,
-    ) {
-    }
+    ) {}
 
     /**
      * @return \ArrayAccess<TKey,TValue>|array<TKey,TValue>

@@ -28,9 +28,7 @@ abstract class AbstractSerializerContext implements
     /**
      * @param array<string,mixed> $context
      */
-    public function __construct(private array $context = [])
-    {
-    }
+    public function __construct(private array $context = []) {}
 
     /**
      * @return array<string,mixed>

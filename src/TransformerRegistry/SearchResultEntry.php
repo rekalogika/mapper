@@ -27,8 +27,7 @@ final readonly class SearchResultEntry
         private Type|MixedType $targetType,
         private string $transformerServiceId,
         private bool $variantTargetType,
-    ) {
-    }
+    ) {}
 
     public function getSourceType(): Type|MixedType
     {

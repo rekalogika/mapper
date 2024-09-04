@@ -27,7 +27,7 @@ class TypeUtil2Test extends TestCase
     public function testGetAllTypeStrings(
         Type $type,
         array $expected,
-        bool $withParents = false
+        bool $withParents = false,
     ): void {
         $result = TypeUtil::getAllTypeStrings($type, $withParents);
         $this->assertEquals($expected, $result);
@@ -42,77 +42,77 @@ class TypeUtil2Test extends TestCase
             TypeFactory::null(),
             [
                 'null',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::bool(),
             [
                 'bool',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::int(),
             [
                 'int',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::float(),
             [
                 'float',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::string(),
             [
                 'string',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::array(),
             [
                 'array',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::objectOfClass(\DateTime::class),
             [
                 'DateTime',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::resource(),
             [
                 'resource',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::arrayWithKeyValue(
                 TypeFactory::string(),
-                TypeFactory::int()
+                TypeFactory::int(),
             ),
             [
                 'array<string,int>',
-            ]
+            ],
         ];
 
         yield [
             TypeFactory::objectWithKeyValue(
                 \Traversable::class,
                 TypeFactory::string(),
-                TypeFactory::int()
+                TypeFactory::int(),
             ),
             [
                 'Traversable<string,int>',
-            ]
+            ],
         ];
 
         yield [
@@ -121,8 +121,8 @@ class TypeUtil2Test extends TestCase
             ),
             [
                 'array',
-                'Traversable'
-            ]
+                'Traversable',
+            ],
         ];
 
         yield [
@@ -130,16 +130,16 @@ class TypeUtil2Test extends TestCase
                 builtinType: 'iterable',
                 collection: true,
                 collectionKeyType: [
-                    TypeFactory::string()
+                    TypeFactory::string(),
                 ],
                 collectionValueType: [
-                    TypeFactory::int()
+                    TypeFactory::int(),
                 ],
             ),
             [
                 'array<string,int>',
-                'Traversable<string,int>'
-            ]
+                'Traversable<string,int>',
+            ],
         ];
 
         yield [
@@ -164,7 +164,7 @@ class TypeUtil2Test extends TestCase
                 "Traversable<int,int>",
                 "array<int,DateTime>",
                 "Traversable<int,DateTime>",
-            ]
+            ],
         ];
 
         yield [
@@ -191,7 +191,7 @@ class TypeUtil2Test extends TestCase
                 'array<int,DateTime>',
                 'Traversable<int,DateTime>',
                 'null',
-            ]
+            ],
         ];
 
         yield [
@@ -215,7 +215,7 @@ class TypeUtil2Test extends TestCase
                 'Traversable<int,int>',
                 'Traversable<int,DateTime>',
                 'null',
-            ]
+            ],
         ];
 
         yield [
@@ -283,7 +283,7 @@ class TypeUtil2Test extends TestCase
                 "ArrayObject<int,ArrayObject<int,int>>",
                 "ArrayObject<int,ArrayObject<int,DateTime>>",
                 "null",
-            ]
+            ],
         ];
 
         yield [
@@ -314,7 +314,7 @@ class TypeUtil2Test extends TestCase
                 'null',
                 'mixed',
             ],
-            true
+            true,
         ];
 
         yield [
@@ -368,7 +368,7 @@ class TypeUtil2Test extends TestCase
                 "object",
                 "mixed",
             ],
-            true
+            true,
         ];
 
         yield [
@@ -425,7 +425,7 @@ class TypeUtil2Test extends TestCase
                 "object",
                 "mixed",
             ],
-            true
+            true,
         ];
 
     }

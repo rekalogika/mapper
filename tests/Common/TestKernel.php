@@ -42,7 +42,7 @@ class TestKernel extends Kernel
     public function __construct(
         private readonly array $config = [],
         string $env = 'test',
-        bool $debug = true
+        bool $debug = true,
     ) {
         parent::__construct($env, $debug);
     }

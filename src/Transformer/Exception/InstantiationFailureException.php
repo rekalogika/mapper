@@ -30,36 +30,36 @@ class InstantiationFailureException extends NotMappableValueException
         Context $context,
     ) {
         if ($constructorArguments === []) {
-            $message = sprintf(
+            $message = \sprintf(
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
                 get_debug_type($source),
                 $targetClass,
             );
         } else {
-            $message = sprintf(
+            $message = \sprintf(
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" using constructor arguments: %s.',
                 get_debug_type($source),
                 $targetClass,
-                $this->formatConstructorArguments($constructorArguments)
+                $this->formatConstructorArguments($constructorArguments),
             );
         }
 
         if ($unsetSourceProperties !== []) {
-            $message .= sprintf(
+            $message .= \sprintf(
                 ' Note that the following properties are not set in the source object: %s.',
-                implode(', ', $unsetSourceProperties)
+                implode(', ', $unsetSourceProperties),
             );
         }
 
-        $message .= sprintf(
+        $message .= \sprintf(
             ' The original error message was: %s.',
-            $previous->getMessage()
+            $previous->getMessage(),
         );
 
         parent::__construct(
             message: $message,
             previous: $previous,
-            context: $context
+            context: $context,
         );
     }
 
@@ -71,7 +71,7 @@ class InstantiationFailureException extends NotMappableValueException
         $formattedArguments = [];
         /** @var mixed $argumentValue */
         foreach ($constructorArguments as $argumentName => $argumentValue) {
-            $formattedArguments[] = sprintf('%s: %s', $argumentName, get_debug_type($argumentValue));
+            $formattedArguments[] = \sprintf('%s: %s', $argumentName, get_debug_type($argumentValue));
         }
 
         return implode(', ', $formattedArguments);

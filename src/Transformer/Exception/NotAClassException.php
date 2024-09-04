@@ -22,7 +22,7 @@ class NotAClassException extends NotMappableValueException
         Context $context = null,
     ) {
         parent::__construct(
-            message: sprintf(
+            message: \sprintf(
                 'Trying to map to "%s", but it is not a class.',
                 $class,
             ),

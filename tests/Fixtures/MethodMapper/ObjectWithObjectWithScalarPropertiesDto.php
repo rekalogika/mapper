@@ -36,7 +36,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
     public static function mapFromObject(
         object $source,
         SubMapperInterface $mapper,
-        Context $context
+        Context $context,
     ): static {
         \assert($source instanceof ObjectWithObjectWithScalarProperties);
 
@@ -45,7 +45,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
         $self->objectWithScalarProperties = $mapper->map(
             $source->objectWithScalarProperties,
             ObjectWithScalarPropertiesDto::class,
-            $context
+            $context,
         );
 
         return $self;
@@ -55,7 +55,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
     public function mapToObject(
         object|string $target,
         SubMapperInterface $mapper,
-        Context $context
+        Context $context,
     ): object {
         if ($target === ObjectWithObjectWithScalarProperties::class) {
             $target = new $target();
@@ -67,7 +67,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
         $target->objectWithScalarProperties = $mapper->map(
             $this->objectWithScalarProperties,
             ObjectWithScalarProperties::class,
-            $context
+            $context,
         );
 
         return $target;

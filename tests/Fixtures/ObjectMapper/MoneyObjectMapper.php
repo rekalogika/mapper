@@ -37,7 +37,7 @@ class MoneyObjectMapper
     #[AsObjectMapper]
     public function mapMoneyToMoneyDtoForProxy(
         Money $money,
-        SubMapperInterface $subMapper
+        SubMapperInterface $subMapper,
     ): MoneyDtoForProxy {
         return $subMapper->createProxy(
             MoneyDtoForProxy::class,

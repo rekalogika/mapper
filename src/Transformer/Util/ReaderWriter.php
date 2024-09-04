@@ -35,7 +35,7 @@ final readonly class ReaderWriter
     public function readSourceProperty(
         object $source,
         PropertyMapping $propertyMapping,
-        Context $context
+        Context $context,
     ): mixed {
         $property = $propertyMapping->getSourceProperty();
 
@@ -47,7 +47,7 @@ final readonly class ReaderWriter
             throw new UnableToReadException(
                 $source,
                 $property,
-                context: $context
+                context: $context,
             );
         }
 
@@ -79,7 +79,7 @@ final readonly class ReaderWriter
                 $source,
                 $property,
                 context: $context,
-                previous: $e
+                previous: $e,
             );
         }
     }
@@ -90,7 +90,7 @@ final readonly class ReaderWriter
     public function readTargetProperty(
         object $target,
         PropertyMapping $propertyMapping,
-        Context $context
+        Context $context,
     ): mixed {
         if (
             $propertyMapping->getTargetSetterWriteMode() === WriteMode::AdderRemover
@@ -143,7 +143,7 @@ final readonly class ReaderWriter
                 $target,
                 $propertyMapping->getTargetProperty(),
                 context: $context,
-                previous: $e
+                previous: $e,
             );
         }
     }
@@ -155,7 +155,7 @@ final readonly class ReaderWriter
         object $target,
         PropertyMapping $propertyMapping,
         mixed $value,
-        Context $context
+        Context $context,
     ): void {
         if ($propertyMapping->getTargetSetterWriteVisibility() !== Visibility::Public) {
             return;
@@ -180,7 +180,7 @@ final readonly class ReaderWriter
                 $target,
                 $propertyMapping->getTargetProperty(),
                 context: $context,
-                previous: $e
+                previous: $e,
             );
         }
     }

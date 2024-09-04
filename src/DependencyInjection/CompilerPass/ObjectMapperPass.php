@@ -47,7 +47,7 @@ final readonly class ObjectMapperPass implements CompilerPassInterface
                         $serviceId,
                         $method,
                         ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
-                    ]
+                    ],
                 );
             }
         }

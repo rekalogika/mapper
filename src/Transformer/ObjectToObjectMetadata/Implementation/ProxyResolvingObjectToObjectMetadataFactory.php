@@ -24,8 +24,7 @@ final readonly class ProxyResolvingObjectToObjectMetadataFactory implements Obje
 {
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $decorated,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function createObjectToObjectMetadata(

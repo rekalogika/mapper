@@ -33,7 +33,7 @@ final class TryCommand extends Command
 {
     public function __construct(
         private readonly TransformerRegistryInterface $transformerRegistry,
-        private readonly TypeResolverInterface $typeResolver
+        private readonly TypeResolverInterface $typeResolver,
     ) {
         parent::__construct();
     }
@@ -67,7 +67,7 @@ final class TryCommand extends Command
         $rows[] = new TableSeparator();
         $rows[] = [
             'Transformer source types compatible with source',
-            implode("\n", $sourceTypeStrings)
+            implode("\n", $sourceTypeStrings),
         ];
 
         //
@@ -85,7 +85,7 @@ final class TryCommand extends Command
         $rows[] = new TableSeparator();
         $rows[] = [
             'Transformer target types compatible with target',
-            implode("\n", $targetTypeStrings)
+            implode("\n", $targetTypeStrings),
         ];
 
         //

@@ -13,6 +13,4 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\DynamicProperty;
 
-class ObjectExtendingStdClass extends \stdClass
-{
-}
+class ObjectExtendingStdClass extends \stdClass {}

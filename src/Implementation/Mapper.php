@@ -27,8 +27,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
 {
     public function __construct(
         private MainTransformerInterface $transformer,
-    ) {
-    }
+    ) {}
 
     /**
      * @template T of object
@@ -45,7 +44,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
                 !class_exists($targetClass)
                 && !interface_exists($targetClass)
             ) {
-                throw new UnexpectedValueException(sprintf('The target class "%s" does not exist.', $targetClass));
+                throw new UnexpectedValueException(\sprintf('The target class "%s" does not exist.', $targetClass));
             }
 
             $targetType = TypeFactory::objectOfClass($targetClass);
@@ -66,11 +65,11 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
         );
 
         if ($target === null) {
-            throw new UnexpectedValueException(sprintf('The mapper returned null, expecting "%s".', $targetClass));
+            throw new UnexpectedValueException(\sprintf('The mapper returned null, expecting "%s".', $targetClass));
         }
 
         if (!\is_object($target) || !$target instanceof $targetClass) {
-            throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
+            throw new UnexpectedValueException(\sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
         }
 
         return $target;
@@ -86,7 +85,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
     public function mapIterable(
         iterable $source,
         string $target,
-        ?Context $context = null
+        ?Context $context = null,
     ): iterable {
         $targetClass = $target;
 
@@ -94,7 +93,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
             !class_exists($targetClass)
             && !interface_exists($targetClass)
         ) {
-            throw new UnexpectedValueException(sprintf('The target class "%s" does not exist.', $targetClass));
+            throw new UnexpectedValueException(\sprintf('The target class "%s" does not exist.', $targetClass));
         }
 
         $targetType = TypeFactory::objectOfClass($targetClass);
@@ -110,7 +109,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
             );
 
             if (!\is_object($result) || !$result instanceof $target) {
-                throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
+                throw new UnexpectedValueException(\sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
             }
 
             yield $result;

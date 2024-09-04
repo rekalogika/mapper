@@ -46,8 +46,7 @@ final readonly class ArrayLikeMetadata
         private bool $targetMemberKeyCanBeIntOnly,
         private bool $targetMemberKeyCanBeOtherThanIntOrString,
         private bool $targetMemberValueIsUntyped,
-    ) {
-    }
+    ) {}
 
     public function getSourceType(): Type
     {

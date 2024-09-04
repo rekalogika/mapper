@@ -54,8 +54,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private ProxyFactoryInterface $proxyFactory,
         private TypeResolverInterface $typeResolver,
-    ) {
-    }
+    ) {}
 
     /**
      * @param class-string $sourceClass
@@ -64,7 +63,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
      */
     private function resolveTargetClass(
         string $sourceClass,
-        string $targetClass
+        string $targetClass,
     ): string {
         $sourceReflection = new \ReflectionClass($sourceClass);
         $targetReflection = new \ReflectionClass($targetClass);
@@ -395,7 +394,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 if (\in_array(
                     $targetPropertyBuiltInType,
                     ['int', 'float', 'string', 'bool', 'null'],
-                    true
+                    true,
                 )) {
                     $targetPropertyScalarType = $targetPropertyBuiltInType;
                 }
@@ -470,8 +469,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // ensure we can create the proxy
 
             $this->proxyFactory
-                ->createProxy($targetClass, function ($instance): void {
-                }, $eagerProperties);
+                ->createProxy($targetClass, function ($instance): void {}, $eagerProperties);
 
             // determine if the constructor contains eager properties. if it
             // does, then the constructor is eager
@@ -500,12 +498,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             $skippedProperties = ClassUtil::getSkippedProperties(
                 $targetClass,
-                $eagerProperties
+                $eagerProperties,
             );
 
             $objectToObjectMetadata = $objectToObjectMetadata->withTargetProxy(
                 $skippedProperties,
-                $constructorIsEager
+                $constructorIsEager,
             );
         } catch (ProxyNotSupportedException $e) {
             $objectToObjectMetadata = $objectToObjectMetadata

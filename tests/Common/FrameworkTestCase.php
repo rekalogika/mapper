@@ -46,12 +46,12 @@ abstract class FrameworkTestCase extends TestCase
 
         $this->mapper = new MapperDecorator(
             $this->get(MapperInterface::class),
-            $this->getMapperContext()
+            $this->getMapperContext(),
         );
 
         $this->iterableMapper = new IterableMapperDecorator(
             $this->get(IterableMapperInterface::class),
-            $this->getMapperContext()
+            $this->getMapperContext(),
         );
     }
 

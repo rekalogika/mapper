@@ -24,7 +24,7 @@ class UnableToReadException extends NotMappableValueException
         Context $context = null,
     ) {
         parent::__construct(
-            message: sprintf(
+            message: \sprintf(
                 'Encountered an error when trying to read from the property "%s" from object type "%s".',
                 $property,
                 get_debug_type($source),

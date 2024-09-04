@@ -31,9 +31,9 @@ final readonly class TypeMapping
             }
 
             if ($targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
-                throw new InvalidArgumentException(sprintf(
+                throw new InvalidArgumentException(\sprintf(
                     'Variant target type must be object, %s given',
-                    $targetType->getBuiltinType()
+                    $targetType->getBuiltinType(),
                 ));
             }
         }

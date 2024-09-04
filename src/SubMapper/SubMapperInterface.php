@@ -27,7 +27,7 @@ interface SubMapperInterface
     public function map(
         ?object $source,
         object|string $target,
-        ?Context $context = null
+        ?Context $context = null,
     ): ?object;
 
     /**
@@ -39,7 +39,7 @@ interface SubMapperInterface
         ?object $source,
         object|string $containing,
         string $property,
-        ?Context $context = null
+        ?Context $context = null,
     ): mixed;
 
     /**
@@ -57,6 +57,6 @@ interface SubMapperInterface
     public function createProxy(
         string $class,
         $initializer,
-        array $eagerProperties = []
+        array $eagerProperties = [],
     ): object;
 }

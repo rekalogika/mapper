@@ -31,7 +31,7 @@ final readonly class PresetTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         $presetMapping = $context(PresetMapping::class);
 

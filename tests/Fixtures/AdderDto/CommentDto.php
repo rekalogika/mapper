@@ -16,9 +16,8 @@ namespace Rekalogika\Mapper\Tests\Fixtures\AdderDto;
 class CommentDto
 {
     public function __construct(
-        private readonly string $content
-    ) {
-    }
+        private readonly string $content,
+    ) {}
 
     public function getContent(): string
     {

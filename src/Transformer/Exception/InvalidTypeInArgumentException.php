@@ -26,7 +26,7 @@ class InvalidTypeInArgumentException extends InvalidArgumentException
         Context $context = null,
     ) {
         parent::__construct(
-            message: sprintf($printfMessage, TypeUtil::getDebugType($expectedType)),
+            message: \sprintf($printfMessage, TypeUtil::getDebugType($expectedType)),
             context: $context,
         );
     }

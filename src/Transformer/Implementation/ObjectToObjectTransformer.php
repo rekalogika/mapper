@@ -66,7 +66,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if ($targetType === null) {
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
@@ -75,7 +75,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // verify source
 
         if (!\is_object($source)) {
-            throw new InvalidArgumentException(sprintf('The source must be an object, "%s" given.', get_debug_type($source)), context: $context);
+            throw new InvalidArgumentException(\sprintf('The source must be an object, "%s" given.', get_debug_type($source)), context: $context);
         }
 
         $sourceType = TypeGuesser::guessTypeFromVariable($source);
@@ -128,20 +128,20 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 $target = $this->instantiateTargetProxy(
                     source: $source,
                     objectToObjectMetadata: $objectToObjectMetadata,
-                    context: $context
+                    context: $context,
                 );
             } else {
                 $target = $this->instantiateRealTarget(
                     source: $source,
                     objectToObjectMetadata: $objectToObjectMetadata,
-                    context: $context
+                    context: $context,
                 );
             }
         } else {
             $canUseTargetProxy = false;
 
             if (!\is_object($target)) {
-                throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
+                throw new InvalidArgumentException(\sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
             }
         }
 
@@ -167,7 +167,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     source: $source,
                     target: $target,
                     objectToObjectMetadata: $objectToObjectMetadata,
-                    context: $context
+                    context: $context,
                 );
             }
 
@@ -175,7 +175,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 source: $source,
                 target: $target,
                 propertyMappings: $objectToObjectMetadata->getPropertyMappings(),
-                context: $context
+                context: $context,
             );
         }
 
@@ -185,7 +185,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     private function instantiateRealTarget(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
-        Context $context
+        Context $context,
     ): object {
         $targetClass = $objectToObjectMetadata->getTargetClass();
 
@@ -198,7 +198,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $constructorArguments = $this->generateConstructorArguments(
             source: $source,
             objectToObjectMetadata: $objectToObjectMetadata,
-            context: $context
+            context: $context,
         );
 
         try {
@@ -213,7 +213,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 constructorArguments: $constructorArguments->getArguments(),
                 unsetSourceProperties: $constructorArguments->getUnsetSourceProperties(),
                 previous: $e,
-                context: $context
+                context: $context,
             );
         }
     }
@@ -221,7 +221,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     private function instantiateTargetProxy(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
-        Context $context
+        Context $context,
     ): object {
         $targetClass = $objectToObjectMetadata->getTargetClass();
 
@@ -246,7 +246,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     source: $source,
                     target: $target,
                     objectToObjectMetadata: $objectToObjectMetadata,
-                    context: $context
+                    context: $context,
                 );
             }
 
@@ -256,7 +256,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 source: $source,
                 target: $target,
                 propertyMappings: $objectToObjectMetadata->getLazyPropertyMappings(),
-                context: $context
+                context: $context,
             );
         };
 
@@ -265,7 +265,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $target = $this->proxyFactory->createProxy(
             $targetClass,
             $initializer,
-            $objectToObjectMetadata->getTargetProxySkippedProperties()
+            $objectToObjectMetadata->getTargetProxySkippedProperties(),
         );
 
         // if the constructor is eager, run it here
@@ -275,7 +275,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 source: $source,
                 target: $target,
                 objectToObjectMetadata: $objectToObjectMetadata,
-                context: $context
+                context: $context,
             );
         }
 
@@ -285,7 +285,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             source: $source,
             target: $target,
             propertyMappings: $objectToObjectMetadata->getEagerPropertyMappings(),
-            context: $context
+            context: $context,
         );
 
         return $target;
@@ -295,7 +295,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         object $source,
         object $target,
         ObjectToObjectMetadata $objectToObjectMetadata,
-        Context $context
+        Context $context,
     ): object {
         if (!method_exists($target, '__construct')) {
             return $target;
@@ -304,7 +304,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $constructorArguments = $this->generateConstructorArguments(
             source: $source,
             objectToObjectMetadata: $objectToObjectMetadata,
-            context: $context
+            context: $context,
         );
 
         $arguments = $constructorArguments->getArguments();
@@ -322,7 +322,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 constructorArguments: $constructorArguments->getArguments(),
                 unsetSourceProperties: $constructorArguments->getUnsetSourceProperties(),
                 previous: $e,
-                context: $context
+                context: $context,
             );
         }
 
@@ -332,7 +332,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     private function generateConstructorArguments(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
-        Context $context
+        Context $context,
     ): ConstructorArguments {
         $propertyMappings = $objectToObjectMetadata->getConstructorPropertyMappings();
 
@@ -345,12 +345,12 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     propertyMapping: $propertyMapping,
                     source: $source,
                     target: null,
-                    context: $context
+                    context: $context,
                 );
 
                 $constructorArguments->addArgument(
                     $propertyMapping->getTargetProperty(),
-                    $targetPropertyValue
+                    $targetPropertyValue,
                 );
             } catch (UninitializedSourcePropertyException $e) {
                 $sourceProperty = $e->getPropertyName();
@@ -372,14 +372,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         object $source,
         object $target,
         array $propertyMappings,
-        Context $context
+        Context $context,
     ): void {
         foreach ($propertyMappings as $propertyMapping) {
             $this->readSourcePropertyAndWriteTargetProperty(
                 source: $source,
                 target: $target,
                 propertyMapping: $propertyMapping,
-                context: $context
+                context: $context,
             );
         }
     }
@@ -388,7 +388,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         object $source,
         object $target,
         PropertyMapping $propertyMapping,
-        Context $context
+        Context $context,
     ): void {
         $targetSetterWriteMode = $propertyMapping->getTargetSetterWriteMode();
         $targetSetterWriteVisibility = $propertyMapping->getTargetSetterWriteVisibility();
@@ -407,7 +407,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 propertyMapping: $propertyMapping,
                 source: $source,
                 target: $target,
-                context: $context
+                context: $context,
             );
         } catch (UninitializedSourcePropertyException|UnsupportedPropertyMappingException) {
             return;
@@ -419,7 +419,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             target: $target,
             propertyMapping: $propertyMapping,
             value: $targetPropertyValue,
-            context: $context
+            context: $context,
         );
     }
 
@@ -431,7 +431,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         PropertyMapping $propertyMapping,
         object $source,
         ?object $target,
-        Context $context
+        Context $context,
     ): mixed {
         // if a custom property mapper is set, then use it
 
@@ -439,14 +439,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $serviceMethodRunner = ServiceMethodRunner::create(
                 serviceLocator: $this->propertyMapperLocator,
                 mainTransformer: $this->getMainTransformer(),
-                subMapperFactory: $this->subMapperFactory
+                subMapperFactory: $this->subMapperFactory,
             );
 
             return $serviceMethodRunner->run(
                 serviceMethodSpecification: $serviceMethodSpecification,
                 source: $source,
                 targetType: null,
-                context: $context
+                context: $context,
             );
         }
 
@@ -515,7 +515,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $targetPropertyValue = $this->readerWriter->readTargetProperty(
                 $target,
                 $propertyMapping,
-                $context
+                $context,
             );
         } else {
             // if this is for a constructor argument, we don't have an existing
@@ -536,8 +536,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 TypeFactory::objectWithKeyValue(
                     \ArrayAccess::class,
                     $key[0],
-                    $value[0]
-                )
+                    $value[0],
+                ),
             ];
         }
 
@@ -572,7 +572,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         object $source,
         object $target,
         ObjectToObjectMetadata $objectToObjectMetadata,
-        Context $context
+        Context $context,
     ): void {
         $sourceProperties = $objectToObjectMetadata->getSourceProperties();
 

@@ -20,9 +20,8 @@ final readonly class InheritanceMap
      * @param array<class-string,class-string> $map
      */
     public function __construct(
-        private array $map = []
-    ) {
-    }
+        private array $map = [],
+    ) {}
 
     /**
      * @return array<class-string,class-string>

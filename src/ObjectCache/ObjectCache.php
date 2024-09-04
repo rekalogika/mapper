@@ -32,7 +32,7 @@ final class ObjectCache
     private \WeakMap $preCache;
 
     public function __construct(
-        private readonly TypeResolverInterface $typeResolver
+        private readonly TypeResolverInterface $typeResolver,
     ) {
         /** @psalm-suppress MixedPropertyTypeCoercion */
         $this->cache = new \WeakMap();
@@ -148,10 +148,10 @@ final class ObjectCache
             $addIfAlreadyExists === false
             && isset($this->cache[$source][$targetTypeString])
         ) {
-            throw new LogicException(sprintf(
+            throw new LogicException(\sprintf(
                 'Target object for source object "%s" and target type "%s" already exists',
                 $source::class,
-                $targetTypeString
+                $targetTypeString,
             ));
         }
 

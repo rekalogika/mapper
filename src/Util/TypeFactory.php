@@ -23,9 +23,7 @@ use Symfony\Component\PropertyInfo\Type;
  */
 final class TypeFactory
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Convert a string type notation to a Type object. Currently does not do
@@ -55,13 +53,13 @@ final class TypeFactory
         }
 
         // remove possible nullable prefix
-        $string = preg_replace('/^\?/', '', $string) ?? throw new InvalidArgumentException(sprintf('"%s" does not appear to be a valid type.', $string));
+        $string = preg_replace('/^\?/', '', $string) ?? throw new InvalidArgumentException(\sprintf('"%s" does not appear to be a valid type.', $string));
 
         // remove generics notation
-        $string = preg_replace('/<.*>/', '', $string) ?? throw new InvalidArgumentException(sprintf('"%s" does not appear to be a valid type.', $string));
+        $string = preg_replace('/<.*>/', '', $string) ?? throw new InvalidArgumentException(\sprintf('"%s" does not appear to be a valid type.', $string));
 
         if (!TypeCheck::nameExists($string)) {
-            throw new InvalidArgumentException(sprintf('"%s" does not appear to be a valid type.', $string));
+            throw new InvalidArgumentException(\sprintf('"%s" does not appear to be a valid type.', $string));
         }
 
         return self::objectOfClass($string);
@@ -78,7 +76,7 @@ final class TypeFactory
     {
         if (self::$nullInstance === null) {
             self::$nullInstance = new Type(
-                builtinType: 'null'
+                builtinType: 'null',
             );
         }
 
@@ -92,7 +90,7 @@ final class TypeFactory
             'int' => self::int(),
             'float' => self::float(),
             'bool' => self::bool(),
-            default => throw new InvalidArgumentException(sprintf('"%s" is not a valid scalar type.', $type)),
+            default => throw new InvalidArgumentException(\sprintf('"%s" is not a valid scalar type.', $type)),
         };
     }
 
@@ -102,7 +100,7 @@ final class TypeFactory
     {
         if (self::$stringInstance === null) {
             self::$stringInstance = new Type(
-                builtinType: 'string'
+                builtinType: 'string',
             );
         }
 
@@ -115,7 +113,7 @@ final class TypeFactory
     {
         if (self::$intInstance === null) {
             self::$intInstance = new Type(
-                builtinType: 'int'
+                builtinType: 'int',
             );
         }
 
@@ -128,7 +126,7 @@ final class TypeFactory
     {
         if (self::$floatInstance === null) {
             self::$floatInstance = new Type(
-                builtinType: 'float'
+                builtinType: 'float',
             );
         }
 
@@ -141,7 +139,7 @@ final class TypeFactory
     {
         if (self::$boolInstance === null) {
             self::$boolInstance = new Type(
-                builtinType: 'bool'
+                builtinType: 'bool',
             );
         }
 
@@ -154,7 +152,7 @@ final class TypeFactory
     {
         if (self::$resourceInstance === null) {
             self::$resourceInstance = new Type(
-                builtinType: 'resource'
+                builtinType: 'resource',
             );
         }
 
@@ -167,7 +165,7 @@ final class TypeFactory
     {
         if (self::$trueInstance === null) {
             self::$trueInstance = new Type(
-                builtinType: 'true'
+                builtinType: 'true',
             );
         }
 
@@ -180,7 +178,7 @@ final class TypeFactory
     {
         if (self::$falseInstance === null) {
             self::$falseInstance = new Type(
-                builtinType: 'false'
+                builtinType: 'false',
             );
         }
 
@@ -193,7 +191,7 @@ final class TypeFactory
     {
         if (self::$callableInstance === null) {
             self::$callableInstance = new Type(
-                builtinType: 'callable'
+                builtinType: 'callable',
             );
         }
 
@@ -206,7 +204,7 @@ final class TypeFactory
     {
         if (self::$arrayInstance === null) {
             self::$arrayInstance = new Type(
-                builtinType: 'array'
+                builtinType: 'array',
             );
         }
 
@@ -219,7 +217,7 @@ final class TypeFactory
     {
         if (self::$iterableInstance === null) {
             self::$iterableInstance = new Type(
-                builtinType: 'iterable'
+                builtinType: 'iterable',
             );
         }
 
@@ -228,13 +226,13 @@ final class TypeFactory
 
     public static function arrayWithKeyValue(
         null|Type $keyType,
-        null|Type $valueType
+        null|Type $valueType,
     ): Type {
         return new Type(
             builtinType: 'array',
             collection: true,
             collectionKeyType: $keyType,
-            collectionValueType: $valueType
+            collectionValueType: $valueType,
         );
     }
 
@@ -253,13 +251,13 @@ final class TypeFactory
         }
 
         if (!TypeCheck::nameExists($class)) {
-            throw new InvalidArgumentException(sprintf('"%s" is not a valid class.', $class));
+            throw new InvalidArgumentException(\sprintf('"%s" is not a valid class.', $class));
         }
 
         return self::$instancesOfArrayOfObject[$class] = new Type(
             builtinType: 'array',
             collection: true,
-            collectionValueType: self::objectOfClass($class)
+            collectionValueType: self::objectOfClass($class),
         );
     }
 
@@ -269,7 +267,7 @@ final class TypeFactory
     {
         if (self::$objectInstance === null) {
             self::$objectInstance = new Type(
-                builtinType: 'object'
+                builtinType: 'object',
             );
         }
 
@@ -293,14 +291,14 @@ final class TypeFactory
 
         return self::$instancesOfObjectOfClass[$class] = new Type(
             builtinType: 'object',
-            class: $class
+            class: $class,
         );
     }
 
     public static function objectWithKeyValue(
         string $class,
         null|Type $keyType,
-        null|Type $valueType
+        null|Type $valueType,
     ): Type {
         $type = clone self::objectOfClass($class);
         $reflectionClass = new \ReflectionClass($type);

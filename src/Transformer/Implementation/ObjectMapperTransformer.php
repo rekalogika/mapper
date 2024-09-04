@@ -38,8 +38,7 @@ final class ObjectMapperTransformer implements
         private ContainerInterface $serviceLocator,
         private ObjectMapperTableFactoryInterface $objectMapperTableFactory,
         private ObjectMapperResolverInterface $objectMapperResolver,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function transform(
@@ -47,7 +46,7 @@ final class ObjectMapperTransformer implements
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         // target type must not be null
 
@@ -63,15 +62,15 @@ final class ObjectMapperTransformer implements
             !\is_string($targetClass)
             || !class_exists($targetClass)
         ) {
-            throw new InvalidArgumentException(sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
+            throw new InvalidArgumentException(\sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
         }
 
         // get source class
 
         if ($source === null || !\is_object($source)) {
             throw new InvalidArgumentException(
-                sprintf('Source must be an object, but got: %s', \gettype($source)),
-                context: $context
+                \sprintf('Source must be an object, but got: %s', \gettype($source)),
+                context: $context,
             );
         }
 
@@ -83,14 +82,14 @@ final class ObjectMapperTransformer implements
         $serviceMethodRunner = ServiceMethodRunner::create(
             serviceLocator: $this->serviceLocator,
             mainTransformer: $this->getMainTransformer(),
-            subMapperFactory: $this->subMapperFactory
+            subMapperFactory: $this->subMapperFactory,
         );
 
         return $serviceMethodRunner->run(
             serviceMethodSpecification: $serviceMethodSpecification,
             source: $source,
             targetType: $targetType,
-            context: $context
+            context: $context,
         );
     }
 

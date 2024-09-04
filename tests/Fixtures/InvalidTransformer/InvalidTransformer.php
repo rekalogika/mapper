@@ -34,7 +34,7 @@ class InvalidTransformer implements TransformerInterface
             // @phpstan-ignore-next-line
             TypeFactory::objectOfClass(InvalidClass::class),
             // @phpstan-ignore-next-line
-            TypeFactory::objectOfClass(AnotherInvalidClass::class)
+            TypeFactory::objectOfClass(AnotherInvalidClass::class),
         );
     }
 
@@ -44,7 +44,7 @@ class InvalidTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         throw new InvalidArgumentException('Should never reach here');
     }

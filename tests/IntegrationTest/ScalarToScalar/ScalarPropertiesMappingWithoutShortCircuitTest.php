@@ -23,8 +23,8 @@ class ScalarPropertiesMappingWithoutShortCircuitTest extends ScalarPropertiesMap
     {
         return Context::create(
             new MapperOptions(
-                objectToObjectScalarShortCircuit: false
-            )
+                objectToObjectScalarShortCircuit: false,
+            ),
         );
     }
 }

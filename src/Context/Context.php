@@ -25,9 +25,8 @@ final readonly class Context implements \IteratorAggregate
      * @param array<class-string,object> $context
      */
     private function __construct(
-        readonly private array $context = []
-    ) {
-    }
+        readonly private array $context = [],
+    ) {}
 
     #[\Override]
     public function getIterator(): \Traversable
@@ -74,7 +73,7 @@ final readonly class Context implements \IteratorAggregate
         $class = \is_string($value) ? $value : $value::class;
 
         if (!isset($this->context[$class])) {
-            throw new LogicException(sprintf('Object "%s" not in context.', $class));
+            throw new LogicException(\sprintf('Object "%s" not in context.', $class));
         }
 
         $context = $this->context;

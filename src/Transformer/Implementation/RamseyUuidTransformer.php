@@ -31,16 +31,16 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if ($targetType === null) {
             throw new InvalidArgumentException(
-                sprintf(
+                \sprintf(
                     'Target type is null when trying to transform type "%s" to "%s", using source "%s".',
                     TypeUtil::getDebugType($sourceType),
                     TypeUtil::getDebugType($targetType),
-                    get_debug_type($source)
-                )
+                    get_debug_type($source),
+                ),
             );
         }
 
@@ -51,12 +51,12 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
 
             if ($targetClass === null) {
                 throw new InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'Target class is null when trying to transform type "%s" to "%s", using source "%s".',
                         TypeUtil::getDebugType($sourceType),
                         TypeUtil::getDebugType($targetType),
-                        get_debug_type($source)
-                    )
+                        get_debug_type($source),
+                    ),
                 );
             }
 
@@ -76,12 +76,12 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
         }
 
         throw new InvalidArgumentException(
-            sprintf(
+            \sprintf(
                 'Trying to transform type "%s" to "%s", using source "%s".',
                 TypeUtil::getDebugType($sourceType),
                 TypeUtil::getDebugType($targetType),
-                get_debug_type($source)
-            )
+                get_debug_type($source),
+            ),
         );
     }
 

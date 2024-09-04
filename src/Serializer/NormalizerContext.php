@@ -17,6 +17,4 @@ namespace Rekalogika\Mapper\Serializer;
  * @deprecated
  * @phpstan-ignore-next-line
  */
-final class NormalizerContext extends AbstractSerializerContext
-{
-}
+final class NormalizerContext extends AbstractSerializerContext {}

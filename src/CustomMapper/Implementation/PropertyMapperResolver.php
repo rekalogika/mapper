@@ -40,7 +40,7 @@ final class PropertyMapperResolver implements PropertyMapperResolverInterface
         string $property,
         string $serviceId,
         string $method,
-        array $extraArguments = []
+        array $extraArguments = [],
     ): void {
         $this->propertyMappers[$targetClass][$property][$sourceClass]
             = new ServiceMethodSpecification($serviceId, $method, $extraArguments);
@@ -54,7 +54,7 @@ final class PropertyMapperResolver implements PropertyMapperResolverInterface
     public function getPropertyMapper(
         string $sourceClass,
         string $targetClass,
-        string $property
+        string $property,
     ): ?ServiceMethodSpecification {
         $sourceClasses = ClassUtil::getAllClassesFromObject($sourceClass);
         $targetClasses = ClassUtil::getAllClassesFromObject($targetClass);

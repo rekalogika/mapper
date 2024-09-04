@@ -28,7 +28,7 @@ final readonly class ObjectToStringTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if ($source instanceof \Stringable) {
             return (string) $source;
@@ -38,7 +38,7 @@ final readonly class ObjectToStringTransformer implements TransformerInterface
             return $source->name;
         }
 
-        throw new InvalidArgumentException(sprintf('Source must be instance of "\Stringable" or "\UnitEnum", "%s" given', get_debug_type($source)), context: $context);
+        throw new InvalidArgumentException(\sprintf('Source must be instance of "\Stringable" or "\UnitEnum", "%s" given', get_debug_type($source)), context: $context);
     }
 
     #[\Override]

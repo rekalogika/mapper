@@ -17,8 +17,7 @@ class ChildObject
 {
     public function __construct(
         private string $a,
-    ) {
-    }
+    ) {}
 
     public function getA(): string
     {

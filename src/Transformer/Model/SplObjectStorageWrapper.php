@@ -31,9 +31,8 @@ final readonly class SplObjectStorageWrapper implements
      * @param \SplObjectStorage<TKey,TValue> $wrapped
      */
     public function __construct(
-        private \SplObjectStorage $wrapped
-    ) {
-    }
+        private \SplObjectStorage $wrapped,
+    ) {}
 
     #[\Override]
     public function offsetExists(mixed $offset): bool

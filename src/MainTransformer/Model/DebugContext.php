@@ -30,9 +30,8 @@ final readonly class DebugContext
     public function __construct(
         private Type $sourceType,
         private array $targetTypes,
-        private bool $sourceTypeGuessed
-    ) {
-    }
+        private bool $sourceTypeGuessed,
+    ) {}
 
     public function getSourceType(): Type
     {
