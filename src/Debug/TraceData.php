@@ -51,7 +51,7 @@ final class TraceData
     private bool $refused = false;
 
     /**
-     * @param null|array<int,MixedType|Type>     $possibleTargetTypes
+     * @param null|array<int,Type|MixedType> $possibleTargetTypes
      * @param class-string<TransformerInterface> $transformerClass
      */
     public function __construct(
@@ -80,7 +80,7 @@ final class TraceData
 
     private function finalizeTime(float $time): void
     {
-        if ([] === $this->nestedTraceData) {
+        if ($this->nestedTraceData === []) {
             // If this is the last trace data (no nested trace data)
             $this->time = $time;
         } else {
@@ -146,7 +146,7 @@ final class TraceData
     }
 
     /**
-     * @return null|array<int,MixedType|Type>
+     * @return null|array<int,Type|MixedType>
      */
     public function getPossibleTargetTypes(): ?array
     {
@@ -155,11 +155,12 @@ final class TraceData
 
     public function getPossibleTargetTypesHtml(): string
     {
-        if (null === $this->possibleTargetTypes) {
-            return '__unknown__';
+        if ($this->possibleTargetTypes === null) {
+            return "__unknown__";
         }
 
         return TypeUtil::getTypeStringHtml($this->possibleTargetTypes);
+        ;
     }
 
     public function getSelectedTargetType(): ?Type
@@ -169,7 +170,7 @@ final class TraceData
 
     public function getSelectedTargetTypeHtml(): string
     {
-        if (null !== $this->selectedTargetType) {
+        if ($this->selectedTargetType !== null) {
             return TypeUtil::getTypeStringHtml($this->selectedTargetType);
         }
 
@@ -208,7 +209,7 @@ final class TraceData
     }
 
     /**
-     * @param null|class-string $class
+     * @param class-string|null $class
      */
     public function setCaller(
         ?string $file,
@@ -223,7 +224,7 @@ final class TraceData
         $this->callerClass = $class;
         $this->callerType = $type;
 
-        if (null !== $file) {
+        if ($file !== null) {
             $name = str_replace('\\', '/', $file);
             $pos = strrpos($name, '/');
             if (is_int($pos)) {
@@ -239,11 +240,11 @@ final class TraceData
     }
 
     /**
-     * @return null|array{file:null|string,line:null|int,function:null|string,class:null|class-string,type:null|string,name:null|string}
+     * @return null|array{file:string|null,line:int|null,function:string|null,class:class-string|null,type:string|null,name:string|null}
      */
     public function getCaller(): ?array
     {
-        if (null === $this->callerFunction) {
+        if ($this->callerFunction === null) {
             return null;
         }
 
@@ -258,7 +259,7 @@ final class TraceData
     }
 
     /**
-     * Get the value of refused.
+     * Get the value of refused
      */
     public function isRefused(): bool
     {

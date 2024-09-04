@@ -19,9 +19,6 @@ use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithEnumStringablePropertyDto;
 
-/**
- * @internal
- */
 class ObjectEnumStringMappingTest extends FrameworkTestCase
 {
     public function testToString(): void

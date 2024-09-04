@@ -16,9 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Model;
 /**
  * @template TKey
  * @template TValue
- *
  * @implements \IteratorAggregate<TKey,TValue>
- *
  * @internal
  */
 final readonly class TraversableCountableWrapper implements \IteratorAggregate, \Countable
@@ -29,7 +27,8 @@ final readonly class TraversableCountableWrapper implements \IteratorAggregate, 
     public function __construct(
         private \Traversable $traversable,
         private \Countable|int $countable,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function getIterator(): \Traversable

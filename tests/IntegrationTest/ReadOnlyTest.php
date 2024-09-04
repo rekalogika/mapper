@@ -19,9 +19,6 @@ use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\ReadOnlyObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\Source;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
-/**
- * @internal
- */
 class ReadOnlyTest extends FrameworkTestCase
 {
     public function testToFinalReadOnly(): void
@@ -33,8 +30,7 @@ class ReadOnlyTest extends FrameworkTestCase
     }
 
     /**
-     * In PHP 8.2, readonly class can't be lazy.
-     *
+     * In PHP 8.2, readonly class can't be lazy
      * @requires PHP >= 8.3.0
      */
     public function testToReadOnly(): void
@@ -55,8 +51,7 @@ class ReadOnlyTest extends FrameworkTestCase
     }
 
     /**
-     * In PHP 8.2, readonly class can't be lazy.
-     *
+     * In PHP 8.2, readonly class can't be lazy
      * @requires PHP >= 8.3.0
      */
     public function testToExistingReadOnly(): void

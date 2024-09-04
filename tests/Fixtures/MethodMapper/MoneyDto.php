@@ -21,7 +21,6 @@ use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 
 /**
  * @deprecated
- *
  * @psalm-suppress DeprecatedInterface
  */
 final readonly class MoneyDto implements MapToObjectInterface, MapFromObjectInterface
@@ -29,7 +28,8 @@ final readonly class MoneyDto implements MapToObjectInterface, MapFromObjectInte
     public function __construct(
         private string $amount,
         private string $currency,
-    ) {}
+    ) {
+    }
 
     public function getAmount(): string
     {
@@ -57,7 +57,7 @@ final readonly class MoneyDto implements MapToObjectInterface, MapFromObjectInte
         Context $context
     ): static {
         if (!$source instanceof Money) {
-            throw new \InvalidArgumentException('Source must be instance of '.Money::class);
+            throw new \InvalidArgumentException('Source must be instance of ' . Money::class);
         }
 
         return new self(

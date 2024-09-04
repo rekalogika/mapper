@@ -13,4 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\InheritanceDto;
 
-abstract class AbstractClassWithoutMapDto {}
+abstract class AbstractClassWithoutMapDto
+{
+}

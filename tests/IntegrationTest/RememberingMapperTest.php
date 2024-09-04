@@ -20,9 +20,6 @@ use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesWithNullCo
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithFloatPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithIntPropertiesDto;
 
-/**
- * @internal
- */
 class RememberingMapperTest extends FrameworkTestCase
 {
     public function testMapping(): void

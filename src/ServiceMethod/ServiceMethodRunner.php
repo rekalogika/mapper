@@ -36,7 +36,8 @@ final readonly class ServiceMethodRunner
         private ContainerInterface $serviceLocator,
         private MainTransformerInterface $mainTransformer,
         private SubMapperFactoryInterface $subMapperFactory,
-    ) {}
+    ) {
+    }
 
     public function run(
         ServiceMethodSpecification $serviceMethodSpecification,

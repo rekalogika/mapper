@@ -50,7 +50,8 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         private readonly TransformerRegistryInterface $transformerRegistry,
         private readonly TypeResolverInterface $typeResolver,
         private readonly bool $debug = false,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function reset(): void
@@ -75,7 +76,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         ?Type $sourceType,
         array $targetTypes,
         Context $context,
-        ?string $path = null,
+        string $path = null,
     ): mixed {
         // if MapperOptions is not provided, use the default options
 
@@ -87,22 +88,22 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         // if manual garbage collection interval is set, run it
 
         if (self::$manualGcInterval > 0) {
-            if (0 === self::$runCounter % self::$manualGcInterval) {
+            if (self::$runCounter % self::$manualGcInterval === 0) {
                 gc_collect_cycles();
             }
 
-            ++self::$runCounter;
+            self::$runCounter++;
         }
 
         // if target is provided, guess the type from it.
         // if target is not provided, use the provided target type. if it is
         // also not provided, then the target type is mixed.
 
-        if (null === $target) {
-            if ([] === $targetTypes) {
+        if ($target === null) {
+            if ($targetTypes === []) {
                 $targetTypes = [MixedType::instance()];
             }
-        } elseif ([] === $targetTypes) {
+        } elseif ($targetTypes === []) {
             $targetTypes = [TypeGuesser::guessTypeFromVariable($target)];
         }
 
@@ -118,7 +119,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         if (($pathContext = $context(Path::class)) !== null) {
             // append path
 
-            if (null === $path) {
+            if ($path === null) {
                 $path = '(not specified)';
             }
 
@@ -130,7 +131,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
 
         // determine the source type
 
-        if (null !== $sourceType) {
+        if ($sourceType !== null) {
             $sourceTypes = [$sourceType];
             $isSourceTypeGuessed = false;
         } else {
@@ -170,7 +171,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
             // the target type of the search entry, if not continue to the next
             // search entry
 
-            if (null !== $target && !TypeCheck::isVariableInstanceOf($target, $searchResultEntry->getTargetType())) {
+            if ($target !== null && !TypeCheck::isVariableInstanceOf($target, $searchResultEntry->getTargetType())) {
                 continue;
             }
 
@@ -185,7 +186,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
 
             // if the target type is cached, return it. otherwise, pre-cache it
 
-            if (null !== $targetTypeForTransformer) {
+            if ($targetTypeForTransformer !== null) {
                 try {
                     return $objectCache
                         ->getTarget($source, $targetTypeForTransformer);
@@ -221,7 +222,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
                     context: $context
                 );
             } catch (RefuseToTransformException) {
-                if (null !== $targetTypeForTransformer) {
+                if ($targetTypeForTransformer !== null) {
                     $objectCache->undoPreCache($source, $targetTypeForTransformer);
                 }
 
@@ -238,7 +239,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
 
             // if the target type is not null, cache it
 
-            if (null !== $targetTypeForTransformer) {
+            if ($targetTypeForTransformer !== null) {
                 $objectCache->saveTarget(
                     source: $source,
                     targetType: $targetTypeForTransformer,

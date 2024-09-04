@@ -27,13 +27,12 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
 {
     public function __construct(
         private MainTransformerInterface $transformer,
-    ) {}
+    ) {
+    }
 
     /**
      * @template T of object
-     *
      * @param class-string<T>|T $target
-     *
      * @return T
      */
     #[\Override]
@@ -66,7 +65,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
             context: $context ?? Context::create(),
         );
 
-        if (null === $target) {
+        if ($target === null) {
             throw new UnexpectedValueException(sprintf('The mapper returned null, expecting "%s".', $targetClass));
         }
 
@@ -79,10 +78,8 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
 
     /**
      * @template T of object
-     *
      * @param iterable<mixed> $source
      * @param class-string<T> $target
-     *
      * @return iterable<T>
      */
     #[\Override]

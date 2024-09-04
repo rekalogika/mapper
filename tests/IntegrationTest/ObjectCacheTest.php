@@ -21,9 +21,6 @@ use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 
-/**
- * @internal
- */
 class ObjectCacheTest extends FrameworkTestCase
 {
     private function createObjectCache(): ObjectCache

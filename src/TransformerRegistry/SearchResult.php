@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\TransformerRegistry;
 
 /**
  * @internal
- *
  * @implements \IteratorAggregate<int,SearchResultEntry>
  * @implements \ArrayAccess<int,SearchResultEntry>
  */
@@ -26,7 +25,8 @@ final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
      */
     public function __construct(
         private array $entries
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function count(): int
@@ -49,7 +49,7 @@ final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
     #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (null === $offset) {
+        if ($offset === null) {
             $this->entries[] = $value;
         } else {
             $this->entries[$offset] = $value;

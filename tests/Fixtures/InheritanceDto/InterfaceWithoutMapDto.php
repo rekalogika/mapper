@@ -13,4 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\InheritanceDto;
 
-interface InterfaceWithoutMapDto {}
+interface InterfaceWithoutMapDto
+{
+}

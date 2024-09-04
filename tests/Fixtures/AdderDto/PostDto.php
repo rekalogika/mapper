@@ -37,7 +37,7 @@ class PostDto
     {
         $key = array_search($comment, $this->comments, true);
 
-        if (false !== $key) {
+        if ($key !== false) {
             unset($this->comments[$key]);
         }
     }

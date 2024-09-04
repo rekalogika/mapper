@@ -17,5 +17,6 @@ final readonly class ValueObjectDto
 {
     public function __construct(
         public string $name
-    ) {}
+    ) {
+    }
 }

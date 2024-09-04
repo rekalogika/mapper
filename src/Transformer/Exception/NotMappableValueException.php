@@ -15,4 +15,6 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 
-abstract class NotMappableValueException extends UnexpectedValueException {}
+abstract class NotMappableValueException extends UnexpectedValueException
+{
+}

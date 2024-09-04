@@ -56,6 +56,6 @@ final class ConstructorArguments
 
     public function hasArguments(): bool
     {
-        return [] !== $this->contructorArguments;
+        return $this->contructorArguments !== [];
     }
 }

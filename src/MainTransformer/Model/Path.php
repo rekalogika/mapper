@@ -25,7 +25,8 @@ final readonly class Path implements \Stringable
      */
     private function __construct(
         private array $path = []
-    ) {}
+    ) {
+    }
 
     public static function create(): self
     {
@@ -48,7 +49,7 @@ final readonly class Path implements \Stringable
                 $path = str_replace(['(', ')'], '', $path);
                 $result .= sprintf('(%s)', $path);
             } else {
-                $result .= '.'.$path;
+                $result .= '.' . $path;
             }
         }
 
@@ -73,7 +74,7 @@ final readonly class Path implements \Stringable
     {
         $lastKey = array_key_last($this->path);
 
-        if (null === $lastKey) {
+        if ($lastKey === null) {
             return null;
         }
 

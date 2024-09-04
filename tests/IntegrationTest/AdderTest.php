@@ -18,9 +18,6 @@ use Rekalogika\Mapper\Tests\Fixtures\Adder\Comment;
 use Rekalogika\Mapper\Tests\Fixtures\Adder\Post;
 use Rekalogika\Mapper\Tests\Fixtures\AdderDto\PostDto;
 
-/**
- * @internal
- */
 class AdderTest extends FrameworkTestCase
 {
     public function testAdder(): void

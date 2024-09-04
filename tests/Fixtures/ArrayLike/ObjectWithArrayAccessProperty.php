@@ -30,4 +30,5 @@ class ObjectWithArrayAccessProperty
             3 => new ObjectWithScalarProperties(),
         ]);
     }
+
 }

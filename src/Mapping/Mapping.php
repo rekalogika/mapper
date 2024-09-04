@@ -18,7 +18,6 @@ use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal
- *
  * @implements \IteratorAggregate<int,MappingEntry>
  */
 final class Mapping implements \IteratorAggregate
@@ -42,8 +41,8 @@ final class Mapping implements \IteratorAggregate
     public function addEntry(
         string $id,
         string $class,
-        MixedType|Type $sourceType,
-        MixedType|Type $targetType,
+        Type|MixedType $sourceType,
+        Type|MixedType $targetType,
         string $sourceTypeString,
         string $targetTypeString,
         bool $variantTargetType,
@@ -65,7 +64,6 @@ final class Mapping implements \IteratorAggregate
     /**
      * @param array<int,string> $sourceTypes
      * @param array<int,string> $targetTypes
-     *
      * @return array<int,MappingEntry>
      */
     public function getMappingBySourceAndTarget(

@@ -21,11 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArray;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDto;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayWithoutAllowDeleteAttribute;
 
-/**
- * @psalm-suppress MissingConstructor
- *
- * @internal
- */
+/** @psalm-suppress MissingConstructor */
 class RemoveTest extends FrameworkTestCase
 {
     private MemberRepository $repository;

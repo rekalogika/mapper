@@ -30,7 +30,7 @@ trait MainTransformerAwareTrait
 
     protected function getMainTransformer(): MainTransformerInterface
     {
-        if (null === $this->mainTransformer) {
+        if ($this->mainTransformer === null) {
             throw new LogicException('Main transformer is not set. Call "withMainTransformer()" first.');
         }
 

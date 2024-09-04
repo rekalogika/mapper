@@ -23,6 +23,6 @@ class PropertyMapperWithoutClassAttribute
     )]
     public function mapPropertyA(SomeObject $object): string
     {
-        return $object::class.'::propertyA';
+        return $object::class . '::propertyA';
     }
 }

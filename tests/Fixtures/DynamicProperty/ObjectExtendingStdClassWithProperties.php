@@ -19,7 +19,9 @@ class ObjectExtendingStdClassWithProperties extends \stdClass
 
     private ?string $private = null;
 
-    public function __construct(private readonly ?string $constructor = null) {}
+    public function __construct(private readonly ?string $constructor = null)
+    {
+    }
 
     public function getConstructor(): ?string
     {

@@ -22,8 +22,8 @@ use Symfony\Component\PropertyInfo\Type;
 final readonly class ArrayLikeMetadata
 {
     /**
-     * @param ?class-string         $sourceClass
-     * @param ?class-string         $targetClass
+     * @param ?class-string $sourceClass
+     * @param ?class-string $targetClass
      * @param array<array-key,Type> $targetMemberKeyTypes
      * @param array<array-key,Type> $targetMemberValueTypes
      */
@@ -46,7 +46,8 @@ final readonly class ArrayLikeMetadata
         private bool $targetMemberKeyCanBeIntOnly,
         private bool $targetMemberKeyCanBeOtherThanIntOrString,
         private bool $targetMemberValueIsUntyped,
-    ) {}
+    ) {
+    }
 
     public function getSourceType(): Type
     {
@@ -63,7 +64,7 @@ final readonly class ArrayLikeMetadata
      */
     public function getSourceClass(): string
     {
-        if (null === $this->sourceClass) {
+        if ($this->sourceClass === null) {
             throw new LogicException('This method can only be called if the source is an array.');
         }
 
@@ -75,7 +76,7 @@ final readonly class ArrayLikeMetadata
      */
     public function getTargetClass(): string
     {
-        if (null === $this->targetClass) {
+        if ($this->targetClass === null) {
             throw new LogicException('This method can only be called if the target is an array.');
         }
 

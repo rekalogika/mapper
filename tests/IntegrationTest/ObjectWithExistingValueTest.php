@@ -19,9 +19,6 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValueDto\FurtherInnerObje
 use Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValueDto\InnerObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValueDto\RootObjectDto;
 
-/**
- * @internal
- */
 class ObjectWithExistingValueTest extends FrameworkTestCase
 {
     public function testObjectWithExistingValueDtoToObject(): void

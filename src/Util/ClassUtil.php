@@ -21,13 +21,13 @@ use Symfony\Component\VarExporter\Internal\Hydrator;
  */
 final readonly class ClassUtil
 {
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * @template T of object
-     *
      * @param class-string<T> $class
-     *
      * @return class-string<T>
      */
     public static function determineRealClassFromPossibleProxy(string $class): string
@@ -36,11 +36,11 @@ final readonly class ClassUtil
 
         $pos = strrpos($class, '\\__CG__\\');
 
-        if (false === $pos) {
+        if ($pos === false) {
             $pos = strrpos($class, '\\__PM__\\');
         }
 
-        if (false !== $pos) {
+        if ($pos !== false) {
             $class = substr($class, $pos + 8);
         }
 
@@ -73,7 +73,7 @@ final readonly class ClassUtil
      * @param class-string|\ReflectionClass<object> $class
      */
     public static function getLastModifiedTime(
-        \ReflectionClass|string $class
+        string|\ReflectionClass $class
     ): int {
         if (is_string($class)) {
             $class = new \ReflectionClass($class);
@@ -85,7 +85,7 @@ final readonly class ClassUtil
 
         $fileName = $class->getFileName();
 
-        if (false === $fileName) {
+        if ($fileName === false) {
             throw new \UnexpectedValueException(sprintf(
                 'Failed to get file name for class "%s"',
                 $class->getName()
@@ -94,7 +94,7 @@ final readonly class ClassUtil
 
         $mtime = filemtime($fileName);
 
-        if (false === $mtime) {
+        if ($mtime === false) {
             throw new \UnexpectedValueException(sprintf(
                 'Failed to get last modified time for class "%s"',
                 $class->getName()
@@ -118,7 +118,6 @@ final readonly class ClassUtil
     {
         /**
          * @var array<string,array{string,string,?string,\ReflectionProperty}>
-         *
          * @psalm-suppress InternalClass
          */
         return Hydrator::getPropertyScopes($class);
@@ -126,7 +125,6 @@ final readonly class ClassUtil
 
     /**
      * @param array<int,string> $eagerProperties
-     *
      * @return array<string,true>
      */
     public static function getSkippedProperties(
@@ -147,9 +145,9 @@ final readonly class ClassUtil
         return $skippedProperties;
     }
 
+
     /**
-     * @param class-string|object $objectOrClass
-     *
+     * @param object|class-string $objectOrClass
      * @return array<int,class-string>
      */
     public static function getAllClassesFromObject(
@@ -158,12 +156,12 @@ final readonly class ClassUtil
         $class = is_object($objectOrClass) ? $objectOrClass::class : $objectOrClass;
 
         $parents = class_parents($class, true);
-        if (false === $parents) {
+        if ($parents === false) {
             $parents = [];
         }
 
         $interfaces = class_implements($class, true);
-        if (false === $interfaces) {
+        if ($interfaces === false) {
             $interfaces = [];
         }
 

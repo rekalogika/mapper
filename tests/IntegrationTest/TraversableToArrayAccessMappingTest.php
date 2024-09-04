@@ -37,9 +37,6 @@ use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\LazyArray;
 
-/**
- * @internal
- */
 class TraversableToArrayAccessMappingTest extends FrameworkTestCase
 {
     //
@@ -104,7 +101,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithArrayAccessPropertyDto::class, $result);
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
-        $this->assertEquals('string', $result->property[1]?->b);
+        $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
     }
@@ -119,7 +116,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $one);
 
         $this->assertEquals(1, $one->a);
-        $this->assertEquals('string', $one->b);
+        $this->assertEquals("string", $one->b);
         $this->assertEquals(true, $one->c);
         $this->assertEquals(1.1, $one->d);
     }
@@ -141,7 +138,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $member);
 
         $this->assertEquals(1, $member->a);
-        $this->assertEquals('string', $member->b);
+        $this->assertEquals("string", $member->b);
         $this->assertEquals(true, $member->c);
         $this->assertEquals(1.1, $member->d);
     }
@@ -159,7 +156,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
 
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
-        $this->assertEquals('string', $result->property[1]?->b);
+        $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
     }
@@ -177,7 +174,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
 
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
-        $this->assertEquals('string', $result->property[1]?->b);
+        $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
     }
@@ -209,7 +206,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
 
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
-        $this->assertEquals('string', $result->property[1]?->b);
+        $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
     }
@@ -227,7 +224,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
 
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
-        $this->assertEquals('string', $result->property[1]?->b);
+        $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
     }
@@ -242,7 +239,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $one);
 
         $this->assertEquals(1, $one->a);
-        $this->assertEquals('string', $one->b);
+        $this->assertEquals("string", $one->b);
         $this->assertEquals(true, $one->c);
         $this->assertEquals(1.1, $one->d);
     }
@@ -264,7 +261,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $member);
 
         $this->assertEquals(1, $member->a);
-        $this->assertEquals('string', $member->b);
+        $this->assertEquals("string", $member->b);
         $this->assertEquals(true, $member->c);
         $this->assertEquals(1.1, $member->d);
     }
@@ -309,7 +306,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithArrayAccessPropertyDto::class, $result);
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
-        $this->assertEquals('string', $result->property[1]?->b);
+        $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
     }
@@ -324,7 +321,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $one);
 
         $this->assertEquals(1, $one->a);
-        $this->assertEquals('string', $one->b);
+        $this->assertEquals("string", $one->b);
         $this->assertEquals(true, $one->c);
         $this->assertEquals(1.1, $one->d);
     }
@@ -337,7 +334,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithArrayAccessPropertyDto::class, $result);
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
-        $this->assertEquals('string', $result->property[1]?->b);
+        $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
     }
@@ -352,7 +349,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $one);
 
         $this->assertEquals(1, $one->a);
-        $this->assertEquals('string', $one->b);
+        $this->assertEquals("string", $one->b);
         $this->assertEquals(true, $one->c);
         $this->assertEquals(1.1, $one->d);
     }
@@ -393,7 +390,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithArrayAccessPropertyDto::class, $result);
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
         $this->assertEquals(1, $result->property[1]?->a);
-        $this->assertEquals('string', $result->property[1]?->b);
+        $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
     }

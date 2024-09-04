@@ -19,10 +19,12 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeCheck
 {
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
-     * Checks if the name is a valid class, interface, or enum.
+     * Checks if the name is a valid class, interface, or enum
      *
      * @phpstan-assert class-string $class
      */
@@ -33,68 +35,68 @@ final readonly class TypeCheck
             || enum_exists($class);
     }
 
-    public static function isInt(null|MixedType|Type $type): bool
+    public static function isInt(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        return Type::BUILTIN_TYPE_INT === $type?->getBuiltinType();
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_INT;
     }
 
-    public static function isFloat(null|MixedType|Type $type): bool
+    public static function isFloat(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        return Type::BUILTIN_TYPE_FLOAT === $type?->getBuiltinType();
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_FLOAT;
     }
 
-    public static function isString(null|MixedType|Type $type): bool
+    public static function isString(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        return Type::BUILTIN_TYPE_STRING === $type?->getBuiltinType();
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_STRING;
     }
 
-    public static function isBool(null|MixedType|Type $type): bool
+    public static function isBool(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        return Type::BUILTIN_TYPE_BOOL === $type?->getBuiltinType();
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_BOOL;
     }
 
-    public static function isArray(null|MixedType|Type $type): bool
+    public static function isArray(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        return Type::BUILTIN_TYPE_ARRAY === $type?->getBuiltinType();
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_ARRAY;
     }
 
-    public static function isObject(null|MixedType|Type $type): bool
+    public static function isObject(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        if (null === $type) {
+        if ($type === null) {
             return false;
         }
 
-        if (Type::BUILTIN_TYPE_OBJECT !== $type->getBuiltinType()) {
+        if ($type->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
             return false;
         }
 
         $class = $type->getClassName();
 
-        if (null !== $class) {
+        if ($class !== null) {
             return self::nameExists($class);
         }
 
@@ -104,9 +106,9 @@ final readonly class TypeCheck
     /**
      * @param class-string $classes
      */
-    public static function isObjectOfType(null|MixedType|Type $type, string ...$classes): bool
+    public static function isObjectOfType(null|Type|MixedType $type, string ...$classes): bool
     {
-        if (null === $type || $type instanceof MixedType) {
+        if ($type === null || $type instanceof MixedType) {
             return false;
         }
 
@@ -116,7 +118,7 @@ final readonly class TypeCheck
 
         $class = $type->getClassName();
 
-        if (null === $class) {
+        if ($class === null) {
             return false;
         }
 
@@ -129,60 +131,60 @@ final readonly class TypeCheck
         return false;
     }
 
-    public static function isEnum(null|MixedType|Type $type): bool
+    public static function isEnum(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        if (null === $type) {
+        if ($type === null) {
             return false;
         }
 
         $class = $type->getClassName();
 
-        return Type::BUILTIN_TYPE_OBJECT === $type->getBuiltinType()
-            && null !== $class
+        return $type->getBuiltinType() === Type::BUILTIN_TYPE_OBJECT
+            && $class !== null
             && enum_exists($class);
     }
 
-    public static function isBackedEnum(null|MixedType|Type $type): bool
+    public static function isBackedEnum(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        if (null === $type) {
+        if ($type === null) {
             return false;
         }
 
         $class = $type->getClassName();
 
-        return Type::BUILTIN_TYPE_OBJECT === $type->getBuiltinType()
-            && null !== $class
+        return $type->getBuiltinType() === Type::BUILTIN_TYPE_OBJECT
+            && $class !== null
             && enum_exists($class)
             && is_a($class, \BackedEnum::class, true);
     }
 
-    public static function isResource(null|MixedType|Type $type): bool
+    public static function isResource(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        return Type::BUILTIN_TYPE_RESOURCE === $type?->getBuiltinType();
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_RESOURCE;
     }
 
-    public static function isNull(null|MixedType|Type $type): bool
+    public static function isNull(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        return Type::BUILTIN_TYPE_NULL === $type?->getBuiltinType();
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_NULL;
     }
 
-    public static function isScalar(null|MixedType|Type $type): bool
+    public static function isScalar(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
@@ -194,25 +196,23 @@ final readonly class TypeCheck
             || self::isBool($type);
     }
 
-    public static function isIterable(null|MixedType|Type $type): bool
+    public static function isIterable(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return false;
         }
 
-        return Type::BUILTIN_TYPE_ITERABLE === $type?->getBuiltinType();
+        return $type?->getBuiltinType() === Type::BUILTIN_TYPE_ITERABLE;
     }
 
     /**
-     * Check for identity between Types, disregarding collection types.
+     * Check for identity between Types, disregarding collection types
      */
-    public static function isSomewhatIdentical(MixedType|Type $type1, MixedType|Type $type2): bool
+    public static function isSomewhatIdentical(Type|MixedType $type1, Type|MixedType $type2): bool
     {
         if ($type1 instanceof MixedType && $type2 instanceof MixedType) {
             return true;
-        }
-
-        if ($type1 instanceof MixedType || $type2 instanceof MixedType) {
+        } elseif ($type1 instanceof MixedType || $type2 instanceof MixedType) {
             return false;
         }
 
@@ -222,8 +222,8 @@ final readonly class TypeCheck
     }
 
     public static function isTypeInstanceOf(
-        MixedType|Type $typeToCheck,
-        MixedType|Type $type
+        Type|MixedType $typeToCheck,
+        Type|MixedType $type
     ): bool {
         // instanceof mixed
         if ($type instanceof MixedType) {
@@ -244,7 +244,7 @@ final readonly class TypeCheck
         }
 
         // if not an object this is as far as we can go
-        if (Type::BUILTIN_TYPE_OBJECT !== $typeToCheck->getBuiltinType()) {
+        if ($typeToCheck->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
             return true;
         }
 
@@ -252,12 +252,12 @@ final readonly class TypeCheck
         $className = $type->getClassName();
 
         // anyobject instanceof object
-        if (null === $className) {
+        if ($className === null) {
             return true;
         }
 
         // object instanceof specificobject
-        if (null === $typeToCheckClassName) {
+        if ($typeToCheckClassName === null) {
             return false;
         }
 
@@ -275,7 +275,7 @@ final readonly class TypeCheck
     /**
      * @todo support generics
      */
-    public static function isVariableInstanceOf(mixed $variable, MixedType|Type $type): bool
+    public static function isVariableInstanceOf(mixed $variable, Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {
             return true;
@@ -286,32 +286,24 @@ final readonly class TypeCheck
         switch ($builtinType) {
             case Type::BUILTIN_TYPE_INT:
                 return is_int($variable);
-
             case Type::BUILTIN_TYPE_FLOAT:
                 return is_float($variable);
-
             case Type::BUILTIN_TYPE_STRING:
                 return is_string($variable);
-
             case Type::BUILTIN_TYPE_BOOL:
                 return is_bool($variable);
-
             case Type::BUILTIN_TYPE_ARRAY:
                 return is_array($variable);
-
             case Type::BUILTIN_TYPE_RESOURCE:
                 return is_resource($variable);
-
             case Type::BUILTIN_TYPE_NULL:
                 return is_null($variable);
-
             case Type::BUILTIN_TYPE_ITERABLE:
                 return is_iterable($variable);
-
             case Type::BUILTIN_TYPE_OBJECT:
                 $class = $type->getClassName();
 
-                if (null === $class) {
+                if ($class === null) {
                     return true;
                 }
 
@@ -320,7 +312,6 @@ final readonly class TypeCheck
                 }
 
                 return $variable instanceof $class;
-
             default:
                 throw new LogicException(sprintf('Unknown builtin type "%s"', $builtinType));
         }

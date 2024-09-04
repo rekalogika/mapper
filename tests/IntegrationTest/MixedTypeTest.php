@@ -18,9 +18,6 @@ use Rekalogika\Mapper\Tests\Fixtures\MixedType\ObjectWithMixedProperty;
 use Rekalogika\Mapper\Tests\Fixtures\MixedType\ObjectWithMixedPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\MixedType\ObjectWithUntypedPropertyDto;
 
-/**
- * @internal
- */
 class MixedTypeTest extends FrameworkTestCase
 {
     public function testMixedType(): void

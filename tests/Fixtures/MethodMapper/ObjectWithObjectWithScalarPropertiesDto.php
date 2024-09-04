@@ -22,12 +22,15 @@ use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 /**
  * @deprecated
- *
  * @psalm-suppress DeprecatedInterface
  */
-final class ObjectWithObjectWithScalarPropertiesDto implements MapFromObjectInterface, MapToObjectInterface
+final class ObjectWithObjectWithScalarPropertiesDto implements
+    MapFromObjectInterface,
+    MapToObjectInterface
 {
     public ?ObjectWithScalarPropertiesDto $objectWithScalarProperties = null;
+
+
 
     #[\Override]
     public static function mapFromObject(
@@ -54,7 +57,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements MapFromObjectInte
         SubMapperInterface $mapper,
         Context $context
     ): object {
-        if (ObjectWithObjectWithScalarProperties::class === $target) {
+        if ($target === ObjectWithObjectWithScalarProperties::class) {
             $target = new $target();
         }
 

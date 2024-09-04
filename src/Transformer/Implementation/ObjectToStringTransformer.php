@@ -32,13 +32,9 @@ final readonly class ObjectToStringTransformer implements TransformerInterface
     ): mixed {
         if ($source instanceof \Stringable) {
             return (string) $source;
-        }
-
-        if ($source instanceof \BackedEnum) {
+        } elseif ($source instanceof \BackedEnum) {
             return $source->value;
-        }
-
-        if ($source instanceof \UnitEnum) {
+        } elseif ($source instanceof \UnitEnum) {
             return $source->name;
         }
 

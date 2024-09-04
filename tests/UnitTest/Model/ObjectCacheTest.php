@@ -20,9 +20,6 @@ use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Rekalogika\Mapper\Util\TypeFactory;
 
-/**
- * @internal
- */
 class ObjectCacheTest extends TestCase
 {
     public function testObjectCache(): void

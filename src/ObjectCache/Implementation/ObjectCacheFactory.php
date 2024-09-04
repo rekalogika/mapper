@@ -21,7 +21,8 @@ final readonly class ObjectCacheFactory implements ObjectCacheFactoryInterface
 {
     public function __construct(
         private TypeResolverInterface $typeResolver
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function createObjectCache(): ObjectCache

@@ -29,4 +29,5 @@ class ObjectWithSplObjectStorageProperty
         $this->property[new ObjectWithScalarProperties()] = new ObjectWithScalarProperties();
         $this->property[new ObjectWithScalarProperties()] = new ObjectWithScalarProperties();
     }
+
 }

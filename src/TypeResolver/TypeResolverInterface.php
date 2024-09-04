@@ -24,16 +24,15 @@ interface TypeResolverInterface
     /**
      * Gets the string representation of a Type.
      */
-    public function getTypeString(MixedType|Type $type): string;
+    public function getTypeString(Type|MixedType $type): string;
 
     /**
-     * Gets all the possible simple types from a Type.
+     * Gets all the possible simple types from a Type
      *
-     * @param array<array-key,MixedType|Type>|MixedType|Type $type
-     *
-     * @return array<int,MixedType|Type>
+     * @param array<array-key,Type|MixedType>|Type|MixedType $type
+     * @return array<int,Type|MixedType>
      */
-    public function getSimpleTypes(array|MixedType|Type $type): array;
+    public function getSimpleTypes(array|Type|MixedType $type): array;
 
     /**
      * Simple Type is a type that is not nullable, and does not have more
@@ -47,13 +46,13 @@ interface TypeResolverInterface
      * will return ['IteratorAggregate<int,IteratorAggregate<int,string>>',
      * 'IteratorAggregate<int,Traversable<int,string>>',
      * 'Traversable<int,IteratorAggregate<int,string>>',
-     * 'Traversable<int,Traversable<int,string>>'].
+     * 'Traversable<int,Traversable<int,string>>']
      *
      * Note: IteratorAggregate extends Traversable
      *
      * @return array<int,string>
      */
-    public function getAcceptedTransformerInputTypeStrings(MixedType|Type $type): array;
+    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array;
 
     /**
      * Example: If the variable type is
@@ -61,11 +60,11 @@ interface TypeResolverInterface
      * will return ['IteratorAggregate<int,IteratorAggregate<int,string>>',
      * 'IteratorAggregate<int,Traversable<int,string>>',
      * 'Traversable<int,IteratorAggregate<int,string>>',
-     * 'Traversable<int,Traversable<int,string>>'].
+     * 'Traversable<int,Traversable<int,string>>']
      *
      * Note: IteratorAggregate extends Traversable
      *
      * @return array<int,string>
      */
-    public function getAcceptedTransformerOutputTypeStrings(MixedType|Type $type): array;
+    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array;
 }

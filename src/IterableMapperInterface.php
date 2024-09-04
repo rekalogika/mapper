@@ -19,10 +19,8 @@ interface IterableMapperInterface
 {
     /**
      * @template T of object
-     *
      * @param iterable<mixed> $source
      * @param class-string<T> $target
-     *
      * @return iterable<T>
      */
     public function mapIterable(iterable $source, string $target, ?Context $context = null): iterable;

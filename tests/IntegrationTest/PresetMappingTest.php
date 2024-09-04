@@ -21,9 +21,6 @@ use Rekalogika\Mapper\Transformer\Context\PresetMappingFactory;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 
-/**
- * @internal
- */
 class PresetMappingTest extends FrameworkTestCase
 {
     private function createObjectCache(): ObjectCache
@@ -96,4 +93,5 @@ class PresetMappingTest extends FrameworkTestCase
         $result = $presetMapping->findResult($target2, $source2::class);
         $this->assertSame($source2, $result);
     }
+
 }

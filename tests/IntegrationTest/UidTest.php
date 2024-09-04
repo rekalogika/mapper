@@ -21,9 +21,6 @@ use Rekalogika\Mapper\Tests\Fixtures\UidDto\ObjectWithUidsDto;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Uid\Uuid;
 
-/**
- * @internal
- */
 class UidTest extends FrameworkTestCase
 {
     public function testUuidToString(): void
@@ -57,4 +54,5 @@ class UidTest extends FrameworkTestCase
         $this->assertEquals(Ulid::fromString('01F9Z3ZJZ1QJXZJXZJXZJXZJXZ'), $dto->ulid);
         $this->assertEquals('c4e0d7e0-7f1a-4b1e-8e3c-2b4b1b9a0b5a', $dto->ramseyUuid?->toString());
     }
+
 }

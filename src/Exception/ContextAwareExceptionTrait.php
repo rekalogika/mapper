@@ -27,13 +27,13 @@ trait ContextAwareExceptionTrait
         $path = $context?->get(Path::class);
 
         $path = (string) $path;
-        if ('' === $path) {
+        if ($path === '') {
             $path = '(root)';
         }
 
         $message = sprintf('%s Mapping path: "%s".', $message, $path);
 
-        if (null !== $previous) {
+        if ($previous !== null) {
             $message = sprintf('%s Previous message: %s.', $message, $previous->getMessage());
         }
 

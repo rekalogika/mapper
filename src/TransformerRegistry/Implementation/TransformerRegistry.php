@@ -35,7 +35,8 @@ final class TransformerRegistry implements TransformerRegistryInterface
         private readonly ContainerInterface $transformersLocator,
         private readonly TypeResolverInterface $typeResolver,
         private readonly MappingFactoryInterface $mappingFactory,
-    ) {}
+    ) {
+    }
 
     /**
      * @var array<string,TransformerInterface>
@@ -64,12 +65,11 @@ final class TransformerRegistry implements TransformerRegistryInterface
 
     /**
      * @todo cache this
-     *
      * @return array<int,MappingEntry>
      */
     private function getMappingBySourceAndTargetType(
-        MixedType|Type $sourceType,
-        MixedType|Type $targetType,
+        Type|MixedType $sourceType,
+        Type|MixedType $targetType,
     ): array {
         $sourceTypeStrings = $this->typeResolver
             ->getAcceptedTransformerInputTypeStrings($sourceType);
@@ -82,8 +82,8 @@ final class TransformerRegistry implements TransformerRegistryInterface
     }
 
     private function findBySourceAndTargetType(
-        MixedType|Type $sourceType,
-        MixedType|Type $targetType,
+        Type|MixedType $sourceType,
+        Type|MixedType $targetType,
     ): SearchResult {
         $mapping = $this->getMappingBySourceAndTargetType(
             $sourceType,

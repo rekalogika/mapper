@@ -33,7 +33,7 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context
     ): mixed {
-        if (null === $targetType) {
+        if ($targetType === null) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Target type is null when trying to transform type "%s" to "%s", using source "%s".',
@@ -49,7 +49,7 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
         if (is_string($source)) {
             $targetClass = $targetType->getClassName();
 
-            if (null === $targetClass) {
+            if ($targetClass === null) {
                 throw new InvalidArgumentException(
                     sprintf(
                         'Target class is null when trying to transform type "%s" to "%s", using source "%s".',
@@ -60,11 +60,9 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
                 );
             }
 
-            if (Uuid::class === $targetClass) {
+            if ($targetClass === Uuid::class) {
                 return Uuid::fromString($source);
-            }
-
-            if (Ulid::class === $targetClass) {
+            } elseif ($targetClass === Ulid::class) {
                 return Ulid::fromString($source);
             }
 
@@ -74,11 +72,9 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
         // wants to convert uuid to string
 
         if ($source instanceof Uuid) {
-            if (Type::BUILTIN_TYPE_STRING === $targetType->getBuiltinType()) {
+            if ($targetType->getBuiltinType() === Type::BUILTIN_TYPE_STRING) {
                 return $source->toRfc4122();
-            }
-
-            if (Uuid::class === $targetType->getClassName()) {
+            } elseif ($targetType->getClassName() === Uuid::class) {
                 return $source;
             }
 
@@ -88,11 +84,9 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
         // wants to convert ulid to string
 
         if ($source instanceof Ulid) {
-            if (Type::BUILTIN_TYPE_STRING === $targetType->getBuiltinType()) {
+            if ($targetType->getBuiltinType() === Type::BUILTIN_TYPE_STRING) {
                 return $source->toBase32();
-            }
-
-            if (Ulid::class === $targetType->getClassName()) {
+            } elseif ($targetType->getClassName() === Ulid::class) {
                 return $source;
             }
 

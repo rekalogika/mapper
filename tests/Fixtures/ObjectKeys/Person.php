@@ -19,7 +19,8 @@ class Person
         private readonly string $name,
         private readonly Gender $gender,
         private readonly \DateTimeInterface $birthDate,
-    ) {}
+    ) {
+    }
 
     public function getName(): string
     {

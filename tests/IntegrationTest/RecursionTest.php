@@ -21,9 +21,6 @@ use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ChildObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ObjectWithRefToItselfDto;
 use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ParentObjectDto;
 
-/**
- * @internal
- */
 class RecursionTest extends FrameworkTestCase
 {
     public function testParentChild(): void
@@ -53,7 +50,8 @@ class RecursionTest extends FrameworkTestCase
 
         $object3 = new ObjectWithRefToItself();
         $object3->string = '3';
-        $object2->ref = $object3;
+        $object2->ref = $object3
+        ;
         $object4 = new ObjectWithRefToItself();
         $object4->string = '4';
         $object3->ref = $object4;

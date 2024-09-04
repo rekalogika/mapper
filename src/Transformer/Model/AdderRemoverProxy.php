@@ -18,27 +18,29 @@ use Rekalogika\Mapper\Exception\LogicException;
 /**
  * @template TKey of array-key
  * @template TValue
- *
  * @implements \ArrayAccess<TKey,TValue>
  * @implements \IteratorAggregate<TKey,TValue>
- *
  * @internal
  */
-final readonly class AdderRemoverProxy implements \ArrayAccess, \IteratorAggregate, \Countable
+final readonly class AdderRemoverProxy implements
+    \ArrayAccess,
+    \IteratorAggregate,
+    \Countable
 {
     public function __construct(
         private object $hostObject,
         private ?string $getterMethodName,
         private ?string $adderMethodName,
         private ?string $removerMethodName,
-    ) {}
+    ) {
+    }
 
     /**
-     * @return array<TKey,TValue>|\ArrayAccess<TKey,TValue>
+     * @return \ArrayAccess<TKey,TValue>|array<TKey,TValue>
      */
     private function getCollection(): mixed
     {
-        if (null === $this->getterMethodName) {
+        if ($this->getterMethodName === null) {
             throw new LogicException('Getter method is not available');
         }
 
@@ -49,7 +51,7 @@ final readonly class AdderRemoverProxy implements \ArrayAccess, \IteratorAggrega
             throw new LogicException('Value is not an array or ArrayAccess');
         }
 
-        /** @var array<TKey,TValue>|\ArrayAccess<TKey,TValue> $result */
+        /** @var \ArrayAccess<TKey,TValue>|array<TKey,TValue> $result */
 
         return $result;
     }
@@ -61,9 +63,7 @@ final readonly class AdderRemoverProxy implements \ArrayAccess, \IteratorAggrega
 
         if ($value instanceof \Traversable) {
             return $value;
-        }
-
-        if (is_array($value)) {
+        } elseif (is_array($value)) {
             return new \ArrayIterator($value);
         }
 
@@ -86,7 +86,7 @@ final readonly class AdderRemoverProxy implements \ArrayAccess, \IteratorAggrega
     #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        if (null === $this->adderMethodName) {
+        if ($this->adderMethodName === null) {
             throw new LogicException('Adder method is not available');
         }
 
@@ -97,7 +97,7 @@ final readonly class AdderRemoverProxy implements \ArrayAccess, \IteratorAggrega
     #[\Override]
     public function offsetUnset(mixed $offset): void
     {
-        if (null === $this->removerMethodName) {
+        if ($this->removerMethodName === null) {
             throw new LogicException('Remover method is not available');
         }
 

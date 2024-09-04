@@ -41,7 +41,8 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         private mixed $source,
         private ?Type $targetType,
         private Context $context,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function map(
@@ -49,7 +50,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         object|string $target,
         ?Context $context = null,
     ): ?object {
-        if (null === $source) {
+        if ($source === null) {
             return null;
         }
 
@@ -86,7 +87,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
     #[\Override]
     public function mapForProperty(
         ?object $source,
-        object|string $containing,
+        string|object $containing,
         string $property,
         ?Context $context = null,
     ): mixed {
@@ -111,24 +112,27 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             $targetPropertyValue = null;
         }
 
-        /** @var null|array<int,Type> */
+
+        /** @var array<int,Type>|null */
         $targetPropertyTypes = $this->propertyTypeExtractor
             ->getTypes($containingClass, $property);
 
         /** @var mixed */
-        return $this->getMainTransformer()->transform(
+        $result = $this->getMainTransformer()->transform(
             source: $source,
             target: $targetPropertyValue,
             sourceType: null,
             targetTypes: $targetPropertyTypes ?? [],
             context: $context ?? $this->context
         );
+
+        return $result;
     }
 
     #[\Override]
     public function cache(mixed $target): void
     {
-        if (null === $this->targetType) {
+        if ($this->targetType === null) {
             throw new CacheNotSupportedException($this->context);
         }
 

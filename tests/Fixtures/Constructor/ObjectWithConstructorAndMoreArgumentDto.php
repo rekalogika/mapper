@@ -22,7 +22,8 @@ class ObjectWithConstructorAndMoreArgumentDto
         private readonly float $d,
         // uses object to prevent casting
         private readonly \Stringable $e,
-    ) {}
+    ) {
+    }
 
     public function getA(): int
     {

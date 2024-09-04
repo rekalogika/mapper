@@ -27,9 +27,6 @@ use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
-/**
- * @internal
- */
 class LazyObjectTest extends FrameworkTestCase
 {
     public function testLazyObject(): void
@@ -59,7 +56,7 @@ class LazyObjectTest extends FrameworkTestCase
     }
 
     /**
-     * In PHP 8.2, readonly class can't be lazy.
+     * In PHP 8.2, readonly class can't be lazy
      *
      * @requires PHP >= 8.2.0
      * @requires PHP < 8.3.0
@@ -75,7 +72,7 @@ class LazyObjectTest extends FrameworkTestCase
     }
 
     /**
-     * In PHP 8.3, readonly class can be lazy.
+     * In PHP 8.3, readonly class can be lazy
      *
      * @requires PHP >= 8.3.0
      */
@@ -84,6 +81,7 @@ class LazyObjectTest extends FrameworkTestCase
     //     $source = new ObjectWithId();
     //     $target = $this->mapper->map($source, ObjectWithIdReadOnlyDto::class);
     // }
+
 
     public function testIdInParentClass(): void
     {

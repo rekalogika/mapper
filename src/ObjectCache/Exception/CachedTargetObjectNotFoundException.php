@@ -17,5 +17,7 @@ use Rekalogika\Mapper\Exception\RuntimeException;
 
 class CachedTargetObjectNotFoundException extends RuntimeException
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

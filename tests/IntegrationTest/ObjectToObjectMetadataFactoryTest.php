@@ -18,9 +18,6 @@ use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 
-/**
- * @internal
- */
 class ObjectToObjectMetadataFactoryTest extends FrameworkTestCase
 {
     public function testObjectToObjectMetadataFactory(): void

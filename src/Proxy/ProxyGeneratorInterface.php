@@ -19,7 +19,6 @@ interface ProxyGeneratorInterface
 {
     /**
      * @param class-string $realClass
-     *
      * @throws ProxyNotSupportedException
      */
     public function generateProxyCode(string $realClass, string $proxyClass): string;

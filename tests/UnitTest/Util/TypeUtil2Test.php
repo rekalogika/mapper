@@ -18,14 +18,10 @@ use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-/**
- * @internal
- */
 class TypeUtil2Test extends TestCase
 {
     /**
      * @dataProvider getSimpleTypesProvider
-     *
      * @param array<int,string> $expected
      */
     public function testGetAllTypeStrings(
@@ -46,56 +42,56 @@ class TypeUtil2Test extends TestCase
             TypeFactory::null(),
             [
                 'null',
-            ],
+            ]
         ];
 
         yield [
             TypeFactory::bool(),
             [
                 'bool',
-            ],
+            ]
         ];
 
         yield [
             TypeFactory::int(),
             [
                 'int',
-            ],
+            ]
         ];
 
         yield [
             TypeFactory::float(),
             [
                 'float',
-            ],
+            ]
         ];
 
         yield [
             TypeFactory::string(),
             [
                 'string',
-            ],
+            ]
         ];
 
         yield [
             TypeFactory::array(),
             [
                 'array',
-            ],
+            ]
         ];
 
         yield [
             TypeFactory::objectOfClass(\DateTime::class),
             [
                 'DateTime',
-            ],
+            ]
         ];
 
         yield [
             TypeFactory::resource(),
             [
                 'resource',
-            ],
+            ]
         ];
 
         yield [
@@ -105,7 +101,7 @@ class TypeUtil2Test extends TestCase
             ),
             [
                 'array<string,int>',
-            ],
+            ]
         ];
 
         yield [
@@ -116,7 +112,7 @@ class TypeUtil2Test extends TestCase
             ),
             [
                 'Traversable<string,int>',
-            ],
+            ]
         ];
 
         yield [
@@ -125,8 +121,8 @@ class TypeUtil2Test extends TestCase
             ),
             [
                 'array',
-                'Traversable',
-            ],
+                'Traversable'
+            ]
         ];
 
         yield [
@@ -134,16 +130,16 @@ class TypeUtil2Test extends TestCase
                 builtinType: 'iterable',
                 collection: true,
                 collectionKeyType: [
-                    TypeFactory::string(),
+                    TypeFactory::string()
                 ],
                 collectionValueType: [
-                    TypeFactory::int(),
+                    TypeFactory::int()
                 ],
             ),
             [
                 'array<string,int>',
-                'Traversable<string,int>',
-            ],
+                'Traversable<string,int>'
+            ]
         ];
 
         yield [
@@ -160,15 +156,15 @@ class TypeUtil2Test extends TestCase
                 ],
             ),
             [
-                'array<string,int>',
-                'Traversable<string,int>',
-                'array<string,DateTime>',
-                'Traversable<string,DateTime>',
-                'array<int,int>',
-                'Traversable<int,int>',
-                'array<int,DateTime>',
-                'Traversable<int,DateTime>',
-            ],
+                "array<string,int>",
+                "Traversable<string,int>",
+                "array<string,DateTime>",
+                "Traversable<string,DateTime>",
+                "array<int,int>",
+                "Traversable<int,int>",
+                "array<int,DateTime>",
+                "Traversable<int,DateTime>",
+            ]
         ];
 
         yield [
@@ -195,7 +191,7 @@ class TypeUtil2Test extends TestCase
                 'array<int,DateTime>',
                 'Traversable<int,DateTime>',
                 'null',
-            ],
+            ]
         ];
 
         yield [
@@ -219,7 +215,7 @@ class TypeUtil2Test extends TestCase
                 'Traversable<int,int>',
                 'Traversable<int,DateTime>',
                 'null',
-            ],
+            ]
         ];
 
         yield [
@@ -248,11 +244,11 @@ class TypeUtil2Test extends TestCase
                 ],
             ),
             [
-                'Traversable<int,Traversable<string,int>>',
-                'Traversable<int,Traversable<string,DateTime>>',
-                'Traversable<int,Traversable<int,int>>',
-                'Traversable<int,Traversable<int,DateTime>>',
-                'null',
+                "Traversable<int,Traversable<string,int>>",
+                "Traversable<int,Traversable<string,DateTime>>",
+                "Traversable<int,Traversable<int,int>>",
+                "Traversable<int,Traversable<int,DateTime>>",
+                "null",
             ],
         ];
 
@@ -282,12 +278,12 @@ class TypeUtil2Test extends TestCase
                 ],
             ),
             [
-                'ArrayObject<int,ArrayObject<string,int>>',
-                'ArrayObject<int,ArrayObject<string,DateTime>>',
-                'ArrayObject<int,ArrayObject<int,int>>',
-                'ArrayObject<int,ArrayObject<int,DateTime>>',
-                'null',
-            ],
+                "ArrayObject<int,ArrayObject<string,int>>",
+                "ArrayObject<int,ArrayObject<string,DateTime>>",
+                "ArrayObject<int,ArrayObject<int,int>>",
+                "ArrayObject<int,ArrayObject<int,DateTime>>",
+                "null",
+            ]
         ];
 
         yield [
@@ -318,7 +314,7 @@ class TypeUtil2Test extends TestCase
                 'null',
                 'mixed',
             ],
-            true,
+            true
         ];
 
         yield [
@@ -344,35 +340,35 @@ class TypeUtil2Test extends TestCase
                 ],
             ),
             [
-                'Traversable<int,IteratorAggregate<int,string>>',
-                'Traversable<int,IteratorAggregate<int,mixed>>',
-                'Traversable<int,IteratorAggregate<mixed,string>>',
-                'Traversable<int,IteratorAggregate<mixed,mixed>>',
-                'Traversable<int,IteratorAggregate>',
-                'Traversable<int,Traversable<int,string>>',
-                'Traversable<int,Traversable<int,mixed>>',
-                'Traversable<int,Traversable<mixed,string>>',
-                'Traversable<int,Traversable<mixed,mixed>>',
-                'Traversable<int,Traversable>',
-                'Traversable<int,object>',
-                'Traversable<int,mixed>',
-                'Traversable<mixed,IteratorAggregate<int,string>>',
-                'Traversable<mixed,IteratorAggregate<int,mixed>>',
-                'Traversable<mixed,IteratorAggregate<mixed,string>>',
-                'Traversable<mixed,IteratorAggregate<mixed,mixed>>',
-                'Traversable<mixed,IteratorAggregate>',
-                'Traversable<mixed,Traversable<int,string>>',
-                'Traversable<mixed,Traversable<int,mixed>>',
-                'Traversable<mixed,Traversable<mixed,string>>',
-                'Traversable<mixed,Traversable<mixed,mixed>>',
-                'Traversable<mixed,Traversable>',
-                'Traversable<mixed,object>',
-                'Traversable<mixed,mixed>',
-                'Traversable',
-                'object',
-                'mixed',
+                "Traversable<int,IteratorAggregate<int,string>>",
+                "Traversable<int,IteratorAggregate<int,mixed>>",
+                "Traversable<int,IteratorAggregate<mixed,string>>",
+                "Traversable<int,IteratorAggregate<mixed,mixed>>",
+                "Traversable<int,IteratorAggregate>",
+                "Traversable<int,Traversable<int,string>>",
+                "Traversable<int,Traversable<int,mixed>>",
+                "Traversable<int,Traversable<mixed,string>>",
+                "Traversable<int,Traversable<mixed,mixed>>",
+                "Traversable<int,Traversable>",
+                "Traversable<int,object>",
+                "Traversable<int,mixed>",
+                "Traversable<mixed,IteratorAggregate<int,string>>",
+                "Traversable<mixed,IteratorAggregate<int,mixed>>",
+                "Traversable<mixed,IteratorAggregate<mixed,string>>",
+                "Traversable<mixed,IteratorAggregate<mixed,mixed>>",
+                "Traversable<mixed,IteratorAggregate>",
+                "Traversable<mixed,Traversable<int,string>>",
+                "Traversable<mixed,Traversable<int,mixed>>",
+                "Traversable<mixed,Traversable<mixed,string>>",
+                "Traversable<mixed,Traversable<mixed,mixed>>",
+                "Traversable<mixed,Traversable>",
+                "Traversable<mixed,object>",
+                "Traversable<mixed,mixed>",
+                "Traversable",
+                "object",
+                "mixed",
             ],
-            true,
+            true
         ];
 
         yield [
@@ -399,37 +395,38 @@ class TypeUtil2Test extends TestCase
                 ],
             ),
             [
-                'Traversable<int,IteratorAggregate<int,string>>',
-                'Traversable<int,IteratorAggregate<int,mixed>>',
-                'Traversable<int,IteratorAggregate<mixed,string>>',
-                'Traversable<int,IteratorAggregate<mixed,mixed>>',
-                'Traversable<int,IteratorAggregate>',
-                'Traversable<int,Traversable<int,string>>',
-                'Traversable<int,Traversable<int,mixed>>',
-                'Traversable<int,Traversable<mixed,string>>',
-                'Traversable<int,Traversable<mixed,mixed>>',
-                'Traversable<int,Traversable>',
-                'Traversable<int,object>',
-                'Traversable<int,null>',
-                'Traversable<int,mixed>',
-                'Traversable<mixed,IteratorAggregate<int,string>>',
-                'Traversable<mixed,IteratorAggregate<int,mixed>>',
-                'Traversable<mixed,IteratorAggregate<mixed,string>>',
-                'Traversable<mixed,IteratorAggregate<mixed,mixed>>',
-                'Traversable<mixed,IteratorAggregate>',
-                'Traversable<mixed,Traversable<int,string>>',
-                'Traversable<mixed,Traversable<int,mixed>>',
-                'Traversable<mixed,Traversable<mixed,string>>',
-                'Traversable<mixed,Traversable<mixed,mixed>>',
-                'Traversable<mixed,Traversable>',
-                'Traversable<mixed,object>',
-                'Traversable<mixed,null>',
-                'Traversable<mixed,mixed>',
-                'Traversable',
-                'object',
-                'mixed',
+                "Traversable<int,IteratorAggregate<int,string>>",
+                "Traversable<int,IteratorAggregate<int,mixed>>",
+                "Traversable<int,IteratorAggregate<mixed,string>>",
+                "Traversable<int,IteratorAggregate<mixed,mixed>>",
+                "Traversable<int,IteratorAggregate>",
+                "Traversable<int,Traversable<int,string>>",
+                "Traversable<int,Traversable<int,mixed>>",
+                "Traversable<int,Traversable<mixed,string>>",
+                "Traversable<int,Traversable<mixed,mixed>>",
+                "Traversable<int,Traversable>",
+                "Traversable<int,object>",
+                "Traversable<int,null>",
+                "Traversable<int,mixed>",
+                "Traversable<mixed,IteratorAggregate<int,string>>",
+                "Traversable<mixed,IteratorAggregate<int,mixed>>",
+                "Traversable<mixed,IteratorAggregate<mixed,string>>",
+                "Traversable<mixed,IteratorAggregate<mixed,mixed>>",
+                "Traversable<mixed,IteratorAggregate>",
+                "Traversable<mixed,Traversable<int,string>>",
+                "Traversable<mixed,Traversable<int,mixed>>",
+                "Traversable<mixed,Traversable<mixed,string>>",
+                "Traversable<mixed,Traversable<mixed,mixed>>",
+                "Traversable<mixed,Traversable>",
+                "Traversable<mixed,object>",
+                "Traversable<mixed,null>",
+                "Traversable<mixed,mixed>",
+                "Traversable",
+                "object",
+                "mixed",
             ],
-            true,
+            true
         ];
+
     }
 }

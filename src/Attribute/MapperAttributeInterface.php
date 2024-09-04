@@ -17,4 +17,6 @@ namespace Rekalogika\Mapper\Attribute;
  * To allow matching using an attribute, your attribute class must implement
  * this interface.
  */
-interface MapperAttributeInterface {}
+interface MapperAttributeInterface
+{
+}

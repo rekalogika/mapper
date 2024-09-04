@@ -16,9 +16,6 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest\ScalarToScalar;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 
-/**
- * @internal
- */
 class ScalarPropertiesMappingWithShortCircuitTest extends ScalarPropertiesMappingTestCase
 {
     #[\Override]

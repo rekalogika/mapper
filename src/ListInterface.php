@@ -16,8 +16,9 @@ namespace Rekalogika\Mapper;
 /**
  * @template TKey of int
  * @template TValue
- *
  * @extends \IteratorAggregate<TKey,TValue>
  * @extends \ArrayAccess<TKey,TValue>
  */
-interface ListInterface extends \ArrayAccess, \IteratorAggregate, \Countable {}
+interface ListInterface extends \ArrayAccess, \IteratorAggregate, \Countable
+{
+}

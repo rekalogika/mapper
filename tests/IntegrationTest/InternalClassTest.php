@@ -18,9 +18,6 @@ use Rekalogika\Mapper\Tests\Fixtures\InternalClass\ObjectWithInternalClass;
 use Rekalogika\Mapper\Tests\Fixtures\InternalClass\ObjectWithInternalClassDto;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 
-/**
- * @internal
- */
 class InternalClassTest extends FrameworkTestCase
 {
     public function testInternalClass(): void
