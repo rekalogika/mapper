@@ -106,7 +106,7 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
             return $this->totalMappings;
         }
 
-        return $this->totalMappings = count($this->getMappings());
+        return $this->totalMappings = \count($this->getMappings());
     }
 
     private ?int $totalMappingsIncludingSubMappings = null;

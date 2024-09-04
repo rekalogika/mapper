@@ -33,7 +33,7 @@ class ObjectWithAdderRemover
 
     public function addMember(Member $member): void
     {
-        if (!in_array($member, $this->members, true)) {
+        if (!\in_array($member, $this->members, true)) {
             $this->members[] = $member;
         }
     }

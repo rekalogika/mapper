@@ -62,7 +62,7 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
         }
 
         if (array_is_list($eagerProperties)) {
-            $eagerProperties = array_filter($eagerProperties, fn ($property): bool => is_string($property));
+            $eagerProperties = array_filter($eagerProperties, fn ($property): bool => \is_string($property));
             $eagerProperties = ClassUtil::getSkippedProperties($class, $eagerProperties);
         }
 

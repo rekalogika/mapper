@@ -68,8 +68,8 @@ final class ClassMethodTransformer implements
         $targetClass = $targetType->getClassName();
 
         if (
-            !is_string($targetClass)
-            || !\class_exists($targetClass)
+            !\is_string($targetClass)
+            || !class_exists($targetClass)
         ) {
             throw new InvalidArgumentException(sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
         }
@@ -79,7 +79,7 @@ final class ClassMethodTransformer implements
 
             // map from object to self path
 
-            if (!is_object($source)) {
+            if (!\is_object($source)) {
                 throw new InvalidArgumentException(sprintf('Source must be object, "%s" given', get_debug_type($source)), context: $context);
             }
 
@@ -88,7 +88,7 @@ final class ClassMethodTransformer implements
 
             // map self to object path
 
-            if (!is_object($target)) {
+            if (!\is_object($target)) {
                 $target = $targetClass;
             }
 

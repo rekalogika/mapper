@@ -35,7 +35,7 @@ final readonly class CopyTransformer implements TransformerInterface
             throw new RefuseToTransformException();
         }
 
-        if (!is_object($source)) {
+        if (!\is_object($source)) {
             return $source;
         }
 

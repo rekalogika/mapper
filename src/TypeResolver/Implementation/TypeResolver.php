@@ -40,7 +40,7 @@ final readonly class TypeResolver implements TypeResolverInterface
     {
         if ($type instanceof MixedType) {
             return [$type];
-        } elseif (is_array($type)) {
+        } elseif (\is_array($type)) {
             $simpleTypes = [];
 
             foreach ($type as $i) {

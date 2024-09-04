@@ -50,11 +50,11 @@ final readonly class TypeUtil
             $keyTypes = $type->getCollectionKeyTypes();
             $valueTypes = $type->getCollectionValueTypes();
 
-            if (count($keyTypes) > 1) {
+            if (\count($keyTypes) > 1) {
                 return false;
             }
 
-            if (count($valueTypes) > 1) {
+            if (\count($valueTypes) > 1) {
                 return false;
             }
 
@@ -236,7 +236,7 @@ final readonly class TypeUtil
             return 'null';
         }
 
-        if (is_array($type)) {
+        if (\is_array($type)) {
             if ($type === []) {
                 return 'mixed';
             }
@@ -337,8 +337,8 @@ final readonly class TypeUtil
                 $shortClassName = preg_replace('/^.*\\\\/', '', $typeString) ?? $typeString;
                 $typeString = sprintf(
                     '<abbr title="%s">%s</abbr>',
-                    \htmlspecialchars($typeString),
-                    \htmlspecialchars($shortClassName)
+                    htmlspecialchars($typeString),
+                    htmlspecialchars($shortClassName)
                 );
             }
         }

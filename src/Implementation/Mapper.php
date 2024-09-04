@@ -38,12 +38,12 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
     #[\Override]
     public function map(object $source, object|string $target, ?Context $context = null): object
     {
-        if (is_string($target)) {
+        if (\is_string($target)) {
             $targetClass = $target;
 
             if (
                 !class_exists($targetClass)
-                && !\interface_exists($targetClass)
+                && !interface_exists($targetClass)
             ) {
                 throw new UnexpectedValueException(sprintf('The target class "%s" does not exist.', $targetClass));
             }
@@ -69,7 +69,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
             throw new UnexpectedValueException(sprintf('The mapper returned null, expecting "%s".', $targetClass));
         }
 
-        if (!is_object($target) || !$target instanceof $targetClass) {
+        if (!\is_object($target) || !$target instanceof $targetClass) {
             throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
         }
 
@@ -92,7 +92,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
 
         if (
             !class_exists($targetClass)
-            && !\interface_exists($targetClass)
+            && !interface_exists($targetClass)
         ) {
             throw new UnexpectedValueException(sprintf('The target class "%s" does not exist.', $targetClass));
         }
@@ -109,7 +109,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
                 context: $context ?? Context::create(),
             );
 
-            if (!is_object($result) || !$result instanceof $target) {
+            if (!\is_object($result) || !$result instanceof $target) {
                 throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)));
             }
 

@@ -30,7 +30,7 @@ final readonly class ScalarToScalarTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context
     ): mixed {
-        if (!is_scalar($source)) {
+        if (!\is_scalar($source)) {
             throw new InvalidArgumentException(sprintf('Source must be scalar, "%s" given.', get_debug_type($source)), context: $context);
         }
 

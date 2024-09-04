@@ -31,13 +31,13 @@ final readonly class StringToBackedEnumTransformer implements TransformerInterfa
         ?Type $targetType,
         Context $context
     ): mixed {
-        if (!is_string($source)) {
+        if (!\is_string($source)) {
             throw new InvalidArgumentException(sprintf('Source must be string, "%s" given', get_debug_type($source)), context: $context);
         }
 
         $class = $targetType?->getClassName();
 
-        if ($class === null || !\enum_exists($class)) {
+        if ($class === null || !enum_exists($class)) {
             throw new InvalidTypeInArgumentException('Target must be an enum class-string, "%s" given', $targetType, context: $context);
         }
 

@@ -54,7 +54,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             return null;
         }
 
-        if (is_object($target)) {
+        if (\is_object($target)) {
             $targetClass = $target::class;
             $targetObject = $target;
         } else {
@@ -71,7 +71,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             context: $context ?? $this->context
         );
 
-        if (is_object($target)) {
+        if (\is_object($target)) {
             $targetClass = $target::class;
         } else {
             $targetClass = $target;
@@ -91,7 +91,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         string $property,
         ?Context $context = null,
     ): mixed {
-        if (is_object($containing)) {
+        if (\is_object($containing)) {
             $containingObject = $containing;
             $containingClass = $containing::class;
 
@@ -100,7 +100,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
                 $targetPropertyValue = $this->propertyAccessor
                     ->getValue($containingObject, $property);
 
-                if (is_scalar($targetPropertyValue)) {
+                if (\is_scalar($targetPropertyValue)) {
                     $targetPropertyValue = null;
                 }
             } catch (ExceptionInterface) {

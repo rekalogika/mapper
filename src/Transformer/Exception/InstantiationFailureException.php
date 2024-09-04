@@ -32,13 +32,13 @@ class InstantiationFailureException extends NotMappableValueException
         if ($constructorArguments === []) {
             $message = sprintf(
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
-                \get_debug_type($source),
+                get_debug_type($source),
                 $targetClass,
             );
         } else {
             $message = sprintf(
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" using constructor arguments: %s.',
-                \get_debug_type($source),
+                get_debug_type($source),
                 $targetClass,
                 $this->formatConstructorArguments($constructorArguments)
             );
@@ -71,7 +71,7 @@ class InstantiationFailureException extends NotMappableValueException
         $formattedArguments = [];
         /** @var mixed $argumentValue */
         foreach ($constructorArguments as $argumentName => $argumentValue) {
-            $formattedArguments[] = sprintf('%s: %s', $argumentName, \get_debug_type($argumentValue));
+            $formattedArguments[] = sprintf('%s: %s', $argumentName, get_debug_type($argumentValue));
         }
 
         return implode(', ', $formattedArguments);

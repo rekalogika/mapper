@@ -50,7 +50,7 @@ final readonly class SplObjectStorageWrapper implements
     #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        assert($offset !== null);
+        \assert($offset !== null);
         $this->wrapped->offsetSet($offset, $value);
     }
 

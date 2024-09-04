@@ -74,14 +74,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // verify source
 
-        if (!is_object($source)) {
+        if (!\is_object($source)) {
             throw new InvalidArgumentException(sprintf('The source must be an object, "%s" given.', get_debug_type($source)), context: $context);
         }
 
         $sourceType = TypeGuesser::guessTypeFromVariable($source);
         $sourceClass = $sourceType->getClassName();
 
-        if (null === $sourceClass || !\class_exists($sourceClass)) {
+        if (null === $sourceClass || !class_exists($sourceClass)) {
             throw new InvalidArgumentException("Cannot get the class name for the source type.", context: $context);
         }
 
@@ -93,7 +93,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             throw new InvalidArgumentException("Cannot get the class name for the target type.", context: $context);
         }
 
-        if (!\class_exists($targetClass) && !\interface_exists($targetClass)) {
+        if (!class_exists($targetClass) && !interface_exists($targetClass)) {
             throw new NotAClassException($targetClass, context: $context);
         }
 
@@ -140,7 +140,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         } else {
             $canUseTargetProxy = false;
 
-            if (!is_object($target)) {
+            if (!\is_object($target)) {
                 throw new InvalidArgumentException(sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
             }
         }
@@ -297,7 +297,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         ObjectToObjectMetadata $objectToObjectMetadata,
         Context $context
     ): object {
-        if (!\method_exists($target, '__construct')) {
+        if (!method_exists($target, '__construct')) {
             return $target;
         }
 
@@ -490,7 +490,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                         'bool' => false,
                         'null' => null,
                     };
-                } elseif (is_scalar($sourcePropertyValue)) {
+                } elseif (\is_scalar($sourcePropertyValue)) {
                     return match ($targetScalarType) {
                         'int' => (int) $sourcePropertyValue,
                         'float' => (float) $sourcePropertyValue,
@@ -506,7 +506,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // target value reading is enabled
 
         if (
-            is_object($target)
+            \is_object($target)
             && $context(MapperOptions::class)?->readTargetValue
         ) {
             // if this is for a property mapping, not a constructor argument
@@ -578,7 +578,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         /** @var mixed $sourcePropertyValue */
         foreach (get_object_vars($source) as $sourceProperty => $sourcePropertyValue) {
-            if (!in_array($sourceProperty, $sourceProperties, true)) {
+            if (!\in_array($sourceProperty, $sourceProperties, true)) {
                 try {
                     if (isset($target->{$sourceProperty})) {
                         /** @psalm-suppress MixedAssignment */
@@ -590,7 +590,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
                     if (
                         $currentTargetPropertyValue === null
-                        || is_scalar($currentTargetPropertyValue)
+                        || \is_scalar($currentTargetPropertyValue)
                     ) {
                         /** @psalm-suppress MixedAssignment */
                         $targetPropertyValue = $sourcePropertyValue;

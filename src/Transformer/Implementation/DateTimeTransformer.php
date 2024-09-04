@@ -35,7 +35,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context
     ): mixed {
-        if (is_string($source)) {
+        if (\is_string($source)) {
             $source = new DatePoint($source);
         }
 

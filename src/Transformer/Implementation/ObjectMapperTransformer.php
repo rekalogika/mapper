@@ -60,8 +60,8 @@ final class ObjectMapperTransformer implements
         $targetClass = $targetType->getClassName();
 
         if (
-            !is_string($targetClass)
-            || !\class_exists($targetClass)
+            !\is_string($targetClass)
+            || !class_exists($targetClass)
         ) {
             throw new InvalidArgumentException(sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
         }

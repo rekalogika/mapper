@@ -285,19 +285,19 @@ final readonly class TypeCheck
 
         switch ($builtinType) {
             case Type::BUILTIN_TYPE_INT:
-                return is_int($variable);
+                return \is_int($variable);
             case Type::BUILTIN_TYPE_FLOAT:
-                return is_float($variable);
+                return \is_float($variable);
             case Type::BUILTIN_TYPE_STRING:
-                return is_string($variable);
+                return \is_string($variable);
             case Type::BUILTIN_TYPE_BOOL:
-                return is_bool($variable);
+                return \is_bool($variable);
             case Type::BUILTIN_TYPE_ARRAY:
-                return is_array($variable);
+                return \is_array($variable);
             case Type::BUILTIN_TYPE_RESOURCE:
-                return is_resource($variable);
+                return \is_resource($variable);
             case Type::BUILTIN_TYPE_NULL:
-                return is_null($variable);
+                return \is_null($variable);
             case Type::BUILTIN_TYPE_ITERABLE:
                 return is_iterable($variable);
             case Type::BUILTIN_TYPE_OBJECT:

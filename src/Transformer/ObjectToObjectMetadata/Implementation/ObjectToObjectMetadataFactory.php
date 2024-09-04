@@ -388,11 +388,11 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             /** @var 'int'|'float'|'string'|'bool'|'null'|null */
             $targetPropertyScalarType = null;
 
-            if (count($originalTargetPropertyTypes) === 1) {
+            if (\count($originalTargetPropertyTypes) === 1) {
                 $targetPropertyType = $originalTargetPropertyTypes[0];
                 $targetPropertyBuiltInType = $targetPropertyType->getBuiltinType();
 
-                if (in_array(
+                if (\in_array(
                     $targetPropertyBuiltInType,
                     ['int', 'float', 'string', 'bool', 'null'],
                     true
@@ -414,7 +414,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // determine if source property is lazy
 
-            $sourceLazy = !in_array($sourceProperty, $eagerProperties, true);
+            $sourceLazy = !\in_array($sourceProperty, $eagerProperties, true);
 
             // instantiate property mapping
 
@@ -493,7 +493,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     $eagerProperties[] = $propertyMapping->getTargetProperty();
                 }
 
-                $eagerProperties = \array_unique($eagerProperties);
+                $eagerProperties = array_unique($eagerProperties);
             }
 
             // skipped properties is the argument used by createLazyGhost()

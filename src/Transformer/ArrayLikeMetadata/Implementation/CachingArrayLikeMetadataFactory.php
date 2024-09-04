@@ -39,7 +39,7 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
         Type $sourceType,
         Type $targetType
     ): ArrayLikeMetadata {
-        $cacheKey = hash('xxh128', \serialize([$sourceType, $targetType]));
+        $cacheKey = hash('xxh128', serialize([$sourceType, $targetType]));
 
         if (isset($this->cache[$cacheKey])) {
             return $this->cache[$cacheKey];

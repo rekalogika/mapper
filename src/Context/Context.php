@@ -71,7 +71,7 @@ final readonly class Context implements \IteratorAggregate
 
     public function without(object|string $value): self
     {
-        $class = is_string($value) ? $value : $value::class;
+        $class = \is_string($value) ? $value : $value::class;
 
         if (!isset($this->context[$class])) {
             throw new LogicException(sprintf('Object "%s" not in context.', $class));

@@ -38,7 +38,7 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
         SubMapperInterface $mapper,
         Context $context
     ): static {
-        assert($source instanceof ObjectWithObjectWithScalarProperties);
+        \assert($source instanceof ObjectWithObjectWithScalarProperties);
 
         $self = new self();
 
@@ -61,8 +61,8 @@ final class ObjectWithObjectWithScalarPropertiesDto implements
             $target = new $target();
         }
 
-        assert($target instanceof ObjectWithObjectWithScalarProperties);
-        assert($this->objectWithScalarProperties instanceof ObjectWithScalarPropertiesDto);
+        \assert($target instanceof ObjectWithObjectWithScalarProperties);
+        \assert($this->objectWithScalarProperties instanceof ObjectWithScalarPropertiesDto);
 
         $target->objectWithScalarProperties = $mapper->map(
             $this->objectWithScalarProperties,

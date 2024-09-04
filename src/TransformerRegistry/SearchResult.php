@@ -31,7 +31,7 @@ final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
     #[\Override]
     public function count(): int
     {
-        return count($this->entries);
+        return \count($this->entries);
     }
 
     #[\Override]

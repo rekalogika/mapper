@@ -45,11 +45,11 @@ final readonly class PresetTransformer implements TransformerInterface
 
         $class = $targetType?->getClassName();
 
-        if (!is_string($class) || !class_exists($class)) {
+        if (!\is_string($class) || !class_exists($class)) {
             throw new RefuseToTransformException();
         }
 
-        if (!is_object($source)) {
+        if (!\is_object($source)) {
             throw new RefuseToTransformException();
         }
 

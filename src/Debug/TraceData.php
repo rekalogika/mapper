@@ -63,8 +63,8 @@ final class TraceData
         private readonly string $transformerClass,
         private readonly bool $sourceTypeGuessed,
     ) {
-        $this->sourceType = \get_debug_type($source);
-        $this->existingTargetType = \get_debug_type($existingTargetValue);
+        $this->sourceType = get_debug_type($source);
+        $this->existingTargetType = get_debug_type($existingTargetValue);
     }
 
     public function refusedToTransform(): void
@@ -93,7 +93,7 @@ final class TraceData
 
     private function finalizeResult(mixed $result): void
     {
-        $this->resultType = \get_debug_type($result);
+        $this->resultType = get_debug_type($result);
     }
 
     public function getTime(): float
@@ -227,7 +227,7 @@ final class TraceData
         if ($file !== null) {
             $name = str_replace('\\', '/', $file);
             $pos = strrpos($name, '/');
-            if (is_int($pos)) {
+            if (\is_int($pos)) {
                 $name = substr($name, $pos + 1);
             }
         } else {

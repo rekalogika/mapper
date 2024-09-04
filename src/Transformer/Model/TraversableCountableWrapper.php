@@ -42,7 +42,7 @@ final readonly class TraversableCountableWrapper implements \IteratorAggregate, 
     #[\Override]
     public function count(): int
     {
-        if (is_int($this->countable)) {
+        if (\is_int($this->countable)) {
             $result = $this->countable;
         } else {
             $result = $this->countable->count();

@@ -47,7 +47,7 @@ final readonly class ArrayToObjectTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context
     ): mixed {
-        if (!is_array($source)) {
+        if (!\is_array($source)) {
             throw new InvalidArgumentException(sprintf('Source must be array, "%s" given', get_debug_type($source)), context: $context);
         }
 
@@ -58,7 +58,7 @@ final readonly class ArrayToObjectTransformer implements TransformerInterface
         $denormalizerContext = $context(DenormalizerContext::class)?->toArray() ?? [];
 
         if ($target !== null) {
-            if (!is_object($target)) {
+            if (!\is_object($target)) {
                 throw new InvalidArgumentException(sprintf('Target must be an object, "%s" given', get_debug_type($target)), context: $context);
             }
 

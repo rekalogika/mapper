@@ -39,14 +39,14 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
                     'Target type is null when trying to transform type "%s" to "%s", using source "%s".',
                     TypeUtil::getDebugType($sourceType),
                     TypeUtil::getDebugType($targetType),
-                    \get_debug_type($source)
+                    get_debug_type($source)
                 )
             );
         }
 
         // wants to convert string to uuid
 
-        if (is_string($source)) {
+        if (\is_string($source)) {
             $targetClass = $targetType->getClassName();
 
             if ($targetClass === null) {
@@ -55,7 +55,7 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
                         'Target class is null when trying to transform type "%s" to "%s", using source "%s".',
                         TypeUtil::getDebugType($sourceType),
                         TypeUtil::getDebugType($targetType),
-                        \get_debug_type($source)
+                        get_debug_type($source)
                     )
                 );
             }
@@ -80,7 +80,7 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
                 'Trying to transform type "%s" to "%s", using source "%s".',
                 TypeUtil::getDebugType($sourceType),
                 TypeUtil::getDebugType($targetType),
-                \get_debug_type($source)
+                get_debug_type($source)
             )
         );
     }

@@ -483,7 +483,7 @@ class MapperFactory
     protected function getArrayObjectTransformer(): TransformerInterface
     {
         $objectToObjectTransformer = $this->getObjectToObjectTransformer();
-        assert($objectToObjectTransformer instanceof ObjectToObjectTransformer);
+        \assert($objectToObjectTransformer instanceof ObjectToObjectTransformer);
 
         if (null === $this->arrayObjectTransformer) {
             $this->arrayObjectTransformer = new ArrayObjectTransformer(
@@ -876,7 +876,7 @@ class MapperFactory
     {
         if (null === $this->proxyAutoLoader) {
             $proxyRegistry = $this->getProxyRegistry();
-            assert($proxyRegistry instanceof ProxyAutoloaderInterface);
+            \assert($proxyRegistry instanceof ProxyAutoloaderInterface);
             $this->proxyAutoLoader = $proxyRegistry;
         }
 

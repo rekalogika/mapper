@@ -44,7 +44,7 @@ final readonly class ObjectToArrayTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context
     ): mixed {
-        if (!is_object($source)) {
+        if (!\is_object($source)) {
             throw new InvalidArgumentException(sprintf('Source must be object, "%s" given', get_debug_type($source)), context: $context);
         }
 

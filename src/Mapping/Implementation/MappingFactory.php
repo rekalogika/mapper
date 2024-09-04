@@ -88,7 +88,7 @@ final class MappingFactory implements MappingFactoryInterface
         // convert to iterator, so that we can catch an exception and able to
         // continue the iteration
 
-        if (is_array($supportedTransformation)) {
+        if (\is_array($supportedTransformation)) {
             $supportedTransformation = new \ArrayIterator($supportedTransformation);
         } else {
             $supportedTransformation = new \IteratorIterator($supportedTransformation);

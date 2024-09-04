@@ -55,7 +55,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         // The source must be a Traversable or an array (a.k.a. iterable).
 
-        if (!$source instanceof \Traversable && !is_array($source)) {
+        if (!$source instanceof \Traversable && !\is_array($source)) {
             throw new InvalidArgumentException(sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)), context: $context);
         }
 
@@ -88,8 +88,8 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         if ($source instanceof \Countable) {
             $target = new TraversableCountableWrapper($target, $source);
-        } elseif (is_array($source)) {
-            $target = new TraversableCountableWrapper($target, count($source));
+        } elseif (\is_array($source)) {
+            $target = new TraversableCountableWrapper($target, \count($source));
         }
 
         // Add to cache

@@ -75,7 +75,7 @@ final readonly class ClassUtil
     public static function getLastModifiedTime(
         string|\ReflectionClass $class
     ): int {
-        if (is_string($class)) {
+        if (\is_string($class)) {
             $class = new \ReflectionClass($class);
         }
 
@@ -137,7 +137,7 @@ final readonly class ClassUtil
 
         foreach ($propertyScopes as $scope => $data) {
             $name = $data[1];
-            if (in_array($name, $eagerProperties, true)) {
+            if (\in_array($name, $eagerProperties, true)) {
                 $skippedProperties[$scope] = true;
             }
         }
@@ -153,7 +153,7 @@ final readonly class ClassUtil
     public static function getAllClassesFromObject(
         object|string $objectOrClass
     ): array {
-        $class = is_object($objectOrClass) ? $objectOrClass::class : $objectOrClass;
+        $class = \is_object($objectOrClass) ? $objectOrClass::class : $objectOrClass;
 
         $parents = class_parents($class, true);
         if ($parents === false) {

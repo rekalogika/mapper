@@ -35,7 +35,7 @@ final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
         SubMapperInterface $mapper,
         Context $context
     ): static {
-        assert($source instanceof ObjectWithCollectionProperty);
+        \assert($source instanceof ObjectWithCollectionProperty);
 
         $result = new self();
 

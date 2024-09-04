@@ -78,7 +78,7 @@ trait ArrayLikeTransformerTrait
         // optimization: we try not to use the main tranformer to transform
         // the source member key to the target member key type
 
-        if (is_string($sourceMemberKey)) {
+        if (\is_string($sourceMemberKey)) {
             // if the key is a string
 
             if ($metadata->targetMemberKeyCanBeIntOnly()) {
@@ -114,7 +114,7 @@ trait ArrayLikeTransformerTrait
                     $path = sprintf('[%s]', get_debug_type($targetMemberKey));
                 }
             }
-        } elseif (is_int($sourceMemberKey)) {
+        } elseif (\is_int($sourceMemberKey)) {
             // if the key is an integer
 
             if (
@@ -204,7 +204,7 @@ trait ArrayLikeTransformerTrait
         // if target member value is not an object we delete it because it
         // will not be used anyway
 
-        if (!is_object($targetMemberValue)) {
+        if (!\is_object($targetMemberValue)) {
             $targetMemberValue = null;
         }
 

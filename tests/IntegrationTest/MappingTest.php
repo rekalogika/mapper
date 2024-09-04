@@ -63,7 +63,7 @@ class MappingTest extends FrameworkTestCase
 
         $this->assertNotNull($selected);
 
-        if (\str_contains($selected->getTransformerServiceId(), PresetTransformer::class)) {
+        if (str_contains($selected->getTransformerServiceId(), PresetTransformer::class)) {
             $selected = $searchResult[1] ?? null;
         }
 

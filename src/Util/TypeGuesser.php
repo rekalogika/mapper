@@ -40,11 +40,11 @@ final readonly class TypeGuesser
             return TypeFactory::null();
         }
 
-        if (class_exists($type) || interface_exists($type) || \enum_exists($type)) {
+        if (class_exists($type) || interface_exists($type) || enum_exists($type)) {
             return TypeFactory::objectOfClass($type);
         }
 
-        if (\str_starts_with($type, 'resource')) {
+        if (str_starts_with($type, 'resource')) {
             return TypeFactory::resource();
         }
 
