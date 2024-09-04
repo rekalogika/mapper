@@ -23,7 +23,7 @@ use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
- * Map between DateTime and string. If a string is involved
+ * Map between DateTime and string. If a string is involved.
  */
 final readonly class DateTimeTransformer implements TransformerInterface
 {

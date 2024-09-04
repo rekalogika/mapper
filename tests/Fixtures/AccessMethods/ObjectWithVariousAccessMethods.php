@@ -24,7 +24,6 @@ class ObjectWithVariousAccessMethods
 
     public string $publicPropertyWithoutGetterSetter = 'publicPropertyWithoutGetterSetter';
 
-
     public bool $publicPropertySetterAccessed = false;
 
     public bool $publicPropertyGetterAccessed = false;
@@ -47,6 +46,7 @@ class ObjectWithVariousAccessMethods
     public function getPublicProperty(): string
     {
         $this->publicPropertyGetterAccessed = true;
+
         return $this->publicPropertyWithGetterSetter;
     }
 

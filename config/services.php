@@ -87,19 +87,18 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.property_info', PropertyInfoExtractor::class)
         ->args([
             '$listExtractors' => [
-                service('property_info.reflection_extractor')
+                service('property_info.reflection_extractor'),
             ],
             '$typeExtractors' => [
                 service('property_info.phpstan_extractor'),
                 service('property_info.reflection_extractor'),
             ],
             '$accessExtractors' => [
-                service('property_info.reflection_extractor')
+                service('property_info.reflection_extractor'),
             ],
             '$initializableExtractors' => [
-                service('property_info.reflection_extractor')
+                service('property_info.reflection_extractor'),
             ],
-
         ]);
 
     # transformers
@@ -161,14 +160,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services
         ->set(TraversableToArrayAccessTransformer::class)
         ->args([
-            service('rekalogika.mapper.array_like_metadata_factory')
+            service('rekalogika.mapper.array_like_metadata_factory'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -750]);
 
     $services
         ->set(TraversableToTraversableTransformer::class)
         ->args([
-            service('rekalogika.mapper.array_like_metadata_factory')
+            service('rekalogika.mapper.array_like_metadata_factory'),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -800]);
 
@@ -195,7 +194,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set(CopyTransformer::class)
         ->tag('rekalogika.mapper.transformer', ['priority' => -1000]);
 
-
     # mappingfactory
 
     $services
@@ -206,7 +204,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             tagged_iterator('rekalogika.mapper.transformer', 'key'),
             service('rekalogika.mapper.type_resolver'),
-            service(LoggerInterface::class)->nullOnInvalid()
+            service(LoggerInterface::class)->nullOnInvalid(),
         ]);
 
     $services
@@ -214,7 +212,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.mapping_factory', null, 100)
         ->args([
             service('.inner'),
-            service('kernel')
+            service('kernel'),
         ]);
 
     # special instance of object to object transformer for ArrayObjectTransformer
@@ -279,7 +277,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('.inner'),
             service('rekalogika.mapper.cache.object_to_object_metadata_factory'),
-            param('kernel.debug')
+            param('kernel.debug'),
         ]);
 
     $services
@@ -304,7 +302,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.array_like_metadata_factory')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.array_like_metadata_factory')
+            service('rekalogika.mapper.cache.array_like_metadata_factory'),
         ]);
 
     # transformer registry
@@ -327,7 +325,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.transformer_registry')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.transformer_registry')
+            service('rekalogika.mapper.cache.transformer_registry'),
         ]);
 
     # sub mapper
@@ -355,7 +353,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.object_mapper.table_factory')
         ->args([
             service('.inner'),
-            service('kernel')
+            service('kernel'),
         ])
         ->tag('kernel.cache_warmer');
 
@@ -377,7 +375,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.object_mapper.resolver')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.object_mapper_resolver')
+            service('rekalogika.mapper.cache.object_mapper_resolver'),
         ]);
 
     # eager properties resolver

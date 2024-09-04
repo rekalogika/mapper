@@ -19,9 +19,7 @@ use Rekalogika\Mapper\Util\ClassUtil;
 
 final readonly class PresetMappingFactory
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function fromObjectCache(ObjectCache $objectCache): PresetMapping
     {
@@ -31,7 +29,7 @@ final readonly class PresetMappingFactory
         $presetMapping = new SplObjectStorageWrapper(new \SplObjectStorage());
 
         /**
-         * @var object $source
+         * @var object                            $source
          * @var \ArrayObject<class-string,object> $classToTargetMapping
          */
         foreach ($objectCacheWeakMap as $source => $classToTargetMapping) {
@@ -57,11 +55,12 @@ final readonly class PresetMappingFactory
         $presetMapping = new SplObjectStorageWrapper(new \SplObjectStorage());
 
         /**
-         * @var object $source
+         * @var object                            $source
          * @var \ArrayObject<class-string,object> $classToTargetMapping
          */
         foreach ($objectCacheWeakMap as $source => $classToTargetMapping) {
             $newTargetClass = ClassUtil::determineRealClassFromPossibleProxy($source::class);
+
             /** @var object */
             $newTarget = $source;
 

@@ -49,8 +49,8 @@ final readonly class ProxyGenerator implements ProxyGeneratorInterface
         $namespace = preg_replace('/\\\\[^\\\\]*$/', '', $proxyClass);
 
         return
-            $this->getClassHeader() .
-            sprintf('namespace %s;', $namespace) . "\n\n" .
+            $this->getClassHeader().
+            sprintf('namespace %s;', $namespace)."\n\n".
             sprintf(
                 'final %sclass %s%s',
                 $targetReflection->isReadOnly() ? 'readonly ' : '',

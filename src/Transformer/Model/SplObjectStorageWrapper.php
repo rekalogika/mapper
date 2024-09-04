@@ -18,22 +18,20 @@ namespace Rekalogika\Mapper\Transformer\Model;
  *
  * @template TKey of object
  * @template TValue
+ *
  * @implements \IteratorAggregate<TKey,TValue>
  * @implements \ArrayAccess<TKey,TValue>
+ *
  * @internal
  */
-final readonly class SplObjectStorageWrapper implements
-    \ArrayAccess,
-    \IteratorAggregate,
-    \Countable
+final readonly class SplObjectStorageWrapper implements \ArrayAccess, \IteratorAggregate, \Countable
 {
     /**
      * @param \SplObjectStorage<TKey,TValue> $wrapped
      */
     public function __construct(
         private \SplObjectStorage $wrapped
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function offsetExists(mixed $offset): bool
@@ -50,7 +48,7 @@ final readonly class SplObjectStorageWrapper implements
     #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        assert($offset !== null);
+        assert(null !== $offset);
         $this->wrapped->offsetSet($offset, $value);
     }
 

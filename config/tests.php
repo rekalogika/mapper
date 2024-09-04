@@ -46,8 +46,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $serviceIds = TestKernel::getServiceIds();
 
     foreach ($serviceIds as $serviceId) {
-        $services->alias('test.' . $serviceId, $serviceId)->public();
-    };
+        $services->alias('test.'.$serviceId, $serviceId)->public();
+    }
 
     $services->set(PropertyMapperWithoutClassAttribute::class);
     $services->set(PropertyMapperWithClassAttribute::class);

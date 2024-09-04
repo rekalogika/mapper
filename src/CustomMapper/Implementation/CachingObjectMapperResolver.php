@@ -30,15 +30,14 @@ final class CachingObjectMapperResolver implements ObjectMapperResolverInterface
     public function __construct(
         private readonly ObjectMapperResolverInterface $objectMapperResolver,
         private readonly CacheItemPoolInterface $cacheItemPool
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function getObjectMapper(
         string $sourceClass,
         string $targetClass
     ): ServiceMethodSpecification {
-        $cacheKey = hash('xxh128', $sourceClass . $targetClass);
+        $cacheKey = hash('xxh128', $sourceClass.$targetClass);
 
         if (isset($this->objectMapperCache[$sourceClass][$targetClass])) {
             return $this->objectMapperCache[$sourceClass][$targetClass];

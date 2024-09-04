@@ -30,6 +30,9 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
 
+/**
+ * @internal
+ */
 class PropertyMappingTest extends FrameworkTestCase
 {
     public function testPropertyMapperRegistration(): void
@@ -47,6 +50,7 @@ class PropertyMappingTest extends FrameworkTestCase
 
     /**
      * @dataProvider propertyMapperResolverDataProvider
+     *
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
@@ -152,10 +156,10 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new SomeObject();
         $dto = $this->mapper->map($object, SomeObjectDto::class);
 
-        $this->assertEquals(SomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(SomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(SomeObject::class.'::propertyA', $dto->propertyA);
+        $this->assertEquals(SomeObject::class.'::propertyB', $dto->propertyB);
         $this->assertNull($dto->propertyC);
-        $this->assertEquals(SomeObject::class .  '::propertyD', $dto->propertyD);
+        $this->assertEquals(SomeObject::class.'::propertyD', $dto->propertyD);
         $this->assertEquals(sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             Context::class,
@@ -169,10 +173,10 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new ChildOfSomeObject();
         $dto = $this->mapper->map($object, SomeObjectDto::class);
 
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(ChildOfSomeObject::class.'::propertyA', $dto->propertyA);
+        $this->assertEquals(ChildOfSomeObject::class.'::propertyB', $dto->propertyB);
         $this->assertNull($dto->propertyC);
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyD', $dto->propertyD);
+        $this->assertEquals(ChildOfSomeObject::class.'::propertyD', $dto->propertyD);
         $this->assertEquals(sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             Context::class,
@@ -186,10 +190,10 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new ChildOfSomeObject();
         $dto = $this->mapper->map($object, ChildOfSomeObjectDto::class);
 
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(ChildOfSomeObject::class.'::propertyA', $dto->propertyA);
+        $this->assertEquals(ChildOfSomeObject::class.'::propertyB', $dto->propertyB);
         $this->assertNull($dto->propertyC);
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyD', $dto->propertyD);
+        $this->assertEquals(ChildOfSomeObject::class.'::propertyD', $dto->propertyD);
         $this->assertEquals(sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             Context::class,
@@ -203,10 +207,10 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new SomeObject();
         $dto = $this->mapper->map($object, ChildOfSomeObjectDto::class);
 
-        $this->assertEquals(SomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(SomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(SomeObject::class.'::propertyA', $dto->propertyA);
+        $this->assertEquals(SomeObject::class.'::propertyB', $dto->propertyB);
         $this->assertNull($dto->propertyC);
-        $this->assertEquals(SomeObject::class .  '::propertyD', $dto->propertyD);
+        $this->assertEquals(SomeObject::class.'::propertyD', $dto->propertyD);
         $this->assertEquals(sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             Context::class,
@@ -220,7 +224,7 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new SomeObject();
         $dto = $this->mapper->map($object, SomeObjectWithConstructorDto::class);
 
-        $this->assertEquals(SomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(SomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(SomeObject::class.'::propertyA', $dto->propertyA);
+        $this->assertEquals(SomeObject::class.'::propertyB', $dto->propertyB);
     }
 }

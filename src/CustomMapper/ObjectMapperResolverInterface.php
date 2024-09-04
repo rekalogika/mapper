@@ -24,6 +24,7 @@ interface ObjectMapperResolverInterface
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
+     *
      * @throws ObjectMapperNotFoundException
      */
     public function getObjectMapper(

@@ -31,8 +31,7 @@ final readonly class SubMapperFactory implements SubMapperFactoryInterface
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyAccessorInterface $propertyAccessor,
         private ProxyFactoryInterface $proxyFactory,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function createSubMapper(

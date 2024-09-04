@@ -19,7 +19,7 @@ class InstantiationFailureException extends NotMappableValueException
 {
     /**
      * @param array<string,mixed> $constructorArguments
-     * @param array<int,string> $unsetSourceProperties
+     * @param array<int,string>   $unsetSourceProperties
      */
     public function __construct(
         object $source,
@@ -29,7 +29,7 @@ class InstantiationFailureException extends NotMappableValueException
         \Throwable $previous,
         Context $context,
     ) {
-        if ($constructorArguments === []) {
+        if ([] === $constructorArguments) {
             $message = sprintf(
                 'Trying to map the source object of type "%s", but failed to instantiate the target object "%s" with no constructor argument.',
                 \get_debug_type($source),
@@ -44,7 +44,7 @@ class InstantiationFailureException extends NotMappableValueException
             );
         }
 
-        if ($unsetSourceProperties !== []) {
+        if ([] !== $unsetSourceProperties) {
             $message .= sprintf(
                 ' Note that the following properties are not set in the source object: %s.',
                 implode(', ', $unsetSourceProperties)
@@ -69,6 +69,7 @@ class InstantiationFailureException extends NotMappableValueException
     private function formatConstructorArguments(array $constructorArguments): string
     {
         $formattedArguments = [];
+
         /** @var mixed $argumentValue */
         foreach ($constructorArguments as $argumentName => $argumentValue) {
             $formattedArguments[] = sprintf('%s: %s', $argumentName, \get_debug_type($argumentValue));

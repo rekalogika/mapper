@@ -18,14 +18,13 @@ namespace Rekalogika\Mapper\Transformer\Model;
  *
  * @template TKey
  * @template TValue
+ *
  * @implements \Iterator<TKey,TValue>
  * @implements \ArrayAccess<TKey,TValue>
+ *
  * @internal
  */
-final class HashTable implements
-    \ArrayAccess,
-    \Iterator,
-    \Countable
+final class HashTable implements \ArrayAccess, \Iterator, \Countable
 {
     /**
      * @var array<string,TKey>
@@ -40,18 +39,30 @@ final class HashTable implements
     private function generateId(mixed $variable): string
     {
         if (is_string($variable)) {
-            return 'string:' . $variable;
-        } elseif (is_int($variable)) {
-            return 'int:' . $variable;
-        } elseif (is_float($variable)) {
-            return 'float:' . $variable;
-        } elseif (is_bool($variable)) {
-            return 'bool:' . ($variable ? 'true' : 'false');
-        } elseif (is_object($variable)) {
-            return 'object:' . spl_object_id($variable);
-        } elseif (\is_resource($variable)) {
-            return 'resource:' . \get_resource_id($variable);
-        } elseif ($variable === null) {
+            return 'string:'.$variable;
+        }
+
+        if (is_int($variable)) {
+            return 'int:'.$variable;
+        }
+
+        if (is_float($variable)) {
+            return 'float:'.$variable;
+        }
+
+        if (is_bool($variable)) {
+            return 'bool:'.($variable ? 'true' : 'false');
+        }
+
+        if (is_object($variable)) {
+            return 'object:'.spl_object_id($variable);
+        }
+
+        if (\is_resource($variable)) {
+            return 'resource:'.\get_resource_id($variable);
+        }
+
+        if (null === $variable) {
             return 'null';
         }
 
@@ -130,7 +141,7 @@ final class HashTable implements
     #[\Override]
     public function valid(): bool
     {
-        return key($this->keys) !== null;
+        return null !== key($this->keys);
     }
 
     #[\Override]
@@ -139,5 +150,4 @@ final class HashTable implements
         reset($this->values);
         reset($this->keys);
     }
-
 }

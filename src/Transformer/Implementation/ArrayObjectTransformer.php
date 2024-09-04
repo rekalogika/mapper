@@ -26,14 +26,11 @@ use Symfony\Component\PropertyInfo\Type;
  * Do object to array, array to object, and array to array transformation by
  * converting array to stdClass & passing the task to ObjectToObjectTransformer.
  */
-final readonly class ArrayObjectTransformer implements
-    TransformerInterface,
-    MainTransformerAwareInterface
+final readonly class ArrayObjectTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     public function __construct(
         private ObjectToObjectTransformer $objectToObjectTransformer,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function withMainTransformer(MainTransformerInterface $mainTransformer): static
@@ -84,7 +81,9 @@ final readonly class ArrayObjectTransformer implements
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(TypeFactory::array(), TypeFactory::object(), true);
+
         yield new TypeMapping(TypeFactory::object(), TypeFactory::array());
+
         yield new TypeMapping(TypeFactory::array(), TypeFactory::array());
     }
 }

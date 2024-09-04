@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 
 /**
- * Forcing scalar to scalar transformer, erroneously
+ * Forcing scalar to scalar transformer, erroneously.
  */
 class OverrideTransformer extends AbstractTransformerDecorator
 {

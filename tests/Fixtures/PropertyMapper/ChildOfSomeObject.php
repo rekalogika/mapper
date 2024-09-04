@@ -13,6 +13,4 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 
-class ChildOfSomeObject extends SomeObject
-{
-}
+class ChildOfSomeObject extends SomeObject {}

@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 
+/**
+ * @internal
+ */
 class TypeCheckTest extends TestCase
 {
     public function testCheck(): void

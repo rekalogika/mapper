@@ -37,7 +37,7 @@ class Post
     {
         $key = array_search($comment, $this->comments, true);
 
-        if ($key !== false) {
+        if (false !== $key) {
             unset($this->comments[$key]);
         }
     }

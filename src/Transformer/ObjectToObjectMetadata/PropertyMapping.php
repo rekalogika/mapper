@@ -19,24 +19,25 @@ use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @immutable
+ *
  * @internal
  */
 final readonly class PropertyMapping
 {
     /**
-     * @var array<int,Type> $sourceTypes
+     * @var array<int,Type>
      */
     private array $sourceTypes;
 
     /**
-     * @var array<int,Type> $targetTypes
+     * @var array<int,Type>
      */
     private array $targetTypes;
 
     /**
-     * @param array<array-key,Type> $sourceTypes
-     * @param array<array-key,Type> $targetTypes
-     * @param 'int'|'float'|'string'|'bool'|'null'|null $targetScalarType
+     * @param array<array-key,Type>                     $sourceTypes
+     * @param array<array-key,Type>                     $targetTypes
+     * @param null|'bool'|'float'|'int'|'null'|'string' $targetScalarType
      */
     public function __construct(
         private ?string $sourceProperty,
@@ -110,9 +111,9 @@ final readonly class PropertyMapping
 
     /**
      * If set, set the property directly, without delegating to the main
-     * transformer
+     * transformer.
      *
-     * @return 'int'|'float'|'string'|'bool'|'null'|null
+     * @return null|'bool'|'float'|'int'|'null'|'string'
      */
     public function getTargetScalarType(): ?string
     {

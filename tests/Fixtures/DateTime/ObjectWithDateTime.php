@@ -23,6 +23,7 @@ class ObjectWithDateTime
     {
         return new \DateTimeImmutable(self::DATETIME);
     }
+
     public function getDateTime(): \DateTime
     {
         return new \DateTime(self::DATETIME);

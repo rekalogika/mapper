@@ -26,9 +26,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeUtil
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Simple Type is a type that is not nullable, and does not have more
@@ -58,10 +56,10 @@ final readonly class TypeUtil
                 return false;
             }
 
-            $keyTypeIsSimple = $keyTypes === []
+            $keyTypeIsSimple = [] === $keyTypes
                 || self::isSimpleType($keyTypes[0]);
 
-            $valueTypeIsSimple = $valueTypes === []
+            $valueTypeIsSimple = [] === $valueTypes
                 || self::isSimpleType($valueTypes[0]);
 
             return $keyTypeIsSimple && $valueTypeIsSimple;
@@ -71,7 +69,7 @@ final readonly class TypeUtil
     }
 
     /**
-     * Gets all the possible simple types from a Type
+     * Gets all the possible simple types from a Type.
      *
      * @return array<int,Type>
      */
@@ -83,9 +81,10 @@ final readonly class TypeUtil
 
     /**
      * Generates all the possible simple type permutations from an array of
-     * Types
+     * Types.
      *
      * @param array<array-key,Type> $types
+     *
      * @return array<int,Type>
      */
     private static function getTypePermutations(
@@ -173,11 +172,11 @@ final readonly class TypeUtil
                 $valueTypes[] = null;
             }
 
-            if ($keyTypes === []) {
+            if ([] === $keyTypes) {
                 $keyTypes = [null];
             }
 
-            if ($valueTypes === []) {
+            if ([] === $valueTypes) {
                 $valueTypes = [null];
             }
 
@@ -228,16 +227,16 @@ final readonly class TypeUtil
     }
 
     /**
-     * @param null|Type|MixedType|array<array-key,Type|MixedType> $type
+     * @param null|array<array-key,MixedType|Type>|MixedType|Type $type
      */
-    public static function getDebugType(null|Type|MixedType|array $type): string
+    public static function getDebugType(null|array|MixedType|Type $type): string
     {
-        if ($type === null) {
+        if (null === $type) {
             return 'null';
         }
 
         if (is_array($type)) {
-            if ($type === []) {
+            if ([] === $type) {
                 return 'mixed';
             }
 
@@ -258,14 +257,14 @@ final readonly class TypeUtil
         TypeUtilTest::class,
         TraceData::class
     )]
-    public static function getTypeString(Type|MixedType $type): string
+    public static function getTypeString(MixedType|Type $type): string
     {
         if ($type instanceof MixedType) {
             return 'mixed';
         }
 
         $typeString = $type->getBuiltinType();
-        if ($typeString === 'object') {
+        if ('object' === $typeString) {
             $typeString = $type->getClassName();
             if (null === $typeString) {
                 $typeString = 'object';
@@ -275,7 +274,7 @@ final readonly class TypeUtil
         if ($type->isCollection()) {
             $keyTypes = $type->getCollectionKeyTypes();
 
-            if ($keyTypes !== []) {
+            if ([] !== $keyTypes) {
                 $keyTypesString = [];
                 foreach ($keyTypes as $keyType) {
                     $keyTypesString[] = self::getTypeString($keyType);
@@ -288,7 +287,7 @@ final readonly class TypeUtil
 
             $valueTypes = $type->getCollectionValueTypes();
 
-            if ($valueTypes !== []) {
+            if ([] !== $valueTypes) {
                 $valueTypesString = [];
                 foreach ($valueTypes as $valueType) {
                     $valueTypesString[] = self::getTypeString($valueType);
@@ -306,12 +305,12 @@ final readonly class TypeUtil
     }
 
     /**
-     * @param Type|MixedType|array<int,Type|MixedType> $type
+     * @param array<int,MixedType|Type>|MixedType|Type $type
      */
-    public static function getTypeStringHtml(Type|MixedType|array $type): string
+    public static function getTypeStringHtml(array|MixedType|Type $type): string
     {
         if (\is_array($type)) {
-            if ($type === []) {
+            if ([] === $type) {
                 return 'mixed';
             }
 
@@ -328,7 +327,7 @@ final readonly class TypeUtil
         }
 
         $typeString = $type->getBuiltinType();
-        if ($typeString === 'object') {
+        if ('object' === $typeString) {
             $typeString = $type->getClassName();
 
             if (null === $typeString) {
@@ -346,7 +345,7 @@ final readonly class TypeUtil
         if ($type->isCollection()) {
             $keyTypes = $type->getCollectionKeyTypes();
 
-            if ($keyTypes !== []) {
+            if ([] !== $keyTypes) {
                 $keyTypesString = [];
                 foreach ($keyTypes as $keyType) {
                     $keyTypesString[] = self::getTypeStringHtml($keyType);
@@ -359,7 +358,7 @@ final readonly class TypeUtil
 
             $valueTypes = $type->getCollectionValueTypes();
 
-            if ($valueTypes !== []) {
+            if ([] !== $valueTypes) {
                 $valueTypesString = [];
                 foreach ($valueTypes as $valueType) {
                     $valueTypesString[] = self::getTypeStringHtml($valueType);
@@ -405,7 +404,7 @@ final readonly class TypeUtil
      * @return array<int,Type>
      */
     private static function getAttributesFromType(
-        Type|MixedType $type
+        MixedType|Type $type
     ): array {
         if ($type instanceof MixedType) {
             return [];
@@ -413,7 +412,7 @@ final readonly class TypeUtil
 
         $class = $type->getClassName();
 
-        if ($class === null) {
+        if (null === $class) {
             return [];
         }
 
@@ -438,11 +437,12 @@ final readonly class TypeUtil
 
     /**
      * @param Type $type
+     *
      * @return array<int,string>
      */
     #[Friend(TypeResolver::class)]
     public static function getAttributesTypeStrings(
-        Type|MixedType $type
+        MixedType|Type $type
     ): array {
         $attributes = self::getAttributesFromType($type);
 

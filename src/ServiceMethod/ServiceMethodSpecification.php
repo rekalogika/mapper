@@ -31,8 +31,7 @@ final readonly class ServiceMethodSpecification
         private string $serviceId,
         private string $method,
         private array $extraArguments,
-    ) {
-    }
+    ) {}
 
     public function getServiceId(): string
     {

@@ -23,7 +23,7 @@ class MissingMemberValueTypeException extends MissingMemberTypeException
     public function __construct(
         ?Type $sourceType,
         Type $targetType,
-        Context $context = null,
+        ?Context $context = null,
     ) {
         if (null === $sourceType) {
             $sourceType = MixedType::instance();

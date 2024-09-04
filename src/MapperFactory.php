@@ -214,12 +214,11 @@ class MapperFactory
         private readonly ?NormalizerInterface $normalizer = null,
         private readonly ?DenormalizerInterface $denormalizer = null,
         private readonly CacheItemPoolInterface $propertyInfoExtractorCache = new ArrayAdapter()
-    ) {
-    }
+    ) {}
 
     /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
+     * @param class-string                                      $sourceClass
+     * @param class-string                                      $targetClass
      * @param array<int,ServiceMethodSpecification::ARGUMENT_*> $extraArguments
      */
     public function addPropertyMapper(
@@ -241,8 +240,8 @@ class MapperFactory
     }
 
     /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
+     * @param class-string                                      $sourceClass
+     * @param class-string                                      $targetClass
      * @param array<int,ServiceMethodSpecification::ARGUMENT_*> $extraArguments
      */
     public function addObjectMapper(
@@ -303,7 +302,7 @@ class MapperFactory
 
     private function getPropertyInfoExtractor(): PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface
     {
-        if ($this->propertyInfoExtractor === null) {
+        if (null === $this->propertyInfoExtractor) {
             $propertyInfoExtractor = new PropertyInfoExtractor(
                 listExtractors: [
                     $this->getReflectionExtractor(),
@@ -359,7 +358,7 @@ class MapperFactory
 
     private function getNormalizer(): NormalizerInterface
     {
-        if ($this->normalizer !== null) {
+        if (null !== $this->normalizer) {
             return $this->normalizer;
         }
 
@@ -368,7 +367,7 @@ class MapperFactory
 
     private function getDenormalizer(): DenormalizerInterface
     {
-        if ($this->denormalizer !== null) {
+        if (null !== $this->denormalizer) {
             return $this->denormalizer;
         }
 
@@ -538,6 +537,7 @@ class MapperFactory
 
     /**
      * @deprecated
+     *
      * @psalm-suppress DeprecatedClass
      */
     protected function getClassMethodTransformer(): ClassMethodTransformer
@@ -634,60 +634,56 @@ class MapperFactory
 
         yield from $this->additionalTransformers;
 
-        yield 'ScalarToScalarTransformer'
-            => $this->getScalarToScalarTransformer();
-        yield 'ObjectMapperTransformer'
-            => $this->getObjectMapperTransformer();
-        yield 'DateTimeTransformer'
-            => $this->getDateTimeTransformer();
-        yield 'StringToBackedEnumTransformer'
-            => $this->getStringToBackedEnumTransformer();
+        yield 'ScalarToScalarTransformer' => $this->getScalarToScalarTransformer();
+
+        yield 'ObjectMapperTransformer' => $this->getObjectMapperTransformer();
+
+        yield 'DateTimeTransformer' => $this->getDateTimeTransformer();
+
+        yield 'StringToBackedEnumTransformer' => $this->getStringToBackedEnumTransformer();
 
         if (class_exists(UuidFactory::class)) {
-            yield 'SymfonyUidTransformer'
-                => $this->getSymfonyUidTransformer();
+            yield 'SymfonyUidTransformer' => $this->getSymfonyUidTransformer();
         }
 
         if (interface_exists(UuidInterface::class)) {
-            yield 'RamseyUuidTransformer'
-                => $this->getRamseyUuidTransformer();
+            yield 'RamseyUuidTransformer' => $this->getRamseyUuidTransformer();
         }
 
-        yield 'ObjectToStringTransformer'
-            => $this->getObjectToStringTransformer();
+        yield 'ObjectToStringTransformer' => $this->getObjectToStringTransformer();
 
-        yield 'PresetTransformer'
-            => $this->getPresetTransformer();
+        yield 'PresetTransformer' => $this->getPresetTransformer();
 
         /**
          * @psalm-suppress DeprecatedMethod
+         *
          * @phpstan-ignore-next-line
          */
         yield 'ClassMethodTransformer' => $this->getClassMethodTransformer();
 
-        yield 'TraversableToArrayAccessTransformer'
-            => $this->getTraversableToArrayAccessTransformer();
-        yield 'TraversableToTraversableTransformer'
-            => $this->getTraversableToTraversableTransformer();
+        yield 'TraversableToArrayAccessTransformer' => $this->getTraversableToArrayAccessTransformer();
+
+        yield 'TraversableToTraversableTransformer' => $this->getTraversableToTraversableTransformer();
 
         /**
          * @psalm-suppress DeprecatedMethod
+         *
          * @phpstan-ignore-next-line
          */
         yield 'ObjectToArrayTransformer' => $this->getObjectToArrayTransformer();
 
         /**
          * @psalm-suppress DeprecatedMethod
+         *
          * @phpstan-ignore-next-line
          */
         yield 'ArrayToObjectTransformer' => $this->getArrayToObjectTransformer();
 
-        yield 'ObjectToObjectTransformer'
-            => $this->getObjectToObjectTransformer();
-        yield 'NullTransformer'
-            => $this->getNullTransformer();
-        yield 'CopyTransformer'
-            => $this->getCopyTransformer();
+        yield 'ObjectToObjectTransformer' => $this->getObjectToObjectTransformer();
+
+        yield 'NullTransformer' => $this->getNullTransformer();
+
+        yield 'CopyTransformer' => $this->getCopyTransformer();
     }
 
     protected function getTransformersLocator(): ContainerInterface

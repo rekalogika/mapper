@@ -21,6 +21,9 @@ use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWith
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
+/**
+ * @internal
+ */
 class DynamicPropertyTest extends FrameworkTestCase
 {
     // from stdclass to object
@@ -45,12 +48,16 @@ class DynamicPropertyTest extends FrameworkTestCase
     public function testObjectExtendingStdClassToObject(): void
     {
         $source = new ObjectExtendingStdClass();
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->a = 1;
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->b = 'string';
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->c = true;
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->d = 1.1;
 
@@ -114,6 +121,7 @@ class DynamicPropertyTest extends FrameworkTestCase
     public function testObjectExtendingStdClassWithExplicitScalarPropertiesToObject(): void
     {
         $source = new ObjectExtendingStdClassWithExplicitScalarProperties();
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->e = 'extra';
         $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class);
@@ -149,10 +157,13 @@ class DynamicPropertyTest extends FrameworkTestCase
 
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertEquals(1, $target->a);
+
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertEquals('string', $target->b);
+
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertTrue($target->c);
+
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertEquals(1.1, $target->d);
     }
@@ -162,24 +173,32 @@ class DynamicPropertyTest extends FrameworkTestCase
     public function testStdClassToStdClass(): void
     {
         $source = new ObjectExtendingStdClass();
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->a = 1;
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->b = 'string';
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->c = true;
+
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->d = 1.1;
 
         $target = $this->mapper->map($source, AnotherObjectExtendingStdClass::class);
 
         $this->assertInstanceOf(\stdClass::class, $target);
+
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertEquals(1, $target->a);
+
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertEquals('string', $target->b);
+
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertTrue($target->c);
+
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertEquals(1.1, $target->d);
     }
@@ -198,6 +217,7 @@ class DynamicPropertyTest extends FrameworkTestCase
         $this->assertEquals('public', $target->public);
         $this->assertNull($target->getPrivate());
         $this->assertEquals('constructor', $target->getConstructor());
+
         /** @psalm-suppress UndefinedPropertyFetch */
         $this->assertEquals('dynamic', $target->dynamic);
     }
@@ -228,6 +248,7 @@ class DynamicPropertyTest extends FrameworkTestCase
 
         /**
          * @psalm-suppress TypeDoesNotContainType
+         *
          * @phpstan-ignore-next-line
          */
         $this->assertInstanceOf(ObjectWithScalarProperties::class, $target->property);

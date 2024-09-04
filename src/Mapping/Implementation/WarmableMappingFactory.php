@@ -31,8 +31,7 @@ final class WarmableMappingFactory implements MappingFactoryInterface
     public function __construct(
         private readonly MappingFactoryInterface $realMappingFactory,
         private readonly KernelInterface $kernel,
-    ) {
-    }
+    ) {}
 
     private function getMappingFromInnerFactory(): Mapping
     {
@@ -49,7 +48,7 @@ final class WarmableMappingFactory implements MappingFactoryInterface
     #[\Override]
     public function getMapping(): Mapping
     {
-        if ($this->mapping !== null) {
+        if (null !== $this->mapping) {
             return $this->mapping;
         }
 
@@ -72,18 +71,17 @@ final class WarmableMappingFactory implements MappingFactoryInterface
             return $this->mapping = $this->warmUpAndGetMapping();
         }
 
-
         return $this->mapping = $result;
     }
 
     private function getCacheFilePath(): string
     {
-        return $this->kernel->getBuildDir() . '/' . self::CACHE_FILE;
+        return $this->kernel->getBuildDir().'/'.self::CACHE_FILE;
     }
 
     public function warmUp(): void
     {
         $mapping = VarExporter::export($this->realMappingFactory->getMapping());
-        file_put_contents($this->getCacheFilePath(), '<?php return ' . $mapping . ';');
+        file_put_contents($this->getCacheFilePath(), '<?php return '.$mapping.';');
     }
 }

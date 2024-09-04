@@ -21,6 +21,6 @@ class PropertyMapperWithClassAttributeWithoutExplicitProperty
     #[AsPropertyMapper]
     public function mapPropertyD(SomeObject $object): string
     {
-        return $object::class . '::propertyD';
+        return $object::class.'::propertyD';
     }
 }

@@ -16,6 +16,4 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Attribute;
 use Rekalogika\Mapper\Attribute\MapperAttributeInterface;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class SomeAttribute implements MapperAttributeInterface
-{
-}
+class SomeAttribute implements MapperAttributeInterface {}

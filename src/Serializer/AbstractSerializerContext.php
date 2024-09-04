@@ -18,19 +18,15 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 /**
  * @implements \ArrayAccess<string,mixed>
  * @implements \IteratorAggregate<string,mixed>
+ *
  * @deprecated
  */
-abstract class AbstractSerializerContext implements
-    \ArrayAccess,
-    \IteratorAggregate,
-    \Countable
+abstract class AbstractSerializerContext implements \ArrayAccess, \IteratorAggregate, \Countable
 {
     /**
      * @param array<string,mixed> $context
      */
-    public function __construct(private array $context = [])
-    {
-    }
+    public function __construct(private array $context = []) {}
 
     /**
      * @return array<string,mixed>

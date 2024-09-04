@@ -41,17 +41,19 @@ final class MappingCommand extends Command
             ->addOption('source', 's', InputOption::VALUE_OPTIONAL, 'Filter by source type')
             ->addOption('target', 't', InputOption::VALUE_OPTIONAL, 'Filter by target type')
             ->addOption('class', 'c', InputOption::VALUE_OPTIONAL, 'Filter by class name or service ID')
-            ->setHelp("The <info>%command.name%</info> command dumps the mapping table for the mapper.");
+            ->setHelp('The <info>%command.name%</info> command dumps the mapping table for the mapper.');
     }
 
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var string|null */
+        /** @var null|string */
         $sourceOption = $input->getOption('source');
-        /** @var string|null */
+
+        /** @var null|string */
         $targetOption = $input->getOption('target');
-        /** @var string|null */
+
+        /** @var null|string */
         $classOption = $input->getOption('class');
 
         $io = new SymfonyStyle($input, $output);
@@ -68,32 +70,32 @@ final class MappingCommand extends Command
             $id = $entry->getId();
             $variantTargetType = $entry->isVariantTargetType();
 
-            if ($sourceOption !== null) {
-                if (preg_match('/' . preg_quote($sourceOption, '/') . '/i', $entry->getSourceTypeString()) === 0) {
+            if (null !== $sourceOption) {
+                if (0 === preg_match('/'.preg_quote($sourceOption, '/').'/i', $entry->getSourceTypeString())) {
                     continue;
                 }
 
-                $sourceType = preg_replace('/(' . preg_quote($sourceOption, '/') . ')/i', '<bg=yellow>$1</>', $sourceType);
+                $sourceType = preg_replace('/('.preg_quote($sourceOption, '/').')/i', '<bg=yellow>$1</>', $sourceType);
             }
 
-            if ($targetOption !== null) {
-                if (preg_match('/' . preg_quote($targetOption, '/') . '/i', $entry->getTargetTypeString()) === 0) {
+            if (null !== $targetOption) {
+                if (0 === preg_match('/'.preg_quote($targetOption, '/').'/i', $entry->getTargetTypeString())) {
                     continue;
                 }
 
-                $targetType = preg_replace('/(' . preg_quote($targetOption, '/') . ')/i', '<bg=yellow>$1</>', $targetType);
+                $targetType = preg_replace('/('.preg_quote($targetOption, '/').')/i', '<bg=yellow>$1</>', $targetType);
             }
 
-            if ($classOption !== null) {
+            if (null !== $classOption) {
                 if (
-                    preg_match('/' . preg_quote($classOption, '/') . '/i', $entry->getClass()) === 0
-                    && preg_match('/' . preg_quote($classOption, '/') . '/i', $entry->getId()) === 0
+                    0 === preg_match('/'.preg_quote($classOption, '/').'/i', $entry->getClass())
+                    && 0 === preg_match('/'.preg_quote($classOption, '/').'/i', $entry->getId())
                 ) {
                     continue;
                 }
 
                 // $class = preg_replace('/(' . preg_quote($classOption) . ')/i', '<bg=yellow>$1</>', $class);
-                $id = preg_replace('/(' . preg_quote($classOption, '/') . ')/i', '<bg=yellow>$1</>', $id);
+                $id = preg_replace('/('.preg_quote($classOption, '/').')/i', '<bg=yellow>$1</>', $id);
             }
 
             $rows[] = [
@@ -114,7 +116,7 @@ final class MappingCommand extends Command
             'Target Type',
             'Target Variance',
             'Service ID',
-            'Class'
+            'Class',
         ]);
         $table->setStyle(new MarkdownLikeTableStyle());
         $table->setRows($rows);

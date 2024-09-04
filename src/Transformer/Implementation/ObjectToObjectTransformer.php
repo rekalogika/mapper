@@ -48,17 +48,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 {
     use MainTransformerAwareTrait;
 
-    private ReaderWriter $readerWriter;
-
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
         private ContainerInterface $propertyMapperLocator,
         private SubMapperFactoryInterface $subMapperFactory,
         private ProxyFactoryInterface $proxyFactory,
-        ReaderWriter $readerWriter = null,
-    ) {
-        $this->readerWriter = $readerWriter ?? new ReaderWriter();
-    }
+        private ReaderWriter $readerWriter = new ReaderWriter()
+    ) {}
 
     #[\Override]
     public function transform(
@@ -68,7 +64,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         ?Type $targetType,
         Context $context
     ): mixed {
-        if ($targetType === null) {
+        if (null === $targetType) {
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
@@ -82,7 +78,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $sourceClass = $sourceType->getClassName();
 
         if (null === $sourceClass || !\class_exists($sourceClass)) {
-            throw new InvalidArgumentException("Cannot get the class name for the source type.", context: $context);
+            throw new InvalidArgumentException('Cannot get the class name for the source type.', context: $context);
         }
 
         // verify target
@@ -90,7 +86,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $targetClass = $targetType->getClassName();
 
         if (null === $targetClass) {
-            throw new InvalidArgumentException("Cannot get the class name for the target type.", context: $context);
+            throw new InvalidArgumentException('Cannot get the class name for the target type.', context: $context);
         }
 
         if (!\class_exists($targetClass) && !\interface_exists($targetClass)) {
@@ -113,7 +109,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         if (
             $objectToObjectMetadata->isTargetReadOnly()
-            || $context(MapperOptions::class)?->readTargetValue !== true
+            || true !== $context(MapperOptions::class)?->readTargetValue
         ) {
             $target = null;
         }
@@ -206,7 +202,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
             return $reflectionClass
                 ->newInstanceArgs($constructorArguments->getArguments());
-        } catch (\TypeError | \ReflectionException $e) {
+        } catch (\ReflectionException|\TypeError $e) {
             throw new InstantiationFailureException(
                 source: $source,
                 targetClass: $targetClass,
@@ -315,7 +311,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
              * @psalm-suppress MixedMethodCall
              */
             $target->__construct(...$arguments);
-        } catch (\TypeError | \ReflectionException $e) {
+        } catch (\ReflectionException|\TypeError $e) {
             throw new InstantiationFailureException(
                 source: $source,
                 targetClass: $target::class,
@@ -393,11 +389,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $targetSetterWriteMode = $propertyMapping->getTargetSetterWriteMode();
         $targetSetterWriteVisibility = $propertyMapping->getTargetSetterWriteVisibility();
 
-        if ($targetSetterWriteMode === WriteMode::None) {
+        if (WriteMode::None === $targetSetterWriteMode) {
             return;
         }
 
-        if ($targetSetterWriteVisibility !== Visibility::Public) {
+        if (Visibility::Public !== $targetSetterWriteVisibility) {
             return;
         }
 
@@ -424,8 +420,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
     }
 
     /**
-     * @param object|null $target Target is null if the transformation is for a
-     * constructor argument
+     * @param null|object $target Target is null if the transformation is for a
+     *                            constructor argument
      */
     private function transformValue(
         PropertyMapping $propertyMapping,
@@ -455,7 +451,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         $sourceProperty = $propertyMapping->getSourceProperty();
 
-        if ($sourceProperty === null) {
+        if (null === $sourceProperty) {
             throw new UnsupportedPropertyMappingException();
         }
 
@@ -469,11 +465,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // null, so that we don't have to go through the main transformer for
         // this common task.
 
-        if ($context(MapperOptions::class)?->objectToObjectScalarShortCircuit === true) {
+        if (true === $context(MapperOptions::class)?->objectToObjectScalarShortCircuit) {
             // if source is null & target accepts null, we set the
             // target to null
 
-            if ($propertyMapping->targetCanAcceptNull() && $sourcePropertyValue === null) {
+            if ($propertyMapping->targetCanAcceptNull() && null === $sourcePropertyValue) {
                 return null;
             }
 
@@ -481,8 +477,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
             $targetScalarType = $propertyMapping->getTargetScalarType();
 
-            if ($targetScalarType !== null) {
-                if ($sourcePropertyValue === null) {
+            if (null !== $targetScalarType) {
+                if (null === $sourcePropertyValue) {
                     return match ($targetScalarType) {
                         'int' => 0,
                         'float' => 0.0,
@@ -490,7 +486,9 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                         'bool' => false,
                         'null' => null,
                     };
-                } elseif (is_scalar($sourcePropertyValue)) {
+                }
+
+                if (is_scalar($sourcePropertyValue)) {
                     return match ($targetScalarType) {
                         'int' => (int) $sourcePropertyValue,
                         'float' => (float) $sourcePropertyValue,
@@ -537,7 +535,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     \ArrayAccess::class,
                     $key[0],
                     $value[0]
-                )
+                ),
             ];
         }
 
@@ -556,7 +554,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // transform the value
 
         /** @var mixed */
-        $targetPropertyValue = $this->getMainTransformer()->transform(
+        return $this->getMainTransformer()->transform(
             source: $sourcePropertyValue,
             target: $targetPropertyValue,
             sourceType: $sourceType,
@@ -564,8 +562,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             context: $context,
             path: $propertyMapping->getTargetProperty(),
         );
-
-        return $targetPropertyValue;
     }
 
     private function mapDynamicProperties(
@@ -587,9 +583,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                         $currentTargetPropertyValue = null;
                     }
 
-
                     if (
-                        $currentTargetPropertyValue === null
+                        null === $currentTargetPropertyValue
                         || is_scalar($currentTargetPropertyValue)
                     ) {
                         /** @psalm-suppress MixedAssignment */

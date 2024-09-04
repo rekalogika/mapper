@@ -22,8 +22,7 @@ final readonly class MappingCacheWarmer implements CacheWarmerInterface
 {
     public function __construct(
         private WarmableMappingFactory $warmableMappingFactory,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function isOptional(): bool

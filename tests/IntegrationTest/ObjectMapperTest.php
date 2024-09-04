@@ -25,12 +25,15 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
+/**
+ * @internal
+ */
 class ObjectMapperTest extends FrameworkTestCase
 {
     public function testService(): void
     {
         $moneyObjectMapper = $this->get(MoneyObjectMapper::class);
-        $objectMapperTransformer = $this->get('test.' . ObjectMapperTransformer::class);
+        $objectMapperTransformer = $this->get('test.'.ObjectMapperTransformer::class);
 
         $this->assertTransformerInstanceOf(MoneyObjectMapper::class, $moneyObjectMapper);
         $this->assertTransformerInstanceOf(ObjectMapperTransformer::class, $objectMapperTransformer);
@@ -99,5 +102,4 @@ class ObjectMapperTest extends FrameworkTestCase
         $this->expectException(ProxyNotSupportedException::class);
         $result = $this->mapper->map($person, FinalPersonDto::class);
     }
-
 }

@@ -24,7 +24,7 @@ class TransformerReturnsUnexpectedValueException extends UnexpectedValueExceptio
 {
     public function __construct(
         mixed $source,
-        Type|MixedType $targetType,
+        MixedType|Type $targetType,
         mixed $target,
         TransformerInterface $transformer,
         Context $context

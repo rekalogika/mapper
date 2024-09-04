@@ -30,5 +30,4 @@ class ObjectWithArrayPropertyWithStringKey
             'c' => new ObjectWithScalarProperties(),
         ];
     }
-
 }

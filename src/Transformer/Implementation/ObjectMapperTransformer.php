@@ -27,9 +27,7 @@ use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
-final class ObjectMapperTransformer implements
-    TransformerInterface,
-    MainTransformerAwareInterface
+final class ObjectMapperTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
 
@@ -38,8 +36,7 @@ final class ObjectMapperTransformer implements
         private ContainerInterface $serviceLocator,
         private ObjectMapperTableFactoryInterface $objectMapperTableFactory,
         private ObjectMapperResolverInterface $objectMapperResolver,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function transform(
@@ -51,7 +48,7 @@ final class ObjectMapperTransformer implements
     ): mixed {
         // target type must not be null
 
-        if ($targetType === null) {
+        if (null === $targetType) {
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
@@ -68,7 +65,7 @@ final class ObjectMapperTransformer implements
 
         // get source class
 
-        if ($source === null || !\is_object($source)) {
+        if (null === $source || !\is_object($source)) {
             throw new InvalidArgumentException(
                 sprintf('Source must be an object, but got: %s', \gettype($source)),
                 context: $context

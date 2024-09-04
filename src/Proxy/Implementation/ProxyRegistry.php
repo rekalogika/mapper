@@ -43,7 +43,7 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         );
 
         $sourceCode = sprintf(
-            '<?php declare(strict_types=1);' . "\n\n" . '%s',
+            '<?php declare(strict_types=1);'."\n\n".'%s',
             $sourceCode
         );
 
@@ -82,7 +82,6 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
             $this->autoloader = null;
         }
     }
-
 
     private static function getProxyFileName(string $proxyClass): string
     {

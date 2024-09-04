@@ -17,7 +17,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 /**
- * Simple container for non-framework use
+ * Simple container for non-framework use.
  */
 final readonly class ServiceLocator implements ContainerInterface
 {
@@ -26,8 +26,7 @@ final readonly class ServiceLocator implements ContainerInterface
      */
     public function __construct(
         private array $services = []
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function get(string $id): mixed

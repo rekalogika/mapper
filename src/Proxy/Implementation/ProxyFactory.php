@@ -28,13 +28,14 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
     public function __construct(
         private ProxyRegistryInterface $proxyRegistry,
         private ProxyGeneratorInterface $proxyGenerator,
-    ) {
-    }
+    ) {}
 
     /**
      * @template T of object
-     * @param class-string<T> $class
+     *
+     * @param class-string<T>  $class
      * @param callable(T):void $initializer
+     *
      * @return T
      */
     #[\Override]
@@ -70,6 +71,7 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
          * @psalm-suppress UndefinedMethod
          * @psalm-suppress MixedReturnStatement
          * @psalm-suppress MixedMethodCall
+         *
          * @var T
          */
         return $targetProxyClass::createLazyGhost($initializer, $eagerProperties);

@@ -35,7 +35,7 @@ final readonly class PresetTransformer implements TransformerInterface
     ): mixed {
         $presetMapping = $context(PresetMapping::class);
 
-        if ($presetMapping === null) {
+        if (null === $presetMapping) {
             throw new RefuseToTransformException();
         }
 

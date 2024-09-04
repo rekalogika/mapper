@@ -18,6 +18,9 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\AnotherContainsArray;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsArray;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsObject;
 
+/**
+ * @internal
+ */
 class ArrayAndObjectMappingTest extends FrameworkTestCase
 {
     public function testObjectToArrayAndBack(): void

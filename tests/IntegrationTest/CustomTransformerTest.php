@@ -19,11 +19,14 @@ use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Money\ObjectWithIntegerBackedMoneyProperty;
 use Rekalogika\Mapper\Tests\Fixtures\Money\ObjectWithMoneyAmountDto;
 
+/**
+ * @internal
+ */
 class CustomTransformerTest extends FrameworkTestCase
 {
     public function testMoneyToMoneyDto(): void
     {
-        $money = Money::of("100000.00", 'IDR');
+        $money = Money::of('100000.00', 'IDR');
         $moneyDto = $this->mapper->map($money, MoneyDto::class);
 
         $this->assertSame('100000.00', $moneyDto->getAmount());
@@ -42,7 +45,7 @@ class CustomTransformerTest extends FrameworkTestCase
     public function testObjectWithIntegerBackedMoneyToDto(): void
     {
         $object = new ObjectWithIntegerBackedMoneyProperty();
-        $object->setAmount(Money::of("100000.00", 'IDR'));
+        $object->setAmount(Money::of('100000.00', 'IDR'));
 
         $dto = $this->mapper->map($object, ObjectWithMoneyAmountDto::class);
 

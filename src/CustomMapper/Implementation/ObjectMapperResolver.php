@@ -33,12 +33,11 @@ final class ObjectMapperResolver implements ObjectMapperResolverInterface
 
     public function __construct(
         private readonly ObjectMapperTableFactoryInterface $objectMapperTableFactory
-    ) {
-    }
+    ) {}
 
     private function getObjectMapperTable(): ObjectMapperTable
     {
-        if ($this->objectMapperTable !== null) {
+        if (null !== $this->objectMapperTable) {
             return $this->objectMapperTable;
         }
 
@@ -58,7 +57,7 @@ final class ObjectMapperResolver implements ObjectMapperResolverInterface
         $objectMapper = $this->getObjectMapperTable()
             ->getObjectMapper($sourceClass, $targetClass);
 
-        if ($objectMapper === null) {
+        if (null === $objectMapper) {
             throw new ObjectMapperNotFoundException($sourceClass, $targetClass);
         }
 

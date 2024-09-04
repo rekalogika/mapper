@@ -25,6 +25,9 @@ use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\InterfaceWithoutMapDto;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 
+/**
+ * @internal
+ */
 class InheritanceTest extends FrameworkTestCase
 {
     public function testMapToAbstractClass(): void
@@ -33,7 +36,6 @@ class InheritanceTest extends FrameworkTestCase
         $result = $this->mapper->map($concreteClassA, AbstractClassDto::class);
 
         /** @var ConcreteClassADto $result */
-
         $this->assertInstanceOf(ConcreteClassADto::class, $result);
         $this->assertSame('propertyInA', $result->propertyInA);
         $this->assertSame('propertyInParent', $result->propertyInParent);
@@ -59,7 +61,6 @@ class InheritanceTest extends FrameworkTestCase
         $result = $this->mapper->map($concreteClassA, InterfaceDto::class);
 
         /** @var ImplementationADto $result */
-
         $this->assertInstanceOf(ImplementationADto::class, $result);
         $this->assertSame('propertyInA', $result->propertyInA);
     }

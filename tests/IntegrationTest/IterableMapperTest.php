@@ -17,11 +17,15 @@ use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\Person;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonDto;
 
+/**
+ * @internal
+ */
 class IterableMapperTest extends FrameworkTestCase
 {
     public function testAdder(): void
     {
         $result = $this->iterableMapper->mapIterable($this->getIterableInput(), PersonDto::class);
+
         /** @psalm-suppress InvalidArgument */
         $result = iterator_to_array($result);
 
@@ -43,7 +47,9 @@ class IterableMapperTest extends FrameworkTestCase
     private function getIterableInput(): iterable
     {
         yield new Person('John Doe', 30);
+
         yield new Person('Jane Doe', 25);
+
         yield new Person('Foo Bar', 99);
     }
 }

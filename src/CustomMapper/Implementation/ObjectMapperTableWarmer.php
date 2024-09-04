@@ -26,8 +26,7 @@ final readonly class ObjectMapperTableWarmer implements CacheWarmerInterface
     public function __construct(
         private ObjectMapperTableFactoryInterface $objectMapperTableFactory,
         private KernelInterface $kernel,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function isOptional(): bool
@@ -39,13 +38,13 @@ final readonly class ObjectMapperTableWarmer implements CacheWarmerInterface
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $mapping = VarExporter::export($this->objectMapperTableFactory->createObjectMapperTable());
-        file_put_contents($this->getCacheFilePath(), '<?php return ' . $mapping . ';');
+        file_put_contents($this->getCacheFilePath(), '<?php return '.$mapping.';');
 
         return [];
     }
 
     private function getCacheFilePath(): string
     {
-        return $this->kernel->getBuildDir() . '/rekalogika_mapper_mapper_table.php';
+        return $this->kernel->getBuildDir().'/rekalogika_mapper_mapper_table.php';
     }
 }

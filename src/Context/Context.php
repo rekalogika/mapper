@@ -17,6 +17,7 @@ use Rekalogika\Mapper\Exception\LogicException;
 
 /**
  * @immutable
+ *
  * @implements \IteratorAggregate<int,object>
  */
 final readonly class Context implements \IteratorAggregate
@@ -26,8 +27,7 @@ final readonly class Context implements \IteratorAggregate
      */
     private function __construct(
         readonly private array $context = []
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function getIterator(): \Traversable
@@ -85,8 +85,10 @@ final readonly class Context implements \IteratorAggregate
 
     /**
      * @template T of object
+     *
      * @param class-string<T> $class
-     * @return T|null
+     *
+     * @return null|T
      */
     public function get(string $class): ?object
     {
@@ -96,8 +98,10 @@ final readonly class Context implements \IteratorAggregate
 
     /**
      * @template T of object
+     *
      * @param class-string<T> $class
-     * @return T|null
+     *
+     * @return null|T
      */
     public function __invoke(string $class): ?object
     {

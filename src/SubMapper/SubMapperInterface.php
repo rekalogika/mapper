@@ -21,7 +21,9 @@ interface SubMapperInterface
      * Maps a source to the specified target.
      *
      * @template T of object
+     *
      * @param class-string<T>|T $target
+     *
      * @return ($source is null ? null : T)
      */
     public function map(
@@ -31,7 +33,7 @@ interface SubMapperInterface
     ): ?object;
 
     /**
-     * Maps a source to the type of the specified class & property
+     * Maps a source to the type of the specified class & property.
      *
      * @param class-string|object $containing
      */
@@ -43,15 +45,17 @@ interface SubMapperInterface
     ): mixed;
 
     /**
-     * Add the target to the object cache
+     * Add the target to the object cache.
      */
     public function cache(mixed $target): void;
 
     /**
      * @template T of object
-     * @param class-string<T> $class
-     * @param callable(T):void $initializer
+     *
+     * @param class-string<T>   $class
+     * @param callable(T):void  $initializer
      * @param array<int,string> $eagerProperties
+     *
      * @return T
      */
     public function createProxy(

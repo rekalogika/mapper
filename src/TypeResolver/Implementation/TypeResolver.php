@@ -24,7 +24,7 @@ use Symfony\Component\PropertyInfo\Type;
 final readonly class TypeResolver implements TypeResolverInterface
 {
     #[\Override]
-    public function getTypeString(Type|MixedType $type): string
+    public function getTypeString(MixedType|Type $type): string
     {
         return TypeUtil::getTypeString($type);
     }
@@ -36,11 +36,13 @@ final readonly class TypeResolver implements TypeResolverInterface
     }
 
     #[\Override]
-    public function getSimpleTypes(array|Type|MixedType $type): array
+    public function getSimpleTypes(array|MixedType|Type $type): array
     {
         if ($type instanceof MixedType) {
             return [$type];
-        } elseif (is_array($type)) {
+        }
+
+        if (is_array($type)) {
             $simpleTypes = [];
 
             foreach ($type as $i) {
@@ -56,7 +58,7 @@ final readonly class TypeResolver implements TypeResolverInterface
     }
 
     #[\Override]
-    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array
+    public function getAcceptedTransformerInputTypeStrings(MixedType|Type $type): array
     {
         if ($type instanceof MixedType) {
             return ['mixed'];
@@ -68,9 +70,8 @@ final readonly class TypeResolver implements TypeResolverInterface
         );
     }
 
-
     #[\Override]
-    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array
+    public function getAcceptedTransformerOutputTypeStrings(MixedType|Type $type): array
     {
         return $this->getAcceptedTransformerInputTypeStrings($type);
     }

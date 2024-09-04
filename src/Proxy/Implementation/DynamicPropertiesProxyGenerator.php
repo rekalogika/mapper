@@ -25,8 +25,7 @@ final readonly class DynamicPropertiesProxyGenerator implements ProxyGeneratorIn
 {
     public function __construct(
         private ProxyGeneratorInterface $decorated,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function generateProxyCode(string $realClass, string $proxyClass): string
@@ -38,7 +37,6 @@ final readonly class DynamicPropertiesProxyGenerator implements ProxyGeneratorIn
                 throw new ProxyNotSupportedException($realClass, reason: 'Objects with dynamic properties do not support proxying.');
             }
         } while ($reflection = $reflection->getParentClass());
-
 
         return $this->decorated->generateProxyCode($realClass, $proxyClass);
     }

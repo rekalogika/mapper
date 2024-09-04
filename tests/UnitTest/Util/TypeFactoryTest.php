@@ -16,6 +16,9 @@ namespace Rekalogika\Mapper\Tests\UnitTest\Util;
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Util\TypeFactory;
 
+/**
+ * @internal
+ */
 class TypeFactoryTest extends TestCase
 {
     public function testTypes(): void

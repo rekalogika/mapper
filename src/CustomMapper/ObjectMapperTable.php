@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Util\ClassUtil;
 
 /**
  * @implements \IteratorAggregate<int,ObjectMapperTableEntry>
+ *
  * @internal
  */
 final class ObjectMapperTable implements \IteratorAggregate
@@ -38,8 +39,8 @@ final class ObjectMapperTable implements \IteratorAggregate
     }
 
     /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
+     * @param class-string                                      $sourceClass
+     * @param class-string                                      $targetClass
      * @param array<int,ServiceMethodSpecification::ARGUMENT_*> $extraArguments
      */
     public function addObjectMapper(

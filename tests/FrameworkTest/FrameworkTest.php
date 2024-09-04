@@ -17,6 +17,9 @@ use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 
+/**
+ * @internal
+ */
 class FrameworkTest extends TestCase
 {
     private ?ContainerInterface $container = null;
@@ -33,7 +36,7 @@ class FrameworkTest extends TestCase
     public function testWiring(): void
     {
         foreach (TestKernel::getServiceIds() as $serviceId) {
-            $service = $this->container?->get('test.' . $serviceId);
+            $service = $this->container?->get('test.'.$serviceId);
 
             $this->assertIsObject($service);
         }
