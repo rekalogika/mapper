@@ -26,6 +26,9 @@ use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\Model\TraversableCountableWrapper;
 
+/**
+ * @internal
+ */
 class TraversableToTraversableMappingTest extends FrameworkTestCase
 {
     //
@@ -46,7 +49,7 @@ class TraversableToTraversableMappingTest extends FrameworkTestCase
             $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $item);
 
             $this->assertEquals(1, $item->a);
-            $this->assertEquals("string", $item->b);
+            $this->assertEquals('string', $item->b);
             $this->assertEquals(true, $item->c);
             $this->assertEquals(1.1, $item->d);
         }
@@ -66,7 +69,7 @@ class TraversableToTraversableMappingTest extends FrameworkTestCase
             $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $item);
 
             $this->assertEquals(1, $item->a);
-            $this->assertEquals("string", $item->b);
+            $this->assertEquals('string', $item->b);
             $this->assertEquals(true, $item->c);
             $this->assertEquals(1.1, $item->d);
         }
@@ -122,7 +125,7 @@ class TraversableToTraversableMappingTest extends FrameworkTestCase
             $this->assertInstanceOf(ObjectWithScalarProperties::class, $item);
 
             $this->assertEquals(1, $item->a);
-            $this->assertEquals("string", $item->b);
+            $this->assertEquals('string', $item->b);
             $this->assertEquals(true, $item->c);
             $this->assertEquals(1.1, $item->d);
         }

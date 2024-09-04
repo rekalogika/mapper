@@ -20,8 +20,8 @@ class UnableToReadException extends NotMappableValueException
     public function __construct(
         mixed $source,
         string $property,
-        \Throwable $previous = null,
-        Context $context = null,
+        ?\Throwable $previous = null,
+        ?Context $context = null,
     ) {
         parent::__construct(
             message: sprintf(

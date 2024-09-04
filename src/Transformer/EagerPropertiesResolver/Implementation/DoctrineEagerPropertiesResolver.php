@@ -22,9 +22,7 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolve
  */
 final readonly class DoctrineEagerPropertiesResolver implements EagerPropertiesResolverInterface
 {
-    public function __construct(private ManagerRegistry $managerRegistry)
-    {
-    }
+    public function __construct(private ManagerRegistry $managerRegistry) {}
 
     #[\Override]
     public function getEagerProperties(string $sourceClass): array
@@ -37,7 +35,7 @@ final readonly class DoctrineEagerPropertiesResolver implements EagerPropertiesR
 
         try {
             $metadata = $manager->getClassMetadata($sourceClass);
-        } catch (\ReflectionException | MappingException) {
+        } catch (MappingException|\ReflectionException) {
             return [];
         }
 

@@ -20,9 +20,7 @@ use Rekalogika\Mapper\Exception\RuntimeException;
  */
 class UninitializedSourcePropertyException extends RuntimeException
 {
-    public function __construct(private readonly string $propertyName)
-    {
-    }
+    public function __construct(private readonly string $propertyName) {}
 
     public function getPropertyName(): string
     {

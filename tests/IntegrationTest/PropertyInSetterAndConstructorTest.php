@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyInSetterAndConstructor\ChildObjectD
 use Rekalogika\Mapper\Tests\Fixtures\PropertyInSetterAndConstructor\ParentObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyInSetterAndConstructor\ParentObjectDto;
 
+/**
+ * @internal
+ */
 class PropertyInSetterAndConstructorTest extends FrameworkTestCase
 {
     public function testPropertyInSetterAndConstructor(): void
@@ -41,7 +44,7 @@ class PropertyInSetterAndConstructorTest extends FrameworkTestCase
         $dto->child = new ChildObjectDto();
         $dto->child->a = 'dto-a';
 
-        $entity =  new ParentObject('entity-name', new ChildObject('entity-a'));
+        $entity = new ParentObject('entity-name', new ChildObject('entity-a'));
         $this->mapper->map($dto, $entity);
 
         $this->assertSame('dto-name', $entity->getName());

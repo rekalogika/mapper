@@ -17,6 +17,9 @@ use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
 
+/**
+ * @internal
+ */
 class ArrayLikeObjectTest extends TestCase
 {
     public function testSplObjectStorageWrapper(): void
@@ -24,10 +27,12 @@ class ArrayLikeObjectTest extends TestCase
         $object = new SplObjectStorageWrapper(new \SplObjectStorage());
 
         $key1 = new \stdClass();
+
         /** @psalm-suppress InvalidArgument */
         $object[$key1] = 'key1';
 
         $key2 = new \stdClass();
+
         /** @psalm-suppress InvalidArgument */
         $object[$key2] = 'key2';
 
@@ -46,11 +51,12 @@ class ArrayLikeObjectTest extends TestCase
     public function testObjectStorage(): void
     {
         /**
-         * @var HashTable<bool|float|int|object|string|null,string>
+         * @var HashTable<null|bool|float|int|object|string,string>
          */
         $object = new HashTable();
 
         $objectKey = new \stdClass();
+
         /** @psalm-suppress InvalidArgument */
         $object[$objectKey] = 'objectKey';
 
@@ -63,7 +69,7 @@ class ArrayLikeObjectTest extends TestCase
         $boolKey = true;
         $object[$boolKey] = 'boolKey';
 
-        $floatKey  = 1.1;
+        $floatKey = 1.1;
         $object[$floatKey] = 'floatKey';
 
         $this->assertCount(5, $object);
@@ -76,18 +82,27 @@ class ArrayLikeObjectTest extends TestCase
             switch ($value) {
                 case 'objectKey':
                     $this->assertInstanceOf(\stdClass::class, $key);
+
                     break;
+
                 case 'stringKey':
                     $this->assertIsString($key);
+
                     break;
+
                 case 'intKey':
                     $this->assertIsInt($key);
+
                     break;
+
                 case 'boolKey':
                     $this->assertIsBool($key);
+
                     break;
+
                 case 'floatKey':
                     $this->assertIsFloat($key);
+
                     break;
             }
         }

@@ -17,6 +17,5 @@ readonly class ReadOnlyObjectDto
 {
     public function __construct(
         public string $name
-    ) {
-    }
+    ) {}
 }

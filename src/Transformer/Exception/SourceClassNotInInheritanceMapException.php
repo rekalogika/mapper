@@ -25,7 +25,7 @@ class SourceClassNotInInheritanceMapException extends NotMappableValueException
     public function __construct(
         string $sourceClass,
         string $targetClass,
-        Context $context = null,
+        ?Context $context = null,
     ) {
         parent::__construct(
             message: sprintf(

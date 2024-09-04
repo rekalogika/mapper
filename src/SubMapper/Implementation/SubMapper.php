@@ -41,8 +41,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         private mixed $source,
         private ?Type $targetType,
         private Context $context,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function map(
@@ -50,7 +49,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         object|string $target,
         ?Context $context = null,
     ): ?object {
-        if ($source === null) {
+        if (null === $source) {
             return null;
         }
 
@@ -87,7 +86,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
     #[\Override]
     public function mapForProperty(
         ?object $source,
-        string|object $containing,
+        object|string $containing,
         string $property,
         ?Context $context = null,
     ): mixed {
@@ -98,7 +97,8 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             try {
                 /** @var mixed */
                 $targetPropertyValue = $this->propertyAccessor
-                    ->getValue($containingObject, $property);
+                    ->getValue($containingObject, $property)
+                ;
 
                 if (is_scalar($targetPropertyValue)) {
                     $targetPropertyValue = null;
@@ -112,27 +112,25 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             $targetPropertyValue = null;
         }
 
-
-        /** @var array<int,Type>|null */
+        /** @var null|array<int,Type> */
         $targetPropertyTypes = $this->propertyTypeExtractor
-            ->getTypes($containingClass, $property);
+            ->getTypes($containingClass, $property)
+        ;
 
         /** @var mixed */
-        $result = $this->getMainTransformer()->transform(
+        return $this->getMainTransformer()->transform(
             source: $source,
             target: $targetPropertyValue,
             sourceType: null,
             targetTypes: $targetPropertyTypes ?? [],
             context: $context ?? $this->context
         );
-
-        return $result;
     }
 
     #[\Override]
     public function cache(mixed $target): void
     {
-        if ($this->targetType === null) {
+        if (null === $this->targetType) {
             throw new CacheNotSupportedException($this->context);
         }
 

@@ -24,7 +24,9 @@ use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
 /**
  * @template TKey of array-key
  * @template TValue
+ *
  * @implements CollectionInterface<TKey,TValue>
+ *
  * @internal
  */
 final class LazyArray implements CollectionInterface
@@ -45,10 +47,10 @@ final class LazyArray implements CollectionInterface
     private bool $isCacheComplete = false;
 
     /**
-     * @param (\Traversable<TKey,mixed>&\ArrayAccess<TKey,mixed>&\Countable)|array<TKey,mixed> $source
+     * @param array<TKey,mixed>|(\ArrayAccess<TKey,mixed>&\Countable&\Traversable<TKey,mixed>) $source
      */
     public function __construct(
-        private (\Traversable&\ArrayAccess&\Countable)|array $source,
+        private array|(\ArrayAccess&\Countable&\Traversable) $source,
         MainTransformerInterface $mainTransformer,
         private ArrayLikeMetadata $metadata,
         private Context $context,
@@ -70,7 +72,7 @@ final class LazyArray implements CollectionInterface
         }
 
         /**
-         * @var TKey $key
+         * @var TKey   $key
          * @var TValue $value
          */
         [$key, $value] = $this->transformMember(
@@ -116,14 +118,15 @@ final class LazyArray implements CollectionInterface
             if (isset($this->cachedData[$sourceMemberKey])) {
                 /** @psalm-suppress InvalidPropertyAssignmentValue */
                 $this->cachedKeyOrder[] = $sourceMemberKey;
+
                 yield $sourceMemberKey => $this->cachedData[$sourceMemberKey];
 
                 continue;
             }
 
             /**
-             * @var TKey|null $key
-             * @var TValue $value
+             * @var null|TKey $key
+             * @var TValue    $value
              */
             [$key, $value] = $this->transformMember(
                 sourceMemberKey: $sourceMemberKey,
@@ -132,17 +135,19 @@ final class LazyArray implements CollectionInterface
                 context: $this->context,
             );
 
-            if ($key === null) {
+            if (null === $key) {
                 /** @psalm-suppress InvalidPropertyAssignmentValue */
                 $this->cachedData[] = $value;
                 $lastKey = \array_key_last($this->cachedData);
+
                 /** @psalm-suppress InvalidPropertyAssignmentValue */
                 $this->cachedKeyOrder[] = $lastKey;
 
                 yield $lastKey => $value;
 
                 continue;
-            } elseif ($key !== $sourceMemberKey) {
+            }
+            if ($key !== $sourceMemberKey) {
                 throw new LogicException(
                     sprintf(
                         'Transformation in keys detected. Source key: "%s", transformed key: "%s".',
@@ -155,6 +160,7 @@ final class LazyArray implements CollectionInterface
 
             /** @psalm-suppress InvalidPropertyAssignmentValue */
             $this->cachedData[$key] = $value;
+
             /** @psalm-suppress InvalidPropertyAssignmentValue */
             $this->cachedKeyOrder[] = $key;
 

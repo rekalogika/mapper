@@ -27,7 +27,8 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         $propertyMapperResolver = $container
-            ->getDefinition('rekalogika.mapper.property_mapper.resolver');
+            ->getDefinition('rekalogika.mapper.property_mapper.resolver')
+        ;
 
         $taggedServices = $container->findTaggedServiceIds('rekalogika.mapper.property_mapper');
 

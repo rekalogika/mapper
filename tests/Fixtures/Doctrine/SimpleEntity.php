@@ -28,7 +28,7 @@ class SimpleEntity
 
     public function getId(): int
     {
-        if ($this->id === null) {
+        if (null === $this->id) {
             throw new \LogicException('The identifier is not set.');
         }
 

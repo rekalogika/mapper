@@ -17,6 +17,5 @@ class MemberDto
 {
     public function __construct(
         public string $id,
-    ) {
-    }
+    ) {}
 }

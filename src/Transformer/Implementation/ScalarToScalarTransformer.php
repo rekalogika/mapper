@@ -35,6 +35,7 @@ final readonly class ScalarToScalarTransformer implements TransformerInterface
         }
 
         $targetTypeBuiltIn = $targetType?->getBuiltinType();
+
         return match ($targetTypeBuiltIn) {
             Type::BUILTIN_TYPE_INT => (int) $source,
             Type::BUILTIN_TYPE_FLOAT => (float) $source,

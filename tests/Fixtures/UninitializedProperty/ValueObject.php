@@ -17,6 +17,5 @@ final readonly class ValueObject
 {
     public function __construct(
         public string $name
-    ) {
-    }
+    ) {}
 }

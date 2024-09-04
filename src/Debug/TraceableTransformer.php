@@ -27,17 +27,14 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final class TraceableTransformer extends AbstractTransformerDecorator implements
-    TransformerInterface,
-    MainTransformerAwareInterface
+final class TraceableTransformer extends AbstractTransformerDecorator implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
 
     public function __construct(
         private TransformerInterface $decorated,
         private MapperDataCollector $dataCollector
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function getDecorated(): TransformerInterface
@@ -107,13 +104,14 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
 
         try {
             $start = microtime(true);
+
             /** @var mixed */
             $result = $this->decorated->transform($source, $target, $sourceType, $targetType, $context);
             $time = microtime(true) - $start;
 
             $traceData->finalize($time, $result);
 
-            if ($parentTraceData === null) {
+            if (null === $parentTraceData) {
                 $this->dataCollector->collectTraceData($traceData);
             }
 

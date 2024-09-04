@@ -14,20 +14,17 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 /**
- * Sentinel class to indicate mixed type
+ * Sentinel class to indicate mixed type.
  */
-
 final class MixedType
 {
     private static ?self $instance = null;
 
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function instance(): self
     {
-        if (self::$instance === null) {
+        if (null === self::$instance) {
             self::$instance = new self();
         }
 

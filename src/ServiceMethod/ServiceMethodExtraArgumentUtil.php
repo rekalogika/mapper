@@ -23,12 +23,11 @@ use Rekalogika\Mapper\SubMapper\SubMapperInterface;
  */
 final readonly class ServiceMethodExtraArgumentUtil
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * @param class-string $serviceClass
+     *
      * @return array<int,ServiceMethodSpecification::ARGUMENT_*>
      */
     public static function getExtraArguments(

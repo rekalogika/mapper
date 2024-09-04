@@ -34,35 +34,38 @@ final readonly class DebugPass implements CompilerPassInterface
         $taggedServices = $container->findTaggedServiceIds('rekalogika.mapper.transformer');
 
         foreach (array_keys($taggedServices) as $serviceId) {
-            $decoratedServiceId = 'debug.' . $serviceId;
+            $decoratedServiceId = 'debug.'.$serviceId;
 
             $container->register($decoratedServiceId, TraceableTransformer::class)
                 ->setDecoratedService($serviceId)
                 ->setArguments([
-                    new Reference($decoratedServiceId . '.inner'),
+                    new Reference($decoratedServiceId.'.inner'),
                     $dataCollector,
-                ]);
+                ])
+            ;
         }
 
         // decorates ObjectToObjectMetadataFactory
 
         $serviceId = 'rekalogika.mapper.object_to_object_metadata_factory.cache';
-        $container->register('debug.' . $serviceId, TraceableObjectToObjectMetadataFactory::class)
+        $container->register('debug.'.$serviceId, TraceableObjectToObjectMetadataFactory::class)
             ->setDecoratedService($serviceId)
             ->setArguments([
-                new Reference('debug.' . $serviceId . '.inner'),
+                new Reference('debug.'.$serviceId.'.inner'),
                 $dataCollector,
-            ]);
+            ])
+        ;
 
         // decorates mapping factory
 
         $serviceId = 'rekalogika.mapper.mapping_factory';
-        $container->register('debug.' . $serviceId, TraceableMappingFactory::class)
+        $container->register('debug.'.$serviceId, TraceableMappingFactory::class)
             ->setDecoratedService($serviceId, null, 50)
             ->setArguments([
-                new Reference('debug.' . $serviceId . '.inner'),
+                new Reference('debug.'.$serviceId.'.inner'),
                 $dataCollector,
             ])
-            ->addTag('kernel.reset', ['method' => 'reset']);
+            ->addTag('kernel.reset', ['method' => 'reset'])
+        ;
     }
 }

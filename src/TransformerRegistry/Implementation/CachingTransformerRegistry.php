@@ -31,8 +31,7 @@ final class CachingTransformerRegistry implements TransformerRegistryInterface
     public function __construct(
         private readonly TransformerRegistryInterface $decorated,
         private readonly CacheItemPoolInterface $cacheItemPool,
-    ) {
-    }
+    ) {}
 
     /**
      * @var array<string,TransformerInterface>

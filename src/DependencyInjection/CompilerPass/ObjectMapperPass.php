@@ -27,7 +27,8 @@ final readonly class ObjectMapperPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         $objectMapperTableFactory = $container
-            ->getDefinition('rekalogika.mapper.object_mapper.table_factory');
+            ->getDefinition('rekalogika.mapper.object_mapper.table_factory')
+        ;
 
         $taggedServices = $container->findTaggedServiceIds('rekalogika.mapper.object_mapper');
 

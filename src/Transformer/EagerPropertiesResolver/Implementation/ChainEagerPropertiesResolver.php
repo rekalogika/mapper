@@ -23,9 +23,7 @@ final readonly class ChainEagerPropertiesResolver implements EagerPropertiesReso
     /**
      * @param iterable<EagerPropertiesResolverInterface> $resolvers
      */
-    public function __construct(private iterable $resolvers)
-    {
-    }
+    public function __construct(private iterable $resolvers) {}
 
     #[\Override]
     public function getEagerProperties(string $sourceClass): array

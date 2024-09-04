@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Transformer\Implementation\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Symfony\Component\Clock\DatePoint;
 
+/**
+ * @internal
+ */
 class MainTransformerTest extends FrameworkTestCase
 {
     public function testMapping(): void

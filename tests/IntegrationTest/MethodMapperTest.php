@@ -24,6 +24,8 @@ use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 /**
  * @deprecated
+ *
+ * @internal
  */
 class MethodMapperTest extends FrameworkTestCase
 {
@@ -124,5 +126,4 @@ class MethodMapperTest extends FrameworkTestCase
         $this->assertIsArray($result->property);
         $this->assertCount(3, $result->property);
     }
-
 }

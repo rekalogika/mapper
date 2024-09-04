@@ -23,6 +23,9 @@ use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesAndAdditio
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 
+/**
+ * @internal
+ */
 class ConstructorTest extends FrameworkTestCase
 {
     public function testConstructor(): void

@@ -33,7 +33,7 @@ final class RekalogikaMapperExtension extends Extension
     #[\Override]
     public function load(array $configs, ContainerBuilder $container): void
     {
-        $loader = new PhpFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
 
         // load services
 
@@ -44,7 +44,7 @@ final class RekalogikaMapperExtension extends Extension
         $env = $container->getParameter('kernel.environment');
         $debug = (bool) $container->getParameter('kernel.debug');
 
-        if ($env === 'test' && class_exists(TestKernel::class)) {
+        if ('test' === $env && class_exists(TestKernel::class)) {
             $loader->import('tests.php');
         }
 
@@ -57,10 +57,12 @@ final class RekalogikaMapperExtension extends Extension
         // autoconfiguration
 
         $container->registerForAutoconfiguration(TransformerInterface::class)
-            ->addTag('rekalogika.mapper.transformer');
+            ->addTag('rekalogika.mapper.transformer')
+        ;
 
         $container->registerForAutoconfiguration(EagerPropertiesResolverInterface::class)
-            ->addTag('rekalogika.mapper.eager_properties_resolver');
+            ->addTag('rekalogika.mapper.eager_properties_resolver')
+        ;
 
         $container->registerAttributeForAutoconfiguration(
             AsPropertyMapper::class,
@@ -85,16 +87,17 @@ final class RekalogikaMapperExtension extends Extension
 
         $classReflection = $reflector->getDeclaringClass();
         $classAttributeReflection = $classReflection
-            ->getAttributes(AsPropertyMapper::class)[0] ?? null;
+            ->getAttributes(AsPropertyMapper::class)[0] ?? null
+        ;
 
         // populate tag attributes from AsPropertyMapper attribute
         // attached to the class
 
-        if ($classAttributeReflection !== null) {
+        if (null !== $classAttributeReflection) {
             $classAttribute = $classAttributeReflection->newInstance();
             $tagAttributes['targetClass'] = $classAttribute->targetClass;
 
-            if ($classAttribute->property !== null) {
+            if (null !== $classAttribute->property) {
                 throw new LogicException(sprintf(
                     '"AsPropertyMapper" attribute attached to the class "%s" must not have "property" attribute.',
                     $classReflection->getName()
@@ -106,11 +109,11 @@ final class RekalogikaMapperExtension extends Extension
 
         $tagAttributes['method'] = $reflector->getName();
 
-        if ($attribute->property !== null) {
+        if (null !== $attribute->property) {
             $tagAttributes['property'] = $attribute->property;
         }
 
-        if ($attribute->targetClass !== null) {
+        if (null !== $attribute->targetClass) {
             $tagAttributes['targetClass'] = $attribute->targetClass;
         }
 
@@ -120,7 +123,7 @@ final class RekalogikaMapperExtension extends Extension
         $firstParameter = $parameters[0] ?? null;
         $type = $firstParameter?->getType();
 
-        if ($type === null || !$type instanceof \ReflectionNamedType) {
+        if (null === $type || !$type instanceof \ReflectionNamedType) {
             throw new LogicException(
                 sprintf(
                     'Unable to determine the source class for property mapper service "%s", method "%s".',
@@ -139,7 +142,7 @@ final class RekalogikaMapperExtension extends Extension
             $name = $reflector->getName();
             // remove 'map' prefix if exists
             $name = preg_replace('/^map/', '', $name);
-            if ($name === null) {
+            if (null === $name) {
                 throw new LogicException(
                     sprintf(
                         'Unable to determine the property name for property mapper service "%s", method "%s".',
@@ -216,7 +219,7 @@ final class RekalogikaMapperExtension extends Extension
         $firstParameter = $parameters[0] ?? null;
         $type = $firstParameter?->getType();
 
-        if ($type === null || !$type instanceof \ReflectionNamedType) {
+        if (null === $type || !$type instanceof \ReflectionNamedType) {
             throw new LogicException(
                 sprintf(
                     'Unable to determine the source class for property mapper service "%s", method "%s".',
@@ -232,7 +235,7 @@ final class RekalogikaMapperExtension extends Extension
 
         $returnType = $reflector->getReturnType();
 
-        if ($returnType === null || !$returnType instanceof \ReflectionNamedType) {
+        if (null === $returnType || !$returnType instanceof \ReflectionNamedType) {
             throw new LogicException(
                 sprintf(
                     'Unable to determine the target class for property mapper service "%s", method "%s".',

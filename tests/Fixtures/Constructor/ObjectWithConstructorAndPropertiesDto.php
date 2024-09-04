@@ -18,8 +18,7 @@ class ObjectWithConstructorAndPropertiesDto
     public function __construct(
         private readonly int $a = 1,
         private readonly string $b = 'string',
-    ) {
-    }
+    ) {}
 
     private ?bool $c = null;
 

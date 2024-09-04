@@ -29,8 +29,8 @@ final class MappingEntry
     public function __construct(
         private readonly string $id,
         private readonly string $class,
-        private readonly Type|MixedType $sourceType,
-        private readonly Type|MixedType $targetType,
+        private readonly MixedType|Type $sourceType,
+        private readonly MixedType|Type $targetType,
         private readonly string $sourceTypeString,
         private readonly string $targetTypeString,
         private readonly bool $variantTargetType,
@@ -44,7 +44,7 @@ final class MappingEntry
                 );
             }
 
-            if ($targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+            if (Type::BUILTIN_TYPE_OBJECT !== $targetType->getBuiltinType()) {
                 throw new InvalidArgumentException(sprintf(
                     'Variant target type must be object, %s given',
                     $targetType->getBuiltinType()
@@ -74,19 +74,19 @@ final class MappingEntry
             return true;
         }
 
-        if ($this->targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+        if (Type::BUILTIN_TYPE_OBJECT !== $this->targetType->getBuiltinType()) {
             return false;
         }
 
         return $this->variantTargetType;
     }
 
-    public function getSourceType(): Type|MixedType
+    public function getSourceType(): MixedType|Type
     {
         return $this->sourceType;
     }
 
-    public function getTargetType(): Type|MixedType
+    public function getTargetType(): MixedType|Type
     {
         return $this->targetType;
     }

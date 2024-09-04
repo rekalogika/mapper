@@ -23,6 +23,9 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolve
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\DoctrineEagerPropertiesResolver;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
+/**
+ * @internal
+ */
 class DoctrineTest extends FrameworkTestCase
 {
     public function testDoctrine(): void
@@ -112,5 +115,4 @@ class DoctrineTest extends FrameworkTestCase
         $entity = $this->mapper->map($input, SimpleEntity::class);
         $this->assertNotInstanceOf(LazyObjectInterface::class, $entity);
     }
-
 }

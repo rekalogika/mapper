@@ -31,8 +31,7 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
     public function __construct(
         private readonly ArrayLikeMetadataFactoryInterface $decorated,
         private readonly CacheItemPoolInterface $cacheItemPool,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function createArrayLikeMetadata(
@@ -63,7 +62,8 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
         }
 
         $arrayLikeMetadata = $this->decorated
-            ->createArrayLikeMetadata($sourceType, $targetType);
+            ->createArrayLikeMetadata($sourceType, $targetType)
+        ;
 
         $cacheItem->set($arrayLikeMetadata);
         $this->cacheItemPool->save($cacheItem);

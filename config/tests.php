@@ -40,14 +40,15 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->defaults()
         ->autowire()
         ->autoconfigure()
-        ->public();
+        ->public()
+    ;
 
     // add test aliases
     $serviceIds = TestKernel::getServiceIds();
 
     foreach ($serviceIds as $serviceId) {
-        $services->alias('test.' . $serviceId, $serviceId)->public();
-    };
+        $services->alias('test.'.$serviceId, $serviceId)->public();
+    }
 
     $services->set(PropertyMapperWithoutClassAttribute::class);
     $services->set(PropertyMapperWithClassAttribute::class);
@@ -62,23 +63,28 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set(MemberDtoToMemberMapper::class)
         ->args([
             '$memberRepository' => service(MemberRepository::class),
-        ]);
+        ])
+    ;
 
     $services->set(MoneyToMoneyDtoTransformer::class)
-        ->tag('rekalogika.mapper.transformer');
+        ->tag('rekalogika.mapper.transformer')
+    ;
     $services->set(OverrideTransformer::class)
         ->tag('rekalogika.mapper.transformer')
         ->args([
             '$transformer' => service(ScalarToScalarTransformer::class),
-        ]);
+        ])
+    ;
     $services->set(InvalidTransformer::class)
-        ->tag('rekalogika.mapper.transformer');
+        ->tag('rekalogika.mapper.transformer')
+    ;
 
     $services->set(TestLogger::class)
         ->decorate(LoggerInterface::class)
         ->args([
             '$logger' => service('.inner'),
-        ]);
+        ])
+    ;
 
     $services->set(RememberingMapper::class)
         ->args([

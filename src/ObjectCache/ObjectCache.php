@@ -36,6 +36,7 @@ final class ObjectCache
     ) {
         /** @psalm-suppress MixedPropertyTypeCoercion */
         $this->cache = new \WeakMap();
+
         /** @psalm-suppress MixedPropertyTypeCoercion */
         $this->preCache = new \WeakMap();
     }
@@ -145,7 +146,7 @@ final class ObjectCache
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
 
         if (
-            $addIfAlreadyExists === false
+            false === $addIfAlreadyExists
             && isset($this->cache[$source][$targetTypeString])
         ) {
             throw new LogicException(sprintf(

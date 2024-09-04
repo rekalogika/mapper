@@ -20,6 +20,9 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsObject;
 use Rekalogika\Mapper\Transformer\Implementation\ArrayObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 
+/**
+ * @internal
+ */
 class DataCollectorTest extends FrameworkTestCase
 {
     public function testDataCollector(): void

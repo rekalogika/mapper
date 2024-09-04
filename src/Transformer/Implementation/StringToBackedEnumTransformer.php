@@ -37,7 +37,7 @@ final readonly class StringToBackedEnumTransformer implements TransformerInterfa
 
         $class = $targetType?->getClassName();
 
-        if ($class === null || !\enum_exists($class)) {
+        if (null === $class || !\enum_exists($class)) {
             throw new InvalidTypeInArgumentException('Target must be an enum class-string, "%s" given', $targetType, context: $context);
         }
 

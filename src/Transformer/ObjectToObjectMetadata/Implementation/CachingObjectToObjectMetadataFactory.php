@@ -33,8 +33,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         private readonly ObjectToObjectMetadataFactoryInterface $decorated,
         private readonly CacheItemPoolInterface $cacheItemPool,
         private readonly bool $debug,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function createObjectToObjectMetadata(
@@ -52,7 +51,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         string $sourceClass,
         string $targetClass,
     ): ObjectToObjectMetadata {
-        $cacheKey = $sourceClass . ':' . $targetClass;
+        $cacheKey = $sourceClass.':'.$targetClass;
 
         if (isset($this->cache[$cacheKey])) {
             $result = $this->cache[$cacheKey];
@@ -74,7 +73,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         string $sourceClass,
         string $targetClass,
     ): ObjectToObjectMetadata {
-        $cacheKey = hash('xxh128', $sourceClass . $targetClass);
+        $cacheKey = hash('xxh128', $sourceClass.$targetClass);
 
         $cacheItem = $this->cacheItemPool->getItem($cacheKey);
 
@@ -99,7 +98,8 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         }
 
         $objectToObjectMetadata = $this->decorated
-            ->createObjectToObjectMetadata($sourceClass, $targetClass);
+            ->createObjectToObjectMetadata($sourceClass, $targetClass)
+        ;
 
         $cacheItem->set($objectToObjectMetadata);
         $this->cacheItemPool->save($cacheItem);

@@ -29,16 +29,13 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @deprecated
  */
-final class ClassMethodTransformer implements
-    TransformerInterface,
-    MainTransformerAwareInterface
+final class ClassMethodTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
 
     public function __construct(
         private SubMapperFactoryInterface $subMapperFactory,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function transform(
@@ -50,7 +47,7 @@ final class ClassMethodTransformer implements
     ): mixed {
         // target type must not be null
 
-        if ($targetType === null) {
+        if (null === $targetType) {
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
@@ -74,9 +71,7 @@ final class ClassMethodTransformer implements
             throw new InvalidArgumentException(sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
         }
 
-
         if (is_a($targetClass, MapFromObjectInterface::class, true)) {
-
             // map from object to self path
 
             if (!is_object($source)) {
@@ -85,7 +80,6 @@ final class ClassMethodTransformer implements
 
             $result = $targetClass::mapFromObject($source, $subMapper, $context);
         } elseif ($source instanceof MapToObjectInterface) {
-
             // map self to object path
 
             if (!is_object($target)) {

@@ -18,6 +18,9 @@ use Rekalogika\Mapper\Tests\Fixtures\Inheritance\AbstractClass;
 use Rekalogika\Mapper\Tests\Fixtures\Inheritance\ConcreteClassA;
 use Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\ConcreteClassADto;
 
+/**
+ * @internal
+ */
 class InheritanceReversedTest extends FrameworkTestCase
 {
     public function testMapDtoToAbstractClass(): void
@@ -29,7 +32,6 @@ class InheritanceReversedTest extends FrameworkTestCase
         $result = $this->mapper->map($concreteClassADto, AbstractClass::class);
 
         /** @var ConcreteClassA $result */
-
         $this->assertInstanceOf(ConcreteClassA::class, $result);
         $this->assertSame('xxpropertyInA', $result->propertyInA);
         $this->assertSame('xxpropertyInParent', $result->propertyInParent);

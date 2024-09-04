@@ -22,8 +22,8 @@ use Symfony\Component\PropertyInfo\Type;
 class CannotFindTransformerException extends UnexpectedValueException
 {
     /**
-     * @param array<int,Type|MixedType> $sourceTypes
-     * @param array<int,Type|MixedType> $targetTypes
+     * @param array<int,MixedType|Type> $sourceTypes
+     * @param array<int,MixedType|Type> $targetTypes
      */
     public function __construct(array $sourceTypes, array $targetTypes, Context $context)
     {

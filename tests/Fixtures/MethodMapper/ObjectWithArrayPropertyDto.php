@@ -20,6 +20,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 
 /**
  * @deprecated
+ *
  * @psalm-suppress DeprecatedInterface
  */
 final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
@@ -39,7 +40,7 @@ final class ObjectWithArrayPropertyDto implements MapFromObjectInterface
 
         $result = new self();
 
-        /** @var array<int,ObjectWithScalarPropertiesDto>|null $property */
+        /** @var null|array<int,ObjectWithScalarPropertiesDto> $property */
         $property = $mapper->mapForProperty(
             $source->property,
             ObjectWithArrayPropertyDto::class,

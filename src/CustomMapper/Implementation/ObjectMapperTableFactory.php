@@ -36,8 +36,8 @@ final readonly class ObjectMapperTableFactory implements ObjectMapperTableFactor
     }
 
     /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
+     * @param class-string                                      $sourceClass
+     * @param class-string                                      $targetClass
      * @param array<int,ServiceMethodSpecification::ARGUMENT_*> $extraArguments
      */
     public function addObjectMapper(

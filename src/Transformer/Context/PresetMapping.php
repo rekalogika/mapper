@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Context;
 use Rekalogika\Mapper\Transformer\Exception\PresetMappingNotFound;
 
 /**
- * Contains preset object to object mapping, used by `PresetTransformer`
+ * Contains preset object to object mapping, used by `PresetTransformer`.
  */
 final readonly class PresetMapping
 {
@@ -51,7 +51,7 @@ final readonly class PresetMapping
     public function mergeFrom(self $presetMapping): void
     {
         /**
-         * @var object $source
+         * @var object                            $source
          * @var \ArrayObject<class-string,object> $classToTargetMapping
          */
         foreach ($presetMapping->mappings as $source => $classToTargetMapping) {
@@ -69,8 +69,11 @@ final readonly class PresetMapping
 
     /**
      * @template T of object
+     *
      * @param class-string<T> $targetClass
+     *
      * @return T
+     *
      * @throws PresetMappingNotFound
      */
     public function findResult(object $source, string $targetClass): object
@@ -87,7 +90,7 @@ final readonly class PresetMapping
             throw new PresetMappingNotFound();
         }
 
-        if (!($result instanceof $targetClass)) {
+        if (!$result instanceof $targetClass) {
             throw new PresetMappingNotFound();
         }
 

@@ -33,7 +33,7 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context
     ): mixed {
-        if ($targetType === null) {
+        if (null === $targetType) {
             throw new InvalidArgumentException(
                 sprintf(
                     'Target type is null when trying to transform type "%s" to "%s", using source "%s".',
@@ -49,7 +49,7 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
         if (is_string($source)) {
             $targetClass = $targetType->getClassName();
 
-            if ($targetClass === null) {
+            if (null === $targetClass) {
                 throw new InvalidArgumentException(
                     sprintf(
                         'Target class is null when trying to transform type "%s" to "%s", using source "%s".',
@@ -66,9 +66,10 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
         // wants to convert uuid to string
 
         if ($source instanceof UuidInterface) {
-            if ($targetType->getBuiltinType() === Type::BUILTIN_TYPE_STRING) {
+            if (Type::BUILTIN_TYPE_STRING === $targetType->getBuiltinType()) {
                 return $source->toString();
-            } elseif ($targetType->getClassName() === UuidInterface::class) {
+            }
+            if (UuidInterface::class === $targetType->getClassName()) {
                 return $source;
             }
 

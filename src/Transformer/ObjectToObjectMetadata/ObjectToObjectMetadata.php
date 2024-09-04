@@ -17,6 +17,7 @@ use Rekalogika\Mapper\Proxy\ProxyNamer;
 
 /**
  * @immutable
+ *
  * @internal
  */
 final readonly class ObjectToObjectMetadata
@@ -47,13 +48,13 @@ final readonly class ObjectToObjectMetadata
     private array $eagerPropertyMappings;
 
     /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass Effective target class after resolving inheritance map
-     * @param class-string $providedTargetClass
+     * @param class-string               $sourceClass
+     * @param class-string               $targetClass                              Effective target class after resolving inheritance map
+     * @param class-string               $providedTargetClass
      * @param array<int,PropertyMapping> $allPropertyMappings
-     * @param array<int,string> $initializableTargetPropertiesNotInSource
-     * @param array<string,true> $targetProxySkippedProperties
-     * @param array<int,string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
+     * @param array<int,string>          $initializableTargetPropertiesNotInSource
+     * @param array<string,true>         $targetProxySkippedProperties
+     * @param array<int,string>          $sourceProperties                         List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
      */
     public function __construct(
         private string $sourceClass,
@@ -79,11 +80,11 @@ final readonly class ObjectToObjectMetadata
         $propertyPropertyMappings = [];
 
         foreach ($allPropertyMappings as $propertyMapping) {
-            if ($propertyMapping->getTargetConstructorWriteMode() === WriteMode::Constructor) {
+            if (WriteMode::Constructor === $propertyMapping->getTargetConstructorWriteMode()) {
                 $constructorPropertyMappings[] = $propertyMapping;
             }
 
-            if ($propertyMapping->getTargetSetterWriteMode() !== WriteMode::None) {
+            if (WriteMode::None !== $propertyMapping->getTargetSetterWriteMode()) {
                 $propertyPropertyMappings[] = $propertyMapping;
 
                 if ($propertyMapping->isSourceLazy()) {
@@ -254,11 +255,11 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return class-string|null
+     * @return null|class-string
      */
     public function getTargetProxyClass(): ?string
     {
-        if ($this->cannotUseProxyReason !== null) {
+        if (null !== $this->cannotUseProxyReason) {
             return null;
         }
 
@@ -268,7 +269,7 @@ final readonly class ObjectToObjectMetadata
 
     public function canUseTargetProxy(): bool
     {
-        return $this->cannotUseProxyReason === null;
+        return null === $this->cannotUseProxyReason;
     }
 
     /**

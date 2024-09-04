@@ -23,6 +23,6 @@ class PropertyMapperWithConstructorWithClassAttribute
     #[AsPropertyMapper('propertyB')]
     public function mapPropertyB(SomeObject $object): string
     {
-        return $object::class . '::propertyB';
+        return $object::class.'::propertyB';
     }
 }

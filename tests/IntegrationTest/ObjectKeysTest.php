@@ -19,6 +19,9 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectKeysDto\PersonDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectKeysDto\RelationshipMapDto;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 
+/**
+ * @internal
+ */
 class ObjectKeysTest extends FrameworkTestCase
 {
     public function testObjectKeys(): void

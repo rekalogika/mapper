@@ -20,8 +20,7 @@ abstract class AbstractTransformerDecorator implements TransformerInterface
 {
     public function __construct(
         private readonly TransformerInterface $decorated,
-    ) {
-    }
+    ) {}
 
     public function getDecorated(): TransformerInterface
     {

@@ -42,8 +42,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
     public function __construct(
         private ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function transform(
@@ -53,11 +52,11 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         ?Type $targetType,
         Context $context
     ): mixed {
-        if ($source === null) {
+        if (null === $source) {
             $source = [];
         }
 
-        if ($targetType === null) {
+        if (null === $targetType) {
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
@@ -69,24 +68,25 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // If the target is provided, make sure it is an array|ArrayAccess
 
-        if ($target !== null && !$target instanceof \ArrayAccess && !is_array($target)) {
+        if (null !== $target && !$target instanceof \ArrayAccess && !is_array($target)) {
             throw new InvalidArgumentException(sprintf('If target is provided, it must be an instance of "\ArrayAccess" or "array", "%s" given', get_debug_type($target)), context: $context);
         }
 
         // create transformation metadata
 
-        if ($sourceType === null) {
+        if (null === $sourceType) {
             $sourceType = TypeGuesser::guessTypeFromVariable($source);
         }
 
         $metadata = $this->arrayLikeMetadataFactory
-            ->createArrayLikeMetadata($sourceType, $targetType);
+            ->createArrayLikeMetadata($sourceType, $targetType)
+        ;
 
         // Transform source
 
         if (
             $metadata->targetCanBeLazy()
-            && $target === null
+            && null === $target
             && (
                 is_array($source) || (
                     $source instanceof \ArrayAccess
@@ -111,10 +111,10 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     }
 
     /**
-     * @param (\Traversable<array-key,mixed>&\ArrayAccess<array-key,mixed>&\Countable)|array<array-key,mixed> $source
+     * @param array<array-key,mixed>|(\ArrayAccess<array-key,mixed>&\Countable&\Traversable<array-key,mixed>) $source
      */
     private function lazyTransform(
-        (\Traversable&\ArrayAccess&\Countable)|array $source,
+        array|(\ArrayAccess&\Countable&\Traversable) $source,
         ArrayLikeMetadata $metadata,
         Context $context
     ): mixed {
@@ -127,18 +127,18 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     }
 
     /**
-     * @param iterable<mixed,mixed> $source
-     * @param \ArrayAccess<mixed,mixed>|array<array-key,mixed> $target
+     * @param iterable<mixed,mixed>                            $source
+     * @param array<array-key,mixed>|\ArrayAccess<mixed,mixed> $target
      */
     private function eagerTransform(
         iterable $source,
-        \ArrayAccess|array|null $target,
+        null|array|\ArrayAccess $target,
         ArrayLikeMetadata $metadata,
         Context $context
     ): mixed {
         // If the target is not provided, instantiate it
 
-        if ($target === null) {
+        if (null === $target) {
             $target = $this->instantiateArrayAccessOrArray($metadata, $context);
         }
 
@@ -152,7 +152,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // determine if target allows deletion
 
-        $allowDelete = $context(AllowDelete::class) !== null;
+        $allowDelete = null !== $context(AllowDelete::class);
 
         if ($allowDelete) {
             $context = $context->without(AllowDelete::class);
@@ -174,7 +174,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         }
 
         foreach ($transformed as $key => $value) {
-            if ($key === null) {
+            if (null === $key) {
                 $target[] = $value;
             } else {
                 $target[$key] = $value;
@@ -218,7 +218,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     private function instantiateArrayAccessOrArray(
         ArrayLikeMetadata $metadata,
         Context $context,
-    ): \ArrayAccess|array {
+    ): array|\ArrayAccess {
         // if it wants an array, just return it. easy.
 
         if ($metadata->isTargetArray()) {
@@ -250,15 +250,15 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // the following is a heuristic for some popular situations
 
         switch (true) {
-            case $class === \ArrayAccess::class:
+            case \ArrayAccess::class === $class:
                 if ($metadata->targetMemberKeyCanBeOtherThanIntOrString()) {
                     return new HashTable();
                 }
 
                 return new \ArrayObject();
 
-            case $class === Collection::class:
-            case $class === ReadableCollection::class:
+            case Collection::class === $class:
+            case ReadableCollection::class === $class:
                 return new ArrayCollection();
         }
 

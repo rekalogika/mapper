@@ -20,11 +20,11 @@ use Symfony\Component\PropertyInfo\Type;
 final readonly class Helper
 {
     /**
-     * @param Type|array<int,Type|MixedType> $type
+     * @param array<int,MixedType|Type>|Type $type
      */
-    public function typeToHtml(Type|MixedType|array|null $type): string
+    public function typeToHtml(null|array|MixedType|Type $type): string
     {
-        if ($type === null) {
+        if (null === $type) {
             return 'mixed';
         }
 

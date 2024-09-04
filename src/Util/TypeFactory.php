@@ -19,19 +19,17 @@ use Rekalogika\Mapper\Transformer\MixedType;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
- * Convenience factory to instantiate Type objects
+ * Convenience factory to instantiate Type objects.
  */
 final class TypeFactory
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Convert a string type notation to a Type object. Currently does not do
      * anything fancy. Just supports the built-in types and class names.
      */
-    public static function fromString(string $string): Type|MixedType
+    public static function fromString(string $string): MixedType|Type
     {
         $result = match ($string) {
             'mixed' => self::mixed(),
@@ -50,7 +48,7 @@ final class TypeFactory
             default => null,
         };
 
-        if ($result !== null) {
+        if (null !== $result) {
             return $result;
         }
 
@@ -76,7 +74,7 @@ final class TypeFactory
 
     public static function null(): Type
     {
-        if (self::$nullInstance === null) {
+        if (null === self::$nullInstance) {
             self::$nullInstance = new Type(
                 builtinType: 'null'
             );
@@ -100,7 +98,7 @@ final class TypeFactory
 
     public static function string(): Type
     {
-        if (self::$stringInstance === null) {
+        if (null === self::$stringInstance) {
             self::$stringInstance = new Type(
                 builtinType: 'string'
             );
@@ -113,7 +111,7 @@ final class TypeFactory
 
     public static function int(): Type
     {
-        if (self::$intInstance === null) {
+        if (null === self::$intInstance) {
             self::$intInstance = new Type(
                 builtinType: 'int'
             );
@@ -126,7 +124,7 @@ final class TypeFactory
 
     public static function float(): Type
     {
-        if (self::$floatInstance === null) {
+        if (null === self::$floatInstance) {
             self::$floatInstance = new Type(
                 builtinType: 'float'
             );
@@ -139,7 +137,7 @@ final class TypeFactory
 
     public static function bool(): Type
     {
-        if (self::$boolInstance === null) {
+        if (null === self::$boolInstance) {
             self::$boolInstance = new Type(
                 builtinType: 'bool'
             );
@@ -152,7 +150,7 @@ final class TypeFactory
 
     public static function resource(): Type
     {
-        if (self::$resourceInstance === null) {
+        if (null === self::$resourceInstance) {
             self::$resourceInstance = new Type(
                 builtinType: 'resource'
             );
@@ -165,7 +163,7 @@ final class TypeFactory
 
     public static function true(): Type
     {
-        if (self::$trueInstance === null) {
+        if (null === self::$trueInstance) {
             self::$trueInstance = new Type(
                 builtinType: 'true'
             );
@@ -178,7 +176,7 @@ final class TypeFactory
 
     public static function false(): Type
     {
-        if (self::$falseInstance === null) {
+        if (null === self::$falseInstance) {
             self::$falseInstance = new Type(
                 builtinType: 'false'
             );
@@ -191,7 +189,7 @@ final class TypeFactory
 
     public static function callable(): Type
     {
-        if (self::$callableInstance === null) {
+        if (null === self::$callableInstance) {
             self::$callableInstance = new Type(
                 builtinType: 'callable'
             );
@@ -204,7 +202,7 @@ final class TypeFactory
 
     public static function array(): Type
     {
-        if (self::$arrayInstance === null) {
+        if (null === self::$arrayInstance) {
             self::$arrayInstance = new Type(
                 builtinType: 'array'
             );
@@ -217,7 +215,7 @@ final class TypeFactory
 
     public static function iterable(): Type
     {
-        if (self::$iterableInstance === null) {
+        if (null === self::$iterableInstance) {
             self::$iterableInstance = new Type(
                 builtinType: 'iterable'
             );
@@ -227,8 +225,8 @@ final class TypeFactory
     }
 
     public static function arrayWithKeyValue(
-        null|Type $keyType,
-        null|Type $valueType
+        ?Type $keyType,
+        ?Type $valueType
     ): Type {
         return new Type(
             builtinType: 'array',
@@ -267,7 +265,7 @@ final class TypeFactory
 
     public static function object(): Type
     {
-        if (self::$objectInstance === null) {
+        if (null === self::$objectInstance) {
             self::$objectInstance = new Type(
                 builtinType: 'object'
             );
@@ -299,8 +297,8 @@ final class TypeFactory
 
     public static function objectWithKeyValue(
         string $class,
-        null|Type $keyType,
-        null|Type $valueType
+        ?Type $keyType,
+        ?Type $valueType
     ): Type {
         $type = clone self::objectOfClass($class);
         $reflectionClass = new \ReflectionClass($type);

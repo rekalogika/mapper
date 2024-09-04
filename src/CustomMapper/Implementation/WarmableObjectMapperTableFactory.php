@@ -23,9 +23,7 @@ use Symfony\Component\VarExporter\VarExporter;
 /**
  * @internal
  */
-final class WarmableObjectMapperTableFactory implements
-    ObjectMapperTableFactoryInterface,
-    CacheWarmerInterface
+final class WarmableObjectMapperTableFactory implements ObjectMapperTableFactoryInterface, CacheWarmerInterface
 {
     public const CACHE_FILE = 'rekalogika_mapper_mapper_table.php';
 
@@ -34,13 +32,12 @@ final class WarmableObjectMapperTableFactory implements
     public function __construct(
         private readonly ObjectMapperTableFactoryInterface $decorated,
         private readonly KernelInterface $kernel,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function createObjectMapperTable(): ObjectMapperTable
     {
-        if ($this->objectMapperTableCache !== null) {
+        if (null !== $this->objectMapperTableCache) {
             return $this->objectMapperTableCache;
         }
 
@@ -77,7 +74,7 @@ final class WarmableObjectMapperTableFactory implements
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $mapping = VarExporter::export($this->decorated->createObjectMapperTable());
-        file_put_contents($this->getCacheFilePath(), '<?php return ' . $mapping . ';');
+        file_put_contents($this->getCacheFilePath(), '<?php return '.$mapping.';');
 
         return [];
     }
@@ -90,6 +87,6 @@ final class WarmableObjectMapperTableFactory implements
 
     private function getCacheFilePath(): string
     {
-        return $this->kernel->getBuildDir() . '/' . self::CACHE_FILE;
+        return $this->kernel->getBuildDir().'/'.self::CACHE_FILE;
     }
 }

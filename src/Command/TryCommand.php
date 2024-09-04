@@ -44,7 +44,8 @@ final class TryCommand extends Command
         $this
             ->addArgument('source', InputArgument::REQUIRED, 'The source type')
             ->addArgument('target', InputArgument::REQUIRED, 'The target type')
-            ->setHelp("The <info>%command.name%</info> displays the mapping result from a source type and a target type.");
+            ->setHelp('The <info>%command.name%</info> displays the mapping result from a source type and a target type.')
+        ;
     }
 
     #[\Override]
@@ -61,13 +62,14 @@ final class TryCommand extends Command
         $sourceTypeString = $input->getArgument('source');
         $sourceType = TypeFactory::fromString($sourceTypeString);
         $sourceTypeStrings = $this->typeResolver
-            ->getAcceptedTransformerInputTypeStrings($sourceType);
+            ->getAcceptedTransformerInputTypeStrings($sourceType)
+        ;
 
         $rows[] = ['Source type', $sourceTypeString];
         $rows[] = new TableSeparator();
         $rows[] = [
             'Transformer source types compatible with source',
-            implode("\n", $sourceTypeStrings)
+            implode("\n", $sourceTypeStrings),
         ];
 
         //
@@ -78,14 +80,15 @@ final class TryCommand extends Command
         $targetTypeString = $input->getArgument('target');
         $targetType = TypeFactory::fromString($targetTypeString);
         $targetTypeStrings = $this->typeResolver
-            ->getAcceptedTransformerOutputTypeStrings($targetType);
+            ->getAcceptedTransformerOutputTypeStrings($targetType)
+        ;
 
         $rows[] = new TableSeparator();
         $rows[] = ['Target type', $targetTypeString];
         $rows[] = new TableSeparator();
         $rows[] = [
             'Transformer target types compatible with target',
-            implode("\n", $targetTypeStrings)
+            implode("\n", $targetTypeStrings),
         ];
 
         //
@@ -106,7 +109,8 @@ final class TryCommand extends Command
         $rows = [];
 
         $searchResult = $this->transformerRegistry
-            ->findBySourceAndTargetTypes([$sourceType], [$targetType]);
+            ->findBySourceAndTargetTypes([$sourceType], [$targetType])
+        ;
 
         foreach ($searchResult as $entry) {
             $transformer = $this->transformerRegistry->get($entry->getTransformerServiceId());
@@ -131,7 +135,7 @@ final class TryCommand extends Command
         $io->writeln('');
         $io->section('<info>Applicable Transformers</info>');
 
-        if ($rows === []) {
+        if ([] === $rows) {
             $io->error('No applicable transformers found.');
 
             return Command::SUCCESS;
