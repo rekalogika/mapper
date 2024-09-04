@@ -135,7 +135,7 @@ final class LazyArray implements CollectionInterface
             if ($key === null) {
                 /** @psalm-suppress InvalidPropertyAssignmentValue */
                 $this->cachedData[] = $value;
-                $lastKey = \array_key_last($this->cachedData);
+                $lastKey = array_key_last($this->cachedData);
                 /** @psalm-suppress InvalidPropertyAssignmentValue */
                 $this->cachedKeyOrder[] = $lastKey;
 
@@ -144,12 +144,12 @@ final class LazyArray implements CollectionInterface
                 continue;
             } elseif ($key !== $sourceMemberKey) {
                 throw new LogicException(
-                    sprintf(
+                    \sprintf(
                         'Transformation in keys detected. Source key: "%s", transformed key: "%s".',
                         $sourceMemberKey,
-                        $key
+                        $key,
                     ),
-                    context: $this->context
+                    context: $this->context,
                 );
             }
 
@@ -167,6 +167,6 @@ final class LazyArray implements CollectionInterface
     #[\Override]
     public function count(): int
     {
-        return count($this->source);
+        return \count($this->source);
     }
 }

@@ -18,9 +18,9 @@ class InvalidClassException extends InvalidArgumentException
     public function __construct(
         private readonly string $class,
         int $code = 0,
-        ?\Throwable $previous = null
+        ?\Throwable $previous = null,
     ) {
-        $message = sprintf('Class "%s" does not exist.', $class);
+        $message = \sprintf('Class "%s" does not exist.', $class);
 
         parent::__construct($message, $code, $previous);
     }

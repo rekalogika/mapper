@@ -27,6 +27,6 @@ interface PropertyMapperResolverInterface
     public function getPropertyMapper(
         string $sourceClass,
         string $targetClass,
-        string $property
+        string $property,
     ): ?ServiceMethodSpecification;
 }

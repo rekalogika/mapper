@@ -64,12 +64,12 @@ final class RekalogikaMapperExtension extends Extension
 
         $container->registerAttributeForAutoconfiguration(
             AsPropertyMapper::class,
-            $this->propertyMapperConfigurator(...)
+            $this->propertyMapperConfigurator(...),
         );
 
         $container->registerAttributeForAutoconfiguration(
             AsObjectMapper::class,
-            $this->objectMapperConfigurator(...)
+            $this->objectMapperConfigurator(...),
         );
     }
 
@@ -95,9 +95,9 @@ final class RekalogikaMapperExtension extends Extension
             $tagAttributes['targetClass'] = $classAttribute->targetClass;
 
             if ($classAttribute->property !== null) {
-                throw new LogicException(sprintf(
+                throw new LogicException(\sprintf(
                     '"AsPropertyMapper" attribute attached to the class "%s" must not have "property" attribute.',
-                    $classReflection->getName()
+                    $classReflection->getName(),
                 ));
             }
         }
@@ -122,11 +122,11 @@ final class RekalogikaMapperExtension extends Extension
 
         if ($type === null || !$type instanceof \ReflectionNamedType) {
             throw new LogicException(
-                sprintf(
+                \sprintf(
                     'Unable to determine the source class for property mapper service "%s", method "%s".',
                     $definition->getClass() ?? '?',
-                    $reflector->getName()
-                )
+                    $reflector->getName(),
+                ),
             );
         }
 
@@ -141,11 +141,11 @@ final class RekalogikaMapperExtension extends Extension
             $name = preg_replace('/^map/', '', $name);
             if ($name === null) {
                 throw new LogicException(
-                    sprintf(
+                    \sprintf(
                         'Unable to determine the property name for property mapper service "%s", method "%s".',
                         $definition->getClass() ?? '?',
-                        $reflector->getName()
-                    )
+                        $reflector->getName(),
+                    ),
                 );
             }
 
@@ -159,12 +159,12 @@ final class RekalogikaMapperExtension extends Extension
 
         if (!class_exists($tagAttributes['sourceClass'])) {
             throw new \LogicException(
-                sprintf(
+                \sprintf(
                     'Source class "%s" for property mapper service "%s", method "%s" does not exist.',
                     $tagAttributes['sourceClass'],
                     $definition->getClass() ?? '?',
-                    $reflector->getName()
-                )
+                    $reflector->getName(),
+                ),
             );
         }
 
@@ -172,11 +172,11 @@ final class RekalogikaMapperExtension extends Extension
 
         if (!isset($tagAttributes['targetClass'])) {
             throw new \LogicException(
-                sprintf(
+                \sprintf(
                     'Unable to determine the target class for property mapper service "%s", method "%s".',
                     $definition->getClass() ?? '?',
-                    $reflector->getName()
-                )
+                    $reflector->getName(),
+                ),
             );
         }
 
@@ -184,12 +184,12 @@ final class RekalogikaMapperExtension extends Extension
 
         if (!class_exists($tagAttributes['targetClass'])) {
             throw new \LogicException(
-                sprintf(
+                \sprintf(
                     'Target class "%s" for property mapper service "%s", method "%s" does not exist.',
                     $tagAttributes['targetClass'],
                     $definition->getClass() ?? '?',
-                    $reflector->getName()
-                )
+                    $reflector->getName(),
+                ),
             );
         }
 
@@ -218,11 +218,11 @@ final class RekalogikaMapperExtension extends Extension
 
         if ($type === null || !$type instanceof \ReflectionNamedType) {
             throw new LogicException(
-                sprintf(
+                \sprintf(
                     'Unable to determine the source class for property mapper service "%s", method "%s".',
                     $definition->getClass() ?? '?',
-                    $reflector->getName()
-                )
+                    $reflector->getName(),
+                ),
             );
         }
 
@@ -234,11 +234,11 @@ final class RekalogikaMapperExtension extends Extension
 
         if ($returnType === null || !$returnType instanceof \ReflectionNamedType) {
             throw new LogicException(
-                sprintf(
+                \sprintf(
                     'Unable to determine the target class for property mapper service "%s", method "%s".',
                     $definition->getClass() ?? '?',
-                    $reflector->getName()
-                )
+                    $reflector->getName(),
+                ),
             );
         }
 

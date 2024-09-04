@@ -24,10 +24,10 @@ class UnableToWriteException extends NotMappableValueException
         Context $context = null,
     ) {
         parent::__construct(
-            message: sprintf(
+            message: \sprintf(
                 'Encountered an error when trying to write to the property "%s" on object type "%s".',
                 $propertyName,
-                \get_debug_type($target),
+                get_debug_type($target),
             ),
             previous: $previous,
             context: $context,

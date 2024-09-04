@@ -63,8 +63,8 @@ final class TraceData
         private readonly string $transformerClass,
         private readonly bool $sourceTypeGuessed,
     ) {
-        $this->sourceType = \get_debug_type($source);
-        $this->existingTargetType = \get_debug_type($existingTargetValue);
+        $this->sourceType = get_debug_type($source);
+        $this->existingTargetType = get_debug_type($existingTargetValue);
     }
 
     public function refusedToTransform(): void
@@ -87,13 +87,13 @@ final class TraceData
             // If this is not the last trace data (has nested trace data), we
             // don't use the given time, but we calculate the time from the
             // nested trace data
-            $this->time = array_sum(array_map(fn (self $traceData): float => $traceData->getTime(), $this->nestedTraceData));
+            $this->time = array_sum(array_map(fn(self $traceData): float => $traceData->getTime(), $this->nestedTraceData));
         }
     }
 
     private function finalizeResult(mixed $result): void
     {
-        $this->resultType = \get_debug_type($result);
+        $this->resultType = get_debug_type($result);
     }
 
     public function getTime(): float
@@ -122,7 +122,7 @@ final class TraceData
      */
     public function getAcceptedNestedTraceData(): array
     {
-        return array_filter($this->nestedTraceData, fn (self $traceData): bool => !$traceData->isRefused());
+        return array_filter($this->nestedTraceData, fn(self $traceData): bool => !$traceData->isRefused());
     }
 
     public function addNestedTraceData(self $traceData): void
@@ -216,7 +216,7 @@ final class TraceData
         ?int $line,
         string $function,
         ?string $class,
-        ?string $type
+        ?string $type,
     ): self {
         $this->callerFile = $file ?? 'unknown';
         $this->callerLine = $line;
@@ -227,7 +227,7 @@ final class TraceData
         if ($file !== null) {
             $name = str_replace('\\', '/', $file);
             $pos = strrpos($name, '/');
-            if (is_int($pos)) {
+            if (\is_int($pos)) {
                 $name = substr($name, $pos + 1);
             }
         } else {

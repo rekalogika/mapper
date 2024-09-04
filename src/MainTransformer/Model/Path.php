@@ -24,9 +24,8 @@ final readonly class Path implements \Stringable
      * @param list<string> $path
      */
     private function __construct(
-        private array $path = []
-    ) {
-    }
+        private array $path = [],
+    ) {}
 
     public static function create(): self
     {
@@ -43,11 +42,11 @@ final readonly class Path implements \Stringable
             if (str_contains($path, '[')) {
                 // remove [ and ]
                 $path = str_replace(['[', ']'], '', $path);
-                $result .= sprintf('[%s]', $path);
+                $result .= \sprintf('[%s]', $path);
             } elseif (str_contains($path, '(')) {
                 // remove ( and )
                 $path = str_replace(['(', ')'], '', $path);
-                $result .= sprintf('(%s)', $path);
+                $result .= \sprintf('(%s)', $path);
             } else {
                 $result .= '.' . $path;
             }

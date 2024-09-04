@@ -20,9 +20,8 @@ final readonly class MapperDecorator implements MapperInterface
 {
     public function __construct(
         private MapperInterface $decorated,
-        private Context $defaultContext
-    ) {
-    }
+        private Context $defaultContext,
+    ) {}
 
     /**
      * @template T of object
@@ -33,7 +32,7 @@ final readonly class MapperDecorator implements MapperInterface
     public function map(
         object $source,
         object|string $target,
-        ?Context $context = null
+        ?Context $context = null,
     ): object {
         return $this->decorated->map($source, $target, $context ?? $this->defaultContext);
     }

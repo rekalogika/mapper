@@ -41,8 +41,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         private mixed $source,
         private ?Type $targetType,
         private Context $context,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function map(
@@ -54,7 +53,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             return null;
         }
 
-        if (is_object($target)) {
+        if (\is_object($target)) {
             $targetClass = $target::class;
             $targetObject = $target;
         } else {
@@ -68,10 +67,10 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             target: $targetObject,
             sourceType: null,
             targetTypes: [TypeFactory::objectOfClass($targetClass)],
-            context: $context ?? $this->context
+            context: $context ?? $this->context,
         );
 
-        if (is_object($target)) {
+        if (\is_object($target)) {
             $targetClass = $target::class;
         } else {
             $targetClass = $target;
@@ -81,7 +80,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             return $result;
         }
 
-        throw new UnexpectedValueException(sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)), context: $context);
+        throw new UnexpectedValueException(\sprintf('The mapper did not return the variable of expected class, expecting "%s", returned "%s".', $targetClass, get_debug_type($target)), context: $context);
     }
 
     #[\Override]
@@ -91,7 +90,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         string $property,
         ?Context $context = null,
     ): mixed {
-        if (is_object($containing)) {
+        if (\is_object($containing)) {
             $containingObject = $containing;
             $containingClass = $containing::class;
 
@@ -100,7 +99,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
                 $targetPropertyValue = $this->propertyAccessor
                     ->getValue($containingObject, $property);
 
-                if (is_scalar($targetPropertyValue)) {
+                if (\is_scalar($targetPropertyValue)) {
                     $targetPropertyValue = null;
                 }
             } catch (ExceptionInterface) {
@@ -123,7 +122,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             target: $targetPropertyValue,
             sourceType: null,
             targetTypes: $targetPropertyTypes ?? [],
-            context: $context ?? $this->context
+            context: $context ?? $this->context,
         );
 
         return $result;
@@ -139,7 +138,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         ($this->context)(ObjectCache::class)?->saveTarget(
             source: $this->source,
             targetType: $this->targetType,
-            target: $target
+            target: $target,
         );
     }
 
@@ -147,13 +146,13 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
     public function createProxy(
         string $class,
         $initializer,
-        array $eagerProperties = []
+        array $eagerProperties = [],
     ): object {
         /** @psalm-suppress InvalidArgument */
         return $this->proxyFactory->createProxy(
             class: $class,
             initializer: $initializer,
-            eagerProperties: $eagerProperties
+            eagerProperties: $eagerProperties,
         );
     }
 }

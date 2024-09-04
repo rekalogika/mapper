@@ -33,8 +33,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         private readonly ObjectToObjectMetadataFactoryInterface $decorated,
         private readonly CacheItemPoolInterface $cacheItemPool,
         private readonly bool $debug,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function createObjectToObjectMetadata(
@@ -108,7 +107,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
     }
 
     private function isObjectToObjectMetadataStale(
-        ObjectToObjectMetadata $objectToObjectMetadata
+        ObjectToObjectMetadata $objectToObjectMetadata,
     ): bool {
         if (!$this->debug) {
             return false;
@@ -118,11 +117,11 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         $targetModifiedTime = $objectToObjectMetadata->getTargetModifiedTime();
 
         $sourceFileModifiedTime = ClassUtil::getLastModifiedTime(
-            $objectToObjectMetadata->getSourceClass()
+            $objectToObjectMetadata->getSourceClass(),
         );
 
         $targetFileModifiedTime = ClassUtil::getLastModifiedTime(
-            $objectToObjectMetadata->getTargetClass()
+            $objectToObjectMetadata->getTargetClass(),
         );
 
         return $sourceFileModifiedTime > $sourceModifiedTime

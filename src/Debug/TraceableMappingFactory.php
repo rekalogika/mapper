@@ -26,9 +26,8 @@ final class TraceableMappingFactory implements MappingFactoryInterface, ResetInt
 
     public function __construct(
         private readonly MappingFactoryInterface $decorated,
-        private readonly MapperDataCollector $dataCollector
-    ) {
-    }
+        private readonly MapperDataCollector $dataCollector,
+    ) {}
 
     #[\Override]
     public function reset(): void

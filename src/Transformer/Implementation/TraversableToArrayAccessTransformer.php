@@ -42,8 +42,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
     public function __construct(
         private ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function transform(
@@ -51,7 +50,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if ($source === null) {
             $source = [];
@@ -63,14 +62,14 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // The source must be a Traversable or an array (a.k.a. iterable).
 
-        if (!$source instanceof \Traversable && !is_array($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)), context: $context);
+        if (!$source instanceof \Traversable && !\is_array($source)) {
+            throw new InvalidArgumentException(\sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)), context: $context);
         }
 
         // If the target is provided, make sure it is an array|ArrayAccess
 
-        if ($target !== null && !$target instanceof \ArrayAccess && !is_array($target)) {
-            throw new InvalidArgumentException(sprintf('If target is provided, it must be an instance of "\ArrayAccess" or "array", "%s" given', get_debug_type($target)), context: $context);
+        if ($target !== null && !$target instanceof \ArrayAccess && !\is_array($target)) {
+            throw new InvalidArgumentException(\sprintf('If target is provided, it must be an instance of "\ArrayAccess" or "array", "%s" given', get_debug_type($target)), context: $context);
         }
 
         // create transformation metadata
@@ -88,7 +87,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             $metadata->targetCanBeLazy()
             && $target === null
             && (
-                is_array($source) || (
+                \is_array($source) || (
                     $source instanceof \ArrayAccess
                     && $source instanceof \Countable
                 )
@@ -116,7 +115,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
     private function lazyTransform(
         (\Traversable&\ArrayAccess&\Countable)|array $source,
         ArrayLikeMetadata $metadata,
-        Context $context
+        Context $context,
     ): mixed {
         return new LazyArray(
             source: $source,
@@ -134,7 +133,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         iterable $source,
         \ArrayAccess|array|null $target,
         ArrayLikeMetadata $metadata,
-        Context $context
+        Context $context,
     ): mixed {
         // If the target is not provided, instantiate it
 
@@ -180,7 +179,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 $target[$key] = $value;
             }
 
-            if (is_array($values)) {
+            if (\is_array($values)) {
                 $values[] = $value;
             }
         }
@@ -188,14 +187,14 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // if target allows delete, remove values in the target that are not in
         // the values array
 
-        if (is_array($values) && is_iterable($target)) {
+        if (\is_array($values) && is_iterable($target)) {
             /**
              * @psalm-suppress RedundantConditionGivenDocblockType
              */
-            $isList = is_array($target) && array_is_list($target);
+            $isList = \is_array($target) && array_is_list($target);
 
             foreach ($target as $key => $value) {
-                if (!in_array($value, $values, true)) {
+                if (!\in_array($value, $values, true)) {
                     unset($target[$key]);
                 }
             }
@@ -203,7 +202,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             // renumber array if it is a list
 
             /** @psalm-suppress RedundantConditionGivenDocblockType */
-            if (is_array($target) && $isList) {
+            if (\is_array($target) && $isList) {
                 /** @psalm-suppress RedundantFunctionCall */
                 $target = array_values($target);
             }
@@ -240,7 +239,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             }
 
             if (!$result instanceof \ArrayAccess) {
-                throw new InvalidArgumentException(sprintf('Target class "%s" must implement "\ArrayAccess"', $class), context: $context);
+                throw new InvalidArgumentException(\sprintf('Target class "%s" must implement "\ArrayAccess"', $class), context: $context);
             }
 
             return $result;
@@ -262,7 +261,7 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
                 return new ArrayCollection();
         }
 
-        throw new InvalidArgumentException(sprintf('We do not know how to create an instance of "%s"', $class));
+        throw new InvalidArgumentException(\sprintf('We do not know how to create an instance of "%s"', $class));
     }
 
     #[\Override]

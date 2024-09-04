@@ -29,7 +29,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 final class MappingCommand extends Command
 {
     public function __construct(
-        private readonly MappingFactoryInterface $mappingFactory
+        private readonly MappingFactoryInterface $mappingFactory,
     ) {
         parent::__construct();
     }
@@ -114,7 +114,7 @@ final class MappingCommand extends Command
             'Target Type',
             'Target Variance',
             'Service ID',
-            'Class'
+            'Class',
         ]);
         $table->setStyle(new MarkdownLikeTableStyle());
         $table->setRows($rows);

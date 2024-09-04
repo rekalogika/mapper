@@ -52,7 +52,7 @@ class DateTimeMappingTest extends FrameworkTestCase
                     continue;
                 }
 
-                yield sprintf("%s to %s", $sourceClass, $targetClass) => [$sourceClass, $targetClass];
+                yield \sprintf("%s to %s", $sourceClass, $targetClass) => [$sourceClass, $targetClass];
             }
         }
     }

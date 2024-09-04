@@ -14,6 +14,4 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Fixtures\Attribute;
 
 #[SomeAttribute]
-class ObjectWithAttribute
-{
-}
+class ObjectWithAttribute {}

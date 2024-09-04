@@ -31,8 +31,7 @@ final class WarmableMappingFactory implements MappingFactoryInterface
     public function __construct(
         private readonly MappingFactoryInterface $realMappingFactory,
         private readonly KernelInterface $kernel,
-    ) {
-    }
+    ) {}
 
     private function getMappingFromInnerFactory(): Mapping
     {

@@ -34,8 +34,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
     public function __construct(
         private ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function transform(
@@ -43,7 +42,7 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if ($source === null) {
             $source = [];
@@ -55,14 +54,14 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         // The source must be a Traversable or an array (a.k.a. iterable).
 
-        if (!$source instanceof \Traversable && !is_array($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)), context: $context);
+        if (!$source instanceof \Traversable && !\is_array($source)) {
+            throw new InvalidArgumentException(\sprintf('Source must be instance of "\Traversable" or "array", "%s" given', get_debug_type($source)), context: $context);
         }
 
         // We cannot work with an existing Traversable value
 
         if ($target !== null) {
-            throw new InvalidArgumentException(sprintf('This transformer does not support existing value, "%s" found.', get_debug_type($target)), context: $context);
+            throw new InvalidArgumentException(\sprintf('This transformer does not support existing value, "%s" found.', get_debug_type($target)), context: $context);
         }
 
         // create transformation metadata
@@ -88,8 +87,8 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         if ($source instanceof \Countable) {
             $target = new TraversableCountableWrapper($target, $source);
-        } elseif (is_array($source)) {
-            $target = new TraversableCountableWrapper($target, count($source));
+        } elseif (\is_array($source)) {
+            $target = new TraversableCountableWrapper($target, \count($source));
         }
 
         // Add to cache

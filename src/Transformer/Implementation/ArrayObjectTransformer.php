@@ -32,8 +32,7 @@ final readonly class ArrayObjectTransformer implements
 {
     public function __construct(
         private ObjectToObjectTransformer $objectToObjectTransformer,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function withMainTransformer(MainTransformerInterface $mainTransformer): static
@@ -50,7 +49,7 @@ final readonly class ArrayObjectTransformer implements
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         $originalTargetType = $targetType;
 
@@ -70,7 +69,7 @@ final readonly class ArrayObjectTransformer implements
             target: $target,
             sourceType: $sourceType,
             targetType: $targetType,
-            context: $context
+            context: $context,
         );
 
         if (TypeCheck::isArray($originalTargetType)) {

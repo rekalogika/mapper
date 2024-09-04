@@ -37,7 +37,7 @@ class TypeFactoryTest extends TestCase
 
         $arrayWithKeyValue = TypeFactory::arrayWithKeyValue(
             TypeFactory::string(),
-            TypeFactory::int()
+            TypeFactory::int(),
         );
         $this->assertSame('array', $arrayWithKeyValue->getBuiltinType());
         $this->assertSame('string', $arrayWithKeyValue->getCollectionKeyTypes()[0]->getBuiltinType());
@@ -46,7 +46,7 @@ class TypeFactoryTest extends TestCase
         $objectWithKeyValue = TypeFactory::objectWithKeyValue(
             \Traversable::class,
             TypeFactory::string(),
-            TypeFactory::int()
+            TypeFactory::int(),
         );
         $this->assertSame('object', $objectWithKeyValue->getBuiltinType());
         $this->assertSame(\Traversable::class, $objectWithKeyValue->getClassName());

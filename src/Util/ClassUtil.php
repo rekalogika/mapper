@@ -21,9 +21,7 @@ use Symfony\Component\VarExporter\Internal\Hydrator;
  */
 final readonly class ClassUtil
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * @template T of object
@@ -45,17 +43,17 @@ final readonly class ClassUtil
         }
 
         if (!class_exists($class)) {
-            throw new UnexpectedValueException(sprintf(
+            throw new UnexpectedValueException(\sprintf(
                 'Trying to resolve the real class from possible proxy class "%s", got "%s", but the class does not exist',
                 $inputClass,
-                $class
+                $class,
             ));
         }
 
         /** @psalm-suppress DocblockTypeContradiction */
         if (!is_a($inputClass, $class, true)) {
             /** @psalm-suppress NoValue */
-            throw new UnexpectedValueException(sprintf(
+            throw new UnexpectedValueException(\sprintf(
                 'Trying to resolve the real class from possible proxy class "%s", got "%s", but the proxy "%s" is not a subclass of "%s"',
                 $inputClass,
                 $class,
@@ -73,9 +71,9 @@ final readonly class ClassUtil
      * @param class-string|\ReflectionClass<object> $class
      */
     public static function getLastModifiedTime(
-        string|\ReflectionClass $class
+        string|\ReflectionClass $class,
     ): int {
-        if (is_string($class)) {
+        if (\is_string($class)) {
             $class = new \ReflectionClass($class);
         }
 
@@ -86,25 +84,25 @@ final readonly class ClassUtil
         $fileName = $class->getFileName();
 
         if ($fileName === false) {
-            throw new \UnexpectedValueException(sprintf(
+            throw new \UnexpectedValueException(\sprintf(
                 'Failed to get file name for class "%s"',
-                $class->getName()
+                $class->getName(),
             ));
         }
 
         $mtime = filemtime($fileName);
 
         if ($mtime === false) {
-            throw new \UnexpectedValueException(sprintf(
+            throw new \UnexpectedValueException(\sprintf(
                 'Failed to get last modified time for class "%s"',
-                $class->getName()
+                $class->getName(),
             ));
         }
 
         if ($parent = $class->getParentClass()) {
             return max(
                 $mtime,
-                self::getLastModifiedTime($parent)
+                self::getLastModifiedTime($parent),
             );
         }
 
@@ -129,7 +127,7 @@ final readonly class ClassUtil
      */
     public static function getSkippedProperties(
         string $class,
-        array $eagerProperties
+        array $eagerProperties,
     ): array {
         $propertyScopes = self::getPropertyScopes($class);
 
@@ -137,7 +135,7 @@ final readonly class ClassUtil
 
         foreach ($propertyScopes as $scope => $data) {
             $name = $data[1];
-            if (in_array($name, $eagerProperties, true)) {
+            if (\in_array($name, $eagerProperties, true)) {
                 $skippedProperties[$scope] = true;
             }
         }
@@ -151,9 +149,9 @@ final readonly class ClassUtil
      * @return array<int,class-string>
      */
     public static function getAllClassesFromObject(
-        object|string $objectOrClass
+        object|string $objectOrClass,
     ): array {
-        $class = is_object($objectOrClass) ? $objectOrClass::class : $objectOrClass;
+        $class = \is_object($objectOrClass) ? $objectOrClass::class : $objectOrClass;
 
         $parents = class_parents($class, true);
         if ($parents === false) {

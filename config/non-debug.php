@@ -29,6 +29,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.property_info')
         ->args([
             service('rekalogika.mapper.property_info.cache.inner'),
-            service('rekalogika.mapper.cache.property_info')
+            service('rekalogika.mapper.cache.property_info'),
         ]);
 };

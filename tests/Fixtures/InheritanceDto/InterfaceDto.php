@@ -22,6 +22,4 @@ use Rekalogika\Mapper\Tests\Fixtures\Inheritance\ConcreteClassB;
     ConcreteClassB::class => ImplementationBDto::class,
     // C is deliberately omitted
 ])]
-interface InterfaceDto
-{
-}
+interface InterfaceDto {}

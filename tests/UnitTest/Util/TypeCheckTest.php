@@ -45,46 +45,46 @@ class TypeCheckTest extends TestCase
 
         $this->assertTrue(TypeCheck::isSomewhatIdentical(
             TypeFactory::int(),
-            TypeFactory::int()
+            TypeFactory::int(),
         ));
         $this->assertTrue(TypeCheck::isSomewhatIdentical(
             TypeFactory::float(),
-            TypeFactory::float()
+            TypeFactory::float(),
         ));
         $this->assertTrue(TypeCheck::isSomewhatIdentical(
             TypeFactory::string(),
-            TypeFactory::string()
+            TypeFactory::string(),
         ));
         $this->assertTrue(TypeCheck::isSomewhatIdentical(
             TypeFactory::bool(),
-            TypeFactory::bool()
+            TypeFactory::bool(),
         ));
         $this->assertTrue(TypeCheck::isSomewhatIdentical(
             TypeFactory::array(),
-            TypeFactory::array()
+            TypeFactory::array(),
         ));
         $this->assertTrue(TypeCheck::isSomewhatIdentical(
             TypeFactory::objectOfClass(\DateTime::class),
-            TypeFactory::objectOfClass(\DateTime::class)
+            TypeFactory::objectOfClass(\DateTime::class),
         ));
         $this->assertFalse(TypeCheck::isSomewhatIdentical(
             TypeFactory::objectOfClass(\DateTime::class),
-            TypeFactory::objectOfClass(\DateTimeImmutable::class)
+            TypeFactory::objectOfClass(\DateTimeImmutable::class),
         ));
         $this->assertTrue(TypeCheck::isSomewhatIdentical(
             TypeFactory::resource(),
-            TypeFactory::resource()
+            TypeFactory::resource(),
         ));
         $this->assertTrue(TypeCheck::isSomewhatIdentical(
             TypeFactory::null(),
-            TypeFactory::null()
+            TypeFactory::null(),
         ));
 
         $this->assertTrue(
-            TypeCheck::isVariableInstanceOf(new \DateTime(), TypeFactory::objectOfClass(\DateTime::class))
+            TypeCheck::isVariableInstanceOf(new \DateTime(), TypeFactory::objectOfClass(\DateTime::class)),
         );
         $this->assertTrue(
-            TypeCheck::isVariableInstanceOf(new \DateTime(), TypeFactory::object())
+            TypeCheck::isVariableInstanceOf(new \DateTime(), TypeFactory::object()),
         );
     }
 }

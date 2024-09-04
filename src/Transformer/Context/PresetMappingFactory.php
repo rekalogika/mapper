@@ -19,9 +19,7 @@ use Rekalogika\Mapper\Util\ClassUtil;
 
 final readonly class PresetMappingFactory
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function fromObjectCache(ObjectCache $objectCache): PresetMapping
     {

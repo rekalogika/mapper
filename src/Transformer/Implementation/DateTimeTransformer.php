@@ -33,14 +33,14 @@ final readonly class DateTimeTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
-        if (is_string($source)) {
+        if (\is_string($source)) {
             $source = new DatePoint($source);
         }
 
         if (!$source instanceof \DateTimeInterface) {
-            throw new InvalidArgumentException(sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)), context: $context);
+            throw new InvalidArgumentException(\sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)), context: $context);
         }
 
         // if target is mutable, just set directly on the instance and return it
@@ -61,7 +61,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
         if (TypeCheck::isObjectOfType(
             $targetType,
             \DateTimeInterface::class,
-            \DateTimeImmutable::class
+            \DateTimeImmutable::class,
         )) {
             return \DateTimeImmutable::createFromInterface($source);
         }
@@ -71,7 +71,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
             return $source->format(\DateTimeInterface::ATOM);
         }
 
-        throw new InvalidArgumentException(sprintf('Target must be DateTime, DateTimeImmutable, or DatePoint, "%s" given', get_debug_type($targetType)), context: $context);
+        throw new InvalidArgumentException(\sprintf('Target must be DateTime, DateTimeImmutable, or DatePoint, "%s" given', get_debug_type($targetType)), context: $context);
     }
 
     #[\Override]
@@ -81,49 +81,49 @@ final readonly class DateTimeTransformer implements TransformerInterface
 
         yield new TypeMapping(
             TypeFactory::string(),
-            TypeFactory::objectOfClass(\DateTimeInterface::class)
+            TypeFactory::objectOfClass(\DateTimeInterface::class),
         );
 
         yield new TypeMapping(
             TypeFactory::string(),
-            TypeFactory::objectOfClass(\DateTime::class)
+            TypeFactory::objectOfClass(\DateTime::class),
         );
 
         yield new TypeMapping(
             TypeFactory::string(),
-            TypeFactory::objectOfClass(\DateTimeImmutable::class)
+            TypeFactory::objectOfClass(\DateTimeImmutable::class),
         );
 
         yield new TypeMapping(
             TypeFactory::string(),
-            TypeFactory::objectOfClass(DatePoint::class)
+            TypeFactory::objectOfClass(DatePoint::class),
         );
 
         // from DateTimeInterface
 
         yield new TypeMapping(
             TypeFactory::objectOfClass(\DateTimeInterface::class),
-            TypeFactory::objectOfClass(\DateTimeInterface::class)
+            TypeFactory::objectOfClass(\DateTimeInterface::class),
         );
 
         yield new TypeMapping(
             TypeFactory::objectOfClass(\DateTimeInterface::class),
-            TypeFactory::objectOfClass(\DateTime::class)
+            TypeFactory::objectOfClass(\DateTime::class),
         );
 
         yield new TypeMapping(
             TypeFactory::objectOfClass(\DateTimeInterface::class),
-            TypeFactory::objectOfClass(\DateTimeImmutable::class)
+            TypeFactory::objectOfClass(\DateTimeImmutable::class),
         );
 
         yield new TypeMapping(
             TypeFactory::objectOfClass(\DateTimeInterface::class),
-            TypeFactory::objectOfClass(DatePoint::class)
+            TypeFactory::objectOfClass(DatePoint::class),
         );
 
         yield new TypeMapping(
             TypeFactory::objectOfClass(\DateTimeInterface::class),
-            TypeFactory::string()
+            TypeFactory::string(),
         );
     }
 }

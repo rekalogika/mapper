@@ -19,9 +19,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeCheck
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * Checks if the name is a valid class, interface, or enum
@@ -223,7 +221,7 @@ final readonly class TypeCheck
 
     public static function isTypeInstanceOf(
         Type|MixedType $typeToCheck,
-        Type|MixedType $type
+        Type|MixedType $type,
     ): bool {
         // instanceof mixed
         if ($type instanceof MixedType) {
@@ -262,11 +260,11 @@ final readonly class TypeCheck
         }
 
         if (!self::nameExists($className)) {
-            throw new LogicException(sprintf('Class "%s" does not exist', $className));
+            throw new LogicException(\sprintf('Class "%s" does not exist', $className));
         }
 
         if (!self::nameExists($typeToCheckClassName)) {
-            throw new LogicException(sprintf('Class "%s" does not exist', $typeToCheckClassName));
+            throw new LogicException(\sprintf('Class "%s" does not exist', $typeToCheckClassName));
         }
 
         return is_a($typeToCheckClassName, $className, true);
@@ -285,19 +283,19 @@ final readonly class TypeCheck
 
         switch ($builtinType) {
             case Type::BUILTIN_TYPE_INT:
-                return is_int($variable);
+                return \is_int($variable);
             case Type::BUILTIN_TYPE_FLOAT:
-                return is_float($variable);
+                return \is_float($variable);
             case Type::BUILTIN_TYPE_STRING:
-                return is_string($variable);
+                return \is_string($variable);
             case Type::BUILTIN_TYPE_BOOL:
-                return is_bool($variable);
+                return \is_bool($variable);
             case Type::BUILTIN_TYPE_ARRAY:
-                return is_array($variable);
+                return \is_array($variable);
             case Type::BUILTIN_TYPE_RESOURCE:
-                return is_resource($variable);
+                return \is_resource($variable);
             case Type::BUILTIN_TYPE_NULL:
-                return is_null($variable);
+                return \is_null($variable);
             case Type::BUILTIN_TYPE_ITERABLE:
                 return is_iterable($variable);
             case Type::BUILTIN_TYPE_OBJECT:
@@ -313,7 +311,7 @@ final readonly class TypeCheck
 
                 return $variable instanceof $class;
             default:
-                throw new LogicException(sprintf('Unknown builtin type "%s"', $builtinType));
+                throw new LogicException(\sprintf('Unknown builtin type "%s"', $builtinType));
         }
     }
 }

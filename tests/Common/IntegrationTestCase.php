@@ -36,7 +36,7 @@ abstract class IntegrationTestCase extends TestCase
     protected function setUp(): void
     {
         $this->factory = new MapperTestFactory(
-            additionalTransformers: $this->getAdditionalTransformers()
+            additionalTransformers: $this->getAdditionalTransformers(),
         );
 
         foreach ($this->getPropertyMappers() as $propertyMapper) {
@@ -45,7 +45,7 @@ abstract class IntegrationTestCase extends TestCase
                 $propertyMapper['targetClass'],
                 $propertyMapper['property'],
                 $propertyMapper['service'],
-                $propertyMapper['method']
+                $propertyMapper['method'],
             );
         }
 

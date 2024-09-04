@@ -30,7 +30,7 @@ class MissingMemberKeyTypeException extends MissingMemberTypeException
         }
 
         parent::__construct(
-            message: sprintf('Trying to map collection type "%s" to "%s", but the source member key is not the simple array-key type, and the target does not have the type information about the key of its child members. Usually you can fix this by adding a PHPdoc to the property containing the collection type.', TypeUtil::getDebugType($sourceType), TypeUtil::getDebugType($targetType)),
+            message: \sprintf('Trying to map collection type "%s" to "%s", but the source member key is not the simple array-key type, and the target does not have the type information about the key of its child members. Usually you can fix this by adding a PHPdoc to the property containing the collection type.', TypeUtil::getDebugType($sourceType), TypeUtil::getDebugType($targetType)),
             context: $context,
         );
     }

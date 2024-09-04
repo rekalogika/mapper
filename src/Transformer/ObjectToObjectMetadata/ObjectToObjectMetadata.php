@@ -124,12 +124,12 @@ final readonly class ObjectToObjectMetadata
             targetReadOnly: $this->targetReadOnly,
             constructorIsEager: $constructorIsEager,
             targetProxySkippedProperties: $targetProxySkippedProperties,
-            cannotUseProxyReason: null
+            cannotUseProxyReason: null,
         );
     }
 
     public function withReasonCannotUseProxy(
-        string $reason
+        string $reason,
     ): self {
         return new self(
             sourceClass: $this->sourceClass,

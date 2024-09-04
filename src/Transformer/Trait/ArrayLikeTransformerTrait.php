@@ -29,7 +29,7 @@ trait ArrayLikeTransformerTrait
         iterable $source,
         \ArrayAccess|array|null $target,
         ArrayLikeMetadata $metadata,
-        Context $context
+        Context $context,
     ): \Traversable {
         // if the source is SplObjectStorage, we wrap it to fix the iterator
 
@@ -78,7 +78,7 @@ trait ArrayLikeTransformerTrait
         // optimization: we try not to use the main tranformer to transform
         // the source member key to the target member key type
 
-        if (is_string($sourceMemberKey)) {
+        if (\is_string($sourceMemberKey)) {
             // if the key is a string
 
             if ($metadata->targetMemberKeyCanBeIntOnly()) {
@@ -87,13 +87,13 @@ trait ArrayLikeTransformerTrait
                 // $target[] = $value)
 
                 $targetMemberKey = null;
-                $path = sprintf('[%d]', $counter ?? -1);
+                $path = \sprintf('[%d]', $counter ?? -1);
             } elseif ($metadata->targetMemberKeyCanBeString()) {
                 // if target has string key type, we use the source key as
                 // the target key and let PHP cast it to string
 
                 $targetMemberKey = $sourceMemberKey;
-                $path = sprintf('[%s]', $sourceMemberKey);
+                $path = \sprintf('[%s]', $sourceMemberKey);
             } else {
                 // otherwise, the target must be non-int & non-string, so we
                 // delegate the transformation to the main transformer
@@ -109,12 +109,12 @@ trait ArrayLikeTransformerTrait
                 );
 
                 if ($targetMemberKey instanceof \Stringable) {
-                    $path = sprintf('[%s]', (string) $targetMemberKey);
+                    $path = \sprintf('[%s]', (string) $targetMemberKey);
                 } else {
-                    $path = sprintf('[%s]', get_debug_type($targetMemberKey));
+                    $path = \sprintf('[%s]', get_debug_type($targetMemberKey));
                 }
             }
-        } elseif (is_int($sourceMemberKey)) {
+        } elseif (\is_int($sourceMemberKey)) {
             // if the key is an integer
 
             if (
@@ -126,7 +126,7 @@ trait ArrayLikeTransformerTrait
                 // needed
 
                 $targetMemberKey = $sourceMemberKey;
-                $path = sprintf('[%s]', $sourceMemberKey);
+                $path = \sprintf('[%s]', $sourceMemberKey);
             } else {
                 // otherwise, the target must be non-int & non-string, so we
                 // delegate the transformation to the main transformer
@@ -142,9 +142,9 @@ trait ArrayLikeTransformerTrait
                 );
 
                 if ($targetMemberKey instanceof \Stringable) {
-                    $path = sprintf('[%s]', (string) $targetMemberKey);
+                    $path = \sprintf('[%s]', (string) $targetMemberKey);
                 } else {
-                    $path = sprintf('[%s]', get_debug_type($targetMemberKey));
+                    $path = \sprintf('[%s]', get_debug_type($targetMemberKey));
                 }
             }
         } else {
@@ -162,9 +162,9 @@ trait ArrayLikeTransformerTrait
             );
 
             if ($targetMemberKey instanceof \Stringable) {
-                $path = sprintf('[%s]', (string) $targetMemberKey);
+                $path = \sprintf('[%s]', (string) $targetMemberKey);
             } else {
-                $path = sprintf('[%s]', get_debug_type($targetMemberKey));
+                $path = \sprintf('[%s]', get_debug_type($targetMemberKey));
             }
         }
 
@@ -204,7 +204,7 @@ trait ArrayLikeTransformerTrait
         // if target member value is not an object we delete it because it
         // will not be used anyway
 
-        if (!is_object($targetMemberValue)) {
+        if (!\is_object($targetMemberValue)) {
             $targetMemberValue = null;
         }
 

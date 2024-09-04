@@ -53,25 +53,25 @@ class MethodMapperTest extends FrameworkTestCase
 
         $result = $this->mapper->map(
             $objectWithObjectWithScalarProperties,
-            ObjectWithObjectWithScalarPropertiesDto::class
+            ObjectWithObjectWithScalarPropertiesDto::class,
         );
 
         $this->assertInstanceOf(ObjectWithObjectWithScalarPropertiesDto::class, $result);
         $this->assertEquals(
             $objectWithObjectWithScalarProperties->objectWithScalarProperties->a,
-            $result->objectWithScalarProperties?->a
+            $result->objectWithScalarProperties?->a,
         );
         $this->assertEquals(
             $objectWithObjectWithScalarProperties->objectWithScalarProperties->b,
-            $result->objectWithScalarProperties?->b
+            $result->objectWithScalarProperties?->b,
         );
         $this->assertEquals(
             $objectWithObjectWithScalarProperties->objectWithScalarProperties->c,
-            $result->objectWithScalarProperties?->c
+            $result->objectWithScalarProperties?->c,
         );
         $this->assertEquals(
             $objectWithObjectWithScalarProperties->objectWithScalarProperties->d,
-            $result->objectWithScalarProperties?->d
+            $result->objectWithScalarProperties?->d,
         );
     }
 
@@ -96,19 +96,19 @@ class MethodMapperTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithObjectWithScalarProperties::class, $result);
         $this->assertEquals(
             $objectWithObjectWithScalarPropertiesDto->objectWithScalarProperties->a,
-            $result->objectWithScalarProperties->a
+            $result->objectWithScalarProperties->a,
         );
         $this->assertEquals(
             $objectWithObjectWithScalarPropertiesDto->objectWithScalarProperties->b,
-            $result->objectWithScalarProperties->b
+            $result->objectWithScalarProperties->b,
         );
         $this->assertEquals(
             $objectWithObjectWithScalarPropertiesDto->objectWithScalarProperties->c,
-            $result->objectWithScalarProperties->c
+            $result->objectWithScalarProperties->c,
         );
         $this->assertEquals(
             $objectWithObjectWithScalarPropertiesDto->objectWithScalarProperties->d,
-            $result->objectWithScalarProperties->d
+            $result->objectWithScalarProperties->d,
         );
     }
 

@@ -32,8 +32,7 @@ final readonly class AdderRemoverProxy implements
         private ?string $getterMethodName,
         private ?string $adderMethodName,
         private ?string $removerMethodName,
-    ) {
-    }
+    ) {}
 
     /**
      * @return \ArrayAccess<TKey,TValue>|array<TKey,TValue>
@@ -47,7 +46,7 @@ final readonly class AdderRemoverProxy implements
         /** @psalm-suppress MixedMethodCall */
         $result = $this->hostObject->{$this->getterMethodName}();
 
-        if (!is_array($result) && !$result instanceof \ArrayAccess) {
+        if (!\is_array($result) && !$result instanceof \ArrayAccess) {
             throw new LogicException('Value is not an array or ArrayAccess');
         }
 
@@ -63,7 +62,7 @@ final readonly class AdderRemoverProxy implements
 
         if ($value instanceof \Traversable) {
             return $value;
-        } elseif (is_array($value)) {
+        } elseif (\is_array($value)) {
             return new \ArrayIterator($value);
         }
 

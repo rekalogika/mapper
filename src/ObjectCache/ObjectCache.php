@@ -32,7 +32,7 @@ final class ObjectCache
     private \WeakMap $preCache;
 
     public function __construct(
-        private readonly TypeResolverInterface $typeResolver
+        private readonly TypeResolverInterface $typeResolver,
     ) {
         /** @psalm-suppress MixedPropertyTypeCoercion */
         $this->cache = new \WeakMap();
@@ -54,7 +54,7 @@ final class ObjectCache
      */
     public function preCache(mixed $source, Type $targetType): void
     {
-        if (!is_object($source)) {
+        if (!\is_object($source)) {
             return;
         }
 
@@ -75,7 +75,7 @@ final class ObjectCache
 
     public function undoPreCache(mixed $source, Type $targetType): void
     {
-        if (!is_object($source)) {
+        if (!\is_object($source)) {
             return;
         }
 
@@ -92,7 +92,7 @@ final class ObjectCache
 
     public function containsTarget(mixed $source, Type $targetType): bool
     {
-        if (!is_object($source)) {
+        if (!\is_object($source)) {
             return false;
         }
 
@@ -107,7 +107,7 @@ final class ObjectCache
 
     public function getTarget(mixed $source, Type $targetType): mixed
     {
-        if (!is_object($source)) {
+        if (!\is_object($source)) {
             throw new CachedTargetObjectNotFoundException();
         }
 
@@ -134,7 +134,7 @@ final class ObjectCache
         mixed $target,
         bool $addIfAlreadyExists = false,
     ): void {
-        if (!is_object($source) || !is_object($target)) {
+        if (!\is_object($source) || !\is_object($target)) {
             return;
         }
 
@@ -148,10 +148,10 @@ final class ObjectCache
             $addIfAlreadyExists === false
             && isset($this->cache[$source][$targetTypeString])
         ) {
-            throw new LogicException(sprintf(
+            throw new LogicException(\sprintf(
                 'Target object for source object "%s" and target type "%s" already exists',
                 $source::class,
-                $targetTypeString
+                $targetTypeString,
             ));
         }
 

@@ -61,7 +61,7 @@ final class LazyList implements ListInterface
     public function offsetGet(mixed $offset): mixed
     {
         if (!$this->isCached) {
-            foreach($this->getIterator() as $i) {
+            foreach ($this->getIterator() as $i) {
                 // do nothing
             }
         }
@@ -119,6 +119,6 @@ final class LazyList implements ListInterface
     #[\Override]
     public function count(): int
     {
-        return count($this->source);
+        return \count($this->source);
     }
 }

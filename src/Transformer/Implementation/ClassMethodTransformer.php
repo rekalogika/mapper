@@ -37,8 +37,7 @@ final class ClassMethodTransformer implements
 
     public function __construct(
         private SubMapperFactoryInterface $subMapperFactory,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function transform(
@@ -46,7 +45,7 @@ final class ClassMethodTransformer implements
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         // target type must not be null
 
@@ -60,7 +59,7 @@ final class ClassMethodTransformer implements
             mainTransformer: $this->getMainTransformer(),
             source: $source,
             targetType: $targetType,
-            context: $context
+            context: $context,
         );
 
         // target class must be valid
@@ -68,10 +67,10 @@ final class ClassMethodTransformer implements
         $targetClass = $targetType->getClassName();
 
         if (
-            !is_string($targetClass)
-            || !\class_exists($targetClass)
+            !\is_string($targetClass)
+            || !class_exists($targetClass)
         ) {
-            throw new InvalidArgumentException(sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
+            throw new InvalidArgumentException(\sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
         }
 
 
@@ -79,8 +78,8 @@ final class ClassMethodTransformer implements
 
             // map from object to self path
 
-            if (!is_object($source)) {
-                throw new InvalidArgumentException(sprintf('Source must be object, "%s" given', get_debug_type($source)), context: $context);
+            if (!\is_object($source)) {
+                throw new InvalidArgumentException(\sprintf('Source must be object, "%s" given', get_debug_type($source)), context: $context);
             }
 
             $result = $targetClass::mapFromObject($source, $subMapper, $context);
@@ -88,7 +87,7 @@ final class ClassMethodTransformer implements
 
             // map self to object path
 
-            if (!is_object($target)) {
+            if (!\is_object($target)) {
                 $target = $targetClass;
             }
 

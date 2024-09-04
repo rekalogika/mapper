@@ -23,8 +23,8 @@ class ClassNotInstantiableException extends NotMappableValueException
     public function __construct(string $class, Context $context = null)
     {
         parent::__construct(
-            message: sprintf('Trying to instantiate "%s", but it is not instantiable. You might solve this problem by adding an "InheritanceMap" to the class, so the mapper will know which concrete class to instantiate.', $class),
-            context: $context
+            message: \sprintf('Trying to instantiate "%s", but it is not instantiable. You might solve this problem by adding an "InheritanceMap" to the class, so the mapper will know which concrete class to instantiate.', $class),
+            context: $context,
         );
     }
 }

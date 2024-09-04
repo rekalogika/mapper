@@ -28,8 +28,7 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
     public function __construct(
         private ProxyRegistryInterface $proxyRegistry,
         private ProxyGeneratorInterface $proxyGenerator,
-    ) {
-    }
+    ) {}
 
     /**
      * @template T of object
@@ -41,7 +40,7 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
     public function createProxy(
         string $class,
         $initializer,
-        array $eagerProperties = []
+        array $eagerProperties = [],
     ): object {
         $targetProxyClass = ProxyNamer::generateProxyClassName($class);
 
@@ -56,13 +55,13 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
             // @phpstan-ignore-next-line
             if (!class_exists($targetProxyClass)) {
                 throw new LogicException(
-                    sprintf('Unable to find target proxy class "%s".', $targetProxyClass),
+                    \sprintf('Unable to find target proxy class "%s".', $targetProxyClass),
                 );
             }
         }
 
         if (array_is_list($eagerProperties)) {
-            $eagerProperties = array_filter($eagerProperties, fn ($property): bool => is_string($property));
+            $eagerProperties = array_filter($eagerProperties, fn($property): bool => \is_string($property));
             $eagerProperties = ClassUtil::getSkippedProperties($class, $eagerProperties);
         }
 

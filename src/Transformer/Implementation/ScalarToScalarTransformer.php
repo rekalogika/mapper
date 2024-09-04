@@ -28,10 +28,10 @@ final readonly class ScalarToScalarTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
-        if (!is_scalar($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be scalar, "%s" given.', get_debug_type($source)), context: $context);
+        if (!\is_scalar($source)) {
+            throw new InvalidArgumentException(\sprintf('Source must be scalar, "%s" given.', get_debug_type($source)), context: $context);
         }
 
         $targetTypeBuiltIn = $targetType?->getBuiltinType();
@@ -40,7 +40,7 @@ final readonly class ScalarToScalarTransformer implements TransformerInterface
             Type::BUILTIN_TYPE_FLOAT => (float) $source,
             Type::BUILTIN_TYPE_STRING => (string) $source,
             Type::BUILTIN_TYPE_BOOL => (bool) $source,
-            default => throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given.', get_debug_type($targetType)), context: $context),
+            default => throw new InvalidArgumentException(\sprintf('Target must be scalar, "%s" given.', get_debug_type($targetType)), context: $context),
         };
     }
 

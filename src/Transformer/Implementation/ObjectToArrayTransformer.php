@@ -32,9 +32,8 @@ final readonly class ObjectToArrayTransformer implements TransformerInterface
 {
     public function __construct(
         private NormalizerInterface $normalizer,
-        private ?string $normalizerFormat = null
-    ) {
-    }
+        private ?string $normalizerFormat = null,
+    ) {}
 
     #[\Override]
     public function transform(
@@ -42,10 +41,10 @@ final readonly class ObjectToArrayTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
-        if (!is_object($source)) {
-            throw new InvalidArgumentException(sprintf('Source must be object, "%s" given', get_debug_type($source)), context: $context);
+        if (!\is_object($source)) {
+            throw new InvalidArgumentException(\sprintf('Source must be object, "%s" given', get_debug_type($source)), context: $context);
         }
 
         $normalizerContext = $context(NormalizerContext::class)?->toArray() ?? [];
@@ -53,7 +52,7 @@ final readonly class ObjectToArrayTransformer implements TransformerInterface
         return $this->normalizer->normalize(
             $source,
             $this->normalizerFormat,
-            $normalizerContext
+            $normalizerContext,
         );
     }
 

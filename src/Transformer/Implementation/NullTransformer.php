@@ -29,7 +29,7 @@ final readonly class NullTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if ($target !== null) {
             throw new InvalidArgumentException('Target must be null');
@@ -59,7 +59,7 @@ final readonly class NullTransformer implements TransformerInterface
             return null;
         }
 
-        throw new InvalidArgumentException(sprintf('Target must be scalar, "%s" given.', get_debug_type($targetType)), context: $context);
+        throw new InvalidArgumentException(\sprintf('Target must be scalar, "%s" given.', get_debug_type($targetType)), context: $context);
     }
 
     #[\Override]

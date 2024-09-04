@@ -26,7 +26,7 @@ final readonly class ProxyGenerator implements ProxyGeneratorInterface
     #[\Override]
     public function generateProxyCode(
         string $realClass,
-        string $proxyClass
+        string $proxyClass,
     ): string {
         try {
             $proxyCode = $this->generateProxySourceCode($realClass, $proxyClass);
@@ -50,12 +50,12 @@ final readonly class ProxyGenerator implements ProxyGeneratorInterface
 
         return
             $this->getClassHeader() .
-            sprintf('namespace %s;', $namespace) . "\n\n" .
-            sprintf(
+            \sprintf('namespace %s;', $namespace) . "\n\n" .
+            \sprintf(
                 'final %sclass %s%s',
                 $targetReflection->isReadOnly() ? 'readonly ' : '',
                 $shortName,
-                ProxyHelper::generateLazyGhost($targetReflection)
+                ProxyHelper::generateLazyGhost($targetReflection),
             );
     }
 

@@ -22,6 +22,6 @@ class NonSimpleTypeException extends UnexpectedValueException
 {
     public function __construct(Type $type, ?Context $context = null)
     {
-        parent::__construct(sprintf('Expected a simple type, got non-simple type "%s".', TypeUtil::getDebugType($type)), context: $context);
+        parent::__construct(\sprintf('Expected a simple type, got non-simple type "%s".', TypeUtil::getDebugType($type)), context: $context);
     }
 }

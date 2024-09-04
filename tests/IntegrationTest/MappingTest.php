@@ -44,7 +44,7 @@ class MappingTest extends FrameworkTestCase
     public function testMapping(
         array $sources,
         array $targets,
-        string $transformerClass
+        string $transformerClass,
     ): void {
         $transformerRegistry = $this->get('test.rekalogika.mapper.transformer_registry');
         $this->assertInstanceOf(
@@ -63,14 +63,14 @@ class MappingTest extends FrameworkTestCase
 
         $this->assertNotNull($selected);
 
-        if (\str_contains($selected->getTransformerServiceId(), PresetTransformer::class)) {
+        if (str_contains($selected->getTransformerServiceId(), PresetTransformer::class)) {
             $selected = $searchResult[1] ?? null;
         }
 
         $this->assertNotNull($selected);
 
         $transformer = $transformerRegistry->get(
-            $selected->getTransformerServiceId()
+            $selected->getTransformerServiceId(),
         );
 
         $this->assertTransformerInstanceOf(
@@ -90,50 +90,50 @@ class MappingTest extends FrameworkTestCase
 
         yield [
             [
-                TypeFactory::int()
+                TypeFactory::int(),
             ],
             [
-                TypeFactory::int()
-            ],
-            ScalarToScalarTransformer::class,
-        ];
-
-        yield [
-            [
-                TypeFactory::int()
-            ],
-            [
-                TypeFactory::float()
+                TypeFactory::int(),
             ],
             ScalarToScalarTransformer::class,
         ];
 
         yield [
             [
-                TypeFactory::int()
+                TypeFactory::int(),
             ],
             [
-                TypeFactory::string()
-            ],
-            ScalarToScalarTransformer::class,
-        ];
-
-        yield [
-            [
-                TypeFactory::int()
-            ],
-            [
-                TypeFactory::bool()
+                TypeFactory::float(),
             ],
             ScalarToScalarTransformer::class,
         ];
 
         yield [
             [
-                TypeFactory::int()
+                TypeFactory::int(),
             ],
             [
-                TypeFactory::resource()
+                TypeFactory::string(),
+            ],
+            ScalarToScalarTransformer::class,
+        ];
+
+        yield [
+            [
+                TypeFactory::int(),
+            ],
+            [
+                TypeFactory::bool(),
+            ],
+            ScalarToScalarTransformer::class,
+        ];
+
+        yield [
+            [
+                TypeFactory::int(),
+            ],
+            [
+                TypeFactory::resource(),
             ],
             CopyTransformer::class,
         ];
@@ -144,30 +144,30 @@ class MappingTest extends FrameworkTestCase
 
         yield [
             [
-                TypeFactory::objectOfClass(\DateTimeInterface::class)
+                TypeFactory::objectOfClass(\DateTimeInterface::class),
             ],
             [
-                TypeFactory::objectOfClass(\DateTimeImmutable::class)
-            ],
-            DateTimeTransformer::class,
-        ];
-
-        yield [
-            [
-                TypeFactory::objectOfClass(\DateTimeInterface::class)
-            ],
-            [
-                TypeFactory::objectOfClass(\DateTime::class)
+                TypeFactory::objectOfClass(\DateTimeImmutable::class),
             ],
             DateTimeTransformer::class,
         ];
 
         yield [
             [
-                TypeFactory::objectOfClass(\DateTimeInterface::class)
+                TypeFactory::objectOfClass(\DateTimeInterface::class),
             ],
             [
-                TypeFactory::objectOfClass(DatePoint::class)
+                TypeFactory::objectOfClass(\DateTime::class),
+            ],
+            DateTimeTransformer::class,
+        ];
+
+        yield [
+            [
+                TypeFactory::objectOfClass(\DateTimeInterface::class),
+            ],
+            [
+                TypeFactory::objectOfClass(DatePoint::class),
             ],
             DateTimeTransformer::class,
         ];
@@ -178,30 +178,30 @@ class MappingTest extends FrameworkTestCase
 
         yield [
             [
-                TypeFactory::objectOfClass(ObjectImplementingStringable::class)
+                TypeFactory::objectOfClass(ObjectImplementingStringable::class),
             ],
             [
-                TypeFactory::string()
-            ],
-            ObjectToStringTransformer::class,
-        ];
-
-        yield [
-            [
-                TypeFactory::objectOfClass(SomeBackedEnum::class)
-            ],
-            [
-                TypeFactory::string()
+                TypeFactory::string(),
             ],
             ObjectToStringTransformer::class,
         ];
 
         yield [
             [
-                TypeFactory::objectOfClass(SomeEnum::class)
+                TypeFactory::objectOfClass(SomeBackedEnum::class),
             ],
             [
-                TypeFactory::string()
+                TypeFactory::string(),
+            ],
+            ObjectToStringTransformer::class,
+        ];
+
+        yield [
+            [
+                TypeFactory::objectOfClass(SomeEnum::class),
+            ],
+            [
+                TypeFactory::string(),
             ],
             ObjectToStringTransformer::class,
         ];
@@ -212,10 +212,10 @@ class MappingTest extends FrameworkTestCase
 
         yield [
             [
-                TypeFactory::string()
+                TypeFactory::string(),
             ],
             [
-                TypeFactory::objectOfClass(SomeBackedEnum::class)
+                TypeFactory::objectOfClass(SomeBackedEnum::class),
             ],
             StringToBackedEnumTransformer::class,
         ];
@@ -239,7 +239,7 @@ class MappingTest extends FrameworkTestCase
                 TypeFactory::array(),
             ],
             [
-                TypeFactory::objectOfClass(\ArrayAccess::class)
+                TypeFactory::objectOfClass(\ArrayAccess::class),
             ],
             TraversableToArrayAccessTransformer::class,
         ];
@@ -249,7 +249,7 @@ class MappingTest extends FrameworkTestCase
                 TypeFactory::objectOfClass(\ArrayObject::class),
             ],
             [
-                TypeFactory::objectOfClass(\ArrayAccess::class)
+                TypeFactory::objectOfClass(\ArrayAccess::class),
             ],
             TraversableToArrayAccessTransformer::class,
         ];
@@ -259,7 +259,7 @@ class MappingTest extends FrameworkTestCase
                 TypeFactory::objectOfClass(\ArrayObject::class),
             ],
             [
-                TypeFactory::objectOfClass(\ArrayObject::class)
+                TypeFactory::objectOfClass(\ArrayObject::class),
             ],
             TraversableToArrayAccessTransformer::class,
         ];
@@ -269,7 +269,7 @@ class MappingTest extends FrameworkTestCase
                 TypeFactory::objectOfClass(\ArrayObject::class),
             ],
             [
-                TypeFactory::objectOfClass(ArrayCollection::class)
+                TypeFactory::objectOfClass(ArrayCollection::class),
             ],
             TraversableToArrayAccessTransformer::class,
         ];
@@ -279,7 +279,7 @@ class MappingTest extends FrameworkTestCase
                 TypeFactory::objectOfClass(ArrayCollection::class),
             ],
             [
-                TypeFactory::objectOfClass(Collection::class)
+                TypeFactory::objectOfClass(Collection::class),
             ],
             TraversableToArrayAccessTransformer::class,
         ];
@@ -289,7 +289,7 @@ class MappingTest extends FrameworkTestCase
                 TypeFactory::objectOfClass(Collection::class),
             ],
             [
-                TypeFactory::objectOfClass(\ArrayAccess::class)
+                TypeFactory::objectOfClass(\ArrayAccess::class),
             ],
             TraversableToArrayAccessTransformer::class,
         ];
@@ -299,7 +299,7 @@ class MappingTest extends FrameworkTestCase
                 TypeFactory::objectOfClass(Collection::class),
             ],
             [
-                TypeFactory::objectOfClass(\ArrayObject::class)
+                TypeFactory::objectOfClass(\ArrayObject::class),
             ],
             TraversableToArrayAccessTransformer::class,
         ];

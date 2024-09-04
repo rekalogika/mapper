@@ -25,8 +25,7 @@ final readonly class DynamicPropertiesProxyGenerator implements ProxyGeneratorIn
 {
     public function __construct(
         private ProxyGeneratorInterface $decorated,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function generateProxyCode(string $realClass, string $proxyClass): string

@@ -27,7 +27,7 @@ final readonly class NullToNullTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         return null;
     }

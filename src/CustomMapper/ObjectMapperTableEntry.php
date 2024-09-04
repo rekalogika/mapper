@@ -27,9 +27,8 @@ final readonly class ObjectMapperTableEntry
     public function __construct(
         private string $sourceClass,
         private string $targetClass,
-        private ServiceMethodSpecification $serviceMethodSpecification
-    ) {
-    }
+        private ServiceMethodSpecification $serviceMethodSpecification,
+    ) {}
 
     public function getSourceClass(): string
     {

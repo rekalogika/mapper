@@ -13,6 +13,4 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest\ScalarToScalar;
 
-class ScalarPropertiesMappingWithoutOptionsTest extends ScalarPropertiesMappingTestCase
-{
-}
+class ScalarPropertiesMappingWithoutOptionsTest extends ScalarPropertiesMappingTestCase {}

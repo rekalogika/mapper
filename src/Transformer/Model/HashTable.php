@@ -39,25 +39,25 @@ final class HashTable implements
 
     private function generateId(mixed $variable): string
     {
-        if (is_string($variable)) {
+        if (\is_string($variable)) {
             return 'string:' . $variable;
-        } elseif (is_int($variable)) {
+        } elseif (\is_int($variable)) {
             return 'int:' . $variable;
-        } elseif (is_float($variable)) {
+        } elseif (\is_float($variable)) {
             return 'float:' . $variable;
-        } elseif (is_bool($variable)) {
+        } elseif (\is_bool($variable)) {
             return 'bool:' . ($variable ? 'true' : 'false');
-        } elseif (is_object($variable)) {
+        } elseif (\is_object($variable)) {
             return 'object:' . spl_object_id($variable);
         } elseif (\is_resource($variable)) {
-            return 'resource:' . \get_resource_id($variable);
+            return 'resource:' . get_resource_id($variable);
         } elseif ($variable === null) {
             return 'null';
         }
 
-        throw new \InvalidArgumentException(sprintf(
+        throw new \InvalidArgumentException(\sprintf(
             'Unsupported variable typ "%s"',
-            \get_debug_type($variable)
+            get_debug_type($variable),
         ));
     }
 
@@ -73,9 +73,9 @@ final class HashTable implements
         $id = $this->generateId($offset);
 
         if (!isset($this->keys[$id])) {
-            throw new \OutOfBoundsException(sprintf(
+            throw new \OutOfBoundsException(\sprintf(
                 'Offset "%s" does not exist',
-                $id
+                $id,
             ));
         }
 

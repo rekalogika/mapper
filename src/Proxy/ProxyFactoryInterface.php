@@ -31,6 +31,6 @@ interface ProxyFactoryInterface
     public function createProxy(
         string $class,
         $initializer,
-        array $eagerProperties = []
+        array $eagerProperties = [],
     ): object;
 }

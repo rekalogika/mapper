@@ -25,20 +25,20 @@ class ProxyNotSupportedException extends RuntimeException
     public function __construct(
         string $class,
         ?string $reason = null,
-        ?\Throwable $previous = null
+        ?\Throwable $previous = null,
     ) {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Creating a proxy for class "%s" is not supported.',
-                $class
+                $class,
             ),
-            previous: $previous
+            previous: $previous,
         );
 
-        $this->reason = $reason ?? $previous?->getMessage() ?? sprintf(
+        $this->reason = $reason ?? $previous?->getMessage() ?? \sprintf(
             'Reason is not provided, thrown by "%s", line %d.',
             $this->getFile(),
-            $this->getLine()
+            $this->getLine(),
         );
     }
 

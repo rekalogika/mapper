@@ -50,8 +50,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         private readonly TransformerRegistryInterface $transformerRegistry,
         private readonly TypeResolverInterface $typeResolver,
         private readonly bool $debug = false,
-    ) {
-    }
+    ) {}
 
     #[\Override]
     public function reset(): void
@@ -60,7 +59,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
     }
 
     private function processTransformer(
-        TransformerInterface $transformer
+        TransformerInterface $transformer,
     ): TransformerInterface {
         if ($transformer instanceof MainTransformerAwareInterface) {
             return $transformer->withMainTransformer($this);
@@ -150,8 +149,8 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
                 new DebugContext(
                     sourceType: $sourceTypes[0],
                     targetTypes: $targetTypes,
-                    sourceTypeGuessed: $isSourceTypeGuessed
-                )
+                    sourceTypeGuessed: $isSourceTypeGuessed,
+                ),
             );
         }
 
@@ -161,7 +160,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         $searchResult = $this->transformerRegistry
             ->findBySourceAndTargetTypes(
                 $sourceTypes,
-                $targetTypes
+                $targetTypes,
             );
 
         // loop over the result and transform the source to the target
@@ -206,8 +205,8 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
             // get and prepare transformer
             $transformer = $this->processTransformer(
                 $this->transformerRegistry->get(
-                    $searchResultEntry->getTransformerServiceId()
-                )
+                    $searchResultEntry->getTransformerServiceId(),
+                ),
             );
 
             // transform the source to the target
@@ -219,7 +218,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
                     target: $target,
                     sourceType: $sourceTypeForTransformer,
                     targetType: $targetTypeForTransformer,
-                    context: $context
+                    context: $context,
                 );
             } catch (RefuseToTransformException) {
                 if ($targetTypeForTransformer !== null) {

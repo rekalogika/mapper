@@ -23,9 +23,7 @@ use Rekalogika\Mapper\SubMapper\SubMapperInterface;
  */
 final readonly class ServiceMethodExtraArgumentUtil
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * @param class-string $serviceClass
@@ -33,7 +31,7 @@ final readonly class ServiceMethodExtraArgumentUtil
      */
     public static function getExtraArguments(
         string $serviceClass,
-        string $method
+        string $method,
     ): array {
         $reflectionClass = new \ReflectionClass($serviceClass);
         $parameters = $reflectionClass->getMethod($method)->getParameters();
@@ -47,11 +45,11 @@ final readonly class ServiceMethodExtraArgumentUtil
 
             if (!$type instanceof \ReflectionNamedType) {
                 throw new InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'Extra arguments for property mapper "%s" in class "%s" must be type hinted.',
                         $method,
                         $serviceClass,
-                    )
+                    ),
                 );
             }
 
@@ -60,13 +58,13 @@ final readonly class ServiceMethodExtraArgumentUtil
                 MainTransformerInterface::class => ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
                 SubMapperInterface::class => ServiceMethodSpecification::ARGUMENT_SUB_MAPPER,
                 default => throw new InvalidArgumentException(
-                    sprintf(
+                    \sprintf(
                         'Extra argument with type "%s" for property mapper "%s" in class "%s" is unsupported.',
                         $type->getName(),
                         $method,
                         $serviceClass,
-                    )
-                )
+                    ),
+                ),
             };
         }
 

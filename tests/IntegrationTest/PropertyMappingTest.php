@@ -54,7 +54,7 @@ class PropertyMappingTest extends FrameworkTestCase
         string $sourceClass,
         string $targetClass,
         string $property,
-        ?ServiceMethodSpecification $expected
+        ?ServiceMethodSpecification $expected,
     ): void {
         $propertyMapperResolver = $this->get('rekalogika.mapper.property_mapper.resolver');
 
@@ -77,7 +77,7 @@ class PropertyMappingTest extends FrameworkTestCase
             new ServiceMethodSpecification(
                 PropertyMapperWithoutClassAttribute::class,
                 'mapPropertyA',
-                []
+                [],
             ),
         ];
 
@@ -88,7 +88,7 @@ class PropertyMappingTest extends FrameworkTestCase
             new ServiceMethodSpecification(
                 PropertyMapperWithClassAttribute::class,
                 'mapPropertyB',
-                []
+                [],
             ),
         ];
 
@@ -106,7 +106,7 @@ class PropertyMappingTest extends FrameworkTestCase
             new ServiceMethodSpecification(
                 PropertyMapperWithConstructorWithoutClassAttribute::class,
                 'mapPropertyA',
-                []
+                [],
             ),
         ];
 
@@ -117,7 +117,7 @@ class PropertyMappingTest extends FrameworkTestCase
             new ServiceMethodSpecification(
                 PropertyMapperWithConstructorWithClassAttribute::class,
                 'mapPropertyB',
-                []
+                [],
             ),
         ];
 
@@ -128,7 +128,7 @@ class PropertyMappingTest extends FrameworkTestCase
             new ServiceMethodSpecification(
                 PropertyMapperWithClassAttributeWithoutExplicitProperty::class,
                 'mapPropertyD',
-                []
+                [],
             ),
         ];
 
@@ -142,7 +142,7 @@ class PropertyMappingTest extends FrameworkTestCase
                 [
                     ServiceMethodSpecification::ARGUMENT_CONTEXT,
                     ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
-                ]
+                ],
             ),
         ];
     }
@@ -152,11 +152,11 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new SomeObject();
         $dto = $this->mapper->map($object, SomeObjectDto::class);
 
-        $this->assertEquals(SomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(SomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(SomeObject::class . '::propertyA', $dto->propertyA);
+        $this->assertEquals(SomeObject::class . '::propertyB', $dto->propertyB);
         $this->assertNull($dto->propertyC);
-        $this->assertEquals(SomeObject::class .  '::propertyD', $dto->propertyD);
-        $this->assertEquals(sprintf(
+        $this->assertEquals(SomeObject::class . '::propertyD', $dto->propertyD);
+        $this->assertEquals(\sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             Context::class,
             MainTransformer::class,
@@ -169,11 +169,11 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new ChildOfSomeObject();
         $dto = $this->mapper->map($object, SomeObjectDto::class);
 
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(ChildOfSomeObject::class . '::propertyA', $dto->propertyA);
+        $this->assertEquals(ChildOfSomeObject::class . '::propertyB', $dto->propertyB);
         $this->assertNull($dto->propertyC);
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyD', $dto->propertyD);
-        $this->assertEquals(sprintf(
+        $this->assertEquals(ChildOfSomeObject::class . '::propertyD', $dto->propertyD);
+        $this->assertEquals(\sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             Context::class,
             MainTransformer::class,
@@ -186,11 +186,11 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new ChildOfSomeObject();
         $dto = $this->mapper->map($object, ChildOfSomeObjectDto::class);
 
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(ChildOfSomeObject::class . '::propertyA', $dto->propertyA);
+        $this->assertEquals(ChildOfSomeObject::class . '::propertyB', $dto->propertyB);
         $this->assertNull($dto->propertyC);
-        $this->assertEquals(ChildOfSomeObject::class .  '::propertyD', $dto->propertyD);
-        $this->assertEquals(sprintf(
+        $this->assertEquals(ChildOfSomeObject::class . '::propertyD', $dto->propertyD);
+        $this->assertEquals(\sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             Context::class,
             MainTransformer::class,
@@ -203,11 +203,11 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new SomeObject();
         $dto = $this->mapper->map($object, ChildOfSomeObjectDto::class);
 
-        $this->assertEquals(SomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(SomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(SomeObject::class . '::propertyA', $dto->propertyA);
+        $this->assertEquals(SomeObject::class . '::propertyB', $dto->propertyB);
         $this->assertNull($dto->propertyC);
-        $this->assertEquals(SomeObject::class .  '::propertyD', $dto->propertyD);
-        $this->assertEquals(sprintf(
+        $this->assertEquals(SomeObject::class . '::propertyD', $dto->propertyD);
+        $this->assertEquals(\sprintf(
             'I have "%s" and "%s" that I can use to transform source property "%s"',
             Context::class,
             MainTransformer::class,
@@ -220,7 +220,7 @@ class PropertyMappingTest extends FrameworkTestCase
         $object = new SomeObject();
         $dto = $this->mapper->map($object, SomeObjectWithConstructorDto::class);
 
-        $this->assertEquals(SomeObject::class .  '::propertyA', $dto->propertyA);
-        $this->assertEquals(SomeObject::class .  '::propertyB', $dto->propertyB);
+        $this->assertEquals(SomeObject::class . '::propertyA', $dto->propertyA);
+        $this->assertEquals(SomeObject::class . '::propertyB', $dto->propertyB);
     }
 }

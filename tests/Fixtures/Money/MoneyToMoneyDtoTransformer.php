@@ -36,12 +36,12 @@ class MoneyToMoneyDtoTransformer implements TransformerInterface
 
         yield new TypeMapping(
             TypeFactory::objectOfClass(Money::class),
-            TypeFactory::objectOfClass(MoneyDto::class)
+            TypeFactory::objectOfClass(MoneyDto::class),
         );
 
         yield new TypeMapping(
             TypeFactory::objectOfClass(MoneyDto::class),
-            TypeFactory::objectOfClass(Money::class)
+            TypeFactory::objectOfClass(Money::class),
         );
     }
 
@@ -64,7 +64,7 @@ class MoneyToMoneyDtoTransformer implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         if (
             $source instanceof Money
@@ -82,7 +82,7 @@ class MoneyToMoneyDtoTransformer implements TransformerInterface
         ) {
             return Money::of(
                 $source->getAmount(),
-                $source->getCurrency()
+                $source->getCurrency(),
             );
         }
 

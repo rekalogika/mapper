@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\UninitializedProperty;
 final readonly class ValueObject
 {
     public function __construct(
-        public string $name
-    ) {
-    }
+        public string $name,
+    ) {}
 }

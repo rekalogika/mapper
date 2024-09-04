@@ -27,6 +27,5 @@ final readonly class MapperOptions
         public bool $lazyLoading = true,
         public bool $readTargetValue = true,
         public bool $objectToObjectScalarShortCircuit = true,
-    ) {
-    }
+    ) {}
 }

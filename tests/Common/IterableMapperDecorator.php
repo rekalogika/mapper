@@ -20,9 +20,8 @@ final readonly class IterableMapperDecorator implements IterableMapperInterface
 {
     public function __construct(
         private IterableMapperInterface $decorated,
-        private Context $defaultContext
-    ) {
-    }
+        private Context $defaultContext,
+    ) {}
 
     #[\Override]
     public function mapIterable(iterable $source, string $target, ?Context $context = null): iterable

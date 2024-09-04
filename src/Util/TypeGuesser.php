@@ -18,9 +18,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeGuesser
 {
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     public static function guessTypeFromVariable(mixed $variable): Type
     {
@@ -40,15 +38,15 @@ final readonly class TypeGuesser
             return TypeFactory::null();
         }
 
-        if (class_exists($type) || interface_exists($type) || \enum_exists($type)) {
+        if (class_exists($type) || interface_exists($type) || enum_exists($type)) {
             return TypeFactory::objectOfClass($type);
         }
 
-        if (\str_starts_with($type, 'resource')) {
+        if (str_starts_with($type, 'resource')) {
             return TypeFactory::resource();
         }
 
-        throw new InvalidArgumentException(sprintf(
+        throw new InvalidArgumentException(\sprintf(
             'Cannot determine type of variable "%s"',
             get_debug_type($variable),
         ));

@@ -68,7 +68,7 @@ final class Mapping implements \IteratorAggregate
      */
     public function getMappingBySourceAndTarget(
         array $sourceTypes,
-        array $targetTypes
+        array $targetTypes,
     ): array {
         $result = [];
 

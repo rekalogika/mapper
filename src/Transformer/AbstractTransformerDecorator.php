@@ -20,8 +20,7 @@ abstract class AbstractTransformerDecorator implements TransformerInterface
 {
     public function __construct(
         private readonly TransformerInterface $decorated,
-    ) {
-    }
+    ) {}
 
     public function getDecorated(): TransformerInterface
     {
@@ -34,14 +33,14 @@ abstract class AbstractTransformerDecorator implements TransformerInterface
         mixed $target,
         ?Type $sourceType,
         ?Type $targetType,
-        Context $context
+        Context $context,
     ): mixed {
         return $this->decorated->transform(
             $source,
             $target,
             $sourceType,
             $targetType,
-            $context
+            $context,
         );
     }
 

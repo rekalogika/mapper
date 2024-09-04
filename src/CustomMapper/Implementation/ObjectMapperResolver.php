@@ -32,9 +32,8 @@ final class ObjectMapperResolver implements ObjectMapperResolverInterface
     private array $objectMapperCache = [];
 
     public function __construct(
-        private readonly ObjectMapperTableFactoryInterface $objectMapperTableFactory
-    ) {
-    }
+        private readonly ObjectMapperTableFactoryInterface $objectMapperTableFactory,
+    ) {}
 
     private function getObjectMapperTable(): ObjectMapperTable
     {
@@ -49,7 +48,7 @@ final class ObjectMapperResolver implements ObjectMapperResolverInterface
     #[\Override]
     public function getObjectMapper(
         string $sourceClass,
-        string $targetClass
+        string $targetClass,
     ): ServiceMethodSpecification {
         if (isset($this->objectMapperCache[$sourceClass][$targetClass])) {
             return $this->objectMapperCache[$sourceClass][$targetClass];

@@ -25,7 +25,7 @@ class InvalidClassException extends UnexpectedValueException
         Context $context,
     ) {
         parent::__construct(
-            message: sprintf('Trying to map to class "%s", but this is not a valid class, interface, or enum.', TypeUtil::getDebugType($type)),
+            message: \sprintf('Trying to map to class "%s", but this is not a valid class, interface, or enum.', TypeUtil::getDebugType($type)),
             context: $context,
         );
     }
