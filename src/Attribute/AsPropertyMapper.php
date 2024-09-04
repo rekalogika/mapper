@@ -17,10 +17,11 @@ namespace Rekalogika\Mapper\Attribute;
 final readonly class AsPropertyMapper
 {
     /**
-     * @param null|class-string $targetClass
+     * @param class-string|null $targetClass
      */
     public function __construct(
         public ?string $property = null,
         public ?string $targetClass = null,
-    ) {}
+    ) {
+    }
 }

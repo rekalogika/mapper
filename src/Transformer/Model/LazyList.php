@@ -24,9 +24,7 @@ use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
  * Discards source key, and use incremental integer key in the target.
  *
  * @template TValue
- *
  * @implements ListInterface<int,TValue>
- *
  * @internal
  */
 final class LazyList implements ListInterface
@@ -42,10 +40,10 @@ final class LazyList implements ListInterface
     private bool $isCached = false;
 
     /**
-     * @param array<int|string,mixed>|(\ArrayAccess<mixed,mixed>&\Countable&\Traversable<mixed,mixed>) $source
+     * @param (\Traversable<mixed,mixed>&\ArrayAccess<mixed,mixed>&\Countable)|array<int|string,mixed> $source
      */
     public function __construct(
-        private array|(\ArrayAccess&\Countable&\Traversable) $source,
+        private (\Traversable&\ArrayAccess&\Countable)|array $source,
         MainTransformerInterface $mainTransformer,
         private ArrayLikeMetadata $metadata,
         private Context $context,
@@ -63,7 +61,7 @@ final class LazyList implements ListInterface
     public function offsetGet(mixed $offset): mixed
     {
         if (!$this->isCached) {
-            foreach ($this->getIterator() as $i) {
+            foreach($this->getIterator() as $i) {
                 // do nothing
             }
         }
@@ -112,7 +110,7 @@ final class LazyList implements ListInterface
 
             yield $value;
 
-            ++$i;
+            $i++;
         }
 
         $this->isCached = true;

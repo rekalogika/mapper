@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Mapping;
 
 /**
- * Initialize transformer mappings.
+ * Initialize transformer mappings
  *
  * @internal
  */

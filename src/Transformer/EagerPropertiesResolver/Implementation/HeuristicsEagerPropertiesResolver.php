@@ -26,7 +26,7 @@ final readonly class HeuristicsEagerPropertiesResolver implements EagerPropertie
     private array $properties;
 
     /**
-     * @param null|array<int,string> $properties
+     * @param array<int,string>|null $properties
      */
     public function __construct(?array $properties = null)
     {
@@ -37,7 +37,7 @@ final readonly class HeuristicsEagerPropertiesResolver implements EagerPropertie
             'uuid',
             'UUID',
             'Uuid',
-            'identifier',
+            'identifier'
         ];
     }
 
@@ -56,7 +56,7 @@ final readonly class HeuristicsEagerPropertiesResolver implements EagerPropertie
             }
 
             try {
-                $methodName = 'get'.ucfirst($property);
+                $methodName = 'get' . ucfirst($property);
                 $id = $reflectionClass->getMethod($methodName);
                 if ($id->isPublic()) {
                     return [$property];

@@ -31,7 +31,8 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
     public function __construct(
         private readonly ArrayLikeMetadataFactoryInterface $decorated,
         private readonly CacheItemPoolInterface $cacheItemPool,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function createArrayLikeMetadata(

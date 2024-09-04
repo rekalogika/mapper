@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto;
 
 /**
- * Final object won't be lazy loaded.
+ * Final object won't be lazy loaded
  */
 final class FinalObjectWithUninitializedPropertyDto
 {

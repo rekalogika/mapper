@@ -31,7 +31,7 @@ final readonly class NullTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context
     ): mixed {
-        if (null !== $target) {
+        if ($target !== null) {
             throw new InvalidArgumentException('Target must be null');
         }
 
@@ -66,15 +66,10 @@ final readonly class NullTransformer implements TransformerInterface
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(TypeFactory::null(), TypeFactory::string());
-
         yield new TypeMapping(TypeFactory::null(), TypeFactory::int());
-
         yield new TypeMapping(TypeFactory::null(), TypeFactory::float());
-
         yield new TypeMapping(TypeFactory::null(), TypeFactory::bool());
-
         yield new TypeMapping(TypeFactory::null(), TypeFactory::array());
-
         yield new TypeMapping(TypeFactory::mixed(), TypeFactory::null());
     }
 }

@@ -33,7 +33,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
     ): ArrayLikeMetadata {
         $targetMemberKeyTypes = $targetType->getCollectionKeyTypes();
 
-        if ([] === $targetMemberKeyTypes) {
+        if ($targetMemberKeyTypes === []) {
             $targetMemberKeyTypes = [
                 TypeFactory::int(),
                 TypeFactory::string(),
@@ -46,12 +46,12 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
         $isTargetArray = TypeCheck::isArray($targetType);
 
         $sourceClass = $sourceType->getClassName();
-        if (null !== $sourceClass && (!class_exists($sourceClass) && !interface_exists($sourceClass))) {
+        if ($sourceClass !== null && (!class_exists($sourceClass) && !interface_exists($sourceClass))) {
             throw new InvalidArgumentException(sprintf('Source class "%s" does not exist', $sourceClass));
         }
 
         $targetClass = $targetType->getClassName();
-        if (null !== $targetClass && (!class_exists($targetClass) && !interface_exists($targetClass))) {
+        if ($targetClass !== null && (!class_exists($targetClass) && !interface_exists($targetClass))) {
             throw new InvalidArgumentException(sprintf('Target class "%s" does not exist', $targetClass));
         }
 
@@ -83,7 +83,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             }
         }
 
-        $targetMemberValueIsUntyped = [] === $targetMemberValueTypes;
+        $targetMemberValueIsUntyped = $targetMemberValueTypes === [];
 
         // determine if target can be lazy
 
@@ -91,9 +91,9 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             && !$sourceMemberKeyTypeCanBeOtherThanIntOrString
             && !$targetMemberKeyTypeCanBeOtherThanIntOrString
             && (
-                \ArrayAccess::class === $targetClass
-                || \Traversable::class === $targetClass
-                || CollectionInterface::class === $targetClass
+                $targetClass === \ArrayAccess::class
+                || $targetClass === \Traversable::class
+                || $targetClass === CollectionInterface::class
             );
 
         return new ArrayLikeMetadata(

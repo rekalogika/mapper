@@ -21,13 +21,12 @@ final readonly class MapperDecorator implements MapperInterface
     public function __construct(
         private MapperInterface $decorated,
         private Context $defaultContext
-    ) {}
+    ) {
+    }
 
     /**
      * @template T of object
-     *
      * @param class-string<T>|T $target
-     *
      * @return T
      */
     #[\Override]

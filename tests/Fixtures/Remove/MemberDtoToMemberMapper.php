@@ -19,7 +19,8 @@ class MemberDtoToMemberMapper
 {
     public function __construct(
         private readonly MemberRepository $memberRepository,
-    ) {}
+    ) {
+    }
 
     #[AsObjectMapper]
     public function mapMemberDtoToMember(MemberDto $memberDto): Member

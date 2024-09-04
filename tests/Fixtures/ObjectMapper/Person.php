@@ -22,19 +22,18 @@ class Person
     public function __construct(
         private readonly string $id,
         private readonly string $name,
-    ) {}
+    ) {
+    }
 
     public function getId(): string
     {
         $this->getIdIsCalled = true;
-
         return $this->id;
     }
 
     public function getName(): string
     {
         $this->getNameIsCalled = true;
-
         return $this->name;
     }
 

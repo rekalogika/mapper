@@ -18,5 +18,7 @@ use Rekalogika\Mapper\Exception\RuntimeException;
 
 class CircularReferenceException extends RuntimeException implements ExceptionInterface
 {
-    public function __construct() {}
+    public function __construct()
+    {
+    }
 }

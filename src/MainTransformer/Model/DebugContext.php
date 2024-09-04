@@ -20,19 +20,19 @@ use Symfony\Component\PropertyInfo\Type;
  * Debug context for main transformer. Used for tracing.
  *
  * @internal
- *
  * @immutable
  */
 final readonly class DebugContext
 {
     /**
-     * @param array<int,MixedType|Type> $targetTypes
+     * @param array<int,Type|MixedType> $targetTypes
      */
     public function __construct(
         private Type $sourceType,
         private array $targetTypes,
         private bool $sourceTypeGuessed
-    ) {}
+    ) {
+    }
 
     public function getSourceType(): Type
     {
@@ -40,7 +40,7 @@ final readonly class DebugContext
     }
 
     /**
-     * @return array<int,MixedType|Type>
+     * @return array<int,Type|MixedType>
      */
     public function getTargetTypes(): array
     {

@@ -19,7 +19,7 @@ use Symfony\Component\PropertyInfo\Type;
 interface MainTransformerInterface
 {
     /**
-     * @param ?Type                 $sourceType  If null, the source type will be guessed
+     * @param ?Type $sourceType If null, the source type will be guessed
      * @param array<array-key,Type> $targetTypes
      */
     public function transform(
@@ -28,6 +28,6 @@ interface MainTransformerInterface
         ?Type $sourceType,
         array $targetTypes,
         Context $context,
-        ?string $path = null,
+        string $path = null,
     ): mixed;
 }

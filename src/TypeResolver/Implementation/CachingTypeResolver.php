@@ -35,15 +35,15 @@ final class CachingTypeResolver implements TypeResolverInterface
     // can be expensive in a loop. we cache using a weakmap
 
     /**
-     * @var \WeakMap<MixedType|Type,string>
+     * @var \WeakMap<Type|MixedType,string>
      */
     private \WeakMap $typeStringCache;
 
     #[\Override]
-    public function getTypeString(MixedType|Type $type): string
+    public function getTypeString(Type|MixedType $type): string
     {
         $result = $this->typeStringCache[$type] ?? null;
-        if (null !== $result) {
+        if ($result !== null) {
             return $result;
         }
 
@@ -61,7 +61,7 @@ final class CachingTypeResolver implements TypeResolverInterface
     private array $simpleTypesCache = [];
 
     #[\Override]
-    public function getSimpleTypes(array|MixedType|Type $type): array
+    public function getSimpleTypes(array|Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {
             return [$type];
@@ -70,7 +70,7 @@ final class CachingTypeResolver implements TypeResolverInterface
         $key = hash('xxh128', serialize($type));
 
         $result = $this->simpleTypesCache[$key] ?? null;
-        if (null !== $result) {
+        if ($result !== null) {
             return $result;
         }
 
@@ -109,7 +109,7 @@ final class CachingTypeResolver implements TypeResolverInterface
     private array $applicableTypeStringsCache = [];
 
     #[\Override]
-    public function getAcceptedTransformerInputTypeStrings(MixedType|Type $type): array
+    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array
     {
         $typeString = $this->getTypeString($type);
 
@@ -124,7 +124,7 @@ final class CachingTypeResolver implements TypeResolverInterface
     }
 
     #[\Override]
-    public function getAcceptedTransformerOutputTypeStrings(MixedType|Type $type): array
+    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array
     {
         return $this->decorated->getAcceptedTransformerOutputTypeStrings($type);
     }

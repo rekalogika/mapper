@@ -19,9 +19,6 @@ use Rekalogika\Mapper\Tests\Fixtures\Attribute\SomeAttribute;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 
-/**
- * @internal
- */
 class AttributeTest extends FrameworkTestCase
 {
     public function testAttribute(): void

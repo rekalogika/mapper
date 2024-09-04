@@ -57,19 +57,18 @@ abstract class FrameworkTestCase extends TestCase
 
     /**
      * @template T of object
-     *
-     * @param class-string<T>|string $serviceId
-     *
+     * @param string|class-string<T> $serviceId
      * @return ($serviceId is class-string<T> ? T : object)
      */
     public function get(string $serviceId): object
     {
         try {
-            $result = $this->container->get('test.'.$serviceId);
+            $result = $this->container->get('test.' . $serviceId);
         } catch (ServiceNotFoundException) {
             /** @psalm-suppress PossiblyNullReference */
             $result = $this->container->get($serviceId);
         }
+
 
         if (class_exists($serviceId) || interface_exists($serviceId)) {
             $this->assertInstanceOf($serviceId, $result);
@@ -123,7 +122,7 @@ abstract class FrameworkTestCase extends TestCase
 
     public function getEntityManager(): EntityManagerInterface
     {
-        if (null !== $this->entityManager) {
+        if ($this->entityManager !== null) {
             return $this->entityManager;
         }
 

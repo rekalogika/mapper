@@ -28,7 +28,8 @@ class EntityWithMultipleIdentifier
         private string $id2,
         #[ORM\Column]
         private string $name
-    ) {}
+    ) {
+    }
 
     public function getId1(): string
     {

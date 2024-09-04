@@ -21,14 +21,13 @@ use Rekalogika\Mapper\Util\TypeCheck;
 trait ArrayLikeTransformerTrait
 {
     /**
-     * @param iterable<mixed,mixed>                                 $source
-     * @param null|array<array-key,mixed>|\ArrayAccess<mixed,mixed> $target
-     *
+     * @param iterable<mixed,mixed> $source
+     * @param \ArrayAccess<mixed,mixed>|array<array-key,mixed>|null $target
      * @return \Traversable<mixed,mixed>
      */
     private function transformTraversableSource(
         iterable $source,
-        null|array|\ArrayAccess $target,
+        \ArrayAccess|array|null $target,
         ArrayLikeMetadata $metadata,
         Context $context
     ): \Traversable {
@@ -60,13 +59,12 @@ trait ArrayLikeTransformerTrait
 
             yield $key => $value;
 
-            ++$i;
+            $i++;
         }
     }
 
     /**
-     * @param null|array<mixed,mixed>|\ArrayAccess<mixed,mixed> $target
-     *
+     * @param null|\ArrayAccess<mixed,mixed>|array<mixed,mixed> $target
      * @return array{0:mixed,1:mixed}
      */
     private function transformMember(
@@ -74,7 +72,7 @@ trait ArrayLikeTransformerTrait
         mixed $sourceMemberValue,
         ArrayLikeMetadata $metadata,
         Context $context,
-        null|array|\ArrayAccess $target = null,
+        null|\ArrayAccess|array $target = null,
         ?int $counter = null,
     ): array {
         // optimization: we try not to use the main tranformer to transform
@@ -189,10 +187,9 @@ trait ArrayLikeTransformerTrait
         // Get the existing member value from the target
 
         try {
-            if (null !== $target && null !== $targetMemberKey) {
+            if ($target !== null && $targetMemberKey !== null) {
                 /**
                  * @var mixed
-                 *
                  * @psalm-suppress MixedArrayOffset
                  * @psalm-suppress MixedArrayTypeCoercion
                  */

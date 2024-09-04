@@ -18,7 +18,8 @@ class Person
     public function __construct(
         private readonly string $name,
         private readonly int $age
-    ) {}
+    ) {
+    }
 
     public function getName(): string
     {

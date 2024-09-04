@@ -18,15 +18,11 @@ use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTime;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeDto;
 use Symfony\Component\Clock\DatePoint;
 
-/**
- * @internal
- */
 class DateTimeMappingTest extends FrameworkTestCase
 {
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
-     *
      * @dataProvider dateTimeProvider
      */
     public function testDateTime(string $sourceClass, string $targetClass): void
@@ -52,11 +48,11 @@ class DateTimeMappingTest extends FrameworkTestCase
 
         foreach ($types as $sourceClass) {
             foreach ($types as $targetClass) {
-                if (\DateTimeInterface::class === $sourceClass) {
+                if ($sourceClass === \DateTimeInterface::class) {
                     continue;
                 }
 
-                yield sprintf('%s to %s', $sourceClass, $targetClass) => [$sourceClass, $targetClass];
+                yield sprintf("%s to %s", $sourceClass, $targetClass) => [$sourceClass, $targetClass];
             }
         }
     }

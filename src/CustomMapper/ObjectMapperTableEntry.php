@@ -28,7 +28,8 @@ final readonly class ObjectMapperTableEntry
         private string $sourceClass,
         private string $targetClass,
         private ServiceMethodSpecification $serviceMethodSpecification
-    ) {}
+    ) {
+    }
 
     public function getSourceClass(): string
     {

@@ -23,18 +23,19 @@ final readonly class SearchResultEntry
 {
     public function __construct(
         private int $mappingOrder,
-        private MixedType|Type $sourceType,
-        private MixedType|Type $targetType,
+        private Type|MixedType $sourceType,
+        private Type|MixedType $targetType,
         private string $transformerServiceId,
         private bool $variantTargetType,
-    ) {}
+    ) {
+    }
 
-    public function getSourceType(): MixedType|Type
+    public function getSourceType(): Type|MixedType
     {
         return $this->sourceType;
     }
 
-    public function getTargetType(): MixedType|Type
+    public function getTargetType(): Type|MixedType
     {
         return $this->targetType;
     }
@@ -50,7 +51,7 @@ final readonly class SearchResultEntry
             return true;
         }
 
-        if (Type::BUILTIN_TYPE_OBJECT !== $this->targetType->getBuiltinType()) {
+        if ($this->targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
             return false;
         }
 

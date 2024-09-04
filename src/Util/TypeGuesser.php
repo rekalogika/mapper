@@ -18,33 +18,25 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class TypeGuesser
 {
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     public static function guessTypeFromVariable(mixed $variable): Type
     {
         $type = get_debug_type($variable);
 
-        if ('array' === $type) {
+        if ($type === 'array') {
             return TypeFactory::array();
-        }
-
-        if ('bool' === $type) {
+        } elseif ($type === 'bool') {
             return TypeFactory::bool();
-        }
-
-        if ('int' === $type) {
+        } elseif ($type === 'int') {
             return TypeFactory::int();
-        }
-
-        if ('float' === $type) {
+        } elseif ($type === 'float') {
             return TypeFactory::float();
-        }
-
-        if ('string' === $type) {
+        } elseif ($type === 'string') {
             return TypeFactory::string();
-        }
-
-        if ('null' === $type) {
+        } elseif ($type === 'null') {
             return TypeFactory::null();
         }
 

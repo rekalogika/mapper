@@ -20,7 +20,7 @@ use Rekalogika\Mapper\Util\ClassUtil;
 /**
  * @internal
  *
- * Not in hot path, no caching needed
+ * Not in hot path, no caching needed.
  */
 final class PropertyMapperResolver implements PropertyMapperResolverInterface
 {
@@ -30,8 +30,8 @@ final class PropertyMapperResolver implements PropertyMapperResolverInterface
     private array $propertyMappers = [];
 
     /**
-     * @param class-string                                      $sourceClass
-     * @param class-string                                      $targetClass
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
      * @param array<int,ServiceMethodSpecification::ARGUMENT_*> $extraArguments
      */
     public function addPropertyMapper(

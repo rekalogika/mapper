@@ -21,9 +21,6 @@ use Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto\FinalObjectWithUni
 use Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto\ObjectWithInitializedPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto\ObjectWithUninitializedPropertyDto;
 
-/**
- * @internal
- */
 class UninitializedPropertyTest extends FrameworkTestCase
 {
     // from initialized

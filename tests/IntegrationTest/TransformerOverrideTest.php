@@ -18,9 +18,6 @@ use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Override\ObjectWithArrayProperty;
 use Rekalogika\Mapper\Tests\Fixtures\Override\ObjectWithArrayPropertyDto;
 
-/**
- * @internal
- */
 class TransformerOverrideTest extends FrameworkTestCase
 {
     public function testTransformerOverride(): void

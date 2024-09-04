@@ -54,12 +54,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private ProxyFactoryInterface $proxyFactory,
         private TypeResolverInterface $typeResolver,
-    ) {}
+    ) {
+    }
 
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
-     *
      * @return class-string
      */
     private function resolveTargetClass(
@@ -71,7 +71,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         $targetAttributes = $targetReflection->getAttributes(InheritanceMap::class);
 
-        if ([] !== $targetAttributes) {
+        if ($targetAttributes !== []) {
             // if the target has an InheritanceMap, we try to resolve the target
             // class using the InheritanceMap
 
@@ -79,14 +79,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             $resolvedTargetClass = $inheritanceMap->getTargetClassFromSourceClass($sourceClass);
 
-            if (null === $resolvedTargetClass) {
+            if ($resolvedTargetClass === null) {
                 throw new SourceClassNotInInheritanceMapException($sourceClass, $targetClass);
             }
 
             return $resolvedTargetClass;
-        }
-
-        if ($targetReflection->isAbstract() || $targetReflection->isInterface()) {
+        } elseif ($targetReflection->isAbstract() || $targetReflection->isInterface()) {
             // if target doesn't have an inheritance map, but is also abstract
             // or an interface, we try to find the InheritanceMap from the
             // source
@@ -97,12 +95,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 $sourceReflection = new \ReflectionClass($currentSourceClass);
                 $sourceAttributes = $sourceReflection->getAttributes(InheritanceMap::class);
 
-                if ([] !== $sourceAttributes) {
+                if ($sourceAttributes !== []) {
                     $inheritanceMap = $sourceAttributes[0]->newInstance();
 
                     $resolvedTargetClass = $inheritanceMap->getSourceClassFromTargetClass($sourceClass);
 
-                    if (null === $resolvedTargetClass) {
+                    if ($resolvedTargetClass === null) {
                         throw new SourceClassNotInInheritanceMapException($currentSourceClass, $targetClass);
                     }
 
@@ -212,15 +210,15 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // determine if target allows delete
 
-            if (null === $targetPropertyReflection) {
+            if ($targetPropertyReflection === null) {
                 $targetAllowsDelete = false;
             } else {
-                $targetAllowsDelete = [] !== $targetPropertyReflection->getAttributes(AllowDelete::class);
+                $targetAllowsDelete = $targetPropertyReflection->getAttributes(AllowDelete::class) !== [];
             }
 
             // process source read mode
 
-            if (null === $sourceReadInfo) {
+            if ($sourceReadInfo === null) {
                 // if source allows dynamic properties, including stdClass
                 if ($sourceAllowsDynamicProperties) {
                     $sourceReadMode = ReadMode::DynamicProperty;
@@ -250,7 +248,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // process target read mode
 
-            if (null === $targetReadInfo) {
+            if ($targetReadInfo === null) {
                 // if source allows dynamic properties, including stdClass
                 if ($targetAllowsDynamicProperties) {
                     $targetReadMode = ReadMode::DynamicProperty;
@@ -280,15 +278,15 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // skip if target is not writable
 
-            if (null === $targetConstructorWriteInfo && null === $targetSetterWriteInfo) {
+            if ($targetConstructorWriteInfo === null && $targetSetterWriteInfo === null) {
                 continue;
             }
 
             // process target constructor write info
 
             if (
-                null === $targetConstructorWriteInfo
-                || PropertyWriteInfo::TYPE_CONSTRUCTOR !== $targetConstructorWriteInfo->getType()
+                $targetConstructorWriteInfo === null
+                || $targetConstructorWriteInfo->getType() !== PropertyWriteInfo::TYPE_CONSTRUCTOR
             ) {
                 $targetConstructorWriteMode = WriteMode::None;
                 $targetConstructorWriteName = null;
@@ -302,11 +300,11 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $targetRemoverWriteName = null;
             $targetRemoverWriteVisibility = Visibility::None;
 
-            if (null === $targetSetterWriteInfo) {
+            if ($targetSetterWriteInfo === null) {
                 $targetSetterWriteMode = WriteMode::None;
                 $targetSetterWriteName = null;
                 $targetSetterWriteVisibility = Visibility::None;
-            } elseif (PropertyWriteInfo::TYPE_ADDER_AND_REMOVER === $targetSetterWriteInfo->getType()) {
+            } elseif ($targetSetterWriteInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
                 $targetSetterWriteMode = WriteMode::AdderRemover;
                 $targetSetterWriteName = $targetSetterWriteInfo->getAdderInfo()->getName();
                 $targetRemoverWriteName = $targetSetterWriteInfo->getRemoverInfo()->getName();
@@ -329,8 +327,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     default => WriteMode::None,
                 };
 
-                if (WriteMode::None === $targetSetterWriteMode) {
-                    if ($targetAllowsDynamicProperties && null === $targetReadInfo) {
+                if ($targetSetterWriteMode === WriteMode::None) {
+                    if ($targetAllowsDynamicProperties && $targetReadInfo === null) {
                         $targetSetterWriteMode = WriteMode::DynamicProperty;
                         $targetSetterWriteName = $targetProperty;
                         $targetSetterWriteVisibility = Visibility::Public;
@@ -387,10 +385,10 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // determine target scalar type
 
-            /** @var null|'bool'|'float'|'int'|'null'|'string' */
+            /** @var 'int'|'float'|'string'|'bool'|'null'|null */
             $targetPropertyScalarType = null;
 
-            if (1 === count($originalTargetPropertyTypes)) {
+            if (count($originalTargetPropertyTypes) === 1) {
                 $targetPropertyType = $originalTargetPropertyTypes[0];
                 $targetPropertyBuiltInType = $targetPropertyType->getBuiltinType();
 
@@ -408,9 +406,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $targetCanAcceptNull = false;
 
             foreach ($targetPropertyTypes as $targetPropertyType) {
-                if ('null' === $targetPropertyType->getBuiltinType()) {
+                if ($targetPropertyType->getBuiltinType() === 'null') {
                     $targetCanAcceptNull = true;
-
                     break;
                 }
             }
@@ -422,7 +419,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // instantiate property mapping
 
             $propertyMapping = new PropertyMapping(
-                sourceProperty: ReadMode::None !== $sourceReadMode ? $sourceProperty : null,
+                sourceProperty: $sourceReadMode !== ReadMode::None ? $sourceProperty : null,
                 targetProperty: $targetProperty,
                 sourceTypes: $sourcePropertyTypes,
                 targetTypes: $targetPropertyTypes,
@@ -473,7 +470,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // ensure we can create the proxy
 
             $this->proxyFactory
-                ->createProxy($targetClass, function ($instance): void {}, $eagerProperties);
+                ->createProxy($targetClass, function ($instance): void {
+                }, $eagerProperties);
 
             // determine if the constructor contains eager properties. if it
             // does, then the constructor is eager
@@ -483,7 +481,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             foreach ($objectToObjectMetadata->getConstructorPropertyMappings() as $propertyMapping) {
                 if (!$propertyMapping->isSourceLazy()) {
                     $constructorIsEager = true;
-
                     break;
                 }
             }
@@ -520,7 +517,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
     /**
      * @param class-string $class
-     *
      * @return array<int,string>
      */
     private function listProperties(
@@ -533,7 +529,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
     /**
      * @param class-string $class
-     *
      * @return array<int,string>
      */
     private function listInitializableProperties(
@@ -544,7 +539,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         $initializableProperties = [];
 
         foreach ($properties as $property) {
-            if (true === $this->propertyInitializableExtractor->isInitializable($class, $property)) {
+            if ($this->propertyInitializableExtractor->isInitializable($class, $property) === true) {
                 $initializableProperties[] = $property;
             }
         }
@@ -558,7 +553,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
     private function allowsDynamicProperties(\ReflectionClass $class): bool
     {
         do {
-            if ([] !== $class->getAttributes(\AllowDynamicProperties::class)) {
+            if ($class->getAttributes(\AllowDynamicProperties::class) !== []) {
                 return true;
             }
         } while ($class = $class->getParentClass());
@@ -577,11 +572,11 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 'enable_adder_remover_extraction' => false,
             ]);
 
-        if (null === $writeInfo) {
+        if ($writeInfo === null) {
             return null;
         }
 
-        if (PropertyWriteInfo::TYPE_CONSTRUCTOR === $writeInfo->getType()) {
+        if ($writeInfo->getType() === PropertyWriteInfo::TYPE_CONSTRUCTOR) {
             return $writeInfo;
         }
 

@@ -18,7 +18,8 @@ final readonly class MoneyDto
     public function __construct(
         private string $amount,
         private string $currency,
-    ) {}
+    ) {
+    }
 
     public function getAmount(): string
     {

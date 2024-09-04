@@ -24,7 +24,7 @@ class CircularReferenceException extends RuntimeException implements ExceptionIn
     public function __construct(
         mixed $source,
         Type $targetType,
-        ?Context $context = null,
+        Context $context = null,
         ?\Throwable $previous = null
     ) {
         parent::__construct(

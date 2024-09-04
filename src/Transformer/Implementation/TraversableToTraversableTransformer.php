@@ -34,7 +34,8 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
     public function __construct(
         private ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function transform(
@@ -44,11 +45,11 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
         ?Type $targetType,
         Context $context
     ): mixed {
-        if (null === $source) {
+        if ($source === null) {
             $source = [];
         }
 
-        if (null === $targetType) {
+        if ($targetType === null) {
             throw new InvalidArgumentException('Target type must not be null.', context: $context);
         }
 
@@ -60,13 +61,13 @@ final class TraversableToTraversableTransformer implements TransformerInterface,
 
         // We cannot work with an existing Traversable value
 
-        if (null !== $target) {
+        if ($target !== null) {
             throw new InvalidArgumentException(sprintf('This transformer does not support existing value, "%s" found.', get_debug_type($target)), context: $context);
         }
 
         // create transformation metadata
 
-        if (null === $sourceType) {
+        if ($sourceType === null) {
             $sourceType = TypeGuesser::guessTypeFromVariable($source);
         }
 

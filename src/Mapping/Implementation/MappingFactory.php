@@ -37,12 +37,13 @@ final class MappingFactory implements MappingFactoryInterface
         private readonly iterable $transformers,
         private readonly TypeResolverInterface $typeResolver,
         private readonly ?LoggerInterface $logger = null,
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function getMapping(): Mapping
     {
-        if (null === $this->mapping) {
+        if ($this->mapping === null) {
             $this->mapping = $this->createMapping($this->transformers);
         }
 
@@ -166,9 +167,9 @@ final class MappingFactory implements MappingFactoryInterface
     }
 
     /**
-     * @return array<array-key,MixedType|Type>
+     * @return array<array-key,Type|MixedType>
      */
-    private function getSimpleTypes(MixedType|Type $type): array
+    private function getSimpleTypes(Type|MixedType $type): array
     {
         if ($type instanceof MixedType) {
             return [$type];

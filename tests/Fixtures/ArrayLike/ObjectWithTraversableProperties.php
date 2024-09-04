@@ -26,9 +26,7 @@ class ObjectWithTraversableProperties
     {
         $this->property = (function () {
             yield new ObjectWithScalarProperties();
-
             yield new ObjectWithScalarProperties();
-
             yield new ObjectWithScalarProperties();
         })();
     }

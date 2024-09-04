@@ -25,8 +25,8 @@ interface TransformerRegistryInterface
     public function get(string $id): TransformerInterface;
 
     /**
-     * @param array<array-key,MixedType|Type> $sourceTypes
-     * @param array<array-key,MixedType|Type> $targetTypes
+     * @param array<array-key,Type|MixedType> $sourceTypes
+     * @param array<array-key,Type|MixedType> $targetTypes
      */
     public function findBySourceAndTargetTypes(
         array $sourceTypes,

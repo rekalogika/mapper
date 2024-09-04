@@ -21,7 +21,6 @@ interface EagerPropertiesResolverInterface
      * object's identifier is eager.
      *
      * @param class-string $sourceClass
-     *
      * @return array<int,string>
      */
     public function getEagerProperties(string $sourceClass): array;

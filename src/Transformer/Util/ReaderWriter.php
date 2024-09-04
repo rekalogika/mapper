@@ -39,11 +39,11 @@ final readonly class ReaderWriter
     ): mixed {
         $property = $propertyMapping->getSourceProperty();
 
-        if (null === $property) {
+        if ($property === null) {
             return null;
         }
 
-        if (Visibility::Public !== $propertyMapping->getSourceReadVisibility()) {
+        if ($propertyMapping->getSourceReadVisibility() !== Visibility::Public) {
             throw new UnableToReadException(
                 $source,
                 $property,
@@ -55,16 +55,12 @@ final readonly class ReaderWriter
             $accessorName = $propertyMapping->getSourceReadName();
             $mode = $propertyMapping->getSourceReadMode();
 
-            if (ReadMode::Property === $mode) {
+            if ($mode === ReadMode::Property) {
                 return $source->{$accessorName};
-            }
-
-            if (ReadMode::Method === $mode) {
+            } elseif ($mode === ReadMode::Method) {
                 /** @psalm-suppress MixedMethodCall */
                 return $source->{$accessorName}();
-            }
-
-            if (ReadMode::DynamicProperty === $mode) {
+            } elseif ($mode === ReadMode::DynamicProperty) {
                 return $source->{$accessorName} ?? null;
             }
 
@@ -97,10 +93,10 @@ final readonly class ReaderWriter
         Context $context
     ): mixed {
         if (
-            WriteMode::AdderRemover === $propertyMapping->getTargetSetterWriteMode()
-            && Visibility::Public === $propertyMapping->getTargetSetterWriteVisibility()
+            $propertyMapping->getTargetSetterWriteMode() === WriteMode::AdderRemover
+            && $propertyMapping->getTargetSetterWriteVisibility() === Visibility::Public
         ) {
-            if (Visibility::Public === $propertyMapping->getTargetRemoverWriteVisibility()
+            if ($propertyMapping->getTargetRemoverWriteVisibility() === Visibility::Public
             ) {
                 $removerMethodName = $propertyMapping->getTargetRemoverWriteName();
             } else {
@@ -115,7 +111,7 @@ final readonly class ReaderWriter
             );
         }
 
-        if (Visibility::Public !== $propertyMapping->getTargetReadVisibility()) {
+        if ($propertyMapping->getTargetReadVisibility() !== Visibility::Public) {
             return null;
         }
 
@@ -123,16 +119,12 @@ final readonly class ReaderWriter
             $accessorName = $propertyMapping->getTargetReadName();
             $readMode = $propertyMapping->getTargetReadMode();
 
-            if (ReadMode::Property === $readMode) {
+            if ($readMode === ReadMode::Property) {
                 return $target->{$accessorName};
-            }
-
-            if (ReadMode::Method === $readMode) {
+            } elseif ($readMode === ReadMode::Method) {
                 /** @psalm-suppress MixedMethodCall */
                 return $target->{$accessorName}();
-            }
-
-            if (ReadMode::DynamicProperty === $readMode) {
+            } elseif ($readMode === ReadMode::DynamicProperty) {
                 return $target->{$accessorName} ?? null;
             }
 
@@ -165,7 +157,7 @@ final readonly class ReaderWriter
         mixed $value,
         Context $context
     ): void {
-        if (Visibility::Public !== $propertyMapping->getTargetSetterWriteVisibility()) {
+        if ($propertyMapping->getTargetSetterWriteVisibility() !== Visibility::Public) {
             return;
         }
 
@@ -173,14 +165,14 @@ final readonly class ReaderWriter
             $accessorName = $propertyMapping->getTargetSetterWriteName();
             $writeMode = $propertyMapping->getTargetSetterWriteMode();
 
-            if (WriteMode::Property === $writeMode) {
+            if ($writeMode === WriteMode::Property) {
                 $target->{$accessorName} = $value;
-            } elseif (WriteMode::Method === $writeMode) {
+            } elseif ($writeMode === WriteMode::Method) {
                 /** @psalm-suppress MixedMethodCall */
                 $target->{$accessorName}($value);
-            } elseif (WriteMode::AdderRemover === $writeMode) {
+            } elseif ($writeMode === WriteMode::AdderRemover) {
                 // noop
-            } elseif (WriteMode::DynamicProperty === $writeMode) {
+            } elseif ($writeMode === WriteMode::DynamicProperty) {
                 $target->{$accessorName} = $value;
             }
         } catch (\Throwable $e) {

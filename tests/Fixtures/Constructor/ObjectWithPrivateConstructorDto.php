@@ -30,7 +30,8 @@ class ObjectWithPrivateConstructorDto
         private readonly string $b,
         private readonly bool $c,
         private readonly float $d,
-    ) {}
+    ) {
+    }
 
     public function getA(): int
     {

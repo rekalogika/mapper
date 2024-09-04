@@ -33,7 +33,8 @@ final readonly class ObjectToArrayTransformer implements TransformerInterface
     public function __construct(
         private NormalizerInterface $normalizer,
         private ?string $normalizerFormat = null
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function transform(

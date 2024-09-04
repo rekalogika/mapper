@@ -47,7 +47,7 @@ final class TryPropertyCommand extends Command
             ->addArgument('sourceProperty', InputArgument::REQUIRED, 'The source property')
             ->addArgument('targetClass', InputArgument::REQUIRED, 'The target class')
             ->addArgument('targetProperty', InputArgument::OPTIONAL, 'The target property, if omitted, it will be the same as the source property')
-            ->setHelp('The <info>%command.name%</info> displays the mapping result by providing the class and property name of the source and target.');
+            ->setHelp("The <info>%command.name%</info> displays the mapping result by providing the class and property name of the source and target.");
     }
 
     #[\Override]
@@ -62,27 +62,24 @@ final class TryPropertyCommand extends Command
 
         /** @var string */
         $sourceClass = $input->getArgument('sourceClass');
-
         /** @var string */
         $sourceProperty = $input->getArgument('sourceProperty');
-
         /** @var string */
         $targetClass = $input->getArgument('targetClass');
-
         /** @var string */
         $targetProperty = $input->getArgument('targetProperty') ?? $sourceProperty;
 
         $sourceTypes = $this->propertyInfoExtractor
             ->getTypes($sourceClass, $sourceProperty);
 
-        if (null === $sourceTypes || [] === $sourceTypes) {
+        if ($sourceTypes === null || $sourceTypes === []) {
             $sourceTypes = [MixedType::instance()];
         }
 
         $targetTypes = $this->propertyInfoExtractor
             ->getTypes($targetClass, $targetProperty);
 
-        if (null === $targetTypes || [] === $targetTypes) {
+        if ($targetTypes === null || $targetTypes === []) {
             $targetTypes = [MixedType::instance()];
         }
 
@@ -130,7 +127,7 @@ final class TryPropertyCommand extends Command
 
         $io->section('<info>Applicable Transformers</info>');
 
-        if ([] === $rows) {
+        if ($rows === []) {
             $io->error('No applicable transformers found.');
 
             return Command::SUCCESS;

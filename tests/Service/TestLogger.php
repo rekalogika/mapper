@@ -17,11 +17,13 @@ use Psr\Log\LoggerInterface;
 
 class TestLogger implements LoggerInterface
 {
-    public function __construct(private readonly LoggerInterface $logger) {}
+    public function __construct(private readonly LoggerInterface $logger)
+    {
+    }
 
     private function isSuppressed(string|\Stringable $message): bool
     {
-        return str_contains((string) $message, 'has a mapping involving an invalid class');
+        return str_contains((string)$message, 'has a mapping involving an invalid class');
     }
 
     #[\Override]

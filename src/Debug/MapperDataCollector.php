@@ -34,7 +34,7 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
     #[\Override]
     public static function getTemplate(): string
     {
-        return '@RekalogikaMapper/data_collector.html.twig';
+        return "@RekalogikaMapper/data_collector.html.twig";
     }
 
     #[\Override]
@@ -42,7 +42,8 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
         Request $request,
         Response $response,
         ?\Throwable $exception = null
-    ): void {}
+    ): void {
+    }
 
     public function collectTraceData(TraceData $traceData): void
     {
@@ -54,7 +55,6 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
         ObjectToObjectMetadata $objectToObjectMetadata
     ): void {
         $key = hash('xxh128', serialize($objectToObjectMetadata));
-
         /** @psalm-suppress MixedArrayAssignment */
         $this->data['object_to_object_metadata'][$key] = $objectToObjectMetadata;
     }
@@ -102,7 +102,7 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
 
     public function getTotalMappings(): int
     {
-        if (null !== $this->totalMappings) {
+        if ($this->totalMappings !== null) {
             return $this->totalMappings;
         }
 
@@ -113,7 +113,7 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
 
     public function getTotalMappingsIncludingSubMappings(): int
     {
-        if (null !== $this->totalMappingsIncludingSubMappings) {
+        if ($this->totalMappingsIncludingSubMappings !== null) {
             return $this->totalMappingsIncludingSubMappings;
         }
 
@@ -130,7 +130,7 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
 
     public function getTotalTime(): float
     {
-        if (null !== $this->totalTime) {
+        if ($this->totalTime !== null) {
             return $this->totalTime;
         }
 

@@ -13,4 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Exception;
 
-interface ExceptionInterface extends \Throwable {}
+interface ExceptionInterface extends \Throwable
+{
+}

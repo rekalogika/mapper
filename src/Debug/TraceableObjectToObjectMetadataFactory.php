@@ -24,7 +24,8 @@ final readonly class TraceableObjectToObjectMetadataFactory implements ObjectToO
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $decorated,
         private MapperDataCollector $dataCollector
-    ) {}
+    ) {
+    }
 
     #[\Override]
     public function createObjectToObjectMetadata(

@@ -21,7 +21,8 @@ final readonly class InheritanceMap
      */
     public function __construct(
         private array $map = []
-    ) {}
+    ) {
+    }
 
     /**
      * @return array<class-string,class-string>
@@ -33,8 +34,7 @@ final readonly class InheritanceMap
 
     /**
      * @param class-string $sourceClass
-     *
-     * @return null|class-string
+     * @return class-string|null
      */
     public function getTargetClassFromSourceClass(string $sourceClass): ?string
     {
@@ -43,8 +43,7 @@ final readonly class InheritanceMap
 
     /**
      * @param class-string $targetClass
-     *
-     * @return null|class-string
+     * @return class-string|null
      */
     public function getSourceClassFromTargetClass(string $targetClass): ?string
     {

@@ -14,4 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Attribute;
 
 #[\Attribute(\Attribute::TARGET_METHOD)]
-final readonly class AsObjectMapper {}
+final readonly class AsObjectMapper
+{
+}

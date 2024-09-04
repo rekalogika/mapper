@@ -33,6 +33,7 @@ class MoneyToMoneyDtoTransformer implements TransformerInterface
     #[\Override]
     public function getSupportedTransformation(): iterable
     {
+
         yield new TypeMapping(
             TypeFactory::objectOfClass(Money::class),
             TypeFactory::objectOfClass(MoneyDto::class)

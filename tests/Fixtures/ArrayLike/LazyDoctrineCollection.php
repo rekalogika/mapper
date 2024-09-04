@@ -23,6 +23,6 @@ class LazyDoctrineCollection extends AbstractLazyCollection
     #[\Override]
     protected function doInitialize()
     {
-        throw new \LogicException('Not expected to be initialized');
+        throw new \LogicException("Not expected to be initialized");
     }
 }
