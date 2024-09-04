@@ -41,6 +41,7 @@ final readonly class TypeResolver implements TypeResolverInterface
         if ($type instanceof MixedType) {
             return [$type];
         }
+
         if (is_array($type)) {
             $simpleTypes = [];
 

@@ -33,9 +33,11 @@ final readonly class ObjectToStringTransformer implements TransformerInterface
         if ($source instanceof \Stringable) {
             return (string) $source;
         }
+
         if ($source instanceof \BackedEnum) {
             return $source->value;
         }
+
         if ($source instanceof \UnitEnum) {
             return $source->name;
         }

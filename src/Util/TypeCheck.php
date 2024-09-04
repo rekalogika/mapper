@@ -211,6 +211,7 @@ final readonly class TypeCheck
         if ($type1 instanceof MixedType && $type2 instanceof MixedType) {
             return true;
         }
+
         if ($type1 instanceof MixedType || $type2 instanceof MixedType) {
             return false;
         }

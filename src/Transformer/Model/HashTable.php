@@ -41,21 +41,27 @@ final class HashTable implements \ArrayAccess, \Iterator, \Countable
         if (is_string($variable)) {
             return 'string:'.$variable;
         }
+
         if (is_int($variable)) {
             return 'int:'.$variable;
         }
+
         if (is_float($variable)) {
             return 'float:'.$variable;
         }
+
         if (is_bool($variable)) {
             return 'bool:'.($variable ? 'true' : 'false');
         }
+
         if (is_object($variable)) {
             return 'object:'.spl_object_id($variable);
         }
+
         if (\is_resource($variable)) {
             return 'resource:'.\get_resource_id($variable);
         }
+
         if (null === $variable) {
             return 'null';
         }

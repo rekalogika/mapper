@@ -69,6 +69,7 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
             if (Type::BUILTIN_TYPE_STRING === $targetType->getBuiltinType()) {
                 return $source->toString();
             }
+
             if (UuidInterface::class === $targetType->getClassName()) {
                 return $source;
             }

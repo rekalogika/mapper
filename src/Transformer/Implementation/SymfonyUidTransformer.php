@@ -63,6 +63,7 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
             if (Uuid::class === $targetClass) {
                 return Uuid::fromString($source);
             }
+
             if (Ulid::class === $targetClass) {
                 return Ulid::fromString($source);
             }
@@ -76,6 +77,7 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
             if (Type::BUILTIN_TYPE_STRING === $targetType->getBuiltinType()) {
                 return $source->toRfc4122();
             }
+
             if (Uuid::class === $targetType->getClassName()) {
                 return $source;
             }
@@ -89,6 +91,7 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
             if (Type::BUILTIN_TYPE_STRING === $targetType->getBuiltinType()) {
                 return $source->toBase32();
             }
+
             if (Ulid::class === $targetType->getClassName()) {
                 return $source;
             }

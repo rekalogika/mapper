@@ -85,6 +85,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             return $resolvedTargetClass;
         }
+
         if ($targetReflection->isAbstract() || $targetReflection->isInterface()) {
             // if target doesn't have an inheritance map, but is also abstract
             // or an interface, we try to find the InheritanceMap from the
@@ -607,6 +608,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         return $this->propertyWriteInfoExtractor
             ->getWriteInfo($class, $property, [
                 'enable_constructor_extraction' => false,
-            ]);
+            ])
+        ;
     }
 }

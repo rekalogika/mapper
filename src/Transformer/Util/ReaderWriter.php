@@ -58,10 +58,12 @@ final readonly class ReaderWriter
             if (ReadMode::Property === $mode) {
                 return $source->{$accessorName};
             }
+
             if (ReadMode::Method === $mode) {
                 /** @psalm-suppress MixedMethodCall */
                 return $source->{$accessorName}();
             }
+
             if (ReadMode::DynamicProperty === $mode) {
                 return $source->{$accessorName} ?? null;
             }
@@ -124,10 +126,12 @@ final readonly class ReaderWriter
             if (ReadMode::Property === $readMode) {
                 return $target->{$accessorName};
             }
+
             if (ReadMode::Method === $readMode) {
                 /** @psalm-suppress MixedMethodCall */
                 return $target->{$accessorName}();
             }
+
             if (ReadMode::DynamicProperty === $readMode) {
                 return $target->{$accessorName} ?? null;
             }

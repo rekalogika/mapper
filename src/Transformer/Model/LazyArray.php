@@ -147,6 +147,7 @@ final class LazyArray implements CollectionInterface
 
                 continue;
             }
+
             if ($key !== $sourceMemberKey) {
                 throw new LogicException(
                     sprintf(

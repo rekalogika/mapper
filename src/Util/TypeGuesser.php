@@ -27,18 +27,23 @@ final readonly class TypeGuesser
         if ('array' === $type) {
             return TypeFactory::array();
         }
+
         if ('bool' === $type) {
             return TypeFactory::bool();
         }
+
         if ('int' === $type) {
             return TypeFactory::int();
         }
+
         if ('float' === $type) {
             return TypeFactory::float();
         }
+
         if ('string' === $type) {
             return TypeFactory::string();
         }
+
         if ('null' === $type) {
             return TypeFactory::null();
         }

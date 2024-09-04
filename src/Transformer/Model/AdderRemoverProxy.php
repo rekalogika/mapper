@@ -62,6 +62,7 @@ final readonly class AdderRemoverProxy implements \ArrayAccess, \IteratorAggrega
         if ($value instanceof \Traversable) {
             return $value;
         }
+
         if (is_array($value)) {
             return new \ArrayIterator($value);
         }

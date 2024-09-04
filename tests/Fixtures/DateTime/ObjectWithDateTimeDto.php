@@ -30,6 +30,8 @@ class ObjectWithDateTimeDto
     }
 
     public ?\DateTimeImmutable $dateTimeImmutable = null;
+
     public ?\DateTime $dateTime = null;
+
     public ?DatePoint $datePoint = null;
 }
