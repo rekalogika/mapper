@@ -161,8 +161,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
             ->findBySourceAndTargetTypes(
                 $sourceTypes,
                 $targetTypes
-            )
-        ;
+            );
 
         // loop over the result and transform the source to the target
 
@@ -189,12 +188,10 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
             if (null !== $targetTypeForTransformer) {
                 try {
                     return $objectCache
-                        ->getTarget($source, $targetTypeForTransformer)
-                    ;
+                        ->getTarget($source, $targetTypeForTransformer);
                 } catch (CachedTargetObjectNotFoundException) {
                     $objectCache
-                        ->preCache($source, $targetTypeForTransformer)
-                    ;
+                        ->preCache($source, $targetTypeForTransformer);
                 } catch (ObjectCacheCircularReferenceException $e) {
                     throw new CircularReferenceException(
                         source: $source,

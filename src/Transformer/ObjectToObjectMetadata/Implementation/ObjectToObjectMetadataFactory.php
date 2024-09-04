@@ -143,11 +143,9 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         // queries
 
         $initializableTargetProperties = $this
-            ->listInitializableProperties($targetClass)
-        ;
+            ->listInitializableProperties($targetClass);
         $targetProperties = $this
-            ->listProperties($targetClass)
-        ;
+            ->listProperties($targetClass);
 
         $initializableTargetPropertiesNotInSource = $initializableTargetProperties;
 
@@ -159,8 +157,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         // determine the list of eager properties
 
         $eagerProperties = $this->eagerPropertiesResolver
-            ->getEagerProperties($sourceClass)
-        ;
+            ->getEagerProperties($sourceClass);
 
         // determine if target read only
 
@@ -192,8 +189,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $sourceProperty = $targetProperty;
 
             $serviceMethodSpecification = $this->propertyMapperResolver
-                ->getPropertyMapper($sourceClass, $targetClass, $targetProperty)
-            ;
+                ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
 
             // get reflection for target property
 
@@ -206,17 +202,13 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // get read & write info for source and target properties
 
             $sourceReadInfo = $this->propertyReadInfoExtractor
-                ->getReadInfo($sourceClass, $sourceProperty)
-            ;
+                ->getReadInfo($sourceClass, $sourceProperty);
             $targetReadInfo = $this->propertyReadInfoExtractor
-                ->getReadInfo($targetClass, $targetProperty)
-            ;
+                ->getReadInfo($targetClass, $targetProperty);
             $targetConstructorWriteInfo = $this
-                ->getConstructorWriteInfo($targetClass, $targetProperty)
-            ;
+                ->getConstructorWriteInfo($targetClass, $targetProperty);
             $targetSetterWriteInfo = $this
-                ->getSetterWriteInfo($targetClass, $targetProperty)
-            ;
+                ->getSetterWriteInfo($targetClass, $targetProperty);
 
             // determine if target allows delete
 
@@ -360,8 +352,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // get source property types
 
             $originalSourcePropertyTypes = $this->propertyTypeExtractor
-                ->getTypes($sourceClass, $sourceProperty) ?? []
-            ;
+                ->getTypes($sourceClass, $sourceProperty) ?? [];
             $sourcePropertyTypes = [];
 
             foreach ($originalSourcePropertyTypes as $sourcePropertyType) {
@@ -379,8 +370,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // get target property types
 
             $originalTargetPropertyTypes = $this->propertyTypeExtractor
-                ->getTypes($targetClass, $targetProperty) ?? []
-            ;
+                ->getTypes($targetClass, $targetProperty) ?? [];
             $targetPropertyTypes = [];
 
             foreach ($originalTargetPropertyTypes as $targetPropertyType) {
@@ -483,8 +473,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // ensure we can create the proxy
 
             $this->proxyFactory
-                ->createProxy($targetClass, function ($instance): void {}, $eagerProperties)
-            ;
+                ->createProxy($targetClass, function ($instance): void {}, $eagerProperties);
 
             // determine if the constructor contains eager properties. if it
             // does, then the constructor is eager
@@ -523,8 +512,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             );
         } catch (ProxyNotSupportedException $e) {
             $objectToObjectMetadata = $objectToObjectMetadata
-                ->withReasonCannotUseProxy($e->getReason())
-            ;
+                ->withReasonCannotUseProxy($e->getReason());
         }
 
         return $objectToObjectMetadata;
@@ -587,8 +575,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 'enable_getter_setter_extraction' => false,
                 'enable_magic_methods_extraction' => false,
                 'enable_adder_remover_extraction' => false,
-            ])
-        ;
+            ]);
 
         if (null === $writeInfo) {
             return null;
@@ -608,7 +595,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         return $this->propertyWriteInfoExtractor
             ->getWriteInfo($class, $property, [
                 'enable_constructor_extraction' => false,
-            ])
-        ;
+            ]);
     }
 }

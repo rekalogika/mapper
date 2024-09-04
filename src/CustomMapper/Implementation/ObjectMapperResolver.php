@@ -42,8 +42,7 @@ final class ObjectMapperResolver implements ObjectMapperResolverInterface
         }
 
         return $this->objectMapperTable = $this->objectMapperTableFactory
-            ->createObjectMapperTable()
-        ;
+            ->createObjectMapperTable();
     }
 
     #[\Override]
@@ -56,8 +55,7 @@ final class ObjectMapperResolver implements ObjectMapperResolverInterface
         }
 
         $objectMapper = $this->getObjectMapperTable()
-            ->getObjectMapper($sourceClass, $targetClass)
-        ;
+            ->getObjectMapper($sourceClass, $targetClass);
 
         if (null === $objectMapper) {
             throw new ObjectMapperNotFoundException($sourceClass, $targetClass);

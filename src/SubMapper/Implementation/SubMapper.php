@@ -97,8 +97,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             try {
                 /** @var mixed */
                 $targetPropertyValue = $this->propertyAccessor
-                    ->getValue($containingObject, $property)
-                ;
+                    ->getValue($containingObject, $property);
 
                 if (is_scalar($targetPropertyValue)) {
                     $targetPropertyValue = null;
@@ -114,8 +113,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
 
         /** @var null|array<int,Type> */
         $targetPropertyTypes = $this->propertyTypeExtractor
-            ->getTypes($containingClass, $property)
-        ;
+            ->getTypes($containingClass, $property);
 
         /** @var mixed */
         return $this->getMainTransformer()->transform(

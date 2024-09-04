@@ -17,6 +17,9 @@ return $config->setRules([
         'order' => ['use_trait']
     ],
     'string_implicit_backslashes' => false,
+    'multiline_whitespace_before_semicolons' => [
+        'strategy' => 'no_multi_line'
+    ],
 
     'header_comment' => [
             'header' => <<<EOF

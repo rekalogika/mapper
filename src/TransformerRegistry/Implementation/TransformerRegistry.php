@@ -72,16 +72,13 @@ final class TransformerRegistry implements TransformerRegistryInterface
         MixedType|Type $targetType,
     ): array {
         $sourceTypeStrings = $this->typeResolver
-            ->getAcceptedTransformerInputTypeStrings($sourceType)
-        ;
+            ->getAcceptedTransformerInputTypeStrings($sourceType);
 
         $targetTypeStrings = $this->typeResolver
-            ->getAcceptedTransformerOutputTypeStrings($targetType)
-        ;
+            ->getAcceptedTransformerOutputTypeStrings($targetType);
 
         return $this->mappingFactory->getMapping()
-            ->getMappingBySourceAndTarget($sourceTypeStrings, $targetTypeStrings)
-        ;
+            ->getMappingBySourceAndTarget($sourceTypeStrings, $targetTypeStrings);
     }
 
     private function findBySourceAndTargetType(

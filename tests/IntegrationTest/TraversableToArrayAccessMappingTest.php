@@ -274,8 +274,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $source = new ObjectWithSplObjectStorageProperty();
 
         $result = $this->mapper
-            ->map($source, ObjectWithArrayAccessPropertyWithObjectKeyDto::class)
-        ;
+            ->map($source, ObjectWithArrayAccessPropertyWithObjectKeyDto::class);
 
         $this->assertInstanceOf(ObjectWithArrayAccessPropertyWithObjectKeyDto::class, $result);
         $this->assertInstanceOf(\ArrayAccess::class, $result->property);
@@ -293,8 +292,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->expectException(CannotFindTransformerException::class);
         $this->expectExceptionMessage('Mapping path: "property(key)"');
         $result = $this->mapper
-            ->map($source, ObjectWithArrayPropertyDto::class)
-        ;
+            ->map($source, ObjectWithArrayPropertyDto::class);
         $this->initialize($result);
     }
 

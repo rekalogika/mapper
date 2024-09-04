@@ -36,8 +36,7 @@ final readonly class ArrayObjectTransformer implements TransformerInterface, Mai
     public function withMainTransformer(MainTransformerInterface $mainTransformer): static
     {
         $objectToObjectTransformer = $this->objectToObjectTransformer
-            ->withMainTransformer($mainTransformer)
-        ;
+            ->withMainTransformer($mainTransformer);
 
         return new self($objectToObjectTransformer);
     }

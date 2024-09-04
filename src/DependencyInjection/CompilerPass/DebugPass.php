@@ -41,8 +41,7 @@ final readonly class DebugPass implements CompilerPassInterface
                 ->setArguments([
                     new Reference($decoratedServiceId.'.inner'),
                     $dataCollector,
-                ])
-            ;
+                ]);
         }
 
         // decorates ObjectToObjectMetadataFactory
@@ -53,8 +52,7 @@ final readonly class DebugPass implements CompilerPassInterface
             ->setArguments([
                 new Reference('debug.'.$serviceId.'.inner'),
                 $dataCollector,
-            ])
-        ;
+            ]);
 
         // decorates mapping factory
 
@@ -65,7 +63,6 @@ final readonly class DebugPass implements CompilerPassInterface
                 new Reference('debug.'.$serviceId.'.inner'),
                 $dataCollector,
             ])
-            ->addTag('kernel.reset', ['method' => 'reset'])
-        ;
+            ->addTag('kernel.reset', ['method' => 'reset']);
     }
 }

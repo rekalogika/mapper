@@ -41,8 +41,7 @@ final class MappingCommand extends Command
             ->addOption('source', 's', InputOption::VALUE_OPTIONAL, 'Filter by source type')
             ->addOption('target', 't', InputOption::VALUE_OPTIONAL, 'Filter by target type')
             ->addOption('class', 'c', InputOption::VALUE_OPTIONAL, 'Filter by class name or service ID')
-            ->setHelp('The <info>%command.name%</info> command dumps the mapping table for the mapper.')
-        ;
+            ->setHelp('The <info>%command.name%</info> command dumps the mapping table for the mapper.');
     }
 
     #[\Override]

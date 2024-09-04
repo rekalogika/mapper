@@ -62,8 +62,7 @@ final class CachingArrayLikeMetadataFactory implements ArrayLikeMetadataFactoryI
         }
 
         $arrayLikeMetadata = $this->decorated
-            ->createArrayLikeMetadata($sourceType, $targetType)
-        ;
+            ->createArrayLikeMetadata($sourceType, $targetType);
 
         $cacheItem->set($arrayLikeMetadata);
         $this->cacheItemPool->save($cacheItem);

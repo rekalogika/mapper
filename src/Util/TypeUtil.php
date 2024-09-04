@@ -424,8 +424,7 @@ final readonly class TypeUtil
             ->getAttributes(
                 MapperAttributeInterface::class,
                 \ReflectionAttribute::IS_INSTANCEOF
-            )
-        ;
+            );
 
         $attributeTypes = [];
 

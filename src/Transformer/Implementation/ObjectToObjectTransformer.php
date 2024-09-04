@@ -102,8 +102,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // get the object to object mapping metadata
 
         $objectToObjectMetadata = $this->objectToObjectMetadataFactory
-            ->createObjectToObjectMetadata($sourceClass, $targetClass)
-        ;
+            ->createObjectToObjectMetadata($sourceClass, $targetClass);
 
         // disregard target if target is read only or target value reading is
         // disabled
@@ -202,8 +201,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $reflectionClass = new \ReflectionClass($targetClass);
 
             return $reflectionClass
-                ->newInstanceArgs($constructorArguments->getArguments())
-            ;
+                ->newInstanceArgs($constructorArguments->getArguments());
         } catch (\ReflectionException|\TypeError $e) {
             throw new InstantiationFailureException(
                 source: $source,
@@ -461,8 +459,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         /** @var mixed */
         $sourcePropertyValue = $this->readerWriter
-            ->readSourceProperty($source, $propertyMapping, $context)
-        ;
+            ->readSourceProperty($source, $propertyMapping, $context);
 
         // short circuit. optimization for transformation between scalar and
         // null, so that we don't have to go through the main transformer for

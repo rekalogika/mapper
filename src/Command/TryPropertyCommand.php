@@ -47,8 +47,7 @@ final class TryPropertyCommand extends Command
             ->addArgument('sourceProperty', InputArgument::REQUIRED, 'The source property')
             ->addArgument('targetClass', InputArgument::REQUIRED, 'The target class')
             ->addArgument('targetProperty', InputArgument::OPTIONAL, 'The target property, if omitted, it will be the same as the source property')
-            ->setHelp('The <info>%command.name%</info> displays the mapping result by providing the class and property name of the source and target.')
-        ;
+            ->setHelp('The <info>%command.name%</info> displays the mapping result by providing the class and property name of the source and target.');
     }
 
     #[\Override]
@@ -74,16 +73,14 @@ final class TryPropertyCommand extends Command
         $targetProperty = $input->getArgument('targetProperty') ?? $sourceProperty;
 
         $sourceTypes = $this->propertyInfoExtractor
-            ->getTypes($sourceClass, $sourceProperty)
-        ;
+            ->getTypes($sourceClass, $sourceProperty);
 
         if (null === $sourceTypes || [] === $sourceTypes) {
             $sourceTypes = [MixedType::instance()];
         }
 
         $targetTypes = $this->propertyInfoExtractor
-            ->getTypes($targetClass, $targetProperty)
-        ;
+            ->getTypes($targetClass, $targetProperty);
 
         if (null === $targetTypes || [] === $targetTypes) {
             $targetTypes = [MixedType::instance()];
@@ -114,8 +111,7 @@ final class TryPropertyCommand extends Command
         $rows = [];
 
         $results = $this->transformerRegistry
-            ->findBySourceAndTargetTypes($sourceTypes, $targetTypes)
-        ;
+            ->findBySourceAndTargetTypes($sourceTypes, $targetTypes);
 
         foreach ($results as $result) {
             $transformer = $this->transformerRegistry->get($result->getTransformerServiceId());

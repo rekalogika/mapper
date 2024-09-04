@@ -48,8 +48,7 @@ final readonly class ProxyFactory implements ProxyFactoryInterface
 
         if (!class_exists($targetProxyClass)) {
             $sourceCode = $this->proxyGenerator
-                ->generateProxyCode($class, $targetProxyClass)
-            ;
+                ->generateProxyCode($class, $targetProxyClass);
             $this->proxyRegistry->registerProxy($targetProxyClass, $sourceCode);
 
             // @phpstan-ignore ekinoBannedCode.expression

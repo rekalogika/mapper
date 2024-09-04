@@ -98,8 +98,7 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
         }
 
         $objectToObjectMetadata = $this->decorated
-            ->createObjectToObjectMetadata($sourceClass, $targetClass)
-        ;
+            ->createObjectToObjectMetadata($sourceClass, $targetClass);
 
         $cacheItem->set($objectToObjectMetadata);
         $this->cacheItemPool->save($cacheItem);

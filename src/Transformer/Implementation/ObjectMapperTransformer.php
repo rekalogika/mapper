@@ -75,8 +75,7 @@ final class ObjectMapperTransformer implements TransformerInterface, MainTransfo
         $sourceClass = $source::class;
 
         $serviceMethodSpecification = $this->objectMapperResolver
-            ->getObjectMapper($sourceClass, $targetClass)
-        ;
+            ->getObjectMapper($sourceClass, $targetClass);
 
         $serviceMethodRunner = ServiceMethodRunner::create(
             serviceLocator: $this->serviceLocator,
@@ -96,8 +95,7 @@ final class ObjectMapperTransformer implements TransformerInterface, MainTransfo
     public function getSupportedTransformation(): iterable
     {
         $objectMapperTable = $this->objectMapperTableFactory
-            ->createObjectMapperTable()
-        ;
+            ->createObjectMapperTable();
 
         foreach ($objectMapperTable as $objectMapperTableEntry) {
             yield new TypeMapping(

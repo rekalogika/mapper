@@ -57,12 +57,10 @@ final class RekalogikaMapperExtension extends Extension
         // autoconfiguration
 
         $container->registerForAutoconfiguration(TransformerInterface::class)
-            ->addTag('rekalogika.mapper.transformer')
-        ;
+            ->addTag('rekalogika.mapper.transformer');
 
         $container->registerForAutoconfiguration(EagerPropertiesResolverInterface::class)
-            ->addTag('rekalogika.mapper.eager_properties_resolver')
-        ;
+            ->addTag('rekalogika.mapper.eager_properties_resolver');
 
         $container->registerAttributeForAutoconfiguration(
             AsPropertyMapper::class,
@@ -87,8 +85,7 @@ final class RekalogikaMapperExtension extends Extension
 
         $classReflection = $reflector->getDeclaringClass();
         $classAttributeReflection = $classReflection
-            ->getAttributes(AsPropertyMapper::class)[0] ?? null
-        ;
+            ->getAttributes(AsPropertyMapper::class)[0] ?? null;
 
         // populate tag attributes from AsPropertyMapper attribute
         // attached to the class

@@ -22,6 +22,5 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('data_collector', [
             'id' => 'rekalogika_mapper',
         ])
-        ->tag('kernel.reset', ['method' => 'reset'])
-    ;
+        ->tag('kernel.reset', ['method' => 'reset']);
 };
