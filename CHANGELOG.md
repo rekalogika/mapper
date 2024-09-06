@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.7
+
+* deps: allow updates to later versions of property-info
+
 ## 1.5.6
 
 * fix: compatibility with `symfony/dependency-injection` 7.1.4
