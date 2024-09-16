@@ -4,7 +4,7 @@
 
 * feat: add `AllowTargetDelete`, similar to `AllowDelete` but defined on the
   source side
-* test: test PHP 8.4
+* fix: PHP 8.4 compatibility
 
 ## 1.5.7
 
