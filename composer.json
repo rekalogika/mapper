@@ -65,7 +65,7 @@
         "symfony/yaml": "^6.4 || ^7.0",
         "tomasvotruba/unused-public": "^0.3.5",
         "twig/twig": "^2.12|^3.0",
-        "vimeo/psalm": "^5.18"
+        "vimeo/psalm": "^5.26"
     },
     "autoload": {
         "psr-4": {
