@@ -75,7 +75,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         ?Type $sourceType,
         array $targetTypes,
         Context $context,
-        string $path = null,
+        ?string $path = null,
     ): mixed {
         // if MapperOptions is not provided, use the default options
 
