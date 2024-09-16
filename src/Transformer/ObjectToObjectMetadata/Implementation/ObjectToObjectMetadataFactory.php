@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Rekalogika\Mapper\Attribute\AllowDelete;
+use Rekalogika\Mapper\Attribute\AllowTargetDelete;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
@@ -188,6 +189,14 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $serviceMethodSpecification = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
 
+            // get reflection for sourceproperty
+
+            try {
+                $sourcePropertyReflection = $sourceReflection->getProperty($sourceProperty);
+            } catch (\ReflectionException) {
+                $sourcePropertyReflection = null;
+            }
+
             // get reflection for target property
 
             try {
@@ -209,10 +218,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // determine if target allows delete
 
-            if ($targetPropertyReflection === null) {
-                $targetAllowsDelete = false;
-            } else {
-                $targetAllowsDelete = $targetPropertyReflection->getAttributes(AllowDelete::class) !== [];
+            $targetAllowsDelete = $targetPropertyReflection !== null
+                && $targetPropertyReflection->getAttributes(AllowDelete::class) !== [];
+
+            if (!$targetAllowsDelete) {
+                $targetAllowsDelete = $sourcePropertyReflection !== null
+                    && $sourcePropertyReflection->getAttributes(AllowTargetDelete::class) !== [];
             }
 
             // process source read mode

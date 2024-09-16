@@ -19,6 +19,7 @@ use Rekalogika\Mapper\Tests\Fixtures\Remove\MemberRepository;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithAdderRemover;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArray;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDto;
+use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDtoWithAllowTargetDeleteAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayWithoutAllowDeleteAttribute;
 
 /** @psalm-suppress MissingConstructor */
@@ -77,6 +78,28 @@ class RemoveTest extends FrameworkTestCase
         $this->assertSame($this->repository->get('2'), $objectWithArray->members[1]);
     }
 
+    public function testRemoveFromArrayWithSourceAttribute(): void
+    {
+        $objectWithArrayDto = new ObjectWithArrayDtoWithAllowTargetDeleteAttribute();
+        $objectWithArrayDto->members[] = new MemberDto('1');
+        $objectWithArrayDto->members[] = new MemberDto('2');
+        // 3 is missing, and this should remove 3 from the target object
+
+        $objectWithArray = new ObjectWithArray();
+        $objectWithArray->members[] = $this->repository->get('1');
+        $objectWithArray->members[] = $this->repository->get('2');
+        $objectWithArray->members[] = $this->repository->get('3');
+        $this->assertCount(3, $objectWithArray->members);
+
+        $this->mapper->map($objectWithArrayDto, $objectWithArray);
+
+        $this->assertCount(2, $objectWithArray->members);
+        $this->assertSame('1', $objectWithArray->members[0]->getId());
+        $this->assertSame('2', $objectWithArray->members[1]->getId());
+        $this->assertSame($this->repository->get('1'), $objectWithArray->members[0]);
+        $this->assertSame($this->repository->get('2'), $objectWithArray->members[1]);
+    }
+
     public function testNoRemovalWithoutAllowDeleteAttribute(): void
     {
         $objectWithArrayDto = new ObjectWithArrayDto();
@@ -104,6 +127,28 @@ class RemoveTest extends FrameworkTestCase
     public function testRemoveUsingRemover(): void
     {
         $objectWithArrayDto = new ObjectWithArrayDto();
+        $objectWithArrayDto->members[] = new MemberDto('1');
+        $objectWithArrayDto->members[] = new MemberDto('2');
+        // 3 is missing, and this should remove 3 from the target object
+
+        $objectWithArray = new ObjectWithAdderRemover();
+        $objectWithArray->addMember($this->repository->get('1'));
+        $objectWithArray->addMember($this->repository->get('2'));
+        $objectWithArray->addMember($this->repository->get('3'));
+        $this->assertCount(3, $objectWithArray->getMembers());
+
+        $this->mapper->map($objectWithArrayDto, $objectWithArray);
+
+        $this->assertCount(2, $objectWithArray->getMembers());
+        $this->assertSame('1', $objectWithArray->getMembers()[0]->getId());
+        $this->assertSame('2', $objectWithArray->getMembers()[1]->getId());
+        $this->assertSame($this->repository->get('1'), $objectWithArray->getMembers()[0]);
+        $this->assertSame($this->repository->get('2'), $objectWithArray->getMembers()[1]);
+    }
+
+    public function testRemoveUsingRemoverWithSourceAttribute(): void
+    {
+        $objectWithArrayDto = new ObjectWithArrayDtoWithAllowTargetDeleteAttribute();
         $objectWithArrayDto->members[] = new MemberDto('1');
         $objectWithArrayDto->members[] = new MemberDto('2');
         // 3 is missing, and this should remove 3 from the target object
