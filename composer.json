@@ -58,6 +58,7 @@
         "rector/rector": "^1.2",
         "symfony/framework-bundle": "^6.4 || ^7.0",
         "symfony/http-kernel": "^6.4 || ^7.0",
+        "symfony/polyfill-php83": "^1.30",
         "symfony/runtime": "^6.4 || ^7.0",
         "symfony/uid": "^6.4 || ^7.0",
         "symfony/var-dumper": "^6.4 || ^7.0",
