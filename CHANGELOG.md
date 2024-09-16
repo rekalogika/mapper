@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.6.0
+
+* feat: add `AllowTargetDelete`, similar to `AllowDelete` but defined on the
+  source side
+
 ## 1.5.7
 
 * deps: allow updates to property-info
