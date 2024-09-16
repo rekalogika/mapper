@@ -22,8 +22,8 @@ class InternalClassUnsupportedException extends NotMappableValueException
      */
     public function __construct(
         string $class,
-        \Throwable $previous = null,
-        Context $context = null,
+        ?\Throwable $previous = null,
+        ?Context $context = null,
     ) {
         parent::__construct(
             message: \sprintf(

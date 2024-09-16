@@ -19,7 +19,7 @@ class NotAClassException extends NotMappableValueException
 {
     public function __construct(
         string $class,
-        Context $context = null,
+        ?Context $context = null,
     ) {
         parent::__construct(
             message: \sprintf(

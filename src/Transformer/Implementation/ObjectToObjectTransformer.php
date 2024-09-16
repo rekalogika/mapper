@@ -55,7 +55,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         private ContainerInterface $propertyMapperLocator,
         private SubMapperFactoryInterface $subMapperFactory,
         private ProxyFactoryInterface $proxyFactory,
-        ReaderWriter $readerWriter = null,
+        ?ReaderWriter $readerWriter = null,
     ) {
         $this->readerWriter = $readerWriter ?? new ReaderWriter();
     }
