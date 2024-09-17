@@ -63,7 +63,7 @@
         "symfony/uid": "^6.4 || ^7.0",
         "symfony/var-dumper": "^6.4 || ^7.0",
         "symfony/yaml": "^6.4 || ^7.0",
-        "tomasvotruba/unused-public": "^0.3.5",
+        "tomasvotruba/unused-public": "^0.4.0",
         "twig/twig": "^2.12|^3.0",
         "vimeo/psalm": "^5.26"
     },
