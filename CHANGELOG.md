@@ -3,6 +3,7 @@
 ## 1.6.1
 
 * fix: remove phpstan config remnant
+* fix: Doctrine MongoDB ODM proxy class resolving (issue [#106](https://github.com/rekalogika/mapper/issues/106))
 
 ## 1.6.0
 
