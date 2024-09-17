@@ -24,47 +24,73 @@ final readonly class ClassUtil
     private function __construct() {}
 
     /**
+     * @copyright Kévin Dunglas
+     * @see https://github.com/api-platform/core/blob/main/src/Metadata/Util/ClassInfoTrait.php
+     */
+    public static function getRealClassName(string $className): string
+    {
+        // __CG__: Doctrine Common Marker for Proxy (ODM < 2.0 and ORM < 3.0)
+        // __PM__: Ocramius Proxy Manager (ODM >= 2.0)
+        $positionCg = strrpos($className, '\\__CG__\\');
+        $positionPm = strrpos($className, '\\__PM__\\');
+
+        if (false === $positionCg && false === $positionPm) {
+            return $className;
+        }
+
+        if (false !== $positionCg) {
+            return substr($className, $positionCg + 8);
+        }
+
+        $className = ltrim($className, '\\');
+        $pos = strrpos($className, '\\');
+
+        if ($pos === false) {
+            throw new UnexpectedValueException(\sprintf(
+                'Unable to determine the real class name from the proxy class "%s"',
+                $className,
+            ));
+        }
+
+        return substr(
+            $className,
+            8 + $positionPm,
+            $pos - ($positionPm + 8),
+        );
+    }
+
+    /**
      * @template T of object
      * @param class-string<T> $class
      * @return class-string<T>
      */
     public static function determineRealClassFromPossibleProxy(string $class): string
     {
-        $inputClass = $class;
+        $realClass = self::getRealClassName($class);
 
-        $pos = strrpos($class, '\\__CG__\\');
-
-        if ($pos === false) {
-            $pos = strrpos($class, '\\__PM__\\');
-        }
-
-        if ($pos !== false) {
-            $class = substr($class, $pos + 8);
-        }
-
-        if (!class_exists($class)) {
+        if (!class_exists($realClass)) {
             throw new UnexpectedValueException(\sprintf(
                 'Trying to resolve the real class from possible proxy class "%s", got "%s", but the class does not exist',
-                $inputClass,
                 $class,
+                $realClass,
             ));
         }
 
         /** @psalm-suppress DocblockTypeContradiction */
-        if (!is_a($inputClass, $class, true)) {
+        if (!is_a($class, $realClass, true)) {
             /** @psalm-suppress NoValue */
             throw new UnexpectedValueException(\sprintf(
                 'Trying to resolve the real class from possible proxy class "%s", got "%s", but the proxy "%s" is not a subclass of "%s"',
-                $inputClass,
                 $class,
-                $inputClass,
+                $realClass,
                 $class,
+                $realClass,
             ));
         }
 
-        /** @var class-string<T> $class */
+        /** @var class-string<T> $realClass */
 
-        return $class;
+        return $realClass;
     }
 
     /**
