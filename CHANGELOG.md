@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.6.2
+
+* fix: spaceless twig filter is deprecated
+
 ## 1.6.1
 
 * fix: remove phpstan config remnant

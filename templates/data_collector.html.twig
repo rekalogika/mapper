@@ -195,7 +195,6 @@
         </tr>
     {% endif %}
     <tr>
-        {%- apply spaceless -%}
         <td>
             {%- if depth > 1 -%}
                 {%- for i in 1..depth-1 -%}&nbsp;&nbsp;
@@ -211,7 +210,6 @@
                 {%- endif -%}
             {%- endif -%}
         </td>
-        {%- endapply -%}
         <td>
             {{ tracedata.sourceType|abbr_class }}
         </td>
