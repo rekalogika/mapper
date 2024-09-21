@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\DependencyInjection;
 use Rekalogika\Mapper\Attribute\AsObjectMapper;
 use Rekalogika\Mapper\Attribute\AsPropertyMapper;
 use Rekalogika\Mapper\Exception\LogicException;
-use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Symfony\Component\Config\FileLocator;
@@ -43,10 +42,6 @@ final class RekalogikaMapperExtension extends Extension
 
         $env = $container->getParameter('kernel.environment');
         $debug = (bool) $container->getParameter('kernel.debug');
-
-        if ($env === 'test' && class_exists(TestKernel::class)) {
-            $loader->import('tests.php');
-        }
 
         if ($debug) {
             $loader->load('debug.php');

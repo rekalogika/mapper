@@ -19,8 +19,11 @@ use Rector\ValueObject\PhpVersion;
 return RectorConfig::configure()
     ->withPhpVersion(PhpVersion::PHP_83)
     ->withPaths([
+        __DIR__ . '/config',
         __DIR__ . '/src',
-        __DIR__ . '/tests',
+        __DIR__ . '/tests/bin',
+        __DIR__ . '/tests/config',
+        __DIR__ . '/tests/src',
     ])
     ->withImportNames(importShortClasses: false)
     ->withPreparedSets(
@@ -62,7 +65,7 @@ return RectorConfig::configure()
         ],
 
         RemoveUnusedPrivatePropertyRector::class => [
-            __DIR__ . '/tests/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php',
+            __DIR__ . '/tests/src/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php',
         ],
 
         RemoveUnusedPrivateMethodParameterRector::class => [
@@ -70,6 +73,6 @@ return RectorConfig::configure()
         ],
 
         MakeInheritedMethodVisibilitySameAsParentRector::class => [
-            __DIR__ . '/tests/Common/MapperTestFactory.php',
+            __DIR__ . '/tests/src/Common/MapperTestFactory.php',
         ],
     ]);

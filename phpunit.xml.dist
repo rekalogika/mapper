@@ -10,11 +10,19 @@
         cacheDirectory=".phpunit.cache"
         beStrictAboutCoverageMetadata="true"
         displayDetailsOnTestsThatTriggerWarnings="true">
+
+    <php>
+        <server
+                name="KERNEL_CLASS"
+                value="Rekalogika\Mapper\Tests\Common\TestKernel" />
+    </php>
+
     <testsuites>
         <testsuite name="default">
-            <directory>tests</directory>
+            <directory>tests/src</directory>
         </testsuite>
     </testsuites>
+
     <source>
         <include>
             <directory suffix=".php">src</directory>
