@@ -75,7 +75,7 @@ final readonly class ReaderWriter
                         throw new UninitializedSourcePropertyException($accessorName);
                     }
 
-                    return true;
+                    return false;
                 };
 
                 \set_error_handler($errorHandler);
