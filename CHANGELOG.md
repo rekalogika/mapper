@@ -5,6 +5,7 @@
 * fix: spaceless twig filter is deprecated
 * test: modernize tests
 * feat: union types support in object mappers
+* feat: union types support in property mappers
 
 ## 1.6.1
 

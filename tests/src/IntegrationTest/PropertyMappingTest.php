@@ -18,8 +18,11 @@ use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Bar;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Baz;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Foo;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
@@ -222,5 +225,14 @@ class PropertyMappingTest extends FrameworkTestCase
 
         $this->assertEquals(SomeObject::class . '::propertyA', $dto->propertyA);
         $this->assertEquals(SomeObject::class . '::propertyB', $dto->propertyB);
+    }
+
+    public function testUnionTypes(): void
+    {
+        $baz1 = $this->mapper->map(new Foo(), Baz::class);
+        $this->assertEquals('Foo', $baz1->bazName);
+
+        $baz2 = $this->mapper->map(new Bar(), Baz::class);
+        $this->assertEquals('Bar', $baz2->bazName);
     }
 }
