@@ -199,7 +199,6 @@ final class RekalogikaMapperExtension extends Extension
         AsObjectMapper $attribute,
         \ReflectionMethod $reflector,
     ): void {
-        /** @var array{targetClass:class-string} */
         $tagAttributes = [];
 
         // add the method
