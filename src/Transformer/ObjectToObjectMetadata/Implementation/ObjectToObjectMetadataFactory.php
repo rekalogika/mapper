@@ -451,6 +451,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 sourceLazy: $sourceLazy,
                 targetCanAcceptNull: $targetCanAcceptNull,
                 targetAllowsDelete: $targetAllowsDelete,
+                ignoreIfImpossible: true,
             );
 
             $propertyMappings[] = $propertyMapping;

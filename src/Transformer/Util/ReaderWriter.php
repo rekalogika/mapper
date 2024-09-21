@@ -22,6 +22,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
+use Rekalogika\Mapper\Transformer\Sentinel\UnsetSentinel;
 
 /**
  * @internal
@@ -136,7 +137,7 @@ final readonly class ReaderWriter
                 str_contains($message, 'must not be accessed before initialization')
                 || str_contains($message, 'Cannot access uninitialized non-nullable property')
             ) {
-                return null;
+                return new UnsetSentinel();
             }
 
             throw new UnableToReadException(

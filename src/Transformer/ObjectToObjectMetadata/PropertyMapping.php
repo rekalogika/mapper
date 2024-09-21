@@ -61,6 +61,7 @@ final readonly class PropertyMapping
         private bool $sourceLazy,
         private bool $targetCanAcceptNull,
         private bool $targetAllowsDelete,
+        private bool $ignoreIfImpossible,
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
@@ -197,5 +198,10 @@ final readonly class PropertyMapping
     public function getTargetRemoverWriteVisibility(): Visibility
     {
         return $this->targetRemoverWriteVisibility;
+    }
+
+    public function ignoreIfImpossible(): bool
+    {
+        return $this->ignoreIfImpossible;
     }
 }
