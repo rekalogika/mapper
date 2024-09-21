@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.7.1
+
+* feat: use error handler when reading source classes with dynamic properties
+
 ## 1.7.0
 
 * fix: spaceless twig filter is deprecated
