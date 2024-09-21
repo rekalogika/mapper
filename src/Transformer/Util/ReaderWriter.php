@@ -65,11 +65,25 @@ final readonly class ReaderWriter
                 /** @psalm-suppress MixedMethodCall */
                 return $source->{$accessorName}();
             } elseif ($mode === ReadMode::DynamicProperty) {
-                if (!property_exists($source, $accessorName)) {
-                    throw new UninitializedSourcePropertyException($accessorName);
-                }
+                $errorHandler = static function (
+                    int $errno,
+                    string $errstr,
+                    string $errfile,
+                    int $errline
+                ) use ($accessorName): bool {
+                    if (\str_starts_with($errstr, 'Undefined property: ')) {
+                        throw new UninitializedSourcePropertyException($accessorName);
+                    }
 
-                return $source->{$accessorName};
+                    return true;
+                };
+
+                \set_error_handler($errorHandler);
+                /** @var mixed */
+                $result = $source->{$accessorName};
+                \restore_error_handler();
+
+                return $result;
             }
 
             return null;
