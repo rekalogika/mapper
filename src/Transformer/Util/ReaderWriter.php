@@ -72,6 +72,7 @@ final readonly class ReaderWriter
                     int $errline
                 ) use ($accessorName): bool {
                     if (\str_starts_with($errstr, 'Undefined property: ')) {
+                        \restore_error_handler();
                         throw new UninitializedSourcePropertyException($accessorName);
                     }
 
