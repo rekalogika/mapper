@@ -126,7 +126,10 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         // dynamic properties
 
         $sourceAllowsDynamicProperties = $this->allowsDynamicProperties($sourceReflection);
-        $targetAllowsDynamicProperties = $this->allowsDynamicProperties($targetReflection);
+
+        $targetAllowsDynamicProperties =
+            $this->allowsDynamicProperties($targetReflection)
+            || method_exists($targetClass, '__set');
 
         // check if source and target classes are internal
 

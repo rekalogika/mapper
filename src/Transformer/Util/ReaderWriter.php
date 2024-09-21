@@ -201,6 +201,8 @@ final readonly class ReaderWriter
             } elseif ($writeMode === WriteMode::DynamicProperty) {
                 $target->{$accessorName} = $value;
             }
+        } catch (\BadMethodCallException $e) {
+            return;
         } catch (\Throwable $e) {
             throw new UnableToWriteException(
                 $target,

@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Magic\ObjectWithMagicGet;
+use Rekalogika\Mapper\Tests\Fixtures\Magic\ObjectWithMagicSet;
 use Rekalogika\Mapper\Tests\Fixtures\Magic\SomeDto;
 
 class MagicTest extends FrameworkTestCase
@@ -27,5 +28,14 @@ class MagicTest extends FrameworkTestCase
         $this->assertSame('Hello', $result->string);
         $this->assertSame('2021-01-01', $result->date->format('Y-m-d'));
         $this->assertFalse(isset($result->generatesException));
+    }
+
+    public function testMagicSet(): void
+    {
+        $source = SomeDto::prefilled();
+        $result = $this->mapper->map($source, ObjectWithMagicSet::class);
+
+        $this->assertSame('Hello', $result->getStringResult());
+        $this->assertSame('2021-01-01', $result->getDateResult()->format('Y-m-d'));
     }
 }

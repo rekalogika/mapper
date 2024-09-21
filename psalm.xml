@@ -31,6 +31,7 @@
         <MixedAssignment>
             <errorLevel type="suppress">
                 <file name="src/Transformer/Implementation/TraversableToArrayAccessTransformer.php" />
+                <file name="tests/src/Fixtures/Magic/ObjectWithMagicSet.php" />
             </errorLevel>
         </MixedAssignment>
         <PossiblyInvalidArgument>
@@ -58,6 +59,7 @@
                 <file name="tests/src/Fixtures/ArrayLikeDto/ObjectWithNotNullTraversablePropertyDto.php" />
                 <file name="tests/src/Fixtures/DynamicProperty/ObjectWithNonNullPropertyThatCannotBeCastFromNull.php" />
                 <file name="tests/src/Fixtures/Magic/SomeDto.php" />
+                <file name="tests/src/Fixtures/Magic/ObjectWithMagicSet.php" />
             </errorLevel>
         </MissingConstructor>
         <ArgumentTypeCoercion>
