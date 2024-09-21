@@ -55,13 +55,21 @@ final readonly class ReaderWriter
             $accessorName = $propertyMapping->getSourceReadName();
             $mode = $propertyMapping->getSourceReadMode();
 
+            if ($accessorName === null) {
+                throw new UninitializedSourcePropertyException('(null)');
+            }
+
             if ($mode === ReadMode::Property) {
                 return $source->{$accessorName};
             } elseif ($mode === ReadMode::Method) {
                 /** @psalm-suppress MixedMethodCall */
                 return $source->{$accessorName}();
             } elseif ($mode === ReadMode::DynamicProperty) {
-                return $source->{$accessorName} ?? null;
+                if (!property_exists($source, $accessorName)) {
+                    throw new UninitializedSourcePropertyException($accessorName);
+                }
+
+                return $source->{$accessorName};
             }
 
             return null;
@@ -96,7 +104,8 @@ final readonly class ReaderWriter
             $propertyMapping->getTargetSetterWriteMode() === WriteMode::AdderRemover
             && $propertyMapping->getTargetSetterWriteVisibility() === Visibility::Public
         ) {
-            if ($propertyMapping->getTargetRemoverWriteVisibility() === Visibility::Public
+            if (
+                $propertyMapping->getTargetRemoverWriteVisibility() === Visibility::Public
             ) {
                 $removerMethodName = $propertyMapping->getTargetRemoverWriteName();
             } else {
