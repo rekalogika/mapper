@@ -12,7 +12,7 @@
         displayDetailsOnTestsThatTriggerWarnings="true">
     <testsuites>
         <testsuite name="default">
-            <directory>tests</directory>
+            <directory>tests/src</directory>
         </testsuite>
     </testsuites>
     <source>

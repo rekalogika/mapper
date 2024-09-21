@@ -58,7 +58,7 @@ class TestKernel extends Kernel
     #[\Override]
     public function registerContainerConfiguration(LoaderInterface $loader): void
     {
-        $confDir = $this->getProjectDir() . '/tests/Resources/';
+        $confDir = $this->getProjectDir() . '/tests/src/Resources/';
         $loader->load($confDir . '*' . '.yaml', 'glob');
 
         $loader->load(function (ContainerBuilder $container): void {

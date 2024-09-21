@@ -20,7 +20,7 @@ return RectorConfig::configure()
     ->withPhpVersion(PhpVersion::PHP_83)
     ->withPaths([
         __DIR__ . '/src',
-        __DIR__ . '/tests',
+        __DIR__ . '/tests/src',
     ])
     ->withImportNames(importShortClasses: false)
     ->withPreparedSets(

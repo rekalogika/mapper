@@ -74,7 +74,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Rekalogika\\Mapper\\Tests\\": "tests/"
+            "Rekalogika\\Mapper\\Tests\\": "tests/src/"
         }
     },
     "config": {

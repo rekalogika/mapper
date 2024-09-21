@@ -3,6 +3,7 @@
 ## 1.6.2
 
 * fix: spaceless twig filter is deprecated
+* test: modernize tests
 
 ## 1.6.1
 

@@ -33,7 +33,7 @@
         </MixedAssignment>
         <PossiblyInvalidArgument>
             <errorLevel type="suppress">
-                <file name="tests/IntegrationTest/MappingTest.php" />
+                <file name="tests/src/IntegrationTest/MappingTest.php" />
             </errorLevel>
         </PossiblyInvalidArgument>
         <InvalidReturnStatement>
@@ -48,18 +48,18 @@
         </InvalidReturnType>
         <MissingConstructor>
             <errorLevel type="suppress">
-                <file name="tests/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php" />
-                <file name="tests/Fixtures/UninitializedProperty/ObjectWithUninitializedProperty.php" />
-                <file name="tests/Fixtures/UninitializedPropertyDto/FinalObjectWithUninitializedPropertyDto.php" />
-                <file name="tests/Fixtures/UninitializedPropertyDto/ObjectWithUninitializedPropertyDto.php" />
-                <file name="tests/Fixtures/ArrayLikeDto/ObjectWithNotNullArrayAccessPropertyDto.php" />
-                <file name="tests/Fixtures/ArrayLikeDto/ObjectWithNotNullTraversablePropertyDto.php" />
+                <file name="tests/src/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php" />
+                <file name="tests/src/Fixtures/UninitializedProperty/ObjectWithUninitializedProperty.php" />
+                <file name="tests/src/Fixtures/UninitializedPropertyDto/FinalObjectWithUninitializedPropertyDto.php" />
+                <file name="tests/src/Fixtures/UninitializedPropertyDto/ObjectWithUninitializedPropertyDto.php" />
+                <file name="tests/src/Fixtures/ArrayLikeDto/ObjectWithNotNullArrayAccessPropertyDto.php" />
+                <file name="tests/src/Fixtures/ArrayLikeDto/ObjectWithNotNullTraversablePropertyDto.php" />
             </errorLevel>
         </MissingConstructor>
         <ArgumentTypeCoercion>
             <errorLevel type="suppress">
                 <file name="src/DependencyInjection/RekalogikaMapperExtension.php" />
-                <file name="tests/IntegrationTest/ObjectToObjectMetadataFactoryTest.php" />
+                <file name="tests/src/IntegrationTest/ObjectToObjectMetadataFactoryTest.php" />
             </errorLevel>
         </ArgumentTypeCoercion>
         <InternalMethod>
@@ -76,18 +76,18 @@
         </InternalClass>
         <UndefinedClass>
             <errorLevel type="suppress">
-                <file name="tests/IntegrationTest/ObjectToObjectMetadataFactoryTest.php" />
+                <file name="tests/src/IntegrationTest/ObjectToObjectMetadataFactoryTest.php" />
             </errorLevel>
         </UndefinedClass>
         <MissingParamType>
             <errorLevel type="suppress">
-                <file name="tests/Fixtures/MixedType/ObjectWithUntypedPropertyDto.php" />
+                <file name="tests/src/Fixtures/MixedType/ObjectWithUntypedPropertyDto.php" />
             </errorLevel>
         </MissingParamType>
         <MissingPropertyType>
             <errorLevel type="suppress">
-                <file name="tests/Fixtures/MixedType/ObjectWithUntypedPropertyDto.php" />
-                <file name="tests/IntegrationTest/MixedTypeTest.php" />
+                <file name="tests/src/Fixtures/MixedType/ObjectWithUntypedPropertyDto.php" />
+                <file name="tests/src/IntegrationTest/MixedTypeTest.php" />
             </errorLevel>
         </MissingPropertyType>
         <DeprecatedClass>
@@ -95,7 +95,7 @@
                 <file name="src/MapperFactory.php" />
                 <file name="src/Transformer/MainTransformerAwareTrait.php" />
                 <file name="src/Transformer/Implementation/ClassMethodTransformer.php" />
-                <file name="tests/IntegrationTest/MethodMapperTest.php" />
+                <file name="tests/src/IntegrationTest/MethodMapperTest.php" />
                 <file name="src/Transformer/Implementation/ArrayToObjectTransformer.php" />
                 <file name="src/Transformer/Implementation/ObjectToArrayTransformer.php" />
                 <file name="src/Serializer/AbstractSerializerContext.php" />
