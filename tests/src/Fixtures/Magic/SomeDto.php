@@ -18,4 +18,14 @@ final class SomeDto
     public ?string $string = null;
     public \DateTimeImmutable $date;
     public \DateTimeImmutable $generatesException;
+
+    public static function prefilled(): self
+    {
+        $dto = new self();
+        $dto->string = 'Hello';
+        $dto->date = new \DateTimeImmutable('2021-01-01');
+        $dto->generatesException = new \DateTimeImmutable('2021-01-01');
+
+        return $dto;
+    }
 }
