@@ -535,7 +535,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // we can preserve generics information
 
         $guessedSourceType = TypeGuesser::guessTypeFromVariable($sourcePropertyValue);
-        $sourceType = $propertyMapping->getCompatibleSourceType($guessedSourceType);
+        $sourceType = $propertyMapping->getCompatibleSourceType($guessedSourceType)
+            ?? $guessedSourceType;
 
         // add AllowDelete to context if target allows deletion
 

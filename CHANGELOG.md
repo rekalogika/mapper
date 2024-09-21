@@ -6,6 +6,7 @@
 * feat: handle magic `__get()` on the source side
 * feat: handle magic `__set()` on the target side
 * feat: allow attaching attribute to getters instead of the property
+* perf: avoid guessing source type for the second time
 
 ## 1.7.0
 
