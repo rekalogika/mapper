@@ -6,6 +6,7 @@
 * test: modernize tests
 * feat: union types support in object mappers
 * feat: union types support in property mappers
+* fix: mapping unset source property to not null target property
 
 ## 1.6.1
 
