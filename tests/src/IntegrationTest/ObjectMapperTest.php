@@ -16,7 +16,9 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Brick\Money\Money;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Baz;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\FinalPersonDto;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Foo;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person;
@@ -98,6 +100,14 @@ class ObjectMapperTest extends FrameworkTestCase
         $person = new Person('1', 'John Doe');
         $this->expectException(ProxyNotSupportedException::class);
         $result = $this->mapper->map($person, FinalPersonDto::class);
+    }
+
+    public function testUnionType(): void
+    {
+        $foo = new Foo();
+        $result = $this->mapper->map($foo, Baz::class);
+
+        $this->assertInstanceOf(Baz::class, $result);
     }
 
 }
