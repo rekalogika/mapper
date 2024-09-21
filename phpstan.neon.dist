@@ -2,8 +2,9 @@ parameters:
     level: max
     paths:
         - src
-        - tests/src
         - config
+        - tests/src
+        - tests/config
     checkBenevolentUnionTypes: true
     checkExplicitMixedMissingReturn: true
     checkFunctionNameCase: true

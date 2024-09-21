@@ -23,7 +23,7 @@ class MainTransformerTest extends FrameworkTestCase
 {
     public function testMapping(): void
     {
-        $mappingFactory = $this->get('test.rekalogika.mapper.mapping_factory');
+        $mappingFactory = $this->get('rekalogika.mapper.mapping_factory');
         $this->assertInstanceOf(MappingFactoryInterface::class, $mappingFactory);
 
         $mapping = $mappingFactory->getMapping();

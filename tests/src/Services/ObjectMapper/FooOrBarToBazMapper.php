@@ -11,13 +11,16 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
+namespace Rekalogika\Mapper\Tests\Services\ObjectMapper;
 
 use Rekalogika\Mapper\Attribute\AsObjectMapper;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Bar;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Baz;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Foo;
 
 class FooOrBarToBazMapper
 {
-    #[AsObjectMapper]
+    // #[AsObjectMapper]
     public function mapPersonToPersonDto(
         Foo|Bar $fooOrBar,
     ): Baz {

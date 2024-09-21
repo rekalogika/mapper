@@ -15,12 +15,12 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\MemberDto;
-use Rekalogika\Mapper\Tests\Fixtures\Remove\MemberRepository;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithAdderRemover;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArray;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDto;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDtoWithAllowTargetDeleteAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayWithoutAllowDeleteAttribute;
+use Rekalogika\Mapper\Tests\Services\Remove\MemberRepository;
 
 /** @psalm-suppress MissingConstructor */
 class RemoveTest extends FrameworkTestCase

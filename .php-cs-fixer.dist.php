@@ -1,9 +1,11 @@
 <?php
 
 $finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__ . '/config')
     ->in(__DIR__ . '/src')
-    ->in(__DIR__ . '/tests')
-    ->in(__DIR__ . '/config');
+    ->in(__DIR__ . '/tests/bin')
+    ->in(__DIR__ . '/tests/config')
+    ->in(__DIR__ . '/tests/src');
 
 $config = new PhpCsFixer\Config();
 return $config->setRules([

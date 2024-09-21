@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\UnitTest;
 
 use PHPUnit\Framework\TestCase;
+use Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity;
 use Rekalogika\Mapper\Util\ClassUtil;
 
 class ClassUtilTest extends TestCase
@@ -36,17 +37,17 @@ class ClassUtilTest extends TestCase
     {
         yield 'DoctrineORM' => [
             'Proxies\__CG__\Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity',
-            'Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity',
+            SimpleEntity::class,
         ];
 
         yield 'MongoDB' => [
             'MongoDBODMProxies\__PM__\Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity\Generated93deedc1e7b56ba9c8d5a337a376eda9',
-            'Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity',
+            SimpleEntity::class,
         ];
 
         yield 'NoProxy' => [
-            'Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity',
-            'Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity',
+            SimpleEntity::class,
+            SimpleEntity::class,
         ];
     }
 }

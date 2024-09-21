@@ -11,9 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\Remove;
+namespace Rekalogika\Mapper\Tests\Services\Remove;
 
 use Rekalogika\Mapper\Attribute\AsObjectMapper;
+use Rekalogika\Mapper\Tests\Fixtures\Remove\Member;
+use Rekalogika\Mapper\Tests\Fixtures\Remove\MemberDto;
 
 class MemberDtoToMemberMapper
 {

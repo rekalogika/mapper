@@ -17,13 +17,13 @@ namespace Rekalogika\Mapper\Tests;
 use Rekalogika\Mapper\Tests\Common\TestKernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
-require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+require_once dirname(__DIR__).'/../vendor/autoload_runtime.php';
 
 return function (array $context) {
     $env = $context['APP_ENV'] ?? 'test';
     assert(is_string($env));
 
-    $kernel = new TestKernel([], $env, (bool) $context['APP_DEBUG']);
+    $kernel = new TestKernel($env, (bool) $context['APP_DEBUG']);
 
     return new Application($kernel);
 };

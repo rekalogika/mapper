@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
-use Rekalogika\Mapper\Tests\Fixtures\RememberingMapper\RememberingMapper;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesWithNullContents;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithFloatPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithIntPropertiesDto;
+use Rekalogika\Mapper\Tests\Services\RememberingMapper\RememberingMapper;
 
 class RememberingMapperTest extends FrameworkTestCase
 {

@@ -11,13 +11,14 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\RememberingMapper;
+namespace Rekalogika\Mapper\Tests\Services\RememberingMapper;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Transformer\Context\PresetMapping;
 use Rekalogika\Mapper\Transformer\Context\PresetMappingFactory;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Service\ResetInterface;
 
 class RememberingMapper implements MapperInterface, ResetInterface
@@ -26,6 +27,7 @@ class RememberingMapper implements MapperInterface, ResetInterface
 
     public function __construct(
         private readonly MapperInterface $decorated,
+        #[Autowire(service: 'rekalogika.mapper.object_cache_factory')]
         private readonly ObjectCacheFactoryInterface $objectCacheFactory,
     ) {
         $this->presetMapping = new PresetMapping();

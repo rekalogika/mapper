@@ -20,15 +20,15 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObjectDto;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttribute;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithConstructorWithoutClassAttribute;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithExtraArguments;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\PropertyMapperWithoutClassAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
+use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithClassAttribute;
+use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
+use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
+use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithConstructorWithoutClassAttribute;
+use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithExtraArguments;
+use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithoutClassAttribute;
 
 class PropertyMappingTest extends FrameworkTestCase
 {

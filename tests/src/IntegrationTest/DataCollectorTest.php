@@ -28,7 +28,7 @@ class DataCollectorTest extends FrameworkTestCase
         $result = $this->mapper->map($object, ContainsArray::class);
         $this->initialize($result);
 
-        $dataCollector = $this->get('test.rekalogika.mapper.data_collector');
+        $dataCollector = $this->get('rekalogika.mapper.data_collector');
         $this->assertInstanceOf(MapperDataCollector::class, $dataCollector);
 
         $mappings = $dataCollector->getMappings();

@@ -11,13 +11,19 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Service;
+namespace Rekalogika\Mapper\Tests\Services;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
 
+#[AsDecorator(LoggerInterface::class)]
 class TestLogger implements LoggerInterface
 {
-    public function __construct(private readonly LoggerInterface $logger) {}
+    public function __construct(
+        #[AutowireDecorated()]
+        private readonly LoggerInterface $logger,
+    ) {}
 
     private function isSuppressed(string|\Stringable $message): bool
     {

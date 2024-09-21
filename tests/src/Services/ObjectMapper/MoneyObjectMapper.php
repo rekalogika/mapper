@@ -11,11 +11,13 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
+namespace Rekalogika\Mapper\Tests\Services\ObjectMapper;
 
 use Brick\Money\Money;
 use Rekalogika\Mapper\Attribute\AsObjectMapper;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
 
 class MoneyObjectMapper
 {

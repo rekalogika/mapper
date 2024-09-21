@@ -11,14 +11,16 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
+namespace Rekalogika\Mapper\Tests\Services\PropertyMapper;
 
 use Rekalogika\Mapper\Attribute\AsPropertyMapper;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 
 #[AsPropertyMapper(
-    targetClass: SomeObjectWithConstructorDto::class,
+    targetClass: SomeObjectDto::class,
 )]
-class PropertyMapperWithConstructorWithClassAttribute
+class PropertyMapperWithClassAttribute
 {
     #[AsPropertyMapper('propertyB')]
     public function mapPropertyB(SomeObject $object): string

@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\InvalidTransformer;
+namespace Rekalogika\Mapper\Tests\Services\InvalidTransformer;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;

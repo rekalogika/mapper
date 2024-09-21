@@ -11,7 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\Remove;
+namespace Rekalogika\Mapper\Tests\Services\Remove;
+
+use Rekalogika\Mapper\Tests\Fixtures\Remove\Member;
 
 class MemberRepository
 {

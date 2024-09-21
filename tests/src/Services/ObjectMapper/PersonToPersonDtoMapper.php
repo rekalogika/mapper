@@ -11,10 +11,13 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
+namespace Rekalogika\Mapper\Tests\Services\ObjectMapper;
 
 use Rekalogika\Mapper\Attribute\AsObjectMapper;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\FinalPersonDto;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto;
 
 class PersonToPersonDtoMapper
 {

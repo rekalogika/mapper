@@ -2,6 +2,7 @@ parameters:
     kernel.secret: test
 
 framework:
+    test: true
     http_method_override: false
     handle_all_throwables: true
     php_errors:

@@ -16,20 +16,16 @@ namespace Rekalogika\Mapper\Tests\Common;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
-use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Debug\MapperDataCollector;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\IterableMapperInterface;
 use Rekalogika\Mapper\MapperInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
-abstract class FrameworkTestCase extends TestCase
+abstract class FrameworkTestCase extends KernelTestCase
 {
-    private ContainerInterface $container;
-
     /** @psalm-suppress MissingConstructor */
     protected MapperInterface $mapper;
 
@@ -39,11 +35,6 @@ abstract class FrameworkTestCase extends TestCase
     #[\Override]
     protected function setUp(): void
     {
-        $kernel = new TestKernel();
-        $kernel->boot();
-
-        $this->container = $kernel->getContainer();
-
         $this->mapper = new MapperDecorator(
             $this->get(MapperInterface::class),
             $this->getMapperContext(),
@@ -62,17 +53,7 @@ abstract class FrameworkTestCase extends TestCase
      */
     public function get(string $serviceId): object
     {
-        try {
-            $result = $this->container->get('test.' . $serviceId);
-        } catch (ServiceNotFoundException) {
-            /** @psalm-suppress PossiblyNullReference */
-            $result = $this->container->get($serviceId);
-        }
-
-
-        if (class_exists($serviceId) || interface_exists($serviceId)) {
-            $this->assertInstanceOf($serviceId, $result);
-        }
+        $result = static::getContainer()->get($serviceId);
 
         /** @psalm-suppress RedundantConditionGivenDocblockType */
         $this->assertNotNull($result);

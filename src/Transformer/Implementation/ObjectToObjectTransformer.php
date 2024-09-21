@@ -48,17 +48,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 {
     use MainTransformerAwareTrait;
 
-    private ReaderWriter $readerWriter;
-
-    public function __construct(
-        private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
-        private ContainerInterface $propertyMapperLocator,
-        private SubMapperFactoryInterface $subMapperFactory,
-        private ProxyFactoryInterface $proxyFactory,
-        ?ReaderWriter $readerWriter = null,
-    ) {
-        $this->readerWriter = $readerWriter ?? new ReaderWriter();
-    }
+    public function __construct(private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory, private ContainerInterface $propertyMapperLocator, private SubMapperFactoryInterface $subMapperFactory, private ProxyFactoryInterface $proxyFactory, private ReaderWriter $readerWriter = new ReaderWriter()) {}
 
     #[\Override]
     public function transform(

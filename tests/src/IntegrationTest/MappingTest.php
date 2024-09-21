@@ -46,7 +46,7 @@ class MappingTest extends FrameworkTestCase
         array $targets,
         string $transformerClass,
     ): void {
-        $transformerRegistry = $this->get('test.rekalogika.mapper.transformer_registry');
+        $transformerRegistry = $this->get('rekalogika.mapper.transformer_registry');
         $this->assertInstanceOf(
             TransformerRegistryInterface::class,
             $transformerRegistry,

@@ -19,9 +19,9 @@ use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\FinalPersonDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
-use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyObjectMapper;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto;
+use Rekalogika\Mapper\Tests\Services\ObjectMapper\MoneyObjectMapper;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
@@ -30,7 +30,7 @@ class ObjectMapperTest extends FrameworkTestCase
     public function testService(): void
     {
         $moneyObjectMapper = $this->get(MoneyObjectMapper::class);
-        $objectMapperTransformer = $this->get('test.' . ObjectMapperTransformer::class);
+        $objectMapperTransformer = $this->get(ObjectMapperTransformer::class);
 
         $this->assertTransformerInstanceOf(MoneyObjectMapper::class, $moneyObjectMapper);
         $this->assertTransformerInstanceOf(ObjectMapperTransformer::class, $objectMapperTransformer);

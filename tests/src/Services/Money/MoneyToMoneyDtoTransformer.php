@@ -11,11 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\Money;
+namespace Rekalogika\Mapper\Tests\Services\Money;
 
 use Brick\Money\Money;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Tests\Fixtures\Money\MoneyDto;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeCheck;

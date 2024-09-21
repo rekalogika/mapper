@@ -26,7 +26,7 @@ class AttributeTest extends FrameworkTestCase
         $class = ObjectWithAttribute::class;
         $type = TypeFactory::objectOfClass($class);
 
-        $typeResolver = $this->get('test.rekalogika.mapper.type_resolver');
+        $typeResolver = $this->get('rekalogika.mapper.type_resolver');
         $this->assertInstanceOf(TypeResolverInterface::class, $typeResolver);
 
         $typeStrings = $typeResolver->getAcceptedTransformerInputTypeStrings($type);
