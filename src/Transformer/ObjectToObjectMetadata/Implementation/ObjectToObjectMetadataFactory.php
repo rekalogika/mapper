@@ -221,12 +221,24 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // determine if target allows delete
 
-            $targetAllowsDelete = $targetPropertyReflection !== null
-                && $targetPropertyReflection->getAttributes(AllowDelete::class) !== [];
+            $allowDeleteAttributes = ClassUtil::getAttributes(
+                class: $targetClass,
+                property: $targetProperty,
+                attributeClass: AllowDelete::class,
+                prefixes: ['get'],
+            );
+
+            $targetAllowsDelete = $allowDeleteAttributes !== [];
 
             if (!$targetAllowsDelete) {
-                $targetAllowsDelete = $sourcePropertyReflection !== null
-                    && $sourcePropertyReflection->getAttributes(AllowTargetDelete::class) !== [];
+                $allowTargetDeleteAttributes = ClassUtil::getAttributes(
+                    class: $sourceClass,
+                    property: $sourceProperty,
+                    attributeClass: AllowTargetDelete::class,
+                    prefixes: ['get'],
+                );
+
+                $targetAllowsDelete = $allowTargetDeleteAttributes !== [];
             }
 
             // process source read mode

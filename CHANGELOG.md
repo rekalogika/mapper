@@ -5,6 +5,7 @@
 * feat: use error handler when reading source classes with dynamic properties
 * feat: handle magic `__get()` on the source side
 * feat: handle magic `__set()` on the target side
+* feat: allow attaching attribute to getters instead of the property
 
 ## 1.7.0
 
