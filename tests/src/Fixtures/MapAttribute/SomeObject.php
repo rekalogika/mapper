@@ -11,16 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
+namespace Rekalogika\Mapper\Tests\Fixtures\MapAttribute;
 
-/**
- * @internal
- */
-enum ReadMode
+class SomeObject
 {
-    case None;
-    case Method;
-    case Property;
-    case DynamicProperty;
-    case PropertyPath;
+    public string $sourcePropertyA = 'propertyA';
+    public string $sourcePropertyB = 'propertyB';
+    public string $sourcePropertyC = 'propertyC';
 }
