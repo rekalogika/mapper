@@ -57,6 +57,7 @@
                 <file name="tests/src/Fixtures/ArrayLikeDto/ObjectWithNotNullArrayAccessPropertyDto.php" />
                 <file name="tests/src/Fixtures/ArrayLikeDto/ObjectWithNotNullTraversablePropertyDto.php" />
                 <file name="tests/src/Fixtures/DynamicProperty/ObjectWithNonNullPropertyThatCannotBeCastFromNull.php" />
+                <file name="tests/src/Fixtures/Magic/SomeDto.php" />
             </errorLevel>
         </MissingConstructor>
         <ArgumentTypeCoercion>

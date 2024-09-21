@@ -69,20 +69,20 @@ final readonly class ReaderWriter
                     int $errno,
                     string $errstr,
                     string $errfile,
-                    int $errline
+                    int $errline,
                 ) use ($accessorName): bool {
-                    if (\str_starts_with($errstr, 'Undefined property: ')) {
-                        \restore_error_handler();
+                    if (str_starts_with($errstr, 'Undefined property')) {
+                        restore_error_handler();
                         throw new UninitializedSourcePropertyException($accessorName);
                     }
 
                     return false;
                 };
 
-                \set_error_handler($errorHandler);
+                set_error_handler($errorHandler);
                 /** @var mixed */
                 $result = $source->{$accessorName};
-                \restore_error_handler();
+                restore_error_handler();
 
                 return $result;
             }
@@ -104,6 +104,8 @@ final readonly class ReaderWriter
                 context: $context,
                 previous: $e,
             );
+        } catch (\BadMethodCallException $e) {
+            throw new UninitializedSourcePropertyException($property);
         }
     }
 
