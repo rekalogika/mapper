@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection;
 
+use ReflectionNamedType;
 use Rekalogika\Mapper\Attribute\AsObjectMapper;
 use Rekalogika\Mapper\Attribute\AsPropertyMapper;
 use Rekalogika\Mapper\Exception\LogicException;
@@ -211,17 +212,41 @@ final class RekalogikaMapperExtension extends Extension
         $firstParameter = $parameters[0] ?? null;
         $type = $firstParameter?->getType();
 
-        if ($type === null || !$type instanceof \ReflectionNamedType) {
-            throw new LogicException(
-                \sprintf(
-                    'Unable to determine the source class for property mapper service "%s", method "%s".',
-                    $definition->getClass() ?? '?',
-                    $reflector->getName(),
-                ),
-            );
-        }
+        if ($type === null) {
+            throw new LogicException(\sprintf(
+                'Cannot set up object mapper, the type of the first argument cannot be determined. Service ID "%s", method "%s".',
+                $definition->getClass() ?? 'unknown',
+                $reflector->getName(),
+            ));
+        } elseif ($type instanceof \ReflectionNamedType) {
+            $sourceClasses = [$type->getName()];
+        } elseif ($type instanceof \ReflectionUnionType) {
+            $sourceClasses = [];
 
-        $tagAttributes['sourceClass'] = $type->getName();
+            foreach ($type->getTypes() as $type) {
+                if ($type instanceof \ReflectionIntersectionType) {
+                    throw new LogicException(\sprintf(
+                        'Cannot set up object mapper, the type of the first argument contains an intersection type, which is not supported. Service ID "%s", method "%s".',
+                        $definition->getClass() ?? '?',
+                        $reflector->getName(),
+                    ));
+                } elseif (!$type instanceof \ReflectionNamedType) {
+                    throw new LogicException(\sprintf(
+                        'Cannot set up object mapper, the type of the first argument contains a non-named type, which is not supported. Service ID "%s", method "%s".',
+                        $definition->getClass() ?? '?',
+                        $reflector->getName(),
+                    ));
+                }
+
+                $sourceClasses[] = $type->getName();
+            }
+        } else {
+            throw new LogicException(\sprintf(
+                'Cannot set up object mapper, the type of the first argument cannot be determined. Service ID "%s", method "%s".',
+                $definition->getClass() ?? '?',
+                $reflector->getName(),
+            ));
+        }
 
         // use the class of the return type as the target class
 
@@ -241,6 +266,11 @@ final class RekalogikaMapperExtension extends Extension
 
         // finally
 
-        $definition->addTag('rekalogika.mapper.object_mapper', $tagAttributes);
+        foreach ($sourceClasses as $sourceClass) {
+            $definition->addTag('rekalogika.mapper.object_mapper', [
+                ...$tagAttributes,
+                'sourceClass' => $sourceClass,
+            ]);
+        }
     }
 }

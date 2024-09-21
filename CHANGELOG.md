@@ -1,9 +1,10 @@
 # CHANGELOG
 
-## 1.6.2
+## 1.7.0
 
 * fix: spaceless twig filter is deprecated
 * test: modernize tests
+* feat: union types support in object mappers
 
 ## 1.6.1
 

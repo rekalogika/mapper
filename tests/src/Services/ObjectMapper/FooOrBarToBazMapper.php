@@ -20,7 +20,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Foo;
 
 class FooOrBarToBazMapper
 {
-    // #[AsObjectMapper]
+    #[AsObjectMapper]
     public function mapPersonToPersonDto(
         Foo|Bar $fooOrBar,
     ): Baz {
