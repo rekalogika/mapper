@@ -3,6 +3,7 @@
 ## 1.7.1
 
 * feat: use error handler when reading source classes with dynamic properties
+* feat: handle magic `__get()` on the source side
 
 ## 1.7.0
 
