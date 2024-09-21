@@ -11,16 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
+namespace Rekalogika\Mapper\Attribute;
 
-/**
- * @internal
- */
-enum ReadMode
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD)]
+final readonly class Map
 {
-    case None;
-    case Method;
-    case Property;
-    case DynamicProperty;
-    case PropertyPath;
+    public function __construct(
+        public string $from,
+    ) {}
 }

@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\AllowTargetDelete;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
+use Rekalogika\Mapper\Attribute\Map;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
@@ -187,7 +188,26 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         $effectivePropertiesToMap = [];
 
         foreach ($propertiesToMap as $targetProperty) {
-            $sourceProperty = $targetProperty;
+            // get map attribute from target property
+
+            $targetMapAttributes = ClassUtil::getAttributes(
+                class: $targetClass,
+                property: $targetProperty,
+                attributeClass: Map::class,
+                prefixes: ['get', 'set', 'is', 'has'],
+            );
+
+            $targetMapAttribute = $targetMapAttributes[0] ?? null;
+
+            // determine source property
+
+            if ($targetMapAttribute !== null) {
+                $sourceProperty = $targetMapAttribute->from;
+            } else {
+                $sourceProperty = $targetProperty;
+            }
+
+            // service method specification
 
             $serviceMethodSpecification = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
@@ -198,14 +218,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 $sourcePropertyReflection = $sourceReflection->getProperty($sourceProperty);
             } catch (\ReflectionException) {
                 $sourcePropertyReflection = null;
-            }
-
-            // get reflection for target property
-
-            try {
-                $targetPropertyReflection = $targetReflection->getProperty($targetProperty);
-            } catch (\ReflectionException) {
-                $targetPropertyReflection = null;
             }
 
             // get read & write info for source and target properties

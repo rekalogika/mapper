@@ -7,6 +7,7 @@
 * feat: handle magic `__set()` on the target side
 * feat: allow attaching attribute to getters instead of the property
 * perf: avoid guessing source type for the second time
+* feat: add `Map` attribute to map from different source property
 
 ## 1.7.0
 
