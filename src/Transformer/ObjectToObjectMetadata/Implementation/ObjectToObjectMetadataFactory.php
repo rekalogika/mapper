@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\AllowTargetDelete;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
-use Rekalogika\Mapper\Attribute\Map;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
@@ -39,7 +38,6 @@ use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
-use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal

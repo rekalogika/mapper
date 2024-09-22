@@ -22,9 +22,9 @@ class OtherObject
     public static function preinitialized(): self
     {
         $object = new self();
-        $object->otherSourcePropertyA = 'sourcePropertyA';
-        $object->otherSourcePropertyB = 'sourcePropertyB';
-        $object->otherSourcePropertyC = 'sourcePropertyC';
+        $object->otherSourcePropertyA = 'otherSourcePropertyA';
+        $object->otherSourcePropertyB = 'otherSourcePropertyB';
+        $object->otherSourcePropertyC = 'otherSourcePropertyC';
 
         return $object;
     }
