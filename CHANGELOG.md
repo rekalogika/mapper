@@ -8,6 +8,7 @@
 * feat: allow attaching attribute to getters instead of the property
 * perf: avoid guessing source type for the second time
 * feat: add `Map` attribute to map from different source property
+* feat: `Map` now supports class inheritance
 
 ## 1.7.0
 

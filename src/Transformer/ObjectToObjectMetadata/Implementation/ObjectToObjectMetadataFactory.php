@@ -194,7 +194,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 class: $targetClass,
                 property: $targetProperty,
                 attributeClass: Map::class,
-                prefixes: ['get', 'set', 'is', 'has'],
+                methodPrefixes: ['get', 'set', 'is', 'has', 'can'],
             );
 
             $targetMapAttribute = $targetMapAttributes[0] ?? null;
@@ -202,7 +202,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // determine source property
 
             if ($targetMapAttribute !== null) {
-                $sourceProperty = $targetMapAttribute->from;
+                $sourceProperty = $targetMapAttribute->property;
             } else {
                 $sourceProperty = $targetProperty;
             }
@@ -237,7 +237,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 class: $targetClass,
                 property: $targetProperty,
                 attributeClass: AllowDelete::class,
-                prefixes: ['get'],
+                methodPrefixes: ['get'],
             );
 
             $targetAllowsDelete = $allowDeleteAttributes !== [];
@@ -247,7 +247,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     class: $sourceClass,
                     property: $sourceProperty,
                     attributeClass: AllowTargetDelete::class,
-                    prefixes: ['get'],
+                    methodPrefixes: ['get'],
                 );
 
                 $targetAllowsDelete = $allowTargetDeleteAttributes !== [];
