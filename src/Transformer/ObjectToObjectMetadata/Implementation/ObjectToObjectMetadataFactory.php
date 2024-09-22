@@ -194,7 +194,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 class: $targetClass,
                 property: $targetProperty,
                 attributeClass: Map::class,
-                methodPrefixes: ['get', 'is', 'has', 'can'],
+                methodPrefixes: ['get', 'set', 'is', 'has', 'can'],
             );
 
             $targetMapAttribute = $targetMapAttributes[0] ?? null;
