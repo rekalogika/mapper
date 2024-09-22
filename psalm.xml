@@ -72,6 +72,7 @@
             <errorLevel type="suppress">
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
                 <file name="src/Util/ClassUtil.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Util/AllowDeleteResolver.php" />
             </errorLevel>
         </InternalMethod>
         <InternalClass>
