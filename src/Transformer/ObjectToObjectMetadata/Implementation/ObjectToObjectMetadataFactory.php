@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
-use Rekalogika\Mapper\Attribute\AllowDelete;
-use Rekalogika\Mapper\Attribute\AllowTargetDelete;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
@@ -27,6 +25,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util\AllowDeleteResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -123,7 +122,9 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         // dynamic properties
 
-        $sourceAllowsDynamicProperties = $this->allowsDynamicProperties($sourceReflection);
+        $sourceAllowsDynamicProperties =
+            $this->allowsDynamicProperties($sourceReflection)
+            || method_exists($sourceClass, '__get');
 
         $targetAllowsDynamicProperties =
             $this->allowsDynamicProperties($targetReflection)
@@ -196,25 +197,15 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // determine if target allows delete
 
-            $allowDeleteAttributes = ClassUtil::getAttributes(
-                class: $targetClass,
-                property: $targetProperty,
-                attributeClass: AllowDelete::class,
-                methodPrefixes: ['get'],
+            $targetAllowsDelete = AllowDeleteResolver::allowDelete(
+                $sourceClass,
+                $sourceProperty,
+                $targetClass,
+                $targetProperty,
+                $sourceReadInfo,
+                $targetReadInfo,
+                $targetSetterWriteInfo,
             );
-
-            $targetAllowsDelete = $allowDeleteAttributes !== [];
-
-            if (!$targetAllowsDelete) {
-                $allowTargetDeleteAttributes = ClassUtil::getAttributes(
-                    class: $sourceClass,
-                    property: $sourceProperty,
-                    attributeClass: AllowTargetDelete::class,
-                    methodPrefixes: ['get'],
-                );
-
-                $targetAllowsDelete = $allowTargetDeleteAttributes !== [];
-            }
 
             // process source read mode
 

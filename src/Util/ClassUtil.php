@@ -226,6 +226,7 @@ final readonly class ClassUtil
      * @param class-string $class
      * @param class-string<T> $attributeClass
      * @param list<string>|null $methodPrefixes
+     * @param list<string>|null $methods
      * @return list<T>
      */
     public static function getAttributes(
@@ -233,6 +234,7 @@ final readonly class ClassUtil
         string $property,
         string $attributeClass,
         ?array $methodPrefixes = null,
+        ?array $methods = null,
     ): array {
         $attributes = self::getAttributesFromProperty($class, $property, $attributeClass);
 
@@ -240,6 +242,13 @@ final readonly class ClassUtil
             $attributes = [
                 ...$attributes,
                 ...self::getAttributesFromMethod($class, $prefix . ucfirst($property), $attributeClass),
+            ];
+        }
+
+        foreach ($methods ?? [] as $method) {
+            $attributes = [
+                ...$attributes,
+                ...self::getAttributesFromMethod($class, $method, $attributeClass),
             ];
         }
 
