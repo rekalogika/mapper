@@ -15,6 +15,8 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util;
 
 use Rekalogika\Mapper\Attribute\Map;
 use Rekalogika\Mapper\Util\ClassUtil;
+use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 
 /**
  * @internal
@@ -27,18 +29,35 @@ final class PropertyMappingResolver
     private array $targetPropertyToSourceProperty = [];
 
     /**
+     * @var array<int,string> $sourceProperties
+     */
+    private readonly array $sourceProperties;
+
+    /**
+     * @var array<int,string> $targetProperties
+     */
+    private readonly array $targetProperties;
+
+    /**
+     * @var array<int,string> $initializableTargetProperties
+     */
+    private readonly array $initializableTargetProperties;
+
+    /**
      * @param class-string $sourceClass
-     * @param array<int,string> $sourceProperties
      * @param class-string $targetClass
-     * @param array<int,string> $targetProperties
      */
     public function __construct(
+        private readonly PropertyListExtractorInterface $propertyListExtractor,
+        private readonly PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private readonly string $sourceClass,
-        private readonly array $sourceProperties,
         private readonly string $targetClass,
-        private readonly array $targetProperties,
         bool $targetAllowsDynamicProperties,
     ) {
+        $this->sourceProperties = $this->listProperties($this->sourceClass);
+        $this->targetProperties = $this->listProperties($this->targetClass);
+        $this->initializableTargetProperties = $this->listInitializableProperties($this->targetClass);
+
         $this->processTargetProperties();
         $this->processSourceProperties();
 
@@ -97,6 +116,14 @@ final class PropertyMappingResolver
     }
 
     /**
+     * @return array<int,string>
+     */
+    public function getInitializableTargetProperties(): array
+    {
+        return $this->initializableTargetProperties;
+    }
+
+    /**
      * @param class-string $class
      * @param class-string $pairedClass
      */
@@ -137,5 +164,37 @@ final class PropertyMappingResolver
         // if not found
 
         return $property;
+    }
+
+    /**
+     * @param class-string $class
+     * @return array<int,string>
+     */
+    private function listProperties(
+        string $class,
+    ): array {
+        $properties = $this->propertyListExtractor->getProperties($class) ?? [];
+
+        return array_values($properties);
+    }
+
+    /**
+     * @param class-string $class
+     * @return array<int,string>
+     */
+    private function listInitializableProperties(
+        string $class,
+    ): array {
+        $properties = $this->listProperties($class);
+
+        $initializableProperties = [];
+
+        foreach ($properties as $property) {
+            if ($this->propertyInitializableExtractor->isInitializable($class, $property) === true) {
+                $initializableProperties[] = $property;
+            }
+        }
+
+        return $initializableProperties;
     }
 }

@@ -145,16 +145,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         // queries
 
-        $initializableTargetProperties = $this
-            ->listInitializableProperties($targetClass);
-
-        $targetProperties = $this->listProperties($targetClass);
-        $sourceProperties = $this->listProperties($sourceClass);
-
-        $initializableTargetPropertiesNotInSource = $initializableTargetProperties;
-
-        // determine if targetClass is instantiable
-
         $instantiable = $targetReflection->isInstantiable();
         $cloneable = $targetReflection->isCloneable();
 
@@ -179,14 +169,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         // determine properties to map
 
         $propertyMappingResolver = new PropertyMappingResolver(
+            propertyListExtractor: $this->propertyListExtractor,
+            propertyInitializableExtractor: $this->propertyInitializableExtractor,
             sourceClass: $sourceClass,
-            sourceProperties: $sourceProperties,
             targetClass: $targetClass,
-            targetProperties: $targetProperties,
             targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
         );
 
         $propertiesToMap = $propertyMappingResolver->getPropertiesToMap();
+        $initializableTargetPropertiesNotInSource = $propertyMappingResolver
+            ->getInitializableTargetProperties();
 
         // iterate over properties to map
 
@@ -197,14 +189,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             $serviceMethodSpecification = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
-
-            // get reflection for sourceproperty
-
-            try {
-                $sourcePropertyReflection = $sourceReflection->getProperty($sourceProperty);
-            } catch (\ReflectionException) {
-                $sourcePropertyReflection = null;
-            }
 
             // get read & write info for source and target properties
 
@@ -535,38 +519,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         }
 
         return $objectToObjectMetadata;
-    }
-
-    /**
-     * @param class-string $class
-     * @return array<int,string>
-     */
-    private function listProperties(
-        string $class,
-    ): array {
-        $properties = $this->propertyListExtractor->getProperties($class) ?? [];
-
-        return array_values($properties);
-    }
-
-    /**
-     * @param class-string $class
-     * @return array<int,string>
-     */
-    private function listInitializableProperties(
-        string $class,
-    ): array {
-        $properties = $this->listProperties($class);
-
-        $initializableProperties = [];
-
-        foreach ($properties as $property) {
-            if ($this->propertyInitializableExtractor->isInitializable($class, $property) === true) {
-                $initializableProperties[] = $property;
-            }
-        }
-
-        return $initializableProperties;
     }
 
     /**
