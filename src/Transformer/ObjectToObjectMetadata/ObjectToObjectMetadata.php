@@ -51,7 +51,6 @@ final readonly class ObjectToObjectMetadata
      * @param class-string $targetClass Effective target class after resolving inheritance map
      * @param class-string $providedTargetClass
      * @param array<int,PropertyMapping> $allPropertyMappings
-     * @param array<int,string> $initializableTargetPropertiesNotInSource
      * @param array<string,true> $targetProxySkippedProperties
      * @param array<int,string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
      */
@@ -65,7 +64,6 @@ final readonly class ObjectToObjectMetadata
         array $allPropertyMappings,
         private bool $instantiable,
         private bool $cloneable,
-        private array $initializableTargetPropertiesNotInSource,
         private int $sourceModifiedTime,
         private int $targetModifiedTime,
         private bool $targetReadOnly,
@@ -118,7 +116,6 @@ final readonly class ObjectToObjectMetadata
             allPropertyMappings: $this->allPropertyMappings,
             instantiable: $this->instantiable,
             cloneable: $this->cloneable,
-            initializableTargetPropertiesNotInSource: $this->initializableTargetPropertiesNotInSource,
             sourceModifiedTime: $this->sourceModifiedTime,
             targetModifiedTime: $this->targetModifiedTime,
             targetReadOnly: $this->targetReadOnly,
@@ -141,7 +138,6 @@ final readonly class ObjectToObjectMetadata
             allPropertyMappings: $this->allPropertyMappings,
             instantiable: $this->instantiable,
             cloneable: $this->cloneable,
-            initializableTargetPropertiesNotInSource: $this->initializableTargetPropertiesNotInSource,
             sourceModifiedTime: $this->sourceModifiedTime,
             targetModifiedTime: $this->targetModifiedTime,
             targetReadOnly: $this->targetReadOnly,
@@ -223,14 +219,6 @@ final readonly class ObjectToObjectMetadata
     public function getAllPropertyMappings(): array
     {
         return $this->allPropertyMappings;
-    }
-
-    /**
-     * @return array<int,string>
-     */
-    public function getInitializableTargetPropertiesNotInSource(): array
-    {
-        return $this->initializableTargetPropertiesNotInSource;
     }
 
     public function getSourceModifiedTime(): int

@@ -33,7 +33,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
-use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
@@ -49,7 +48,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 {
     public function __construct(
         private PropertyListExtractorInterface $propertyListExtractor,
-        private PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyMapperResolverInterface $propertyMapperResolver,
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
@@ -170,15 +168,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         $propertyMappingResolver = new PropertyMappingResolver(
             propertyListExtractor: $this->propertyListExtractor,
-            propertyInitializableExtractor: $this->propertyInitializableExtractor,
             sourceClass: $sourceClass,
             targetClass: $targetClass,
             targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
         );
 
         $propertiesToMap = $propertyMappingResolver->getPropertiesToMap();
-        $initializableTargetPropertiesNotInSource = $propertyMappingResolver
-            ->getInitializableTargetProperties();
 
         // iterate over properties to map
 
@@ -464,7 +459,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             allPropertyMappings: $propertyMappings,
             instantiable: $instantiable,
             cloneable: $cloneable,
-            initializableTargetPropertiesNotInSource: $initializableTargetPropertiesNotInSource,
             sourceModifiedTime: $sourceModifiedTime,
             targetModifiedTime: $targetModifiedTime,
             targetReadOnly: $targetReadOnly,

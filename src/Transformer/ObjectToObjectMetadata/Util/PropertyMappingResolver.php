@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util;
 
 use Rekalogika\Mapper\Attribute\Map;
 use Rekalogika\Mapper\Util\ClassUtil;
-use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 
 /**
@@ -39,24 +38,17 @@ final class PropertyMappingResolver
     private readonly array $targetProperties;
 
     /**
-     * @var array<int,string> $initializableTargetProperties
-     */
-    private readonly array $initializableTargetProperties;
-
-    /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
     public function __construct(
         private readonly PropertyListExtractorInterface $propertyListExtractor,
-        private readonly PropertyInitializableExtractorInterface $propertyInitializableExtractor,
         private readonly string $sourceClass,
         private readonly string $targetClass,
         bool $targetAllowsDynamicProperties,
     ) {
         $this->sourceProperties = $this->listProperties($this->sourceClass);
         $this->targetProperties = $this->listProperties($this->targetClass);
-        $this->initializableTargetProperties = $this->listInitializableProperties($this->targetClass);
 
         $this->processTargetProperties();
         $this->processSourceProperties();
@@ -116,14 +108,6 @@ final class PropertyMappingResolver
     }
 
     /**
-     * @return array<int,string>
-     */
-    public function getInitializableTargetProperties(): array
-    {
-        return $this->initializableTargetProperties;
-    }
-
-    /**
      * @param class-string $class
      * @param class-string $pairedClass
      */
@@ -176,25 +160,5 @@ final class PropertyMappingResolver
         $properties = $this->propertyListExtractor->getProperties($class) ?? [];
 
         return array_values($properties);
-    }
-
-    /**
-     * @param class-string $class
-     * @return array<int,string>
-     */
-    private function listInitializableProperties(
-        string $class,
-    ): array {
-        $properties = $this->listProperties($class);
-
-        $initializableProperties = [];
-
-        foreach ($properties as $property) {
-            if ($this->propertyInitializableExtractor->isInitializable($class, $property) === true) {
-                $initializableProperties[] = $property;
-            }
-        }
-
-        return $initializableProperties;
     }
 }
