@@ -9,6 +9,7 @@
 * perf: avoid guessing source type for the second time
 * feat: add `Map` attribute to map from different source property
 * feat: `Map` now supports class inheritance
+* feat: `Map` now supports reversed mapping
 
 ## 1.7.0
 

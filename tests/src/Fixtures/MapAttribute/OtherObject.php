@@ -13,18 +13,18 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\MapAttribute;
 
-class SomeObject
+class OtherObject
 {
-    public ?string $sourcePropertyA = null;
-    public ?string $sourcePropertyB = null;
-    public ?string $sourcePropertyC = null;
+    public ?string $otherSourcePropertyA = null;
+    public ?string $otherSourcePropertyB = null;
+    public ?string $otherSourcePropertyC = null;
 
     public static function preinitialized(): self
     {
         $object = new self();
-        $object->sourcePropertyA = 'sourcePropertyA';
-        $object->sourcePropertyB = 'sourcePropertyB';
-        $object->sourcePropertyC = 'sourcePropertyC';
+        $object->otherSourcePropertyA = 'sourcePropertyA';
+        $object->otherSourcePropertyB = 'sourcePropertyB';
+        $object->otherSourcePropertyC = 'sourcePropertyC';
 
         return $object;
     }

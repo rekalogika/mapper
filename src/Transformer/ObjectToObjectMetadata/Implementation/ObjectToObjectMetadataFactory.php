@@ -146,8 +146,9 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         $initializableTargetProperties = $this
             ->listInitializableProperties($targetClass);
-        $targetProperties = $this
-            ->listProperties($targetClass);
+
+        $targetProperties = $this->listProperties($targetClass);
+        $sourceProperties = $this->listProperties($sourceClass);
 
         $initializableTargetPropertiesNotInSource = $initializableTargetProperties;
 
@@ -176,37 +177,41 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         // determine properties to map
 
+        $propertiesToMap = [];
+
+        foreach ($sourceProperties as $sourceProperty) {
+            $targetProperty = $this->determinePairedProperty(
+                class: $sourceClass,
+                property: $sourceProperty,
+                pairedClass: $targetClass,
+            );
+
+            $propertiesToMap[$sourceProperty] = $targetProperty;
+        }
+
+        foreach ($targetProperties as $targetProperty) {
+            $sourceProperty = $this->determinePairedProperty(
+                class: $targetClass,
+                property: $targetProperty,
+                pairedClass: $sourceClass,
+            );
+
+            $propertiesToMap[$sourceProperty] = $targetProperty;
+        }
+
         if ($targetAllowsDynamicProperties) {
-            $sourceProperties = $this->listProperties($sourceClass);
-            $propertiesToMap = array_unique(array_merge($sourceProperties, $targetProperties));
-        } else {
-            $propertiesToMap = $targetProperties;
+            foreach ($sourceProperties as $sourceProperty) {
+                if (!isset($propertiesToMap[$sourceProperty])) {
+                    $propertiesToMap[$sourceProperty] = $sourceProperty;
+                }
+            }
         }
 
         // iterate over properties to map
 
         $effectivePropertiesToMap = [];
 
-        foreach ($propertiesToMap as $targetProperty) {
-            // get map attribute from target property
-
-            $targetMapAttributes = ClassUtil::getAttributes(
-                class: $targetClass,
-                property: $targetProperty,
-                attributeClass: Map::class,
-                methodPrefixes: ['get', 'set', 'is', 'has', 'can'],
-            );
-
-            $targetMapAttribute = $targetMapAttributes[0] ?? null;
-
-            // determine source property
-
-            if ($targetMapAttribute !== null) {
-                $sourceProperty = $targetMapAttribute->property;
-            } else {
-                $sourceProperty = $targetProperty;
-            }
-
+        foreach ($propertiesToMap as $sourceProperty => $targetProperty) {
             // service method specification
 
             $serviceMethodSpecification = $this->propertyMapperResolver
@@ -627,5 +632,48 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             ->getWriteInfo($class, $property, [
                 'enable_constructor_extraction' => false,
             ]);
+    }
+
+    /**
+     * @param class-string $class
+     * @param class-string $pairedClass
+     */
+    private function determinePairedProperty(
+        string $class,
+        string $property,
+        string $pairedClass,
+    ): string {
+        $attributes = ClassUtil::getAttributes(
+            class: $class,
+            property: $property,
+            attributeClass: Map::class,
+            methodPrefixes: ['get', 'set', 'is', 'has', 'can'],
+        );
+
+        // process attributes with pairedClass first
+
+        $attributesWithClass = array_filter(
+            $attributes,
+            fn(Map $attribute): bool => $attribute->class === $pairedClass,
+        );
+
+        if (\count($attributesWithClass) >= 1) {
+            return $attributesWithClass[0]->property;
+        }
+
+        // process attributes without pairedClass
+
+        $attributesWithoutClass = array_filter(
+            $attributes,
+            fn(Map $attribute): bool => $attribute->class === null,
+        );
+
+        if (\count($attributesWithoutClass) >= 1) {
+            return $attributesWithoutClass[0]->property;
+        }
+
+        // if not found
+
+        return $property;
     }
 }
