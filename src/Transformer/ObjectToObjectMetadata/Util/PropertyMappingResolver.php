@@ -23,6 +23,27 @@ use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 final class PropertyMappingResolver
 {
     /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     * @return array<int,array{string,string}>
+     */
+    public static function resolvePropertiesToMap(
+        PropertyListExtractorInterface $propertyListExtractor,
+        string $sourceClass,
+        string $targetClass,
+        bool $targetAllowsDynamicProperties,
+    ): array {
+        $resolver = new self(
+            propertyListExtractor: $propertyListExtractor,
+            sourceClass: $sourceClass,
+            targetClass: $targetClass,
+            targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
+        );
+
+        return $resolver->getPropertiesToMap();
+    }
+
+    /**
      * @var array<string,string>
      */
     private array $targetPropertyToSourceProperty = [];
@@ -41,7 +62,7 @@ final class PropertyMappingResolver
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
-    public function __construct(
+    private function __construct(
         private readonly PropertyListExtractorInterface $propertyListExtractor,
         private readonly string $sourceClass,
         private readonly string $targetClass,
