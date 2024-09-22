@@ -15,6 +15,7 @@
 * refactor: remove unneeded `initializableTargetPropertiesNotInSource`
 * fix: `Map` class property is now inheritance aware
 * feat: `AllowDelete` now can be attached to remover methods to take effect
+* style: naming, etc
 
 ## 1.7.0
 
