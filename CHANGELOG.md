@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.7.1
+## 1.8.0
 
 * feat: use error handler when reading source classes with dynamic properties
 * feat: handle magic `__get()` on the source side
@@ -14,6 +14,7 @@
 * refactor: refactor for clarity
 * refactor: remove unneeded `initializableTargetPropertiesNotInSource`
 * fix: `Map` class property is now inheritance aware
+* feat: `AllowDelete` now can be attached to remover methods to take effect
 
 ## 1.7.0
 
