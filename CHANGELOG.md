@@ -12,6 +12,7 @@
 * feat: `Map` now supports reversed mapping
 * refactor: refactor to `PropertyMappingResolver` for clarity
 * refactor: refactor for clarity
+* refactor: remove unneeded `initializableTargetPropertiesNotInSource`
 
 ## 1.7.0
 

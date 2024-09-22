@@ -596,7 +596,6 @@ class MapperFactory
             $objectToObjectMetadataFactory = new ObjectToObjectMetadataFactory(
                 $this->getPropertyInfoExtractor(),
                 $this->getPropertyInfoExtractor(),
-                $this->getPropertyInfoExtractor(),
                 $this->getPropertyMapperResolver(),
                 $this->getPropertyReadInfoExtractor(),
                 $this->getPropertyWriteInfoExtractor(),
