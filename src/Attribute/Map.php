@@ -13,10 +13,17 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Attribute;
 
-#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD)]
+/**
+ * Defines the property to be mapped from or to.
+ */
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 final readonly class Map
 {
+    /**
+     * @param class-string|null $class
+     */
     public function __construct(
-        public string $from,
+        public string $property,
+        public ?string $class = null,
     ) {}
 }

@@ -201,30 +201,49 @@ final readonly class ClassUtil
      *
      * @param class-string $class
      * @param class-string<T> $attributeClass
-     * @param list<string>|null $prefixes
+     * @param list<string>|null $methodPrefixes
+     * @return T|null
+     */
+    public static function getAttribute(
+        string $class,
+        string $property,
+        string $attributeClass,
+        ?array $methodPrefixes = null,
+    ): ?object {
+        $attributes = self::getAttributes(
+            class: $class,
+            property: $property,
+            attributeClass: $attributeClass,
+            methodPrefixes: $methodPrefixes,
+        );
+
+        return $attributes[0] ?? null;
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string $class
+     * @param class-string<T> $attributeClass
+     * @param list<string>|null $methodPrefixes
      * @return list<T>
      */
     public static function getAttributes(
         string $class,
         string $property,
         string $attributeClass,
-        ?array $prefixes = null,
+        ?array $methodPrefixes = null,
     ): array {
-        $propertyAttributes = self::getAttributesFromProperty($class, $property, $attributeClass);
+        $attributes = self::getAttributesFromProperty($class, $property, $attributeClass);
 
-        if ($propertyAttributes !== []) {
-            return $propertyAttributes;
+        foreach ($methodPrefixes ?? [] as $prefix) {
+            $attributes = [
+                ...$attributes,
+                ...self::getAttributesFromMethod($class, $prefix . ucfirst($property), $attributeClass),
+            ];
         }
 
-        foreach ($prefixes ?? [] as $prefix) {
-            $methodAttributes = self::getAttributesFromMethod($class, $prefix . ucfirst($property), $attributeClass);
-
-            if ($methodAttributes !== []) {
-                return $methodAttributes;
-            }
-        }
-
-        return [];
+        return $attributes;
     }
 
     /**
@@ -239,19 +258,24 @@ final readonly class ClassUtil
         string $property,
         string $attributeClass,
     ): array {
-        $reflectionClass = new \ReflectionClass($class);
+        $classes = self::getAllClassesFromObject($class);
 
-        try {
-            $reflectionProperty = $reflectionClass->getProperty($property);
-        } catch (\ReflectionException) {
-            return [];
-        }
-
-        $reflectionAttributes = $reflectionProperty->getAttributes($attributeClass);
         $attributes = [];
 
-        foreach ($reflectionAttributes as $reflectionAttribute) {
-            $attributes[] = $reflectionAttribute->newInstance();
+        foreach ($classes as $class) {
+            $reflectionClass = new \ReflectionClass($class);
+
+            try {
+                $reflectionProperty = $reflectionClass->getProperty($property);
+            } catch (\ReflectionException) {
+                continue;
+            }
+
+            $reflectionAttributes = $reflectionProperty->getAttributes($attributeClass);
+
+            foreach ($reflectionAttributes as $reflectionAttribute) {
+                $attributes[] = $reflectionAttribute->newInstance();
+            }
         }
 
         return $attributes;
@@ -269,19 +293,24 @@ final readonly class ClassUtil
         string $method,
         string $attributeClass,
     ): array {
-        $reflectionClass = new \ReflectionClass($class);
+        $classes = self::getAllClassesFromObject($class);
 
-        try {
-            $reflectionMethod = $reflectionClass->getMethod($method);
-        } catch (\ReflectionException) {
-            return [];
-        }
-
-        $reflectionAttributes = $reflectionMethod->getAttributes($attributeClass);
         $attributes = [];
 
-        foreach ($reflectionAttributes as $reflectionAttribute) {
-            $attributes[] = $reflectionAttribute->newInstance();
+        foreach ($classes as $class) {
+            $reflectionClass = new \ReflectionClass($class);
+
+            try {
+                $reflectionMethod = $reflectionClass->getMethod($method);
+            } catch (\ReflectionException) {
+                continue;
+            }
+
+            $reflectionAttributes = $reflectionMethod->getAttributes($attributeClass);
+
+            foreach ($reflectionAttributes as $reflectionAttribute) {
+                $attributes[] = $reflectionAttribute->newInstance();
+            }
         }
 
         return $attributes;

@@ -15,14 +15,14 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MapAttribute;
 
 use Rekalogika\Mapper\Attribute\Map;
 
-class SomeObjectDto
+class ObjectOverridingSomeObjectDto extends SomeObjectDto
 {
-    #[Map(property: 'sourcePropertyA')]
+    #[Map(property: 'sourcePropertyB')]
     public ?string $targetPropertyA = null;
     private ?string $targetPropertyB = null;
     private ?string $targetPropertyC = null;
 
-    #[Map(property: 'sourcePropertyB')]
+    #[Map(property: 'sourcePropertyC')]
     public function setTargetPropertyB(string $value): void
     {
         $this->targetPropertyB = $value;
@@ -38,7 +38,7 @@ class SomeObjectDto
         $this->targetPropertyC = $value;
     }
 
-    #[Map(property: 'sourcePropertyC')]
+    #[Map(property: 'sourcePropertyA')]
     public function getTargetPropertyC(): ?string
     {
         return $this->targetPropertyC;
