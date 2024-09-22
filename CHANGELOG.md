@@ -10,6 +10,7 @@
 * feat: add `Map` attribute to map from different source property
 * feat: `Map` now supports class inheritance
 * feat: `Map` now supports reversed mapping
+* refactor: refactor to `PropertyMappingResolver` for clarity
 
 ## 1.7.0
 
