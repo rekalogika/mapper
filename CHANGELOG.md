@@ -13,6 +13,7 @@
 * refactor: refactor to `PropertyMappingResolver` for clarity
 * refactor: refactor for clarity
 * refactor: remove unneeded `initializableTargetPropertiesNotInSource`
+* fix: `Map` class property is now inheritance aware
 
 ## 1.7.0
 

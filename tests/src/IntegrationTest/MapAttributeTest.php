@@ -14,8 +14,10 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
+use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectExtendingOtherObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectExtendingSomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectOverridingSomeObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\OtherObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto;
 
@@ -79,5 +81,45 @@ class MapAttributeTest extends FrameworkTestCase
         $this->assertEquals('targetPropertyA', $target->sourcePropertyA);
         $this->assertEquals('targetPropertyB', $target->sourcePropertyB);
         $this->assertEquals('targetPropertyC', $target->sourcePropertyC);
+    }
+
+    public function testMapWithClassProperty(): void
+    {
+        $source = OtherObject::preinitialized();
+        $target = $this->mapper->map($source, SomeObjectDto::class);
+
+        $this->assertEquals('otherSourcePropertyA', $target->targetPropertyA);
+        $this->assertEquals('otherSourcePropertyB', $target->getTargetPropertyB());
+        $this->assertEquals('otherSourcePropertyC', $target->getTargetPropertyC());
+    }
+
+    public function testReverseMapWithClassProperty(): void
+    {
+        $source = SomeObjectDto::preinitialized();
+        $target = $this->mapper->map($source, OtherObject::class);
+
+        $this->assertEquals('targetPropertyA', $target->otherSourcePropertyA);
+        $this->assertEquals('targetPropertyB', $target->otherSourcePropertyB);
+        $this->assertEquals('targetPropertyC', $target->otherSourcePropertyC);
+    }
+
+    public function testMapWithClassPropertyInvolvingSubclass(): void
+    {
+        $source = ObjectExtendingOtherObject::preinitialized();
+        $target = $this->mapper->map($source, SomeObjectDto::class);
+
+        $this->assertEquals('otherSourcePropertyA', $target->targetPropertyA);
+        $this->assertEquals('otherSourcePropertyB', $target->getTargetPropertyB());
+        $this->assertEquals('otherSourcePropertyC', $target->getTargetPropertyC());
+    }
+
+    public function testReverseMapWithClassPropertyInvolvingSubclass(): void
+    {
+        $source = SomeObjectDto::preinitialized();
+        $target = $this->mapper->map($source, ObjectExtendingOtherObject::class);
+
+        $this->assertEquals('targetPropertyA', $target->otherSourcePropertyA);
+        $this->assertEquals('targetPropertyB', $target->otherSourcePropertyB);
+        $this->assertEquals('targetPropertyC', $target->otherSourcePropertyC);
     }
 }

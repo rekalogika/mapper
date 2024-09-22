@@ -125,10 +125,10 @@ final class PropertyMappingResolver
 
         // process attributes with pairedClass first
 
-        $attributesWithClass = array_filter(
+        $attributesWithClass = array_values(array_filter(
             $attributes,
-            fn(Map $attribute): bool => $attribute->class === $pairedClass,
-        );
+            fn(Map $attribute): bool => $attribute->class !== null && is_a($pairedClass, $attribute->class, true),
+        ));
 
         if (\count($attributesWithClass) >= 1) {
             return $attributesWithClass[0]->property;
