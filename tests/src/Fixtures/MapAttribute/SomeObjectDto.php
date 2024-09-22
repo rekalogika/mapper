@@ -18,11 +18,23 @@ use Rekalogika\Mapper\Attribute\Map;
 class SomeObjectDto
 {
     #[Map(property: 'sourcePropertyA')]
+    #[Map(property: 'otherSourcePropertyA', class: OtherObject::class)]
     public ?string $targetPropertyA = null;
     private ?string $targetPropertyB = null;
     private ?string $targetPropertyC = null;
 
+    public static function preinitialized(): self
+    {
+        $object = new self();
+        $object->targetPropertyA = 'targetPropertyA';
+        $object->targetPropertyB = 'targetPropertyB';
+        $object->targetPropertyC = 'targetPropertyC';
+
+        return $object;
+    }
+
     #[Map(property: 'sourcePropertyB')]
+    #[Map(property: 'otherSourcePropertyB', class: OtherObject::class)]
     public function setTargetPropertyB(string $value): void
     {
         $this->targetPropertyB = $value;
@@ -39,6 +51,7 @@ class SomeObjectDto
     }
 
     #[Map(property: 'sourcePropertyC')]
+    #[Map(property: 'otherSourcePropertyC', class: OtherObject::class)]
     public function getTargetPropertyC(): ?string
     {
         return $this->targetPropertyC;

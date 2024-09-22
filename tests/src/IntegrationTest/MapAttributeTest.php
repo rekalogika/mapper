@@ -23,32 +23,61 @@ class MapAttributeTest extends FrameworkTestCase
 {
     public function testMapAttribute(): void
     {
-        $source = new SomeObject();
+        $source = SomeObject::preinitialized();
         $target = $this->mapper->map($source, SomeObjectDto::class);
 
-        $this->assertEquals('propertyA', $target->targetPropertyA);
-        $this->assertEquals('propertyB', $target->getTargetPropertyB());
-        $this->assertEquals('propertyC', $target->getTargetPropertyC());
+        $this->assertEquals('sourcePropertyA', $target->targetPropertyA);
+        $this->assertEquals('sourcePropertyB', $target->getTargetPropertyB());
+        $this->assertEquals('sourcePropertyC', $target->getTargetPropertyC());
+    }
+
+    public function testReverseMapAttribute(): void
+    {
+        $source = SomeObjectDto::preinitialized();
+        $target = $this->mapper->map($source, SomeObject::class);
+
+        $this->assertEquals('targetPropertyA', $target->sourcePropertyA);
+        $this->assertEquals('targetPropertyB', $target->sourcePropertyB);
+        $this->assertEquals('targetPropertyC', $target->sourcePropertyC);
     }
 
     public function testMapAttributeOnSubclass(): void
     {
-        $source = new SomeObject();
+        $source = SomeObject::preinitialized();
         $target = $this->mapper->map($source, ObjectExtendingSomeObjectDto::class);
 
-        $this->assertEquals('propertyA', $target->targetPropertyA);
-        $this->assertEquals('propertyB', $target->getTargetPropertyB());
-        $this->assertEquals('propertyC', $target->getTargetPropertyC());
+        $this->assertEquals('sourcePropertyA', $target->targetPropertyA);
+        $this->assertEquals('sourcePropertyB', $target->getTargetPropertyB());
+        $this->assertEquals('sourcePropertyC', $target->getTargetPropertyC());
+    }
+
+    public function testReverseMapAttributeOnSubclass(): void
+    {
+        $source = ObjectExtendingSomeObjectDto::preinitialized();
+        $target = $this->mapper->map($source, SomeObject::class);
+
+        $this->assertEquals('targetPropertyA', $target->sourcePropertyA);
+        $this->assertEquals('targetPropertyB', $target->sourcePropertyB);
+        $this->assertEquals('targetPropertyC', $target->sourcePropertyC);
     }
 
     public function testMapAttributeOnOverridingSubclass(): void
     {
-        $source = new SomeObject();
+        $source = SomeObject::preinitialized();
         $target = $this->mapper->map($source, ObjectOverridingSomeObjectDto::class);
 
-        $this->assertEquals('propertyB', $target->targetPropertyA);
-        $this->assertEquals('propertyC', $target->getTargetPropertyB());
-        $this->assertEquals('propertyA', $target->getTargetPropertyC());
+        $this->assertEquals('sourcePropertyB', $target->targetPropertyA);
+        $this->assertEquals('sourcePropertyC', $target->getTargetPropertyB());
+        $this->assertEquals('sourcePropertyA', $target->getTargetPropertyC());
     }
 
+    public function testReverseMapAttributeOnOverridingSubclass(): void
+    {
+        $source = ObjectOverridingSomeObjectDto::preinitialized();
+        $target = $this->mapper->map($source, SomeObject::class);
+
+        $this->assertEquals('targetPropertyA', $target->sourcePropertyA);
+        $this->assertEquals('targetPropertyB', $target->sourcePropertyB);
+        $this->assertEquals('targetPropertyC', $target->sourcePropertyC);
+    }
 }
