@@ -60,12 +60,13 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         }
 
         $proxyDirectory = $this->proxyDirectory;
+        $getProxyFileName = $this->getProxyFileName(...);
 
-        $this->autoloader = static function (string $class) use ($proxyDirectory): void {
+        $this->autoloader = static function (string $class) use ($proxyDirectory, $getProxyFileName): void {
             $proxyFile = \sprintf(
                 '%s/%s',
                 $proxyDirectory,
-                $this->getProxyFileName($class),
+                $getProxyFileName($class),
             );
 
             if (file_exists($proxyFile)) {
