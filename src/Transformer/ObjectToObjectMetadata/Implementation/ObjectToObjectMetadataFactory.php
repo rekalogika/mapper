@@ -260,44 +260,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         // create proxy if possible
 
         try {
-            // ensure we can create the proxy
-
-            $this->proxyFactory
-                ->createProxy($targetClass, function ($instance): void {}, $eagerProperties);
-
-            // determine if the constructor contains eager properties. if it
-            // does, then the constructor is eager
-
-            $constructorIsEager = false;
-
-            foreach ($objectToObjectMetadata->getConstructorPropertyMappings() as $propertyMapping) {
-                if (!$propertyMapping->isSourceLazy()) {
-                    $constructorIsEager = true;
-                    break;
-                }
-            }
-
-            // if the constructor is eager, then every constructor argument is
-            // eager
-
-            if ($constructorIsEager) {
-                foreach ($objectToObjectMetadata->getConstructorPropertyMappings() as $propertyMapping) {
-                    $eagerProperties[] = $propertyMapping->getTargetProperty();
-                }
-
-                $eagerProperties = array_unique($eagerProperties);
-            }
-
-            // skipped properties is the argument used by createLazyGhost()
-
-            $skippedProperties = ClassUtil::getSkippedProperties(
-                $targetClass,
-                $eagerProperties,
+            [$skippedProperties, $constructorIsEager] = $this->getProxyParameters(
+                targetClass: $targetClass,
+                eagerProperties: $eagerProperties,
+                constructorPropertyMappings: $objectToObjectMetadata
+                    ->getConstructorPropertyMappings(),
             );
 
             $objectToObjectMetadata = $objectToObjectMetadata->withTargetProxy(
-                $skippedProperties,
-                $constructorIsEager,
+                targetProxySkippedProperties: $skippedProperties,
+                constructorIsEager: $constructorIsEager,
             );
         } catch (ProxyNotSupportedException $e) {
             $objectToObjectMetadata = $objectToObjectMetadata
@@ -305,6 +277,55 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         }
 
         return $objectToObjectMetadata;
+    }
+
+    /**
+     * @param class-string $targetClass
+     * @param list<string> $eagerProperties
+     * @param list<PropertyMapping> $constructorPropertyMappings
+     * @return array{array<string,true>,bool}
+     */
+    private function getProxyParameters(
+        string $targetClass,
+        array $eagerProperties,
+        array $constructorPropertyMappings,
+    ): array {
+        // ensure we can create the proxy
+
+        $this->proxyFactory
+            ->createProxy($targetClass, function ($instance): void {}, $eagerProperties);
+
+        // determine if the constructor contains eager properties. if it
+        // does, then the constructor is eager
+
+        $constructorIsEager = false;
+
+        foreach ($constructorPropertyMappings as $propertyMapping) {
+            if (!$propertyMapping->isSourceLazy()) {
+                $constructorIsEager = true;
+                break;
+            }
+        }
+
+        // if the constructor is eager, then every constructor argument is
+        // eager
+
+        if ($constructorIsEager) {
+            foreach ($constructorPropertyMappings as $propertyMapping) {
+                $eagerProperties[] = $propertyMapping->getTargetProperty();
+            }
+
+            $eagerProperties = array_unique($eagerProperties);
+        }
+
+        // skipped properties is the argument used by createLazyGhost()
+
+        $skippedProperties = ClassUtil::getSkippedProperties(
+            $targetClass,
+            $eagerProperties,
+        );
+
+        return [$skippedProperties, $constructorIsEager];
     }
 
     /**

@@ -7,6 +7,7 @@
 * chore: rector run
 * chore: refactor `ObjectToObjectMetadataFactory` for clarity
 * chore: refactor `PropertyMappingResolver`
+* chore: cleanup
 
 ## 1.8.0
 
