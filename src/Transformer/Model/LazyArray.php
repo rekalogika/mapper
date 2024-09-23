@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Model;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Exception\BadMethodCallException;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
@@ -25,9 +28,10 @@ use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
  * @template TKey of array-key
  * @template TValue
  * @implements CollectionInterface<TKey,TValue>
+ * @implements Collection<TKey,TValue>
  * @internal
  */
-final class LazyArray implements CollectionInterface
+final class LazyArray implements CollectionInterface, Collection
 {
     use MainTransformerAwareTrait;
     use ArrayLikeTransformerTrait;
@@ -55,6 +59,10 @@ final class LazyArray implements CollectionInterface
     ) {
         $this->mainTransformer = $mainTransformer;
     }
+
+    //
+    // ArrayAccess methods
+    //
 
     #[\Override]
     public function offsetExists(mixed $offset): bool
@@ -86,14 +94,18 @@ final class LazyArray implements CollectionInterface
     #[\Override]
     public function offsetSet(mixed $offset, mixed $value): void
     {
-        throw new \BadMethodCallException('LazyArray is immutable.');
+        throw new BadMethodCallException('LazyArray is immutable.');
     }
 
     #[\Override]
     public function offsetUnset(mixed $offset): void
     {
-        throw new \BadMethodCallException('LazyArray is immutable.');
+        throw new BadMethodCallException('LazyArray is immutable.');
     }
+
+    //
+    // IteratorAggregate methods
+    //
 
     /** @psalm-suppress InvalidReturnType */
     #[\Override]
@@ -164,9 +176,284 @@ final class LazyArray implements CollectionInterface
         $this->isCacheComplete = true;
     }
 
+    //
+    // Countable methods
+    //
+
     #[\Override]
     public function count(): int
     {
         return \count($this->source);
+    }
+
+    //
+    // ReadableCollection methods
+    //
+
+    #[\Override]
+    public function contains(mixed $element): bool
+    {
+        foreach ($this->getIterator() as $value) {
+            if ($value === $element) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    #[\Override]
+    public function isEmpty(): bool
+    {
+        return $this->count() === 0;
+    }
+
+    #[\Override]
+    public function containsKey(string|int $key): bool
+    {
+        return $this->offsetExists($key);
+    }
+
+    #[\Override]
+    public function get(string|int $key): mixed
+    {
+        return $this->offsetGet($key);
+    }
+
+    #[\Override]
+    public function getKeys(): array
+    {
+        $keys = [];
+
+        foreach ($this->getIterator() as $key => $_) {
+            $keys[] = $key;
+        }
+
+        return $keys;
+    }
+
+    #[\Override]
+    public function getValues(): array
+    {
+        $values = [];
+
+        foreach ($this->getIterator() as $_ => $value) {
+            $values[] = $value;
+        }
+
+        return $values;
+    }
+
+    #[\Override]
+    public function toArray(): array
+    {
+        $array = [];
+
+        foreach ($this->getIterator() as $key => $value) {
+            $array[$key] = $value;
+        }
+
+        return $array;
+    }
+
+    #[\Override]
+    public function first(): mixed
+    {
+        $first = null;
+
+        foreach ($this->getIterator() as $value) {
+            $first = $value;
+            break;
+        }
+
+        return $first ?? false;
+    }
+
+    #[\Override]
+    public function last(): mixed
+    {
+        $last = null;
+
+        foreach ($this->getIterator() as $value) {
+            $last = $value;
+        }
+
+        return $last ?? false;
+    }
+
+    #[\Override]
+    public function key(): int|string|null
+    {
+        throw new BadMethodCallException('Unsupported method');
+    }
+
+    #[\Override]
+    public function current(): mixed
+    {
+        throw new BadMethodCallException('Unsupported method');
+    }
+
+    #[\Override]
+    public function next(): mixed
+    {
+        throw new BadMethodCallException('Unsupported method');
+    }
+
+    #[\Override]
+    public function slice(int $offset, ?int $length = null): array
+    {
+        $result = [];
+        $i = 0;
+
+        foreach ($this->getIterator() as $key => $value) {
+            if ($i >= $offset) {
+                $result[$key] = $value;
+            }
+
+            if ($length !== null && \count($result) >= $length) {
+                break;
+            }
+
+            $i++;
+        }
+
+        return $result;
+    }
+
+    #[\Override]
+    public function exists(\Closure $p): bool
+    {
+        foreach ($this->getIterator() as $key => $value) {
+            if ($p($key, $value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    #[\Override]
+    public function filter(\Closure $p): Collection
+    {
+        $filtered = [];
+
+        foreach ($this->getIterator() as $key => $value) {
+            if ($p($value, $key)) {
+                $filtered[$key] = $value;
+            }
+        }
+
+        return new ArrayCollection($filtered);
+    }
+
+    #[\Override]
+    public function map(\Closure $func): Collection
+    {
+        $mapped = [];
+
+        foreach ($this->getIterator() as $key => $value) {
+            $mapped[$key] = $func($value);
+        }
+
+        return new ArrayCollection($mapped);
+    }
+
+    #[\Override]
+    public function partition(\Closure $p): array
+    {
+        $matches = [];
+        $nonMatches = [];
+
+        foreach ($this->getIterator() as $key => $value) {
+            if ($p($key, $value)) {
+                $matches[$key] = $value;
+            } else {
+                $nonMatches[$key] = $value;
+            }
+        }
+
+        return [new ArrayCollection($matches), new ArrayCollection($nonMatches)];
+    }
+
+    #[\Override]
+    public function forAll(\Closure $p): bool
+    {
+        foreach ($this->getIterator() as $key => $value) {
+            if (!$p($key, $value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    #[\Override]
+    public function indexOf(mixed $element): int|string|bool
+    {
+        foreach ($this->getIterator() as $key => $value) {
+            if ($value === $element) {
+                return $key;
+            }
+        }
+
+        return false;
+    }
+
+    #[\Override]
+    public function findFirst(\Closure $p): mixed
+    {
+        foreach ($this->getIterator() as $key => $value) {
+            if ($p($key, $value)) {
+                return $value;
+            }
+        }
+
+        return null;
+    }
+
+    #[\Override]
+    public function reduce(\Closure $func, mixed $initial = null): mixed
+    {
+        $carry = $initial;
+
+        foreach ($this->getIterator() as $key => $value) {
+            $carry = $func($carry, $value);
+        }
+
+        return $carry;
+    }
+
+    //
+    // Collection methods
+    //
+
+    #[\Override]
+    public function add(mixed $element): void
+    {
+        throw new BadMethodCallException('LazyArray is immutable.');
+    }
+
+    #[\Override]
+    public function clear(): void
+    {
+        throw new BadMethodCallException('LazyArray is immutable.');
+    }
+
+    #[\Override]
+    public function remove(string|int $key): mixed
+    {
+        throw new BadMethodCallException('LazyArray is immutable.');
+    }
+
+    #[\Override]
+    public function removeElement(mixed $element): bool
+    {
+        throw new BadMethodCallException('LazyArray is immutable.');
+    }
+
+    #[\Override]
+    public function set(string|int $key, mixed $value): void
+    {
+        throw new BadMethodCallException('LazyArray is immutable.');
     }
 }

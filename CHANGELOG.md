@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.8.1
+
+* feat: target properties with `Collection` & `ReadableCollection` typehint will
+  now be lazy-loaded
+
 ## 1.8.0
 
 * feat: use error handler when reading source classes with dynamic properties

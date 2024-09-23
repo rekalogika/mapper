@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ReadableCollection;
 use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
@@ -94,6 +96,8 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
                 $targetClass === \ArrayAccess::class
                 || $targetClass === \Traversable::class
                 || $targetClass === CollectionInterface::class
+                || $targetClass === Collection::class
+                || $targetClass === ReadableCollection::class
             );
 
         return new ArrayLikeMetadata(
