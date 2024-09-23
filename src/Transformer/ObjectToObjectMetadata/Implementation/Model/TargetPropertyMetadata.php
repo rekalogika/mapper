@@ -11,8 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
+namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model;
 
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
