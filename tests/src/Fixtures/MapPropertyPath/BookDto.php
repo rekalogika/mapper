@@ -18,14 +18,14 @@ use Rekalogika\Mapper\Attribute\Map;
 class BookDto
 {
     #[Map(property: 'shelf.library.name')]
-    public string $libraryName;
+    public ?string $libraryName = null;
 
     #[Map(property: 'shelf.number')]
-    public int $shelfNumber;
+    public ?int $shelfNumber = null;
 
     /**
      * @var list<ChapterDto>
      */
     #[Map(property: 'shelf.books[0].chapters')]
-    public array $sections;
+    public array $sections = [];
 }
