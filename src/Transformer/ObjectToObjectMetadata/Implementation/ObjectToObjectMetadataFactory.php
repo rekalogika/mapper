@@ -26,7 +26,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util\PropertyMetadataResolver;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
@@ -190,17 +189,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     property: $targetProperty,
                     allowsDynamicProperties: $targetAllowsDynamicProperties,
                 );
-
-            // skip if target is not writable
-
-            if (
-                $targetPropertyMetadata->getConstructorWriteMode() === WriteMode::None
-                && $targetPropertyMetadata->getSetterWriteMode() === WriteMode::None
-            ) {
-                continue;
-            }
-
-            dump($targetProperty, $targetPropertyMetadata);
 
             // get source property types
 
