@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Attribute\MapperAttributeInterface;
 use Rekalogika\Mapper\Debug\TraceData;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValueException;
+use Rekalogika\Mapper\Tests\IntegrationTest\MapPropertyPathTest;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtil2Test;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtilTest;
 use Rekalogika\Mapper\Transformer\MixedType;
@@ -255,6 +256,7 @@ final readonly class TypeUtil
         TransformerReturnsUnexpectedValueException::class,
         TypeUtilTest::class,
         TraceData::class,
+        MapPropertyPathTest::class,
     )]
     public static function getTypeString(Type|MixedType $type): string
     {

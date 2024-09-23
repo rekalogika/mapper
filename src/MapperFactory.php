@@ -404,6 +404,7 @@ class MapperFactory
                 propertyMapperLocator: $this->getPropertyMapperLocator(),
                 subMapperFactory: $this->getSubMapperFactory(),
                 proxyFactory: $this->getProxyFactory(),
+                propertyAccessor: $this->getPropertyAccessor(),
             );
         }
 

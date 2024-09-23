@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.8.1
+## 1.9.0
 
 * feat: target properties with `Collection` & `ReadableCollection` typehint will
   now be lazy-loaded
@@ -8,6 +8,7 @@
 * chore: refactor `ObjectToObjectMetadataFactory` for clarity
 * chore: refactor `PropertyMappingResolver`
 * chore: cleanup
+* feat: property path support in `Map` attributes
 
 ## 1.8.0
 

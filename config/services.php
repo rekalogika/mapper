@@ -184,6 +184,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$propertyMapperLocator' => tagged_locator('rekalogika.mapper.property_mapper'),
             '$subMapperFactory' => service('rekalogika.mapper.sub_mapper.factory'),
             '$proxyFactory' => service('rekalogika.mapper.proxy.factory'),
+            '$propertyAccessor' => service(PropertyAccessorInterface::class),
         ])
         ->tag('rekalogika.mapper.transformer', ['priority' => -900]);
 
@@ -229,6 +230,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$propertyMapperLocator' => tagged_locator('rekalogika.mapper.property_mapper'),
             '$subMapperFactory' => service('rekalogika.mapper.sub_mapper.factory'),
             '$proxyFactory' => service('rekalogika.mapper.proxy.factory'),
+            '$propertyAccessor' => service(PropertyAccessorInterface::class),
         ]);
 
     # mapping cache warmer
