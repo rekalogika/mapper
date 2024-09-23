@@ -253,7 +253,7 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithCollectionPropertyDto::class, $result);
         $property = $result->property;
         $this->assertInstanceOf(Collection::class, $property);
-        $this->assertInstanceOf(ArrayCollection::class, $property);
+        $this->assertInstanceOf(LazyArray::class, $property);
 
         $property = $result->property;
 
