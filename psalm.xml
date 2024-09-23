@@ -72,14 +72,14 @@
             <errorLevel type="suppress">
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
                 <file name="src/Util/ClassUtil.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Util/PropertyMetadataResolver.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyMetadataResolver.php" />
             </errorLevel>
         </InternalMethod>
         <InternalClass>
             <errorLevel type="suppress">
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
                 <file name="src/Util/ClassUtil.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Util/PropertyMetadataResolver.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyMetadataResolver.php" />
             </errorLevel>
         </InternalClass>
         <UndefinedClass>
