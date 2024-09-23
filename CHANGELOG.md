@@ -6,6 +6,7 @@
   now be lazy-loaded
 * chore: rector run
 * chore: refactor `ObjectToObjectMetadataFactory` for clarity
+* chore: refactor `PropertyMappingResolver`
 
 ## 1.8.0
 

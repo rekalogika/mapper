@@ -20,108 +20,62 @@ use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 /**
  * @internal
  */
-final class PropertyMappingResolver
+final readonly class PropertyMappingResolver
 {
+    public function __construct(
+        private PropertyListExtractorInterface $propertyListExtractor,
+    ) {}
+
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
      * @return array<int,array{string,string}>
      */
-    public static function resolvePropertiesToMap(
-        PropertyListExtractorInterface $propertyListExtractor,
+    public function getPropertiesToMap(
         string $sourceClass,
         string $targetClass,
         bool $targetAllowsDynamicProperties,
     ): array {
-        $resolver = new self(
-            propertyListExtractor: $propertyListExtractor,
-            sourceClass: $sourceClass,
-            targetClass: $targetClass,
-            targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
-        );
+        $sourceProperties = $this->listProperties($sourceClass);
+        $targetProperties = $this->listProperties($targetClass);
 
-        return $resolver->getPropertiesToMap();
-    }
+        $targetPropertyToSourceProperty = [];
 
-    /**
-     * @var array<string,string>
-     */
-    private array $targetPropertyToSourceProperty = [];
+        foreach ($targetProperties as $targetProperty) {
+            $sourceProperty = $this->determinePairedProperty(
+                class: $targetClass,
+                property: $targetProperty,
+                pairedClass: $sourceClass,
+            );
 
-    /**
-     * @var array<int,string> $sourceProperties
-     */
-    private readonly array $sourceProperties;
+            $targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
+        }
 
-    /**
-     * @var array<int,string> $targetProperties
-     */
-    private readonly array $targetProperties;
+        foreach ($sourceProperties as $sourceProperty) {
+            $targetProperty = $this->determinePairedProperty(
+                class: $sourceClass,
+                property: $sourceProperty,
+                pairedClass: $targetClass,
+            );
 
-    /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
-     */
-    private function __construct(
-        private readonly PropertyListExtractorInterface $propertyListExtractor,
-        private readonly string $sourceClass,
-        private readonly string $targetClass,
-        bool $targetAllowsDynamicProperties,
-    ) {
-        $this->sourceProperties = $this->listProperties($this->sourceClass);
-        $this->targetProperties = $this->listProperties($this->targetClass);
-
-        $this->processTargetProperties();
-        $this->processSourceProperties();
+            $targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
+        }
 
         if ($targetAllowsDynamicProperties) {
-            $this->processDynamicProperties();
-        }
-    }
+            foreach ($targetProperties as $targetProperty) {
+                $sourceProperty = $this->determinePairedProperty(
+                    class: $targetClass,
+                    property: $targetProperty,
+                    pairedClass: $sourceClass,
+                );
 
-    private function processSourceProperties(): void
-    {
-        foreach ($this->sourceProperties as $sourceProperty) {
-            $targetProperty = $this->determinePairedProperty(
-                class: $this->sourceClass,
-                property: $sourceProperty,
-                pairedClass: $this->targetClass,
-            );
-
-            $this->targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
-        }
-    }
-
-    private function processTargetProperties(): void
-    {
-        foreach ($this->targetProperties as $targetProperty) {
-            $sourceProperty = $this->determinePairedProperty(
-                class: $this->targetClass,
-                property: $targetProperty,
-                pairedClass: $this->sourceClass,
-            );
-
-            $this->targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
-        }
-    }
-
-    private function processDynamicProperties(): void
-    {
-        foreach ($this->sourceProperties as $sourceProperty) {
-            if (!isset($this->targetPropertyToSourceProperty[$sourceProperty])) {
-                $this->targetPropertyToSourceProperty[$sourceProperty] = $sourceProperty;
+                $targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
             }
         }
-    }
 
-    /**
-     * @return array<int,array{string,string}>
-     */
-    public function getPropertiesToMap(): array
-    {
         $map = [];
 
-        foreach ($this->targetPropertyToSourceProperty as $targetProperty => $sourceProperty) {
+        foreach ($targetPropertyToSourceProperty as $targetProperty => $sourceProperty) {
             $map[] = [$sourceProperty, $targetProperty];
         }
 
