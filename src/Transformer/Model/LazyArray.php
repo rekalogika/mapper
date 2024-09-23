@@ -332,6 +332,9 @@ final class LazyArray implements CollectionInterface, Collection
         return false;
     }
 
+    /**
+     * @return Collection<TKey,TValue>
+     */
     #[\Override]
     public function filter(\Closure $p): Collection
     {
@@ -346,6 +349,11 @@ final class LazyArray implements CollectionInterface, Collection
         return new ArrayCollection($filtered);
     }
 
+    /**
+     * @template U
+     * @param \Closure(TValue): U $func
+     * @return Collection<TKey,U>
+     */
     #[\Override]
     public function map(\Closure $func): Collection
     {
