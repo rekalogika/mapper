@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Util;
 
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
@@ -22,12 +23,17 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * @internal
  */
 final readonly class ReaderWriter
 {
+    public function __construct(
+        private PropertyAccessorInterface $propertyAccessor,
+    ) {}
+
     /**
      * @throws UninitializedSourcePropertyException
      * @throws UnableToReadException
@@ -56,7 +62,7 @@ final readonly class ReaderWriter
             $mode = $propertyMapping->getSourceReadMode();
 
             if ($accessorName === null) {
-                throw new UninitializedSourcePropertyException('(null)');
+                throw new UnexpectedValueException('AccessorName is null', context: $context);
             }
 
             if ($mode === ReadMode::Property) {
@@ -64,6 +70,9 @@ final readonly class ReaderWriter
             } elseif ($mode === ReadMode::Method) {
                 /** @psalm-suppress MixedMethodCall */
                 return $source->{$accessorName}();
+            } elseif ($mode === ReadMode::PropertyPath) {
+                return $this->propertyAccessor
+                    ->getValue($source, $accessorName);
             } elseif ($mode === ReadMode::DynamicProperty) {
                 $errorHandler = static function (
                     int $errno,
@@ -145,11 +154,18 @@ final readonly class ReaderWriter
             $accessorName = $propertyMapping->getTargetReadName();
             $readMode = $propertyMapping->getTargetReadMode();
 
+            if ($accessorName === null) {
+                throw new UnexpectedValueException('AccessorName is null', context: $context);
+            }
+
             if ($readMode === ReadMode::Property) {
                 return $target->{$accessorName};
             } elseif ($readMode === ReadMode::Method) {
                 /** @psalm-suppress MixedMethodCall */
                 return $target->{$accessorName}();
+            } elseif ($readMode === ReadMode::PropertyPath) {
+                return $this->propertyAccessor
+                    ->getValue($target, $accessorName);
             } elseif ($readMode === ReadMode::DynamicProperty) {
                 return $target->{$accessorName} ?? null;
             }
@@ -191,6 +207,10 @@ final readonly class ReaderWriter
             $accessorName = $propertyMapping->getTargetSetterWriteName();
             $writeMode = $propertyMapping->getTargetSetterWriteMode();
 
+            if ($accessorName === null) {
+                throw new UnexpectedValueException('AccessorName is null', context: $context);
+            }
+
             if ($writeMode === WriteMode::Property) {
                 $target->{$accessorName} = $value;
             } elseif ($writeMode === WriteMode::Method) {
@@ -198,6 +218,9 @@ final readonly class ReaderWriter
                 $target->{$accessorName}($value);
             } elseif ($writeMode === WriteMode::AdderRemover) {
                 // noop
+            } elseif ($writeMode === WriteMode::PropertyPath) {
+                $this->propertyAccessor
+                    ->setValue($target, $accessorName, $value);
             } elseif ($writeMode === WriteMode::DynamicProperty) {
                 $target->{$accessorName} = $value;
             }

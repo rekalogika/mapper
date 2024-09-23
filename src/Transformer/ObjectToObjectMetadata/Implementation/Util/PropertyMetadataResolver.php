@@ -35,12 +35,18 @@ use Symfony\Component\PropertyInfo\Type;
  */
 final readonly class PropertyMetadataResolver
 {
+    private PropertyPathResolver $propertyPathResolver;
+
     public function __construct(
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
-    ) {}
+    ) {
+        $this->propertyPathResolver = new PropertyPathResolver(
+            propertyTypeExtractor: $propertyTypeExtractor,
+        );
+    }
 
     /**
      * @param class-string $class
@@ -50,6 +56,21 @@ final readonly class PropertyMetadataResolver
         string $property,
         bool $allowsDynamicProperties,
     ): SourcePropertyMetadata {
+        if ($this->isPropertyPath($property)) {
+            $types = $this->propertyPathResolver->resolvePropertyPath(
+                class: $class,
+                propertyPath: $property,
+            );
+
+            return new SourcePropertyMetadata(
+                readMode: ReadMode::PropertyPath,
+                readName: $property,
+                readVisibility: Visibility::Public,
+                allowsTargetDelete: false,
+                types: $types,
+            );
+        }
+
         $readInfo = $this->propertyReadInfoExtractor
             ->getReadInfo($class, $property);
 
@@ -84,6 +105,30 @@ final readonly class PropertyMetadataResolver
         string $property,
         bool $allowsDynamicProperties,
     ): TargetPropertyMetadata {
+        if ($this->isPropertyPath($property)) {
+            $types = $this->propertyPathResolver->resolvePropertyPath(
+                class: $class,
+                propertyPath: $property,
+            );
+
+            return new TargetPropertyMetadata(
+                readMode: ReadMode::PropertyPath,
+                readName: $property,
+                readVisibility: Visibility::Public,
+                constructorWriteMode: WriteMode::None,
+                constructorWriteName: null,
+                setterWriteMode: WriteMode::PropertyPath,
+                setterWriteName: null,
+                setterWriteVisibility: Visibility::None,
+                removerWriteName: null,
+                removerWriteVisibility: Visibility::None,
+                allowsDelete: false,
+                types: $types,
+                scalarType: $this->determineScalarType($types),
+                nullable: false,
+            );
+        }
+
         $readInfo = $this->propertyReadInfoExtractor
             ->getReadInfo($class, $property);
 
@@ -394,6 +439,8 @@ final readonly class PropertyMetadataResolver
         $originalPropertyTypes = $this->propertyTypeExtractor
             ->getTypes($class, $property) ?? [];
 
+        $originalPropertyTypes = array_values($originalPropertyTypes);
+
         $types = [];
 
         foreach ($originalPropertyTypes as $propertyType) {
@@ -411,20 +458,7 @@ final readonly class PropertyMetadataResolver
         // determine if it is a lone scalar type
 
         /** @var 'int'|'float'|'string'|'bool'|'null'|null */
-        $scalarType = null;
-
-        if (\count($originalPropertyTypes) === 1) {
-            $propertyType = $originalPropertyTypes[0];
-            $propertyBuiltInType = $propertyType->getBuiltinType();
-
-            if (\in_array(
-                $propertyBuiltInType,
-                ['int', 'float', 'string', 'bool', 'null'],
-                true,
-            )) {
-                $scalarType = $propertyBuiltInType;
-            }
-        }
+        $scalarType = $this->determineScalarType($originalPropertyTypes);
 
         // determine if nullable
 
@@ -438,5 +472,35 @@ final readonly class PropertyMetadataResolver
         }
 
         return [$types, $scalarType, $nullable];
+    }
+
+    /**
+     * @param list<Type> $types
+     * @return 'int'|'float'|'string'|'bool'|'null'|null
+     */
+    private function determineScalarType(array $types): ?string
+    {
+        /** @var 'int'|'float'|'string'|'bool'|'null'|null */
+        $scalarType = null;
+
+        if (\count($types) === 1) {
+            $propertyType = $types[0];
+            $propertyBuiltInType = $propertyType->getBuiltinType();
+
+            if (\in_array(
+                $propertyBuiltInType,
+                ['int', 'float', 'string', 'bool', 'null'],
+                true,
+            )) {
+                $scalarType = $propertyBuiltInType;
+            }
+        }
+
+        return $scalarType;
+    }
+
+    private function isPropertyPath(string $property): bool
+    {
+        return str_contains($property, '.') || str_contains($property, '[');
     }
 }

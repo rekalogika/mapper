@@ -42,13 +42,24 @@ use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 final class ObjectToObjectTransformer implements TransformerInterface, MainTransformerAwareInterface
 {
     use MainTransformerAwareTrait;
 
-    public function __construct(private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory, private ContainerInterface $propertyMapperLocator, private SubMapperFactoryInterface $subMapperFactory, private ProxyFactoryInterface $proxyFactory, private ReaderWriter $readerWriter = new ReaderWriter()) {}
+    private ReaderWriter $readerWriter;
+
+    public function __construct(
+        private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
+        private ContainerInterface $propertyMapperLocator,
+        private SubMapperFactoryInterface $subMapperFactory,
+        private ProxyFactoryInterface $proxyFactory,
+        PropertyAccessorInterface $propertyAccessor,
+    ) {
+        $this->readerWriter = new ReaderWriter($propertyAccessor);
+    }
 
     #[\Override]
     public function transform(
@@ -399,7 +410,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 target: $target,
                 context: $context,
             );
-        } catch (UninitializedSourcePropertyException|UnsupportedPropertyMappingException) {
+        } catch (UninitializedSourcePropertyException | UnsupportedPropertyMappingException) {
             return;
         }
 
