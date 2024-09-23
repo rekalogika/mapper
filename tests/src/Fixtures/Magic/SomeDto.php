@@ -16,7 +16,9 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Magic;
 final class SomeDto
 {
     public ?string $string = null;
+
     public \DateTimeImmutable $date;
+
     public \DateTimeImmutable $generatesException;
 
     public static function prefilled(): self

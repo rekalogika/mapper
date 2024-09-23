@@ -24,7 +24,7 @@ class ObjectWithTraversableProperties
 
     public function __construct()
     {
-        $this->property = (function () {
+        $this->property = (function (): \Generator {
             yield new ObjectWithScalarProperties();
             yield new ObjectWithScalarProperties();
             yield new ObjectWithScalarProperties();

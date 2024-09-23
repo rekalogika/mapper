@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Magic;
 class ObjectWithMagicSet
 {
     private string $string;
+
     private \DateTimeImmutable $date;
 
     public function __set(string $name, mixed $value): void

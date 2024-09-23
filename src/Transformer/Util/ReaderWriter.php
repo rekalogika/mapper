@@ -104,7 +104,7 @@ final readonly class ReaderWriter
                 context: $context,
                 previous: $e,
             );
-        } catch (\BadMethodCallException $e) {
+        } catch (\BadMethodCallException) {
             throw new UninitializedSourcePropertyException($property);
         }
     }
@@ -201,7 +201,7 @@ final readonly class ReaderWriter
             } elseif ($writeMode === WriteMode::DynamicProperty) {
                 $target->{$accessorName} = $value;
             }
-        } catch (\BadMethodCallException $e) {
+        } catch (\BadMethodCallException) {
             return;
         } catch (\Throwable $e) {
             throw new UnableToWriteException(

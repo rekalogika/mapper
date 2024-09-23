@@ -16,7 +16,9 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MapAttribute;
 class SomeObject
 {
     public ?string $sourcePropertyA = null;
+
     public ?string $sourcePropertyB = null;
+
     public ?string $sourcePropertyC = null;
 
     public static function preinitialized(): self

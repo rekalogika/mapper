@@ -19,26 +19,32 @@ class ObjectOverridingSomeObjectDto extends SomeObjectDto
 {
     #[Map(property: 'sourcePropertyB')]
     public ?string $targetPropertyA = null;
+
     private ?string $targetPropertyB = null;
+
     private ?string $targetPropertyC = null;
 
     #[Map(property: 'sourcePropertyC')]
+    #[\Override]
     public function setTargetPropertyB(string $value): void
     {
         $this->targetPropertyB = $value;
     }
 
+    #[\Override]
     public function getTargetPropertyB(): ?string
     {
         return $this->targetPropertyB;
     }
 
+    #[\Override]
     public function setTargetPropertyC(string $value): void
     {
         $this->targetPropertyC = $value;
     }
 
     #[Map(property: 'sourcePropertyA')]
+    #[\Override]
     public function getTargetPropertyC(): ?string
     {
         return $this->targetPropertyC;
