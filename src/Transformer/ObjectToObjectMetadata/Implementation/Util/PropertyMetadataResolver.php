@@ -53,7 +53,7 @@ final readonly class PropertyMetadataResolver
         $readInfo = $this->propertyReadInfoExtractor
             ->getReadInfo($class, $property);
 
-        [$readMode, $readName, $readVisibility] = $this->getPropertyReadInfo(
+        [$readMode, $readName, $readVisibility] = $this->processPropertyReadInfo(
             readInfo: $readInfo,
             property: $property,
             allowsDynamicProperties: $allowsDynamicProperties,
@@ -93,21 +93,28 @@ final readonly class PropertyMetadataResolver
         $constructorWriteInfo = $this
             ->getConstructorPropertyWriteInfo($class, $property);
 
-        [$readMode, $readName, $readVisibility] = $this->getPropertyReadInfo(
+        [$readMode, $readName, $readVisibility] = $this->processPropertyReadInfo(
             readInfo: $readInfo,
             property: $property,
             allowsDynamicProperties: $allowsDynamicProperties,
         );
 
         [$constructorWriteMode, $constructorWriteName] =
-            $this->getConstructorWriteInfo($constructorWriteInfo);
+            $this->processConstructorWriteInfo($constructorWriteInfo);
 
-        [$setterWriteMode, $setterWriteName, $setterWriteVisibility, $removerWriteName, $removerWriteVisibility,] = $this->getPropertyWriteInfo(
-            readInfo: $readInfo,
-            writeInfo: $writeInfo,
-            property: $property,
-            allowsDynamicProperties: $allowsDynamicProperties,
-        );
+        [
+            $setterWriteMode,
+            $setterWriteName,
+            $setterWriteVisibility,
+            $removerWriteName,
+            $removerWriteVisibility,
+        ]
+            = $this->processPropertyWriteInfo(
+                readInfo: $readInfo,
+                writeInfo: $writeInfo,
+                property: $property,
+                allowsDynamicProperties: $allowsDynamicProperties,
+            );
 
         $allowsDelete = $this->targetAllowsDelete(
             class: $class,
@@ -140,7 +147,7 @@ final readonly class PropertyMetadataResolver
     /**
      * @return array{ReadMode,?string,Visibility}
      */
-    private function getPropertyReadInfo(
+    private function processPropertyReadInfo(
         ?PropertyReadInfo $readInfo,
         string $property,
         bool $allowsDynamicProperties,
@@ -179,7 +186,7 @@ final readonly class PropertyMetadataResolver
     /**
      * @return array{WriteMode,?string}
      */
-    private function getConstructorWriteInfo(
+    private function processConstructorWriteInfo(
         ?PropertyWriteInfo $constructorWriteInfo,
     ): array {
         if (
@@ -199,7 +206,7 @@ final readonly class PropertyMetadataResolver
     /**
      * @return array{WriteMode,?string,Visibility,?string,Visibility}
      */
-    private function getPropertyWriteInfo(
+    private function processPropertyWriteInfo(
         ?PropertyReadInfo $readInfo,
         ?PropertyWriteInfo $writeInfo,
         string $property,
