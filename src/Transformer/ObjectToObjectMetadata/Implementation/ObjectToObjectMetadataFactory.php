@@ -18,24 +18,20 @@ use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
-use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util\AllowDeleteResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util\PropertyMappingResolver;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util\PropertyMetadataResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 
 /**
@@ -43,6 +39,8 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
  */
 final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
+    private PropertyMetadataResolver $propertyMetadataResolver;
+
     public function __construct(
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
@@ -52,7 +50,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private ProxyFactoryInterface $proxyFactory,
         private TypeResolverInterface $typeResolver,
-    ) {}
+    ) {
+        $this->propertyMetadataResolver = new PropertyMetadataResolver(
+            propertyReadInfoExtractor: $this->propertyReadInfoExtractor,
+            propertyWriteInfoExtractor: $this->propertyWriteInfoExtractor,
+        );
+    }
 
     /**
      * @param class-string $sourceClass
@@ -130,16 +133,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $this->allowsDynamicProperties($targetReflection)
             || method_exists($targetClass, '__set');
 
-        // check if source and target classes are internal
-
-        if (!$sourceAllowsDynamicProperties && $sourceReflection->isInternal()) {
-            throw new InternalClassUnsupportedException($sourceClass);
-        }
-
-        if (!$targetAllowsDynamicProperties && $targetReflection->isInternal()) {
-            throw new InternalClassUnsupportedException($targetClass);
-        }
-
         // queries
 
         $instantiable = $targetReflection->isInstantiable();
@@ -182,159 +175,32 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $serviceMethodSpecification = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
 
-            // get read & write info for source and target properties
+            // generate source & target property metadata
 
-            $sourceReadInfo = $this->propertyReadInfoExtractor
-                ->getReadInfo($sourceClass, $sourceProperty);
-            $targetReadInfo = $this->propertyReadInfoExtractor
-                ->getReadInfo($targetClass, $targetProperty);
-            $targetConstructorWriteInfo = $this
-                ->getConstructorWriteInfo($targetClass, $targetProperty);
-            $targetWriteInfo = $this
-                ->getSetterWriteInfo($targetClass, $targetProperty);
+            $sourcePropertyMetadata = $this->propertyMetadataResolver
+                ->createSourcePropertyMetadata(
+                    class: $sourceClass,
+                    property: $sourceProperty,
+                    allowsDynamicProperties: $sourceAllowsDynamicProperties,
+                );
 
-            // determine if target allows delete
-
-            $targetAllowsDelete = AllowDeleteResolver::allowDelete(
-                sourceClass: $sourceClass,
-                sourceProperty: $sourceProperty,
-                targetClass: $targetClass,
-                targetProperty: $targetProperty,
-                sourceReadInfo: $sourceReadInfo,
-                targetReadInfo: $targetReadInfo,
-                targetWriteInfo: $targetWriteInfo,
-            );
-
-            // process source read mode
-
-            if ($sourceReadInfo === null) {
-                // if source allows dynamic properties, including stdClass
-                if ($sourceAllowsDynamicProperties) {
-                    $sourceReadMode = ReadMode::DynamicProperty;
-                    $sourceReadName = $sourceProperty;
-                    $sourceReadVisibility = Visibility::Public;
-                } else {
-                    $sourceReadMode = ReadMode::None;
-                    $sourceReadName = null;
-                    $sourceReadVisibility = Visibility::None;
-                }
-            } else {
-                $sourceReadMode = match ($sourceReadInfo->getType()) {
-                    PropertyReadInfo::TYPE_METHOD => ReadMode::Method,
-                    PropertyReadInfo::TYPE_PROPERTY => ReadMode::Property,
-                    default => ReadMode::None,
-                };
-
-                $sourceReadName = $sourceReadInfo->getName();
-
-                $sourceReadVisibility = match ($sourceReadInfo->getVisibility()) {
-                    PropertyReadInfo::VISIBILITY_PUBLIC => Visibility::Public,
-                    PropertyReadInfo::VISIBILITY_PROTECTED => Visibility::Protected,
-                    PropertyReadInfo::VISIBILITY_PRIVATE => Visibility::Private,
-                    default => Visibility::None,
-                };
-            }
-
-            // process target read mode
-
-            if ($targetReadInfo === null) {
-                // if source allows dynamic properties, including stdClass
-                if ($targetAllowsDynamicProperties) {
-                    $targetReadMode = ReadMode::DynamicProperty;
-                    $targetReadName = $targetProperty;
-                    $targetReadVisibility = Visibility::Public;
-                } else {
-                    $targetReadMode = ReadMode::None;
-                    $targetReadName = null;
-                    $targetReadVisibility = Visibility::None;
-                }
-            } else {
-                $targetReadMode = match ($targetReadInfo->getType()) {
-                    PropertyReadInfo::TYPE_METHOD => ReadMode::Method,
-                    PropertyReadInfo::TYPE_PROPERTY => ReadMode::Property,
-                    default => ReadMode::None,
-                };
-
-                $targetReadName = $targetReadInfo->getName();
-
-                $targetReadVisibility = match ($targetReadInfo->getVisibility()) {
-                    PropertyReadInfo::VISIBILITY_PUBLIC => Visibility::Public,
-                    PropertyReadInfo::VISIBILITY_PROTECTED => Visibility::Protected,
-                    PropertyReadInfo::VISIBILITY_PRIVATE => Visibility::Private,
-                    default => Visibility::None,
-                };
-            }
+            $targetPropertyMetadata = $this->propertyMetadataResolver
+                ->createTargetPropertyMetadata(
+                    class: $targetClass,
+                    property: $targetProperty,
+                    allowsDynamicProperties: $targetAllowsDynamicProperties,
+                );
 
             // skip if target is not writable
 
-            if ($targetConstructorWriteInfo === null && $targetWriteInfo === null) {
+            if (
+                $targetPropertyMetadata->getConstructorWriteMode() === WriteMode::None
+                && $targetPropertyMetadata->getSetterWriteMode() === WriteMode::None
+            ) {
                 continue;
             }
 
-            // process target constructor write info
-
-            if (
-                $targetConstructorWriteInfo === null
-                || $targetConstructorWriteInfo->getType() !== PropertyWriteInfo::TYPE_CONSTRUCTOR
-            ) {
-                $targetConstructorWriteMode = WriteMode::None;
-                $targetConstructorWriteName = null;
-            } else {
-                $targetConstructorWriteMode = WriteMode::Constructor;
-                $targetConstructorWriteName = $targetConstructorWriteInfo->getName();
-            }
-
-            // process target setter write mode
-
-            $targetRemoverWriteName = null;
-            $targetRemoverWriteVisibility = Visibility::None;
-
-            if ($targetWriteInfo === null) {
-                $targetSetterWriteMode = WriteMode::None;
-                $targetSetterWriteName = null;
-                $targetSetterWriteVisibility = Visibility::None;
-            } elseif ($targetWriteInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
-                $targetSetterWriteMode = WriteMode::AdderRemover;
-                $targetSetterWriteName = $targetWriteInfo->getAdderInfo()->getName();
-                $targetRemoverWriteName = $targetWriteInfo->getRemoverInfo()->getName();
-                $targetSetterWriteVisibility = match ($targetWriteInfo->getAdderInfo()->getVisibility()) {
-                    PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
-                    PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
-                    PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
-                    default => Visibility::None,
-                };
-                $targetRemoverWriteVisibility = match ($targetWriteInfo->getRemoverInfo()->getVisibility()) {
-                    PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
-                    PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
-                    PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
-                    default => Visibility::None,
-                };
-            } else {
-                $targetSetterWriteMode = match ($targetWriteInfo->getType()) {
-                    PropertyWriteInfo::TYPE_METHOD => WriteMode::Method,
-                    PropertyWriteInfo::TYPE_PROPERTY => WriteMode::Property,
-                    default => WriteMode::None,
-                };
-
-                if ($targetSetterWriteMode === WriteMode::None) {
-                    if ($targetAllowsDynamicProperties && $targetReadInfo === null) {
-                        $targetSetterWriteMode = WriteMode::DynamicProperty;
-                        $targetSetterWriteName = $targetProperty;
-                        $targetSetterWriteVisibility = Visibility::Public;
-                    } else {
-                        $targetSetterWriteName = null;
-                        $targetSetterWriteVisibility = Visibility::None;
-                    }
-                } else {
-                    $targetSetterWriteName = $targetWriteInfo->getName();
-                    $targetSetterWriteVisibility = match ($targetWriteInfo->getVisibility()) {
-                        PropertyWriteInfo::VISIBILITY_PUBLIC => Visibility::Public,
-                        PropertyWriteInfo::VISIBILITY_PROTECTED => Visibility::Protected,
-                        PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
-                        default => Visibility::None,
-                    };
-                }
-            }
+            dump($targetProperty, $targetPropertyMetadata);
 
             // get source property types
 
@@ -408,28 +274,28 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // instantiate property mapping
 
             $propertyMapping = new PropertyMapping(
-                sourceProperty: $sourceReadMode !== ReadMode::None ? $sourceProperty : null,
+                sourceProperty: $sourcePropertyMetadata->getReadMode() !== ReadMode::None ? $sourceProperty : null,
                 targetProperty: $targetProperty,
                 sourceTypes: $sourcePropertyTypes,
                 targetTypes: $targetPropertyTypes,
-                sourceReadMode: $sourceReadMode,
-                sourceReadName: $sourceReadName,
-                sourceReadVisibility: $sourceReadVisibility,
-                targetReadMode: $targetReadMode,
-                targetReadName: $targetReadName,
-                targetReadVisibility: $targetReadVisibility,
-                targetSetterWriteMode: $targetSetterWriteMode,
-                targetSetterWriteName: $targetSetterWriteName,
-                targetRemoverWriteName: $targetRemoverWriteName,
-                targetSetterWriteVisibility: $targetSetterWriteVisibility,
-                targetRemoverWriteVisibility: $targetRemoverWriteVisibility,
-                targetConstructorWriteMode: $targetConstructorWriteMode,
-                targetConstructorWriteName: $targetConstructorWriteName,
+                sourceReadMode: $sourcePropertyMetadata->getReadMode(),
+                sourceReadName: $sourcePropertyMetadata->getReadName(),
+                sourceReadVisibility: $sourcePropertyMetadata->getReadVisibility(),
+                targetReadMode: $targetPropertyMetadata->getReadMode(),
+                targetReadName: $targetPropertyMetadata->getReadName(),
+                targetReadVisibility: $targetPropertyMetadata->getReadVisibility(),
+                targetSetterWriteMode: $targetPropertyMetadata->getSetterWriteMode(),
+                targetSetterWriteName: $targetPropertyMetadata->getSetterWriteName(),
+                targetRemoverWriteName: $targetPropertyMetadata->getRemoverWriteName(),
+                targetSetterWriteVisibility: $targetPropertyMetadata->getSetterWriteVisibility(),
+                targetRemoverWriteVisibility: $targetPropertyMetadata->getRemoverWriteVisibility(),
+                targetConstructorWriteMode: $targetPropertyMetadata->getConstructorWriteMode(),
+                targetConstructorWriteName: $targetPropertyMetadata->getConstructorWriteName(),
                 targetScalarType: $targetPropertyScalarType,
                 propertyMapper: $serviceMethodSpecification,
                 sourceLazy: $sourceLazy,
                 targetCanAcceptNull: $targetCanAcceptNull,
-                targetAllowsDelete: $targetAllowsDelete,
+                targetAllowsDelete: $targetPropertyMetadata->allowsDelete() || $sourcePropertyMetadata->allowsTargetDelete(),
             );
 
             $propertyMappings[] = $propertyMapping;
@@ -514,37 +380,5 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         } while ($class = $class->getParentClass());
 
         return false;
-    }
-
-    private function getConstructorWriteInfo(
-        string $class,
-        string $property,
-    ): ?PropertyWriteInfo {
-        $writeInfo = $this->propertyWriteInfoExtractor
-            ->getWriteInfo($class, $property, [
-                'enable_getter_setter_extraction' => false,
-                'enable_magic_methods_extraction' => false,
-                'enable_adder_remover_extraction' => false,
-            ]);
-
-        if ($writeInfo === null) {
-            return null;
-        }
-
-        if ($writeInfo->getType() === PropertyWriteInfo::TYPE_CONSTRUCTOR) {
-            return $writeInfo;
-        }
-
-        return null;
-    }
-
-    private function getSetterWriteInfo(
-        string $class,
-        string $property,
-    ): ?PropertyWriteInfo {
-        return $this->propertyWriteInfoExtractor
-            ->getWriteInfo($class, $property, [
-                'enable_constructor_extraction' => false,
-            ]);
     }
 }
