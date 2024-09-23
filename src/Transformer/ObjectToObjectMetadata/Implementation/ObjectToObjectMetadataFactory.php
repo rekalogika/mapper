@@ -18,6 +18,7 @@ use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
+use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataResolver;
@@ -132,6 +133,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         $targetAllowsDynamicProperties =
             $this->allowsDynamicProperties($targetReflection)
             || method_exists($targetClass, '__set');
+
+        // internal classes are unsupported
+
+        if (!$sourceAllowsDynamicProperties && $sourceReflection->isInternal()) {
+            throw new InternalClassUnsupportedException($sourceClass);
+        }
+
+        if (!$targetAllowsDynamicProperties && $targetReflection->isInternal()) {
+            throw new InternalClassUnsupportedException($targetClass);
+        }
 
         // queries
 

@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Ut
 
 use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\AllowTargetDelete;
-use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\SourcePropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\TargetPropertyMetadata;
@@ -51,14 +50,8 @@ final readonly class PropertyMetadataResolver
         string $property,
         bool $allowsDynamicProperties,
     ): SourcePropertyMetadata {
-        $reflectionClass = new \ReflectionClass($class);
-
         $readInfo = $this->propertyReadInfoExtractor
             ->getReadInfo($class, $property);
-
-        if (!$allowsDynamicProperties && $reflectionClass->isInternal()) {
-            throw new InternalClassUnsupportedException($class);
-        }
 
         [$readMode, $readName, $readVisibility] = $this->getPropertyReadInfo(
             readInfo: $readInfo,
@@ -91,8 +84,6 @@ final readonly class PropertyMetadataResolver
         string $property,
         bool $allowsDynamicProperties,
     ): TargetPropertyMetadata {
-        $reflectionClass = new \ReflectionClass($class);
-
         $readInfo = $this->propertyReadInfoExtractor
             ->getReadInfo($class, $property);
 
@@ -101,10 +92,6 @@ final readonly class PropertyMetadataResolver
 
         $constructorWriteInfo = $this
             ->getConstructorPropertyWriteInfo($class, $property);
-
-        if (!$allowsDynamicProperties && $reflectionClass->isInternal()) {
-            throw new InternalClassUnsupportedException($class);
-        }
 
         [$readMode, $readName, $readVisibility] = $this->getPropertyReadInfo(
             readInfo: $readInfo,
