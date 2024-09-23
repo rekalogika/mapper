@@ -4,6 +4,7 @@
 
 * feat: target properties with `Collection` & `ReadableCollection` typehint will
   now be lazy-loaded
+* chore: rector run
 
 ## 1.8.0
 

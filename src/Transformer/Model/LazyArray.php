@@ -237,7 +237,7 @@ final class LazyArray implements CollectionInterface, Collection
     {
         $values = [];
 
-        foreach ($this->getIterator() as $_ => $value) {
+        foreach ($this->getIterator() as $value) {
             $values[] = $value;
         }
 
@@ -424,7 +424,7 @@ final class LazyArray implements CollectionInterface, Collection
     {
         $carry = $initial;
 
-        foreach ($this->getIterator() as $key => $value) {
+        foreach ($this->getIterator() as $value) {
             $carry = $func($carry, $value);
         }
 
