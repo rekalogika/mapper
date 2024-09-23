@@ -22,27 +22,27 @@ use Rekalogika\Mapper\Proxy\ProxyNamer;
 final readonly class ObjectToObjectMetadata
 {
     /**
-     * @var array<int,PropertyMapping>
+     * @var list<PropertyMapping>
      */
     private array $allPropertyMappings;
 
     /**
-     * @var array<int,PropertyMapping>
+     * @var list<PropertyMapping>
      */
     private array $propertyMappings;
 
     /**
-     * @var array<int,PropertyMapping>
+     * @var list<PropertyMapping>
      */
     private array $constructorPropertyMappings;
 
     /**
-     * @var array<int,PropertyMapping>
+     * @var list<PropertyMapping>
      */
     private array $lazyPropertyMappings;
 
     /**
-     * @var array<int,PropertyMapping>
+     * @var list<PropertyMapping>
      */
     private array $eagerPropertyMappings;
 
@@ -50,9 +50,9 @@ final readonly class ObjectToObjectMetadata
      * @param class-string $sourceClass
      * @param class-string $targetClass Effective target class after resolving inheritance map
      * @param class-string $providedTargetClass
-     * @param array<int,PropertyMapping> $allPropertyMappings
+     * @param list<PropertyMapping> $allPropertyMappings
      * @param array<string,true> $targetProxySkippedProperties
-     * @param array<int,string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
+     * @param list<string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
      */
     public function __construct(
         private string $sourceClass,
@@ -182,7 +182,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<int,PropertyMapping>
+     * @return list<PropertyMapping>
      */
     public function getPropertyMappings(): array
     {
@@ -190,7 +190,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<int,PropertyMapping>
+     * @return list<PropertyMapping>
      */
     public function getLazyPropertyMappings(): array
     {
@@ -198,7 +198,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<int,PropertyMapping>
+     * @return list<PropertyMapping>
      */
     public function getEagerPropertyMappings(): array
     {
@@ -206,7 +206,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<int,PropertyMapping>
+     * @return list<PropertyMapping>
      */
     public function getConstructorPropertyMappings(): array
     {
@@ -214,7 +214,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<int,PropertyMapping>
+     * @return list<PropertyMapping>
      */
     public function getAllPropertyMappings(): array
     {
@@ -288,7 +288,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<int,string>
+     * @return list<string>
      */
     public function getSourceProperties(): array
     {

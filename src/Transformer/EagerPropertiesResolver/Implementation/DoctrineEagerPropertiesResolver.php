@@ -39,6 +39,6 @@ final readonly class DoctrineEagerPropertiesResolver implements EagerPropertiesR
             return [];
         }
 
-        return $metadata->getIdentifierFieldNames();
+        return array_values($metadata->getIdentifierFieldNames());
     }
 }
