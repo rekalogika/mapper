@@ -44,15 +44,15 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyMapperResolverInterface $propertyMapperResolver,
-        private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
-        private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
+        PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
+        PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private ProxyFactoryInterface $proxyFactory,
         private TypeResolverInterface $typeResolver,
     ) {
         $this->propertyMetadataResolver = new PropertyMetadataResolver(
-            propertyReadInfoExtractor: $this->propertyReadInfoExtractor,
-            propertyWriteInfoExtractor: $this->propertyWriteInfoExtractor,
+            propertyReadInfoExtractor: $propertyReadInfoExtractor,
+            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
         );
     }
 
