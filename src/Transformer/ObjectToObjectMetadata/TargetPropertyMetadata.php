@@ -13,11 +13,17 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
+use Symfony\Component\PropertyInfo\Type;
+
 /**
  * @internal
  */
 final readonly class TargetPropertyMetadata
 {
+    /**
+     * @param list<Type> $types
+     * @param 'int'|'float'|'string'|'bool'|'null'|null $scalarType
+     */
     public function __construct(
         private ReadMode $readMode,
         private ?string $readName,
@@ -30,6 +36,9 @@ final readonly class TargetPropertyMetadata
         private ?string $removerWriteName,
         private Visibility $removerWriteVisibility,
         private bool $allowsDelete,
+        private array $types,
+        private ?string $scalarType,
+        private bool $nullable,
     ) {}
 
     public function getReadMode(): ReadMode
@@ -85,5 +94,26 @@ final readonly class TargetPropertyMetadata
     public function allowsDelete(): bool
     {
         return $this->allowsDelete;
+    }
+
+    /**
+     * @return list<Type>
+     */
+    public function getTypes(): array
+    {
+        return $this->types;
+    }
+
+    /**
+     * @return 'int'|'float'|'string'|'bool'|'null'|null
+     */
+    public function getScalarType(): ?string
+    {
+        return $this->scalarType;
+    }
+
+    public function isNullable(): bool
+    {
+        return $this->nullable;
     }
 }

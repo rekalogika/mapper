@@ -13,16 +13,22 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
+use Symfony\Component\PropertyInfo\Type;
+
 /**
  * @internal
  */
 final readonly class SourcePropertyMetadata
 {
+    /**
+     * @param list<Type> $types
+     */
     public function __construct(
         private ReadMode $readMode,
         private ?string $readName,
         private Visibility $readVisibility,
         private bool $allowsTargetDelete,
+        private array $types,
     ) {}
 
     public function getReadMode(): ReadMode
@@ -43,5 +49,13 @@ final readonly class SourcePropertyMetadata
     public function allowsTargetDelete(): bool
     {
         return $this->allowsTargetDelete;
+    }
+
+    /**
+     * @return list<Type>
+     */
+    public function getTypes(): array
+    {
+        return $this->types;
     }
 }

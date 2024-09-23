@@ -16,16 +16,20 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Util;
 use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\AllowTargetDelete;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
+use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\SourcePropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\TargetPropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
+use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
+use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal
@@ -35,6 +39,8 @@ final readonly class PropertyMetadataResolver
     public function __construct(
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
+        private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        private TypeResolverInterface $typeResolver,
     ) {}
 
     /**
@@ -66,11 +72,14 @@ final readonly class PropertyMetadataResolver
             readInfo: $readInfo,
         );
 
+        [$types] = $this->getPropertyTypes($class, $property);
+
         return new SourcePropertyMetadata(
             readMode: $readMode,
             readName: $readName,
             readVisibility: $readVisibility,
             allowsTargetDelete: $allowsTargetDelete,
+            types: $types,
         );
     }
 
@@ -103,8 +112,6 @@ final readonly class PropertyMetadataResolver
             allowsDynamicProperties: $allowsDynamicProperties,
         );
 
-        // $isWritable = $constructorWriteInfo !== null || $writeInfo !== null;
-
         [$constructorWriteMode, $constructorWriteName] =
             $this->getConstructorWriteInfo($constructorWriteInfo);
 
@@ -122,6 +129,9 @@ final readonly class PropertyMetadataResolver
             writeInfo: $writeInfo,
         );
 
+        [$types, $scalarType, $nullable] =
+            $this->getPropertyTypes($class, $property);
+
         return new TargetPropertyMetadata(
             readMode: $readMode,
             readName: $readName,
@@ -134,6 +144,9 @@ final readonly class PropertyMetadataResolver
             removerWriteName: $removerWriteName,
             removerWriteVisibility: $removerWriteVisibility,
             allowsDelete: $allowsDelete,
+            types: $types,
+            scalarType: $scalarType,
+            nullable: $nullable,
         );
     }
 
@@ -374,5 +387,62 @@ final readonly class PropertyMetadataResolver
         }
 
         return null;
+    }
+
+    /**
+     * @param class-string $class
+     * @return array{list<Type>,'int'|'float'|'string'|'bool'|'null'|null,bool}
+     */
+    private function getPropertyTypes(string $class, string $property): array
+    {
+        // break property types into simple types
+
+        $originalPropertyTypes = $this->propertyTypeExtractor
+            ->getTypes($class, $property) ?? [];
+
+        $types = [];
+
+        foreach ($originalPropertyTypes as $propertyType) {
+            $simpleTypes = $this->typeResolver->getSimpleTypes($propertyType);
+
+            foreach ($simpleTypes as $simpleType) {
+                if ($simpleType instanceof MixedType) {
+                    continue;
+                }
+
+                $types[] = $simpleType;
+            }
+        }
+
+        // determine if it is a lone scalar type
+
+        /** @var 'int'|'float'|'string'|'bool'|'null'|null */
+        $scalarType = null;
+
+        if (\count($originalPropertyTypes) === 1) {
+            $propertyType = $originalPropertyTypes[0];
+            $propertyBuiltInType = $propertyType->getBuiltinType();
+
+            if (\in_array(
+                $propertyBuiltInType,
+                ['int', 'float', 'string', 'bool', 'null'],
+                true,
+            )) {
+                $scalarType = $propertyBuiltInType;
+            }
+        }
+
+        // determine if nullable
+
+        $nullable = false;
+
+        foreach ($types as $type) {
+            if ($type->getBuiltinType() === 'null') {
+                $nullable = true;
+                break;
+            }
+        }
+
+        return [$types, $scalarType, $nullable];
     }
 }

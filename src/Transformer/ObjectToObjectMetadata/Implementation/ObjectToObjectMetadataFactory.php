@@ -19,7 +19,6 @@ use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
@@ -42,17 +41,19 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
     public function __construct(
         private PropertyListExtractorInterface $propertyListExtractor,
-        private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyMapperResolverInterface $propertyMapperResolver,
         PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
         PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private ProxyFactoryInterface $proxyFactory,
-        private TypeResolverInterface $typeResolver,
+        TypeResolverInterface $typeResolver,
     ) {
         $this->propertyMetadataResolver = new PropertyMetadataResolver(
             propertyReadInfoExtractor: $propertyReadInfoExtractor,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
+            propertyTypeExtractor: $propertyTypeExtractor,
+            typeResolver: $typeResolver,
         );
     }
 
@@ -190,71 +191,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                     allowsDynamicProperties: $targetAllowsDynamicProperties,
                 );
 
-            // get source property types
-
-            $originalSourcePropertyTypes = $this->propertyTypeExtractor
-                ->getTypes($sourceClass, $sourceProperty) ?? [];
-            $sourcePropertyTypes = [];
-
-            foreach ($originalSourcePropertyTypes as $sourcePropertyType) {
-                $simpleTypes = $this->typeResolver->getSimpleTypes($sourcePropertyType);
-
-                foreach ($simpleTypes as $simpleType) {
-                    if ($simpleType instanceof MixedType) {
-                        continue;
-                    }
-
-                    $sourcePropertyTypes[] = $simpleType;
-                }
-            }
-
-            // get target property types
-
-            $originalTargetPropertyTypes = $this->propertyTypeExtractor
-                ->getTypes($targetClass, $targetProperty) ?? [];
-            $targetPropertyTypes = [];
-
-            foreach ($originalTargetPropertyTypes as $targetPropertyType) {
-                $simpleTypes = $this->typeResolver->getSimpleTypes($targetPropertyType);
-
-                foreach ($simpleTypes as $simpleType) {
-                    if ($simpleType instanceof MixedType) {
-                        continue;
-                    }
-
-                    $targetPropertyTypes[] = $simpleType;
-                }
-            }
-
-            // determine target scalar type
-
-            /** @var 'int'|'float'|'string'|'bool'|'null'|null */
-            $targetPropertyScalarType = null;
-
-            if (\count($originalTargetPropertyTypes) === 1) {
-                $targetPropertyType = $originalTargetPropertyTypes[0];
-                $targetPropertyBuiltInType = $targetPropertyType->getBuiltinType();
-
-                if (\in_array(
-                    $targetPropertyBuiltInType,
-                    ['int', 'float', 'string', 'bool', 'null'],
-                    true,
-                )) {
-                    $targetPropertyScalarType = $targetPropertyBuiltInType;
-                }
-            }
-
-            // determine if target can accept null
-
-            $targetCanAcceptNull = false;
-
-            foreach ($targetPropertyTypes as $targetPropertyType) {
-                if ($targetPropertyType->getBuiltinType() === 'null') {
-                    $targetCanAcceptNull = true;
-                    break;
-                }
-            }
-
             // determine if source property is lazy
 
             $sourceLazy = !\in_array($sourceProperty, $eagerProperties, true);
@@ -264,8 +200,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $propertyMapping = new PropertyMapping(
                 sourceProperty: $sourcePropertyMetadata->getReadMode() !== ReadMode::None ? $sourceProperty : null,
                 targetProperty: $targetProperty,
-                sourceTypes: $sourcePropertyTypes,
-                targetTypes: $targetPropertyTypes,
+                sourceTypes: $sourcePropertyMetadata->getTypes(),
+                targetTypes: $targetPropertyMetadata->getTypes(),
                 sourceReadMode: $sourcePropertyMetadata->getReadMode(),
                 sourceReadName: $sourcePropertyMetadata->getReadName(),
                 sourceReadVisibility: $sourcePropertyMetadata->getReadVisibility(),
@@ -279,10 +215,10 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 targetRemoverWriteVisibility: $targetPropertyMetadata->getRemoverWriteVisibility(),
                 targetConstructorWriteMode: $targetPropertyMetadata->getConstructorWriteMode(),
                 targetConstructorWriteName: $targetPropertyMetadata->getConstructorWriteName(),
-                targetScalarType: $targetPropertyScalarType,
+                targetScalarType: $targetPropertyMetadata->getScalarType(),
                 propertyMapper: $serviceMethodSpecification,
                 sourceLazy: $sourceLazy,
-                targetCanAcceptNull: $targetCanAcceptNull,
+                targetCanAcceptNull: $targetPropertyMetadata->isNullable(),
                 targetAllowsDelete: $targetPropertyMetadata->allowsDelete() || $sourcePropertyMetadata->allowsTargetDelete(),
             );
 
