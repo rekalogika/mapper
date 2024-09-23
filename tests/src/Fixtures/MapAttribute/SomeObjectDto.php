@@ -20,7 +20,9 @@ class SomeObjectDto
     #[Map(property: 'sourcePropertyA')]
     #[Map(property: 'otherSourcePropertyA', class: OtherObject::class)]
     public ?string $targetPropertyA = null;
+
     private ?string $targetPropertyB = null;
+
     private ?string $targetPropertyC = null;
 
     public static function preinitialized(): self

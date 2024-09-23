@@ -16,7 +16,9 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MapAttribute;
 class OtherObject
 {
     public ?string $otherSourcePropertyA = null;
+
     public ?string $otherSourcePropertyB = null;
+
     public ?string $otherSourcePropertyC = null;
 
     public static function preinitialized(): self
