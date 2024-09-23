@@ -39,9 +39,10 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     private PropertyMetadataResolver $propertyMetadataResolver;
+    private PropertyMappingResolver $propertyMappingResolver;
 
     public function __construct(
-        private PropertyListExtractorInterface $propertyListExtractor,
+        PropertyListExtractorInterface $propertyListExtractor,
         PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyMapperResolverInterface $propertyMapperResolver,
         PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
@@ -55,6 +56,10 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
             propertyTypeExtractor: $propertyTypeExtractor,
             typeResolver: $typeResolver,
+        );
+
+        $this->propertyMappingResolver = new PropertyMappingResolver(
+            propertyListExtractor: $propertyListExtractor,
         );
     }
 
@@ -169,8 +174,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         // determine properties to map
 
-        $propertiesToMap = PropertyMappingResolver::resolvePropertiesToMap(
-            propertyListExtractor: $this->propertyListExtractor,
+        $propertiesToMap = $this->propertyMappingResolver->getPropertiesToMap(
             sourceClass: $sourceClass,
             targetClass: $targetClass,
             targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
