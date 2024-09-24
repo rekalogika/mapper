@@ -23,7 +23,7 @@ final class Book
     /**
      * @var Collection<int,Chapter>
      */
-    private Collection $chapters;
+    private readonly Collection $chapters;
 
     public function __construct()
     {
@@ -70,8 +70,4 @@ final class Book
     {
         return new ArrayCollection();
     }
-
-    public function addPart(Chapter|Section $chapter): void {}
-
-    public function removePart(Chapter|Section $chapter): void {}
 }
