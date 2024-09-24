@@ -13,6 +13,7 @@
 * fix: data collector output for property path
 * chore: naming, etc
 * test: property path negative test
+* fix: mapping from `stdClass` to object with mandatory constructor arguments
 
 ## 1.8.0
 
