@@ -21,7 +21,7 @@ final class Library
     /**
      * @var Collection<int,Shelf>
      */
-    private Collection $shelves;
+    private readonly Collection $shelves;
 
     private ?string $name = null;
 

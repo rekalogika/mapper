@@ -33,18 +33,18 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final readonly class PropertyMetadataResolver
+final readonly class PropertyMetadataFactory
 {
-    private PropertyPathResolver $propertyPathResolver;
+    private PropertyTypeExtractorInterface $propertyTypeExtractor;
 
     public function __construct(
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
-        private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
     ) {
-        $this->propertyPathResolver = new PropertyPathResolver(
-            propertyTypeExtractor: $propertyTypeExtractor,
+        $this->propertyTypeExtractor = new PropertyPathAwarePropertyTypeExtractor(
+            decorated: $propertyTypeExtractor,
         );
     }
 
@@ -57,10 +57,7 @@ final readonly class PropertyMetadataResolver
         bool $allowsDynamicProperties,
     ): SourcePropertyMetadata {
         if ($this->isPropertyPath($property)) {
-            $types = $this->propertyPathResolver->resolvePropertyPath(
-                class: $class,
-                propertyPath: $property,
-            );
+            $types = array_values($this->propertyTypeExtractor->getTypes($class, $property) ?? []);
 
             return new SourcePropertyMetadata(
                 readMode: ReadMode::PropertyPath,
@@ -106,10 +103,7 @@ final readonly class PropertyMetadataResolver
         bool $allowsDynamicProperties,
     ): TargetPropertyMetadata {
         if ($this->isPropertyPath($property)) {
-            $types = $this->propertyPathResolver->resolvePropertyPath(
-                class: $class,
-                propertyPath: $property,
-            );
+            $types = array_values($this->propertyTypeExtractor->getTypes($class, $property) ?? []);
 
             return new TargetPropertyMetadata(
                 readMode: ReadMode::PropertyPath,
@@ -318,7 +312,6 @@ final readonly class PropertyMetadataResolver
 
     /**
      * @param class-string $class
-     * @return boolean
      */
     private function sourceAllowsTargetDelete(
         string $class,
@@ -347,7 +340,6 @@ final readonly class PropertyMetadataResolver
 
     /**
      * @param class-string $class
-     * @return boolean
      */
     private function targetAllowsDelete(
         string $class,

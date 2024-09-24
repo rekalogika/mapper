@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolve
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMappingResolver;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataResolver;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
@@ -38,7 +38,8 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
  */
 final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
-    private PropertyMetadataResolver $propertyMetadataResolver;
+    private PropertyMetadataFactory $propertyMetadataFactory;
+
     private PropertyMappingResolver $propertyMappingResolver;
 
     public function __construct(
@@ -51,7 +52,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private ProxyFactoryInterface $proxyFactory,
         TypeResolverInterface $typeResolver,
     ) {
-        $this->propertyMetadataResolver = new PropertyMetadataResolver(
+        $this->propertyMetadataFactory = new PropertyMetadataFactory(
             propertyReadInfoExtractor: $propertyReadInfoExtractor,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
             propertyTypeExtractor: $propertyTypeExtractor,
@@ -192,14 +193,14 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // generate source & target property metadata
 
-            $sourcePropertyMetadata = $this->propertyMetadataResolver
+            $sourcePropertyMetadata = $this->propertyMetadataFactory
                 ->createSourcePropertyMetadata(
                     class: $sourceClass,
                     property: $sourceProperty,
                     allowsDynamicProperties: $sourceAllowsDynamicProperties,
                 );
 
-            $targetPropertyMetadata = $this->propertyMetadataResolver
+            $targetPropertyMetadata = $this->propertyMetadataFactory
                 ->createTargetPropertyMetadata(
                     class: $targetClass,
                     property: $targetProperty,

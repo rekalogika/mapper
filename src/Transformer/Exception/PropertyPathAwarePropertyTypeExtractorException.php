@@ -18,11 +18,8 @@ use Rekalogika\Mapper\Exception\ExceptionInterface;
 /**
  * @internal
  */
-class PropertyPathResolverException extends \LogicException implements ExceptionInterface
+class PropertyPathAwarePropertyTypeExtractorException extends \LogicException implements ExceptionInterface
 {
-    /**
-     * @param class-string $class
-     */
     public function __construct(string $message, string $class, string $propertyPath)
     {
         $message = \sprintf('%s, root class: "%s", property path: "%s"', $message, $class, $propertyPath);

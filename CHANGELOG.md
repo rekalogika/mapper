@@ -11,6 +11,7 @@
 * feat: property path support in `Map` attributes
 * fix: writing using property path
 * fix: data collector output for property path
+* chore: cleanup property path classes
 
 ## 1.8.0
 

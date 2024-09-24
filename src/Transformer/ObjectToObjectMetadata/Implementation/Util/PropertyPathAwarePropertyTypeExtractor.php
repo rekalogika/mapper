@@ -13,30 +13,48 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
-use Rekalogika\Mapper\Transformer\Exception\PropertyPathResolverException;
+use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyTypeExtractorException;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type as TypeInfoType;
 
 /**
  * @internal
  */
-final readonly class PropertyPathResolver
+final readonly class PropertyPathAwarePropertyTypeExtractor implements PropertyTypeExtractorInterface
 {
     public function __construct(
-        private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        private PropertyTypeExtractorInterface $decorated,
     ) {}
 
     /**
-     * @param class-string $class
-     * @return list<Type>
+     * @param array<string,mixed> $context
      */
-    public function resolvePropertyPath(
+    public function getType(
         string $class,
-        string $propertyPath,
-    ): array {
-        $propertyPathObject = new PropertyPath($propertyPath);
+        string $property,
+        array $context = [],
+    ): TypeInfoType {
+        throw new \BadMethodCallException('Not implemented');
+    }
+
+    /**
+     * @param array<array-key,mixed> $context
+     * @return null|array<array-key,Type>
+     */
+    #[\Override]
+    public function getTypes(
+        string $class,
+        string $property,
+        array $context = [],
+    ): ?array {
+        if (!$this->isPropertyPath($property)) {
+            return $this->decorated->getTypes($class, $property, $context);
+        }
+
+        $propertyPathObject = new PropertyPath($property);
 
         /** @var \Iterator&PropertyPathIteratorInterface */
         $iterator = $propertyPathObject->getIterator();
@@ -55,10 +73,10 @@ final readonly class PropertyPathResolver
 
             if ($types !== null) {
                 if (\count($types) > 1) {
-                    throw new PropertyPathResolverException(
+                    throw new PropertyPathAwarePropertyTypeExtractorException(
                         message: \sprintf('Cannot proceed because property "%s" has multiple types in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                         class: $class,
-                        propertyPath: $propertyPath,
+                        propertyPath: $property,
                     );
                 }
 
@@ -71,33 +89,38 @@ final readonly class PropertyPathResolver
                 $types = $currentType?->getCollectionValueTypes();
             } else {
                 if ($currentClass === null) {
-                    throw new PropertyPathResolverException(
+                    throw new PropertyPathAwarePropertyTypeExtractorException(
                         message: \sprintf('Trying to resolve path "%s", but the current node is not an object', $propertyPathPart),
                         class: $class,
-                        propertyPath: $propertyPath,
+                        propertyPath: $property,
                     );
                 }
 
                 $currentPath .= '.' . $propertyPathPart;
-                $types = $this->propertyTypeExtractor
-                    ->getTypes($currentClass, $propertyPathPart);
+                $types = $this->decorated
+                    ->getTypes($currentClass, $propertyPathPart, $context);
             }
 
             if ($types === null) {
-                throw new PropertyPathResolverException(
+                throw new PropertyPathAwarePropertyTypeExtractorException(
                     message: \sprintf('Property "%s" not found in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                     class: $class,
-                    propertyPath: $propertyPath,
+                    propertyPath: $property,
                 );
             } elseif (\count($types) === 0) {
-                throw new PropertyPathResolverException(
+                throw new PropertyPathAwarePropertyTypeExtractorException(
                     message: \sprintf('Cannot determine the type of property "%s" in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                     class: $class,
-                    propertyPath: $propertyPath,
+                    propertyPath: $property,
                 );
             }
         }
 
         return array_values($types ?? []);
+    }
+
+    private function isPropertyPath(string $property): bool
+    {
+        return str_contains($property, '.') || str_contains($property, '[');
     }
 }
