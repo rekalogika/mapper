@@ -15,6 +15,7 @@
 * test: property path negative test
 * fix: mapping from `stdClass` to object with mandatory constructor arguments
 * feat: variadic setter & constructor arguments support
+* feat: string to `UnitEnum` transformation
 
 ## 1.8.0
 
