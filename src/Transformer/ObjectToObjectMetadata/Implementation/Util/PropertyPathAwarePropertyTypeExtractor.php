@@ -31,12 +31,13 @@ final readonly class PropertyPathAwarePropertyTypeExtractor implements PropertyT
 
     /**
      * @param array<string,mixed> $context
+     * @return TypeInfoType
      */
     public function getType(
         string $class,
         string $property,
         array $context = [],
-    ): TypeInfoType {
+    ) {
         throw new \BadMethodCallException('Not implemented');
     }
 
