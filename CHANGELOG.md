@@ -12,6 +12,7 @@
 * fix: writing using property path
 * fix: data collector output for property path
 * chore: naming, etc
+* test: property path negative test
 
 ## 1.8.0
 

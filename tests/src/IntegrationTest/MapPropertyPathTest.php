@@ -21,7 +21,10 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Chapter;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Library;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Section;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Shelf;
+use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Book2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInConstructorDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInUnpromotedConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathAwarePropertyTypeExtractor;
@@ -232,6 +235,39 @@ class MapPropertyPathTest extends FrameworkTestCase
         $this->assertEquals('Chapter 1', $book->getChapters()->get(0)?->getTitle());
         $this->assertEquals('Chapter 2', $book->getChapters()->get(1)?->getTitle());
         $this->assertEquals('Chapter 3', $book->getChapters()->get(2)?->getTitle());
+    }
+
+    public function testInvalid(): void
+    {
+        $this->expectException(PropertyPathAwarePropertyInfoExtractorException::class);
+        $book = $this->createBook();
+        $this->mapper->map($book, Book2Dto::class);
+    }
+
+    public function testMapInConstructor(): void
+    {
+        $book = $this->createBook();
+        $bookWithMapInConstructorDto = $this->mapper->map($book, BookWithMapInConstructorDto::class);
+
+        $this->assertEquals('The Library', $bookWithMapInConstructorDto->getLibraryName());
+        $this->assertEquals(1, $bookWithMapInConstructorDto->getShelfNumber());
+        $this->assertCount(3, $bookWithMapInConstructorDto->getSections());
+        $this->assertEquals('Chapter 1', $bookWithMapInConstructorDto->getSections()[0]->title);
+        $this->assertEquals('Chapter 2', $bookWithMapInConstructorDto->getSections()[1]->title);
+        $this->assertEquals('Chapter 3', $bookWithMapInConstructorDto->getSections()[2]->title);
+    }
+
+    public function testMapInUnpromotedConstructor(): void
+    {
+        $book = $this->createBook();
+        $bookWithMapInConstructorDto = $this->mapper->map($book, BookWithMapInUnpromotedConstructorDto::class);
+
+        $this->assertEquals('The Library', $bookWithMapInConstructorDto->getLibraryName());
+        $this->assertEquals(1, $bookWithMapInConstructorDto->getShelfNumber());
+        $this->assertCount(3, $bookWithMapInConstructorDto->getSections());
+        $this->assertEquals('Chapter 1', $bookWithMapInConstructorDto->getSections()[0]->title);
+        $this->assertEquals('Chapter 2', $bookWithMapInConstructorDto->getSections()[1]->title);
+        $this->assertEquals('Chapter 3', $bookWithMapInConstructorDto->getSections()[2]->title);
     }
 
 }
