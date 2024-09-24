@@ -17,6 +17,6 @@ use Rekalogika\Mapper\Attribute\Map;
 
 class Book2Dto
 {
-    #[Map(property: 'shelf.library.namefoo')]
+    #[Map(property: 'shelf.library.foo')]
     public ?string $libraryName = null;
 }
