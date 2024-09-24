@@ -33,6 +33,7 @@ final readonly class TargetPropertyMetadata
         private Visibility $readVisibility,
         private WriteMode $constructorWriteMode,
         private ?string $constructorWriteName,
+        private bool $constructorMandatory,
         private WriteMode $setterWriteMode,
         private ?string $setterWriteName,
         private Visibility $setterWriteVisibility,
@@ -118,5 +119,10 @@ final readonly class TargetPropertyMetadata
     public function isNullable(): bool
     {
         return $this->nullable;
+    }
+
+    public function isConstructorMandatory(): bool
+    {
+        return $this->constructorMandatory;
     }
 }

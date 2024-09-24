@@ -13,10 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
-use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndMoreArgumentDto;
+use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndExtraMandatoryArgumentDto;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndPropertiesDto;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorDto;
+use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorWithExtraOptionalArgumentDto;
+use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithMandatoryConstructorThatCannotBeCastFromNullDto;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithPrivateConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesAndAdditionalNullProperty;
@@ -30,10 +33,10 @@ class ConstructorTest extends FrameworkTestCase
         $source = new ObjectWithScalarProperties();
         $target = $this->mapper->map($source, ObjectWithConstructorDto::class);
 
-        $this->assertSame(1, $target->getA());
-        $this->assertSame('string', $target->getB());
+        $this->assertEquals(1, $target->getA());
+        $this->assertEquals('string', $target->getB());
         $this->assertTrue($target->isC());
-        $this->assertSame(1.1, $target->getD());
+        $this->assertEquals(1.1, $target->getD());
     }
 
     public function testPrivateConstructor(): void
@@ -49,25 +52,55 @@ class ConstructorTest extends FrameworkTestCase
         $source = new ObjectWithScalarProperties();
         $target = $this->mapper->map($source, ObjectWithConstructorAndPropertiesDto::class);
 
-        $this->assertSame(1, $target->getA());
-        $this->assertSame('string', $target->getB());
+        $this->assertEquals(1, $target->getA());
+        $this->assertEquals('string', $target->getB());
         $this->assertTrue($target->isC());
-        $this->assertSame(1.1, $target->getD());
+        $this->assertEquals(1.1, $target->getD());
     }
 
-    public function testMissingSourceProperty(): void
+    public function testMandatoryArgumentWithoutSourceProperty(): void
     {
         $this->expectException(InstantiationFailureException::class);
         $source = new ObjectWithScalarProperties();
-        $result = $this->mapper->map($source, ObjectWithConstructorAndMoreArgumentDto::class);
+        $result = $this->mapper->map($source, ObjectWithConstructorAndExtraMandatoryArgumentDto::class);
         $this->initialize($result);
+    }
+
+    public function testOptionalArgumentWithoutSourceProperty(): void
+    {
+        $source = new ObjectWithScalarProperties();
+        $target = $this->mapper->map($source, ObjectWithConstructorWithExtraOptionalArgumentDto::class);
+
+        $this->assertEquals(1, $target->getA());
+        $this->assertEquals('string', $target->getB());
+        $this->assertTrue($target->isC());
+        $this->assertEquals(1.1, $target->getD());
+        $this->assertEquals('stringE', $target->getE());
+    }
+
+    public function testFromEmptyStdClassToMandatoryArguments(): void
+    {
+        $source = new \stdClass();
+        $target = $this->mapper->map($source, ObjectWithConstructorDto::class);
+
+        $this->assertEquals(0, $target->getA());
+        $this->assertEquals('', $target->getB());
+        $this->assertFalse($target->isC());
+        $this->assertEquals(0.0, $target->getD());
+    }
+
+    public function testFromEmptyStdClassToMandatoryArgumentsThatCannotBeCastFromNull(): void
+    {
+        $this->expectException(CannotFindTransformerException::class);
+        $source = new \stdClass();
+        $this->mapper->map($source, ObjectWithMandatoryConstructorThatCannotBeCastFromNullDto::class);
     }
 
     public function testNullSourcePropertyAndNotNullTargetProperty(): void
     {
         $this->expectException(InstantiationFailureException::class);
         $source = new ObjectWithScalarPropertiesAndAdditionalNullProperty();
-        $result = $this->mapper->map($source, ObjectWithConstructorAndMoreArgumentDto::class);
+        $result = $this->mapper->map($source, ObjectWithConstructorAndExtraMandatoryArgumentDto::class);
         $this->initialize($result);
     }
 }

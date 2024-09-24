@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\Constructor;
 
-class ObjectWithConstructorAndMoreArgumentDto
+class ObjectWithConstructorAndExtraMandatoryArgumentDto
 {
     public function __construct(
         private readonly int $a,

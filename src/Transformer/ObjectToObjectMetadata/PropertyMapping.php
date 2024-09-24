@@ -56,6 +56,7 @@ final readonly class PropertyMapping
         private Visibility $targetRemoverWriteVisibility,
         private WriteMode $targetConstructorWriteMode,
         private ?string $targetConstructorWriteName,
+        private bool $targetConstructorMandatory,
         private ?string $targetScalarType,
         private ?ServiceMethodSpecification $propertyMapper,
         private bool $sourceLazy,
@@ -162,6 +163,11 @@ final readonly class PropertyMapping
     public function getTargetConstructorWriteName(): ?string
     {
         return $this->targetConstructorWriteName;
+    }
+
+    public function isTargetConstructorMandatory(): bool
+    {
+        return $this->targetConstructorMandatory;
     }
 
     public function getSourceReadVisibility(): Visibility

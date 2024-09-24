@@ -231,6 +231,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 targetRemoverWriteVisibility: $targetPropertyMetadata->getRemoverWriteVisibility(),
                 targetConstructorWriteMode: $targetPropertyMetadata->getConstructorWriteMode(),
                 targetConstructorWriteName: $targetPropertyMetadata->getConstructorWriteName(),
+                targetConstructorMandatory: $targetPropertyMetadata->isConstructorMandatory(),
                 targetScalarType: $targetPropertyMetadata->getScalarType(),
                 propertyMapper: $serviceMethodSpecification,
                 sourceLazy: $sourceLazy,

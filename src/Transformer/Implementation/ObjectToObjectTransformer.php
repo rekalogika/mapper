@@ -346,6 +346,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     propertyMapping: $propertyMapping,
                     source: $source,
                     target: null,
+                    mandatory: $propertyMapping->isTargetConstructorMandatory(),
                     context: $context,
                 );
 
@@ -408,6 +409,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 propertyMapping: $propertyMapping,
                 source: $source,
                 target: $target,
+                mandatory: false,
                 context: $context,
             );
         } catch (UninitializedSourcePropertyException | UnsupportedPropertyMappingException) {
@@ -432,6 +434,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         PropertyMapping $propertyMapping,
         object $source,
         ?object $target,
+        bool $mandatory,
         Context $context,
     ): mixed {
         // if a custom property mapper is set, then use it
@@ -462,9 +465,17 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // get the value of the source property
 
-        /** @var mixed */
-        $sourcePropertyValue = $this->readerWriter
-            ->readSourceProperty($source, $propertyMapping, $context);
+        try {
+            /** @var mixed */
+            $sourcePropertyValue = $this->readerWriter
+                ->readSourceProperty($source, $propertyMapping, $context);
+        } catch (UninitializedSourcePropertyException $e) {
+            if (!$mandatory) {
+                throw $e;
+            }
+
+            $sourcePropertyValue = null;
+        }
 
         // short circuit. optimization for transformation between scalar and
         // null, so that we don't have to go through the main transformer for

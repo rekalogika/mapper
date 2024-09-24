@@ -117,6 +117,7 @@ final readonly class PropertyMetadataFactory
                 readVisibility: Visibility::Public,
                 constructorWriteMode: WriteMode::None,
                 constructorWriteName: null,
+                constructorMandatory: false,
                 setterWriteMode: WriteMode::PropertyPath,
                 setterWriteName: $property,
                 setterWriteVisibility: Visibility::Public,
@@ -146,6 +147,13 @@ final readonly class PropertyMetadataFactory
 
         [$constructorWriteMode, $constructorWriteName] =
             $this->processConstructorWriteInfo($constructorWriteInfo);
+
+        $constructorMandatory = $constructorWriteInfo !== null
+            ? $this->isConstructorMandatory(
+                class: $class,
+                constructorArgument: $constructorWriteInfo->getName(),
+            )
+            : false;
 
         [
             $setterWriteMode,
@@ -177,6 +185,7 @@ final readonly class PropertyMetadataFactory
             readVisibility: $readVisibility,
             constructorWriteMode: $constructorWriteMode,
             constructorWriteName: $constructorWriteName,
+            constructorMandatory: $constructorMandatory,
             setterWriteMode: $setterWriteMode,
             setterWriteName: $setterWriteName,
             setterWriteVisibility: $setterWriteVisibility,
@@ -500,5 +509,24 @@ final readonly class PropertyMetadataFactory
     private function isPropertyPath(string $property): bool
     {
         return str_contains($property, '.') || str_contains($property, '[');
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function isConstructorMandatory(
+        string $class,
+        string $constructorArgument,
+    ): bool {
+        $constructor = new \ReflectionMethod($class, '__construct');
+        $parameters = $constructor->getParameters();
+
+        foreach ($parameters as $parameter) {
+            if ($parameter->getName() === $constructorArgument) {
+                return !$parameter->isDefaultValueAvailable();
+            }
+        }
+
+        return false;
     }
 }
