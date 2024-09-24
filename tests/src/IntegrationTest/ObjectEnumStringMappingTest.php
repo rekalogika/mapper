@@ -13,23 +13,58 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
-use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithEnumStringableProperty;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithEnumProperty;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithStringableProperty;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithStringProperty;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
-use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithEnumStringablePropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithStringablePropertyDto;
 
 class ObjectEnumStringMappingTest extends FrameworkTestCase
 {
-    public function testToString(): void
+    public function testStringableToString(): void
     {
-        $object = new ObjectWithEnumStringableProperty();
-        $result = $this->mapper->map($object, ObjectWithEnumStringablePropertyDto::class);
+        $object = new ObjectWithStringableProperty();
+        $result = $this->mapper->map($object, ObjectWithStringablePropertyDto::class);
 
         $this->assertEquals('foo', $result->stringable);
+    }
+
+    public function testEnumToString(): void
+    {
+        $object = ObjectWithEnumProperty::preinitialized();
+        $result = $this->mapper->map($object, ObjectWithStringProperty::class);
+
         $this->assertEquals('foo', $result->backedEnum);
         $this->assertEquals('Foo', $result->unitEnum);
-        $this->assertEquals(SomeBackedEnum::Foo, $result->stringBackedEnum);
-        // $this->assertEquals(SomeEnum::Foo, $result->stringUnitEnum);
+    }
+
+    public function testStringToEnum(): void
+    {
+        $object = ObjectWithStringProperty::preinitialized();
+        $result = $this->mapper->map($object, ObjectWithEnumProperty::class);
+
+        $this->assertEquals(SomeBackedEnum::Foo, $result->backedEnum);
+        $this->assertEquals(SomeEnum::Foo, $result->unitEnum);
+    }
+
+    public function testInvalidStringToBackedEnum(): void
+    {
+        $this->expectException(\ValueError::class);
+        $object = ObjectWithStringProperty::preinitialized();
+        $object->backedEnum = 'invalid';
+        $result = $this->mapper->map($object, ObjectWithEnumProperty::class);
+        $this->assertEquals(SomeBackedEnum::Foo, $result->backedEnum);
+    }
+
+    public function testInvalidStringToUnitEnum(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $object = ObjectWithStringProperty::preinitialized();
+        $object->unitEnum = 'invalid';
+        $result = $this->mapper->map($object, ObjectWithEnumProperty::class);
+        $this->assertEquals(SomeEnum::Foo, $result->unitEnum);
     }
 }

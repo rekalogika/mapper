@@ -13,17 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable;
 
-class ObjectWithEnumStringableProperty
+class ObjectWithStringableProperty
 {
     public ObjectImplementingStringable $stringable;
-
-    public SomeBackedEnum $backedEnum = SomeBackedEnum::Foo;
-
-    public SomeEnum $unitEnum = SomeEnum::Foo;
-
-    public string $stringBackedEnum = 'foo';
-
-    public string $stringUnitEnum = 'Foo';
 
     public function __construct()
     {

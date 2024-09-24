@@ -41,10 +41,18 @@ final readonly class StringToBackedEnumTransformer implements TransformerInterfa
             throw new InvalidTypeInArgumentException('Target must be an enum class-string, "%s" given', $targetType, context: $context);
         }
 
-        // @todo maybe add option to handle values not in the enum
         if (is_a($class, \BackedEnum::class, true)) {
             /** @var class-string<\BackedEnum> $class */
             return $class::from($source);
+        } elseif (is_a($class, \UnitEnum::class, true)) {
+            /** @var class-string<\UnitEnum> $class */
+            $const = $class . '::' . $source;
+
+            if (!\defined($const)) {
+                throw new InvalidArgumentException(\sprintf('Value "%s" is not a valid enum value for "%s"', $source, $class), context: $context);
+            }
+
+            return \constant($const);
         }
 
         throw new InvalidArgumentException(\sprintf('Target must be an enum class-string, "%s" given', get_debug_type($target)), context: $context);
@@ -55,7 +63,7 @@ final readonly class StringToBackedEnumTransformer implements TransformerInterfa
     {
         yield new TypeMapping(
             TypeFactory::string(),
-            TypeFactory::objectOfClass(\BackedEnum::class),
+            TypeFactory::objectOfClass(\UnitEnum::class),
             true,
         );
     }
