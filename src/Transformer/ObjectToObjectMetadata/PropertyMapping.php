@@ -51,12 +51,14 @@ final readonly class PropertyMapping
         private Visibility $targetReadVisibility,
         private WriteMode $targetSetterWriteMode,
         private ?string $targetSetterWriteName,
+        private bool $targetSetterVariadic,
         private ?string $targetRemoverWriteName,
         private Visibility $targetSetterWriteVisibility,
         private Visibility $targetRemoverWriteVisibility,
         private WriteMode $targetConstructorWriteMode,
         private ?string $targetConstructorWriteName,
         private bool $targetConstructorMandatory,
+        private bool $targetConstructorVariadic,
         private ?string $targetScalarType,
         private ?ServiceMethodSpecification $propertyMapper,
         private bool $sourceLazy,
@@ -155,6 +157,11 @@ final readonly class PropertyMapping
         return $this->targetSetterWriteVisibility;
     }
 
+    public function isTargetSetterVariadic(): bool
+    {
+        return $this->targetSetterVariadic;
+    }
+
     public function getTargetConstructorWriteMode(): WriteMode
     {
         return $this->targetConstructorWriteMode;
@@ -168,6 +175,11 @@ final readonly class PropertyMapping
     public function isTargetConstructorMandatory(): bool
     {
         return $this->targetConstructorMandatory;
+    }
+
+    public function isTargetConstructorVariadic(): bool
+    {
+        return $this->targetConstructorVariadic;
     }
 
     public function getSourceReadVisibility(): Visibility

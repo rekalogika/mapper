@@ -214,8 +214,20 @@ final readonly class ReaderWriter
             if ($writeMode === WriteMode::Property) {
                 $target->{$accessorName} = $value;
             } elseif ($writeMode === WriteMode::Method) {
-                /** @psalm-suppress MixedMethodCall */
-                $target->{$accessorName}($value);
+                if ($propertyMapping->isTargetSetterVariadic()) {
+                    if (!\is_array($value) && !$value instanceof \Traversable) {
+                        $value = [$value];
+                    }
+
+                    /** @psalm-suppress MixedArgument */
+                    $value = iterator_to_array($value);
+
+                    /** @psalm-suppress MixedMethodCall */
+                    $target->{$accessorName}(...$value);
+                } else {
+                    /** @psalm-suppress MixedMethodCall */
+                    $target->{$accessorName}($value);
+                }
             } elseif ($writeMode === WriteMode::AdderRemover) {
                 // noop
             } elseif ($writeMode === WriteMode::PropertyPath) {

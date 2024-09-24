@@ -34,9 +34,11 @@ final readonly class TargetPropertyMetadata
         private WriteMode $constructorWriteMode,
         private ?string $constructorWriteName,
         private bool $constructorMandatory,
+        private bool $constructorVariadic,
         private WriteMode $setterWriteMode,
         private ?string $setterWriteName,
         private Visibility $setterWriteVisibility,
+        private bool $setterVariadic,
         private ?string $removerWriteName,
         private Visibility $removerWriteVisibility,
         private bool $allowsDelete,
@@ -70,6 +72,16 @@ final readonly class TargetPropertyMetadata
         return $this->constructorWriteName;
     }
 
+    public function isConstructorMandatory(): bool
+    {
+        return $this->constructorMandatory;
+    }
+
+    public function isConstructorVariadic(): bool
+    {
+        return $this->constructorVariadic;
+    }
+
     public function getSetterWriteMode(): WriteMode
     {
         return $this->setterWriteMode;
@@ -83,6 +95,11 @@ final readonly class TargetPropertyMetadata
     public function getSetterWriteVisibility(): Visibility
     {
         return $this->setterWriteVisibility;
+    }
+
+    public function isSetterVariadic(): bool
+    {
+        return $this->setterVariadic;
     }
 
     public function getRemoverWriteName(): ?string
@@ -119,10 +136,5 @@ final readonly class TargetPropertyMetadata
     public function isNullable(): bool
     {
         return $this->nullable;
-    }
-
-    public function isConstructorMandatory(): bool
-    {
-        return $this->constructorMandatory;
     }
 }

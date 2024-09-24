@@ -118,9 +118,12 @@ final readonly class PropertyMetadataFactory
                 constructorWriteMode: WriteMode::None,
                 constructorWriteName: null,
                 constructorMandatory: false,
+                constructorVariadic: false,
                 setterWriteMode: WriteMode::PropertyPath,
                 setterWriteName: $property,
                 setterWriteVisibility: Visibility::Public,
+                // property access does not support variadic arguments
+                setterVariadic: false,
                 removerWriteName: $property,
                 removerWriteVisibility: Visibility::Public,
                 allowsDelete: false,
@@ -155,6 +158,13 @@ final readonly class PropertyMetadataFactory
             )
             : false;
 
+        $constructorVariadic = $constructorWriteInfo !== null
+            ? $this->isConstructorArgumentVariadic(
+                class: $class,
+                argument: $constructorWriteInfo->getName(),
+            )
+            : false;
+
         [
             $setterWriteMode,
             $setterWriteName,
@@ -179,6 +189,14 @@ final readonly class PropertyMetadataFactory
         [$types, $scalarType, $nullable] =
             $this->getPropertyTypes($class, $property);
 
+        $setterVariadic =
+            $setterWriteMode === WriteMode::Method && $setterWriteName !== null
+            ? $this->isSetterVariadic(
+                class: $class,
+                setter: $setterWriteName,
+            )
+            : false;
+
         return new TargetPropertyMetadata(
             readMode: $readMode,
             readName: $readName,
@@ -186,9 +204,11 @@ final readonly class PropertyMetadataFactory
             constructorWriteMode: $constructorWriteMode,
             constructorWriteName: $constructorWriteName,
             constructorMandatory: $constructorMandatory,
+            constructorVariadic: $constructorVariadic,
             setterWriteMode: $setterWriteMode,
             setterWriteName: $setterWriteName,
             setterWriteVisibility: $setterWriteVisibility,
+            setterVariadic: $setterVariadic,
             removerWriteName: $removerWriteName,
             removerWriteVisibility: $removerWriteVisibility,
             allowsDelete: $allowsDelete,
@@ -528,5 +548,37 @@ final readonly class PropertyMetadataFactory
         }
 
         return false;
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function isConstructorArgumentVariadic(
+        string $class,
+        string $argument,
+    ): bool {
+        $reflectionMethod = new \ReflectionMethod($class, '__construct');
+        $reflectionParameters = $reflectionMethod->getParameters();
+
+        foreach ($reflectionParameters as $reflectionParameter) {
+            if ($reflectionParameter->getName() === $argument) {
+                return $reflectionParameter->isVariadic();
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function isSetterVariadic(
+        string $class,
+        string $setter,
+    ): bool {
+        $reflectionMethod = new \ReflectionMethod($class, $setter);
+        $reflectionParameters = $reflectionMethod->getParameters();
+        $reflectionParameter = $reflectionParameters[0];
+        return $reflectionParameter->isVariadic();
     }
 }
