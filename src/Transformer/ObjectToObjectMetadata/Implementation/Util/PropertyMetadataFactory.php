@@ -33,9 +33,9 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final readonly class PropertyMetadataResolver
+final readonly class PropertyMetadataFactory
 {
-    private PropertyPathResolver $propertyPathResolver;
+    private PropertyPathAwarePropertyTypeExtractor $propertyPathAwarePropertyTypeExtractor;
 
     public function __construct(
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
@@ -43,7 +43,7 @@ final readonly class PropertyMetadataResolver
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
     ) {
-        $this->propertyPathResolver = new PropertyPathResolver(
+        $this->propertyPathAwarePropertyTypeExtractor = new PropertyPathAwarePropertyTypeExtractor(
             propertyTypeExtractor: $propertyTypeExtractor,
         );
     }
@@ -57,7 +57,7 @@ final readonly class PropertyMetadataResolver
         bool $allowsDynamicProperties,
     ): SourcePropertyMetadata {
         if ($this->isPropertyPath($property)) {
-            $types = $this->propertyPathResolver->resolvePropertyPath(
+            $types = $this->propertyPathAwarePropertyTypeExtractor->getTypes(
                 class: $class,
                 propertyPath: $property,
             );
@@ -106,7 +106,7 @@ final readonly class PropertyMetadataResolver
         bool $allowsDynamicProperties,
     ): TargetPropertyMetadata {
         if ($this->isPropertyPath($property)) {
-            $types = $this->propertyPathResolver->resolvePropertyPath(
+            $types = $this->propertyPathAwarePropertyTypeExtractor->getTypes(
                 class: $class,
                 propertyPath: $property,
             );

@@ -23,8 +23,8 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Section;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Shelf;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
-use Rekalogika\Mapper\Transformer\Exception\PropertyPathResolverException;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathResolver;
+use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathAwarePropertyTypeExtractor;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -33,9 +33,9 @@ class MapPropertyPathTest extends FrameworkTestCase
     /**
      * @param class-string $class
      * @param list<Type>|class-string<ExceptionInterface> $expected
-     * @dataProvider propertyPathResolverDataProvider
+     * @dataProvider propertyPathAwarePropertyPathExtractorDataProvider
      */
-    public function testPropertyPathResolver(
+    public function testPropertyPathAwarePropertyInfoExtractor(
         string $class,
         string $path,
         array|string $expected,
@@ -45,7 +45,7 @@ class MapPropertyPathTest extends FrameworkTestCase
         }
 
         $propertyTypeExtractor = $this->get(PropertyTypeExtractorInterface::class);
-        $propertyPathResolver = new PropertyPathResolver($propertyTypeExtractor);
+        $propertyPathAwarePropertyTypeExtractor = new PropertyPathAwarePropertyTypeExtractor($propertyTypeExtractor);
 
         $chapter = new Chapter();
 
@@ -58,7 +58,7 @@ class MapPropertyPathTest extends FrameworkTestCase
         $library = new Library();
         $library->addShelf($shelf);
 
-        $type = $propertyPathResolver->resolvePropertyPath($class, $path);
+        $type = $propertyPathAwarePropertyTypeExtractor->getTypes($class, $path);
 
         $this->assertEquals($expected, $type);
     }
@@ -66,7 +66,7 @@ class MapPropertyPathTest extends FrameworkTestCase
     /**
      * @return iterable<int|string,array{class-string,string,list<Type>|class-string<ExceptionInterface>}>
      */
-    public static function propertyPathResolverDataProvider(): iterable
+    public static function propertyPathAwarePropertyPathExtractorDataProvider(): iterable
     {
         yield [
             Book::class,
@@ -141,7 +141,7 @@ class MapPropertyPathTest extends FrameworkTestCase
         yield [
             Chapter::class,
             'book.shelf.library.foo',
-            PropertyPathResolverException::class,
+            PropertyPathAwarePropertyInfoExtractorException::class,
         ];
 
         yield [

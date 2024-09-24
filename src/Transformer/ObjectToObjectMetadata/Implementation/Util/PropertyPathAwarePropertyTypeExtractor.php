@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
-use Rekalogika\Mapper\Transformer\Exception\PropertyPathResolverException;
+use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -22,7 +22,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final readonly class PropertyPathResolver
+final readonly class PropertyPathAwarePropertyTypeExtractor
 {
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
@@ -32,7 +32,7 @@ final readonly class PropertyPathResolver
      * @param class-string $class
      * @return list<Type>
      */
-    public function resolvePropertyPath(
+    public function getTypes(
         string $class,
         string $propertyPath,
     ): array {
@@ -55,7 +55,7 @@ final readonly class PropertyPathResolver
 
             if ($types !== null) {
                 if (\count($types) > 1) {
-                    throw new PropertyPathResolverException(
+                    throw new PropertyPathAwarePropertyInfoExtractorException(
                         message: \sprintf('Cannot proceed because property "%s" has multiple types in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                         class: $class,
                         propertyPath: $propertyPath,
@@ -71,7 +71,7 @@ final readonly class PropertyPathResolver
                 $types = $currentType?->getCollectionValueTypes();
             } else {
                 if ($currentClass === null) {
-                    throw new PropertyPathResolverException(
+                    throw new PropertyPathAwarePropertyInfoExtractorException(
                         message: \sprintf('Trying to resolve path "%s", but the current node is not an object', $propertyPathPart),
                         class: $class,
                         propertyPath: $propertyPath,
@@ -84,13 +84,13 @@ final readonly class PropertyPathResolver
             }
 
             if ($types === null) {
-                throw new PropertyPathResolverException(
+                throw new PropertyPathAwarePropertyInfoExtractorException(
                     message: \sprintf('Property "%s" not found in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                     class: $class,
                     propertyPath: $propertyPath,
                 );
             } elseif (\count($types) === 0) {
-                throw new PropertyPathResolverException(
+                throw new PropertyPathAwarePropertyInfoExtractorException(
                     message: \sprintf('Cannot determine the type of property "%s" in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                     class: $class,
                     propertyPath: $propertyPath,
