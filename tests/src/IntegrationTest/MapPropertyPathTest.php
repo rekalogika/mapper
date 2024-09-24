@@ -17,11 +17,12 @@ use Doctrine\Common\Collections\Collection;
 use Rekalogika\Mapper\Exception\ExceptionInterface;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Book;
-use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\BookDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Chapter;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Library;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Section;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Shelf;
+use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathResolverException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathResolver;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -199,7 +200,38 @@ class MapPropertyPathTest extends FrameworkTestCase
         $this->assertEquals('Chapter 1', $bookDto->sections[0]->title);
         $this->assertEquals('Chapter 2', $bookDto->sections[1]->title);
         $this->assertEquals('Chapter 3', $bookDto->sections[2]->title);
-
-        $book = $this->mapper->map($bookDto, Book::class);
     }
+
+    public function testReverseMapping(): void
+    {
+        $book = $this->createBook();
+        $book->getChapters()->clear();
+
+        $bookDto = new BookDto();
+        $bookDto->libraryName = 'Some Library';
+        $bookDto->shelfNumber = 31337;
+
+        $chapterDto1 = new ChapterDto();
+        $chapterDto1->title = 'Chapter 1';
+        $bookDto->sections[] = $chapterDto1;
+
+        $chapterDto2 = new ChapterDto();
+        $chapterDto2->title = 'Chapter 2';
+        $bookDto->sections[] = $chapterDto2;
+
+        $chapterDto3 = new ChapterDto();
+        $chapterDto3->title = 'Chapter 3';
+        $bookDto->sections[] = $chapterDto3;
+
+        $this->assertEquals('The Library', $book->getShelf()?->getLibrary()?->getName());
+        $book = $this->mapper->map($bookDto, $book);
+        $this->assertEquals('Some Library', $book->getShelf()?->getLibrary()?->getName());
+
+        $this->assertEquals(31337, $book->getShelf()?->getNumber());
+        $this->assertCount(3, $book->getChapters());
+        $this->assertEquals('Chapter 1', $book->getChapters()->get(0)?->getTitle());
+        $this->assertEquals('Chapter 2', $book->getChapters()->get(1)?->getTitle());
+        $this->assertEquals('Chapter 3', $book->getChapters()->get(2)?->getTitle());
+    }
+
 }

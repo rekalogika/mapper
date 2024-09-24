@@ -9,6 +9,7 @@
 * chore: refactor `PropertyMappingResolver`
 * chore: cleanup
 * feat: property path support in `Map` attributes
+* fix: writing using property path
 
 ## 1.8.0
 

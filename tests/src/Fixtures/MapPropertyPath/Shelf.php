@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-class Shelf
+final class Shelf
 {
     private ?Library $library = null;
 

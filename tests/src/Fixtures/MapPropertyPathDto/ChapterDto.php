@@ -11,6 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath;
+namespace Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto;
 
-final class Section {}
+final class ChapterDto
+{
+    public ?string $title = null;
+}

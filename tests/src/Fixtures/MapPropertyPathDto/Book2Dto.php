@@ -11,9 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath;
+namespace Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto;
 
-class ChapterDto
+use Rekalogika\Mapper\Attribute\Map;
+
+class Book2Dto
 {
-    public ?string $title = null;
+    #[Map(property: 'shelf.library.namefoo')]
+    public ?string $libraryName = null;
 }
