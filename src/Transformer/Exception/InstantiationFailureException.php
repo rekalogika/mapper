@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Context\Context;
 class InstantiationFailureException extends NotMappableValueException
 {
     /**
-     * @param array<string,mixed> $constructorArguments
+     * @param array<int|string,mixed> $constructorArguments
      * @param array<int,string> $unsetSourceProperties
      */
     public function __construct(
@@ -64,7 +64,7 @@ class InstantiationFailureException extends NotMappableValueException
     }
 
     /**
-     * @param array<string,mixed> $constructorArguments
+     * @param array<int|string,mixed> $constructorArguments
      */
     private function formatConstructorArguments(array $constructorArguments): string
     {

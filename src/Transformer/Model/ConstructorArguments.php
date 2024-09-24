@@ -13,15 +13,19 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Model;
 
+use Rekalogika\Mapper\Exception\LogicException;
+
 /**
  * @internal
  */
 final class ConstructorArguments
 {
     /**
-     * @var array<string,mixed>
+     * @var array<int<0,max>|string,mixed>
      */
     private array $contructorArguments = [];
+
+    private bool $variadicAdded = false;
 
     /**
      * @var array<int,string>
@@ -30,7 +34,24 @@ final class ConstructorArguments
 
     public function addArgument(string $name, mixed $value): void
     {
+        if ($this->variadicAdded) {
+            throw new LogicException('Cannot add argument after variadic argument');
+        }
+
         $this->contructorArguments[$name] = $value;
+    }
+
+    /**
+     * @param iterable<mixed> $value
+     */
+    public function addVariadicArgument(iterable $value): void
+    {
+        /** @var mixed $item */
+        foreach ($value as $item) {
+            $this->contructorArguments[] = $item;
+        }
+
+        $this->variadicAdded = true;
     }
 
     public function addUnsetSourceProperty(string $name): void
@@ -39,7 +60,7 @@ final class ConstructorArguments
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<int<0,max>|string,mixed>
      */
     public function getArguments(): array
     {

@@ -350,10 +350,21 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                     context: $context,
                 );
 
-                $constructorArguments->addArgument(
-                    $propertyMapping->getTargetProperty(),
-                    $targetPropertyValue,
-                );
+                if ($propertyMapping->isTargetConstructorVariadic()) {
+                    if (
+                        !\is_array($targetPropertyValue)
+                        && !$targetPropertyValue instanceof \Traversable
+                    ) {
+                        $targetPropertyValue = [$targetPropertyValue];
+                    }
+
+                    $constructorArguments->addVariadicArgument($targetPropertyValue);
+                } else {
+                    $constructorArguments->addArgument(
+                        $propertyMapping->getTargetProperty(),
+                        $targetPropertyValue,
+                    );
+                }
             } catch (UninitializedSourcePropertyException $e) {
                 $sourceProperty = $e->getPropertyName();
                 $constructorArguments->addUnsetSourceProperty($sourceProperty);
