@@ -39,6 +39,7 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
     private PropertyMetadataFactory $propertyMetadataFactory;
+
     private PropertyMappingResolver $propertyMappingResolver;
 
     public function __construct(

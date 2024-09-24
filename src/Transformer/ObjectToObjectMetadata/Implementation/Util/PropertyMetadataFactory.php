@@ -318,7 +318,6 @@ final readonly class PropertyMetadataFactory
 
     /**
      * @param class-string $class
-     * @return boolean
      */
     private function sourceAllowsTargetDelete(
         string $class,
@@ -347,7 +346,6 @@ final readonly class PropertyMetadataFactory
 
     /**
      * @param class-string $class
-     * @return boolean
      */
     private function targetAllowsDelete(
         string $class,

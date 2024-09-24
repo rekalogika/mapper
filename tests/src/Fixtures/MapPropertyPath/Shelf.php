@@ -23,7 +23,7 @@ final class Shelf
     /**
      * @var Collection<int,Book>
      */
-    private Collection $books;
+    private readonly Collection $books;
 
     private ?int $number = null;
 
