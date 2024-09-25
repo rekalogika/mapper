@@ -392,7 +392,7 @@ final readonly class PropertyMetadataFactory
             }
         }
 
-        return ClassUtil::getAttributes(
+        return ClassUtil::getPropertyAttributes(
             class: $class,
             property: $property,
             attributeClass: null,

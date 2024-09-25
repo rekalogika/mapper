@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
-use Rekalogika\Mapper\Transformer\Context\SourceAttributes;
-use Rekalogika\Mapper\Transformer\Context\TargetAttributes;
+use Rekalogika\Mapper\Transformer\Context\SourcePropertyAttributes;
+use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -65,8 +65,8 @@ final readonly class PropertyMapping
         private ?ServiceMethodSpecification $propertyMapper,
         private bool $sourceLazy,
         private bool $targetCanAcceptNull,
-        private SourceAttributes $sourceAttributes,
-        private TargetAttributes $targetAttributes,
+        private SourcePropertyAttributes $sourceAttributes,
+        private TargetPropertyAttributes $targetAttributes,
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
@@ -215,12 +215,12 @@ final readonly class PropertyMapping
         return $this->targetRemoverWriteVisibility;
     }
 
-    public function getSourceAttributes(): SourceAttributes
+    public function getSourceAttributes(): SourcePropertyAttributes
     {
         return $this->sourceAttributes;
     }
 
-    public function getTargetAttributes(): TargetAttributes
+    public function getTargetAttributes(): TargetPropertyAttributes
     {
         return $this->targetAttributes;
     }

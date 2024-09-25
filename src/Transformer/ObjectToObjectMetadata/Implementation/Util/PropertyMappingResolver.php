@@ -91,7 +91,7 @@ final readonly class PropertyMappingResolver
         string $property,
         string $pairedClass,
     ): string {
-        $attributes = ClassUtil::getAttributes(
+        $attributes = ClassUtil::getPropertyAttributes(
             class: $class,
             property: $property,
             attributeClass: Map::class,

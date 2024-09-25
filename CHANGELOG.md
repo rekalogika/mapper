@@ -24,6 +24,7 @@
 * fix: multiple attributes found in inheritance chain now correctly handled
 * feat: save all attributes in metadata, not just our attributes
 * feat: datetime transformation to int & float
+* feat: class attributes are now stored in the metadata
 
 ## 1.8.0
 

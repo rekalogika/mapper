@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
 use Rekalogika\Mapper\Proxy\ProxyNamer;
+use Rekalogika\Mapper\Transformer\Context\SourceClassAttributes;
+use Rekalogika\Mapper\Transformer\Context\TargetClassAttributes;
 
 /**
  * @immutable
@@ -68,6 +70,8 @@ final readonly class ObjectToObjectMetadata
         private int $targetModifiedTime,
         private bool $targetReadOnly,
         private bool $constructorIsEager,
+        private SourceClassAttributes $sourceClassAttributes,
+        private TargetClassAttributes $targetClassAttributes,
         private array $targetProxySkippedProperties = [],
         private ?string $cannotUseProxyReason = null,
     ) {
@@ -120,6 +124,8 @@ final readonly class ObjectToObjectMetadata
             targetModifiedTime: $this->targetModifiedTime,
             targetReadOnly: $this->targetReadOnly,
             constructorIsEager: $constructorIsEager,
+            sourceClassAttributes: $this->sourceClassAttributes,
+            targetClassAttributes: $this->targetClassAttributes,
             targetProxySkippedProperties: $targetProxySkippedProperties,
             cannotUseProxyReason: null,
         );
@@ -142,6 +148,8 @@ final readonly class ObjectToObjectMetadata
             targetModifiedTime: $this->targetModifiedTime,
             targetReadOnly: $this->targetReadOnly,
             constructorIsEager: $this->constructorIsEager,
+            sourceClassAttributes: $this->sourceClassAttributes,
+            targetClassAttributes: $this->targetClassAttributes,
             targetProxySkippedProperties: [],
             cannotUseProxyReason: $reason,
         );
@@ -293,5 +301,15 @@ final readonly class ObjectToObjectMetadata
     public function getSourceProperties(): array
     {
         return $this->sourceProperties;
+    }
+
+    public function getSourceClassAttributes(): SourceClassAttributes
+    {
+        return $this->sourceClassAttributes;
+    }
+
+    public function getTargetClassAttributes(): TargetClassAttributes
+    {
+        return $this->targetClassAttributes;
     }
 }
