@@ -109,19 +109,19 @@ class DateTimeMappingTest extends FrameworkTestCase
 
         $this->assertEquals(
             '2024-01-01 07:00:00 Asia/Jakarta',
-            $target->dateTimeInterface->format('Y-m-d H:i:s e')
+            $target->dateTimeInterface->format('Y-m-d H:i:s e'),
         );
         $this->assertEquals(
             '2024-01-01 07:00:00 Asia/Jakarta',
-            $target->dateTimeImmutable->format('Y-m-d H:i:s e')
+            $target->dateTimeImmutable->format('Y-m-d H:i:s e'),
         );
         $this->assertEquals(
             '2024-01-01 07:00:00 Asia/Jakarta',
-            $target->dateTime->format('Y-m-d H:i:s e')
+            $target->dateTime->format('Y-m-d H:i:s e'),
         );
         $this->assertEquals(
             '2024-01-01 07:00:00 Asia/Jakarta',
-            $target->datePoint->format('Y-m-d H:i:s e')
+            $target->datePoint->format('Y-m-d H:i:s e'),
         );
     }
 }

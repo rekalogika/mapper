@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Attribute;
 
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_PROPERTY)]
-final readonly class DateTimeOptions
+final readonly class DateTimeOptions implements PropertyAttributeInterface
 {
     /**
      * @param string|null $stringFormat The string format for
@@ -38,7 +38,7 @@ final readonly class DateTimeOptions
             return null;
         }
 
-        if (is_string($this->timeZone)) {
+        if (\is_string($this->timeZone)) {
             return new \DateTimeZone($this->timeZone);
         }
 

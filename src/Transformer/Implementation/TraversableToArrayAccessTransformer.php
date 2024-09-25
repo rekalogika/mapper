@@ -17,12 +17,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ReadableCollection;
 use Rekalogika\Mapper\Attribute\AllowDelete;
+use Rekalogika\Mapper\Attribute\AllowTargetDelete;
 use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\Context\SourceAttributes;
+use Rekalogika\Mapper\Transformer\Context\TargetAttributes;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
@@ -151,11 +154,9 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
 
         // determine if target allows deletion
 
-        $allowDelete = $context(AllowDelete::class) !== null;
-
-        if ($allowDelete) {
-            $context = $context->without(AllowDelete::class);
-        }
+        $allowDelete =
+            $context(SourceAttributes::class)?->get(AllowTargetDelete::class) !== null
+            || $context(TargetAttributes::class)?->get(AllowDelete::class) !== null;
 
         // Transform the source
 

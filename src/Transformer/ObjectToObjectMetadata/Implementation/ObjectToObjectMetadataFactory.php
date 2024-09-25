@@ -17,6 +17,8 @@ use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
+use Rekalogika\Mapper\Transformer\Context\SourceAttributes;
+use Rekalogika\Mapper\Transformer\Context\TargetAttributes;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
@@ -211,6 +213,11 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             $sourceLazy = !\in_array($sourceProperty, $eagerProperties, true);
 
+            // attributes
+
+            $sourceAttributes = new SourceAttributes($sourcePropertyMetadata->getAttributes());
+            $targetAttributes = new TargetAttributes($targetPropertyMetadata->getAttributes());
+
             // instantiate property mapping
 
             $propertyMapping = new PropertyMapping(
@@ -238,8 +245,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 propertyMapper: $serviceMethodSpecification,
                 sourceLazy: $sourceLazy,
                 targetCanAcceptNull: $targetPropertyMetadata->isNullable(),
-                targetAllowsDelete: $targetPropertyMetadata->allowsDelete() || $sourcePropertyMetadata->allowsTargetDelete(),
-                dateTimeOptions: $targetPropertyMetadata->getDateTimeOptions(),
+                sourceAttributes: $sourceAttributes,
+                targetAttributes: $targetAttributes,
             );
 
             $propertyMappings[] = $propertyMapping;

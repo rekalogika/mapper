@@ -17,6 +17,7 @@
 * feat: variadic setter & constructor arguments support
 * feat: string to `UnitEnum` transformation
 * feat: datetime format & timezone conversion
+* refactor: genericize attribute handling
 
 ## 1.8.0
 
