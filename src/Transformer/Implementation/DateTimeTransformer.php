@@ -101,8 +101,9 @@ final readonly class DateTimeTransformer implements TransformerInterface
                 $result = $result->setTimezone($timeZone);
             }
 
-            $format = $context(DateTimeOptions::class)
-                ?->getStringFormat()
+            $format = $context(TargetAttributes::class)
+                ?->get(DateTimeOptions::class)
+                ?->getFormat()
                 ?? \DateTimeInterface::ATOM;
 
             return $result->format($format);

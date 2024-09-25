@@ -15,6 +15,8 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTime;
+use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeCollection;
+use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeCollectionDto;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeDto;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeWithTimeZoneDto;
 use Symfony\Component\Clock\DatePoint;
@@ -122,6 +124,32 @@ class DateTimeMappingTest extends FrameworkTestCase
         $this->assertEquals(
             '2024-01-01 07:00:00 Asia/Jakarta',
             $target->datePoint->format('Y-m-d H:i:s e'),
+        );
+    }
+
+    public function testDateTimeCollectionAttribute(): void
+    {
+        $source = new ObjectWithDateTimeCollection();
+        $target = $this->mapper->map($source, ObjectWithDateTimeCollectionDto::class);
+        $target->datetimes->count();
+
+        $this->assertInstanceOf(ObjectWithDateTimeCollectionDto::class, $target);
+        $this->assertCount(3, $target->datetimes);
+
+
+        $this->assertEquals(
+            '2024-01-01 07:00:00 Asia/Jakarta',
+            $target->datetimes[0],
+        );
+
+        $this->assertEquals(
+            '2024-02-01 07:00:00 Asia/Jakarta',
+            $target->datetimes[1],
+        );
+
+        $this->assertEquals(
+            '2024-03-01 07:00:00 Asia/Jakarta',
+            $target->datetimes[2],
         );
     }
 }

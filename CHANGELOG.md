@@ -18,6 +18,8 @@
 * feat: string to `UnitEnum` transformation
 * feat: datetime format & timezone conversion
 * refactor: genericize attribute handling
+* feat: attributes now affects the transformation of collection members
+* fix: date time format was not recognized
 
 ## 1.8.0
 

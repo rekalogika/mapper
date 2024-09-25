@@ -17,19 +17,19 @@ namespace Rekalogika\Mapper\Attribute;
 final readonly class DateTimeOptions implements PropertyAttributeInterface
 {
     /**
-     * @param string|null $stringFormat The string format for
+     * @param string|null $format The string format for
      * DateTimeInterface::format()
      * @param \DateTimeZone|non-empty-string|null $timeZone If specified, the DateTime will be
      * converted to the specified time zone.
      */
     public function __construct(
-        private ?string $stringFormat = null,
+        private ?string $format = null,
         private null|string|\DateTimeZone $timeZone = null,
     ) {}
 
-    public function getStringFormat(): ?string
+    public function getFormat(): ?string
     {
-        return $this->stringFormat;
+        return $this->format;
     }
 
     public function getTimeZone(): null|\DateTimeZone
