@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\Attribute;
 
-class SomeObject {
+class SomeObject
+{
     /**
      * @psalm-suppress UndefinedAttributeClass
      * @phpstan-ignore attribute.notFound
