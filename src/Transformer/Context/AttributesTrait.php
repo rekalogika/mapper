@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Context;
 
-use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 
 trait AttributesTrait
@@ -64,14 +63,6 @@ trait AttributesTrait
     {
         $objects = $this->classToObjects[$class] ?? null;
 
-        if ($objects === null) {
-            return null;
-        }
-
-        if (\count($objects) > 1) {
-            throw new LogicException(\sprintf('Multiple attributes found for class %s', $class));
-        }
-
         $result = $objects[0] ?? null;
 
         if ($result === null) {
@@ -79,7 +70,7 @@ trait AttributesTrait
         }
 
         if (!$result instanceof $class) {
-            throw new UnexpectedValueException();
+            throw new UnexpectedValueException(\sprintf('Expected an instance of %s, but got %s.', $class, $result::class));
         }
 
         return $result;
