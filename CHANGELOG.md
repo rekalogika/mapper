@@ -26,6 +26,7 @@
 * feat: datetime transformation to int & float
 * feat: class attributes are now stored in the metadata
 * chore: rector run
+* feat: collect attributes if using property path mapping
 
 ## 1.8.0
 

@@ -33,7 +33,7 @@ use Symfony\Component\PropertyInfo\Type;
  */
 final readonly class PropertyMetadataFactory
 {
-    private PropertyPathAwarePropertyTypeExtractor $propertyPathAwarePropertyTypeExtractor;
+    private PropertyPathMetadataFactory $propertyPathAwarePropertyTypeExtractor;
 
     public function __construct(
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
@@ -41,7 +41,7 @@ final readonly class PropertyMetadataFactory
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
     ) {
-        $this->propertyPathAwarePropertyTypeExtractor = new PropertyPathAwarePropertyTypeExtractor(
+        $this->propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
         );
     }
@@ -55,20 +55,22 @@ final readonly class PropertyMetadataFactory
         string $property,
         bool $allowsDynamicProperties,
     ): SourcePropertyMetadata {
+        // property path
+
         if ($this->isPropertyPath($property)) {
-            $types = $this->propertyPathAwarePropertyTypeExtractor->getTypes(
-                class: $class,
-                propertyPath: $property,
-            );
+            $propertyPathMetadata = $this->propertyPathAwarePropertyTypeExtractor
+                ->getMetadata($class, $property);
 
             return new SourcePropertyMetadata(
                 readMode: ReadMode::PropertyPath,
                 readName: $property,
                 readVisibility: Visibility::Public,
-                types: $types,
-                attributes: [],
+                types: $propertyPathMetadata->getTypes(),
+                attributes: $propertyPathMetadata->getAttributes(),
             );
         }
+
+        // normal, non property path
 
         $readInfo = $this->propertyReadInfoExtractor
             ->getReadInfo($class, $property);
@@ -109,11 +111,13 @@ final readonly class PropertyMetadataFactory
         string $property,
         bool $allowsDynamicProperties,
     ): TargetPropertyMetadata {
+        // property path
+
         if ($this->isPropertyPath($property)) {
-            $types = $this->propertyPathAwarePropertyTypeExtractor->getTypes(
-                class: $class,
-                propertyPath: $property,
-            );
+            $propertyPathMetadata = $this->propertyPathAwarePropertyTypeExtractor
+                ->getMetadata($class, $property);
+
+            $types = $propertyPathMetadata->getTypes();
 
             return new TargetPropertyMetadata(
                 readMode: ReadMode::PropertyPath,
@@ -133,9 +137,11 @@ final readonly class PropertyMetadataFactory
                 types: $types,
                 scalarType: $this->determineScalarType($types),
                 nullable: false,
-                attributes: [],
+                attributes: $propertyPathMetadata->getAttributes(),
             );
         }
+
+        // normal, non property path
 
         $readInfo = $this->propertyReadInfoExtractor
             ->getReadInfo($class, $property);

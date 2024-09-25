@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyPathMetadata;
+use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -22,7 +24,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final readonly class PropertyPathAwarePropertyTypeExtractor
+final readonly class PropertyPathMetadataFactory
 {
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
@@ -30,12 +32,11 @@ final readonly class PropertyPathAwarePropertyTypeExtractor
 
     /**
      * @param class-string $class
-     * @return list<Type>
      */
-    public function getTypes(
+    public function getMetadata(
         string $class,
         string $propertyPath,
-    ): array {
+    ): PropertyPathMetadata {
         $propertyPathObject = new PropertyPath($propertyPath);
 
         /** @var \Iterator&PropertyPathIteratorInterface */
@@ -46,6 +47,10 @@ final readonly class PropertyPathAwarePropertyTypeExtractor
         $currentClass = $class;
 
         $currentType = null;
+
+        $currentProperty = null;
+
+        $lastClass = null;
 
         /** @var list<Type>|null */
         $types = null;
@@ -79,6 +84,8 @@ final readonly class PropertyPathAwarePropertyTypeExtractor
                 }
 
                 $currentPath .= '.' . $propertyPathPart;
+                $currentProperty = $propertyPathPart;
+                $lastClass = $currentClass;
                 $types = $this->propertyTypeExtractor
                     ->getTypes($currentClass, $propertyPathPart);
             }
@@ -98,6 +105,38 @@ final readonly class PropertyPathAwarePropertyTypeExtractor
             }
         }
 
-        return array_values($types ?? []);
+        if ($lastClass === null) {
+            throw new PropertyPathAwarePropertyInfoExtractorException(
+                message: \sprintf('Property path "%s" is empty', $propertyPath),
+                class: $class,
+                propertyPath: $propertyPath,
+            );
+        }
+
+        if (!class_exists($lastClass)) {
+            throw new PropertyPathAwarePropertyInfoExtractorException(
+                message: \sprintf('Class "%s" not found', $lastClass),
+                class: $class,
+                propertyPath: $propertyPath,
+            );
+        }
+
+        if ($currentProperty !== null) {
+            $attributes = ClassUtil::getPropertyAttributes(
+                class: $lastClass,
+                property: $currentProperty,
+                attributeClass: null,
+            );
+        } else {
+            $attributes = [];
+        }
+
+        return new PropertyPathMetadata(
+            propertyPath: $propertyPath,
+            class: $lastClass,
+            property: $currentProperty,
+            types: array_values($types ?? []),
+            attributes: $attributes,
+        );
     }
 }

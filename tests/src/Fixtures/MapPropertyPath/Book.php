@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Rekalogika\Mapper\Attribute\DateTimeOptions;
 
 final class Book
 {
@@ -23,11 +24,19 @@ final class Book
     /**
      * @var Collection<int,Chapter>
      */
+    #[SomeAttribute('book-chapters')]
     private readonly Collection $chapters;
+
+    /**
+     * @var Collection<int,string>
+     */
+    #[DateTimeOptions(format: 'm/d/Y H:i-s')]
+    private readonly Collection $publicationDates;
 
     public function __construct()
     {
         $this->chapters = new ArrayCollection();
+        $this->publicationDates = new ArrayCollection();
     }
 
     public function getShelf(): ?Shelf
@@ -61,6 +70,24 @@ final class Book
         if ($chapter->getBook() === $this) {
             $chapter->setBook(null);
         }
+    }
+
+    /**
+     * @return Collection<int,string>
+     */
+    public function getPublicationDates(): Collection
+    {
+        return $this->publicationDates;
+    }
+
+    public function addPublicationDate(string $publicationDate): void
+    {
+        $this->publicationDates->add($publicationDate);
+    }
+
+    public function removePublicationDate(string $publicationDate): void
+    {
+        $this->publicationDates->removeElement($publicationDate);
     }
 
     /**

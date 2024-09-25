@@ -21,13 +21,15 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Chapter;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Library;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Section;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Shelf;
+use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\SomeAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Book2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInUnpromotedConstructorDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Chapter2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathAwarePropertyTypeExtractor;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathMetadataFactory;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -35,20 +37,22 @@ class MapPropertyPathTest extends FrameworkTestCase
 {
     /**
      * @param class-string $class
-     * @param list<Type>|class-string<ExceptionInterface> $expected
+     * @param list<Type>|class-string<ExceptionInterface> $expectedTypes
+     * @param list<object> $expectedAttributes
      * @dataProvider propertyPathAwarePropertyPathExtractorDataProvider
      */
     public function testPropertyPathAwarePropertyInfoExtractor(
         string $class,
         string $path,
-        array|string $expected,
+        array|string $expectedTypes,
+        array $expectedAttributes = [],
     ): void {
-        if (\is_string($expected)) {
-            $this->expectException($expected);
+        if (\is_string($expectedTypes)) {
+            $this->expectException($expectedTypes);
         }
 
         $propertyTypeExtractor = $this->get(PropertyTypeExtractorInterface::class);
-        $propertyPathAwarePropertyTypeExtractor = new PropertyPathAwarePropertyTypeExtractor($propertyTypeExtractor);
+        $propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory($propertyTypeExtractor);
 
         $chapter = new Chapter();
 
@@ -61,13 +65,14 @@ class MapPropertyPathTest extends FrameworkTestCase
         $library = new Library();
         $library->addShelf($shelf);
 
-        $type = $propertyPathAwarePropertyTypeExtractor->getTypes($class, $path);
+        $metadata = $propertyPathAwarePropertyTypeExtractor->getMetadata($class, $path);
 
-        $this->assertEquals($expected, $type);
+        $this->assertEquals($expectedTypes, $metadata->getTypes());
+        $this->assertEquals($expectedAttributes, $metadata->getAttributes());
     }
 
     /**
-     * @return iterable<int|string,array{class-string,string,list<Type>|class-string<ExceptionInterface>}>
+     * @return iterable<int|string,array{0:class-string,1:string,2:list<Type>|class-string<ExceptionInterface>,3?:list<object>}>
      */
     public static function propertyPathAwarePropertyPathExtractorDataProvider(): iterable
     {
@@ -80,6 +85,9 @@ class MapPropertyPathTest extends FrameworkTestCase
                     class: Book::class,
                     nullable: true,
                 ),
+            ],
+            [
+                new SomeAttribute('chapter-book'),
             ],
         ];
 
@@ -103,6 +111,9 @@ class MapPropertyPathTest extends FrameworkTestCase
                     ),
                 ),
             ],
+            [
+                new SomeAttribute('book-chapters'),
+            ],
         ];
 
         yield [
@@ -114,6 +125,9 @@ class MapPropertyPathTest extends FrameworkTestCase
                     class: Library::class,
                     nullable: true,
                 ),
+            ],
+            [
+                new SomeAttribute('shelf-library'),
             ],
         ];
 
@@ -127,6 +141,9 @@ class MapPropertyPathTest extends FrameworkTestCase
                     nullable: true,
                 ),
             ],
+            [
+                new SomeAttribute('chapter-book'),
+            ],
         ];
 
         yield [
@@ -138,6 +155,9 @@ class MapPropertyPathTest extends FrameworkTestCase
                     class: Chapter::class,
                     nullable: false,
                 ),
+            ],
+            [
+                new SomeAttribute('book-chapters'),
             ],
         ];
 
@@ -180,6 +200,9 @@ class MapPropertyPathTest extends FrameworkTestCase
         $book->addChapter($chapter1);
         $book->addChapter($chapter2);
         $book->addChapter($chapter3);
+        $book->addPublicationDate('05/20/2024 00:00-05');
+        $book->addPublicationDate('05/21/2024 00:00-06');
+        $book->addPublicationDate('05/22/2024 00:00-07');
 
         $shelf = new Shelf();
         $shelf->setNumber(1);
@@ -268,6 +291,34 @@ class MapPropertyPathTest extends FrameworkTestCase
         $this->assertEquals('Chapter 1', $bookWithMapInConstructorDto->getSections()[0]->title);
         $this->assertEquals('Chapter 2', $bookWithMapInConstructorDto->getSections()[1]->title);
         $this->assertEquals('Chapter 3', $bookWithMapInConstructorDto->getSections()[2]->title);
+    }
+
+    public function testAttributeWithCollectionTypes(): void
+    {
+        $book = $this->createBook();
+        $chapter = $book->getChapters()->first();
+        $this->assertInstanceOf(Chapter::class, $chapter);
+        $target = $this->mapper->map($chapter, Chapter2Dto::class);
+
+        $this->assertCount(3, $target->bookPublicationDates);
+        $this->assertContainsOnlyInstancesOf(\DateTimeInterface::class, $target->bookPublicationDates);
+
+        foreach ($target->bookPublicationDates as $bookPublicationDate) {
+            $this->assertEquals('Asia/Jakarta', $bookPublicationDate->getTimezone()->getName());
+        }
+
+        $expected = [
+            '2024-05-20 07:00:05 Asia/Jakarta',
+            '2024-05-21 07:00:06 Asia/Jakarta',
+            '2024-05-22 07:00:07 Asia/Jakarta',
+        ];
+
+        $actual = array_map(
+            static fn(\DateTimeInterface $dateTime): string => $dateTime->format('Y-m-d H:i:s e'),
+            $target->bookPublicationDates,
+        );
+
+        $this->assertEquals($expected, $actual);
     }
 
 }

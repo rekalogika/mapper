@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath;
 
 final class Chapter
 {
+    #[SomeAttribute('chapter-book')]
     private ?Book $book = null;
 
     private ?string $title = null;
