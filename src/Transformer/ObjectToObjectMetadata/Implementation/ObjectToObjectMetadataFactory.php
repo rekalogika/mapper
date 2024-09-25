@@ -17,8 +17,10 @@ use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
-use Rekalogika\Mapper\Transformer\Context\SourceAttributes;
-use Rekalogika\Mapper\Transformer\Context\TargetAttributes;
+use Rekalogika\Mapper\Transformer\Context\SourceClassAttributes;
+use Rekalogika\Mapper\Transformer\Context\SourcePropertyAttributes;
+use Rekalogika\Mapper\Transformer\Context\TargetClassAttributes;
+use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
@@ -152,6 +154,11 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             throw new InternalClassUnsupportedException($targetClass);
         }
 
+        // get class attributes
+
+        $sourceClassAttributes = new SourceClassAttributes(ClassUtil::getClassAttributes($sourceClass, null));
+        $targetClassAttributes = new TargetClassAttributes(ClassUtil::getClassAttributes($targetClass, null));
+
         // queries
 
         $instantiable = $targetReflection->isInstantiable();
@@ -215,8 +222,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // attributes
 
-            $sourceAttributes = new SourceAttributes($sourcePropertyMetadata->getAttributes());
-            $targetAttributes = new TargetAttributes($targetPropertyMetadata->getAttributes());
+            $sourceAttributes = new SourcePropertyAttributes($sourcePropertyMetadata->getAttributes());
+            $targetAttributes = new TargetPropertyAttributes($targetPropertyMetadata->getAttributes());
 
             // instantiate property mapping
 
@@ -267,6 +274,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             targetModifiedTime: $targetModifiedTime,
             targetReadOnly: $targetReadOnly,
             constructorIsEager: false,
+            sourceClassAttributes: $sourceClassAttributes,
+            targetClassAttributes: $targetClassAttributes,
         );
 
         // create proxy if possible

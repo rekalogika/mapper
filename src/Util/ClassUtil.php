@@ -197,28 +197,6 @@ final readonly class ClassUtil
     }
 
     /**
-     * @param class-string $class
-     * @param null|class-string $attributeClass
-     * @param list<string>|null $methodPrefixes
-     * @return object|null
-     */
-    public static function getAttribute(
-        string $class,
-        string $property,
-        ?string $attributeClass,
-        ?array $methodPrefixes = null,
-    ): ?object {
-        $attributes = self::getAttributes(
-            class: $class,
-            property: $property,
-            attributeClass: $attributeClass,
-            methodPrefixes: $methodPrefixes,
-        );
-
-        return $attributes[0] ?? null;
-    }
-
-    /**
      * @template T of object
      * @param class-string $class
      * @param null|class-string<T> $attributeClass
@@ -226,7 +204,7 @@ final readonly class ClassUtil
      * @param list<string>|null $methods
      * @return ($attributeClass is null ? list<object> : list<T>)
      */
-    public static function getAttributes(
+    public static function getPropertyAttributes(
         string $class,
         string $property,
         ?string $attributeClass,
@@ -247,6 +225,43 @@ final readonly class ClassUtil
                 ...$attributes,
                 ...self::getAttributesFromMethod($class, $method, $attributeClass),
             ];
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * @template T of object
+     * @param class-string $class
+     * @param null|class-string<T> $attributeClass
+     * @return ($attributeClass is null ? list<object> : list<T>)
+     */
+    public static function getClassAttributes(
+        string $class,
+        ?string $attributeClass,
+    ): array {
+        $classes = self::getAllClassesFromObject($class);
+
+        $attributes = [];
+
+        foreach ($classes as $class) {
+            $reflectionClass = new \ReflectionClass($class);
+
+            if ($attributeClass === null) {
+                $reflectionAttributes = $reflectionClass
+                    ->getAttributes();
+            } else {
+                $reflectionAttributes = $reflectionClass
+                    ->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF);
+            }
+
+            foreach ($reflectionAttributes as $reflectionAttribute) {
+                try {
+                    $attributes[] = $reflectionAttribute->newInstance();
+                } catch (\Error) {
+                    // Ignore errors
+                }
+            }
         }
 
         return $attributes;

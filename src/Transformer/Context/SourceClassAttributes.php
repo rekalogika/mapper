@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Context;
 /**
  * @implements \IteratorAggregate<object>
  */
-final readonly class TargetAttributes implements \IteratorAggregate
+final readonly class SourceClassAttributes implements \IteratorAggregate
 {
     use AttributesTrait;
 }

@@ -16,8 +16,8 @@ namespace Rekalogika\Mapper\Transformer\Implementation;
 use Rekalogika\Mapper\Attribute\DateTimeOptions;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Transformer\Context\SourceAttributes;
-use Rekalogika\Mapper\Transformer\Context\TargetAttributes;
+use Rekalogika\Mapper\Transformer\Context\SourcePropertyAttributes;
+use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -41,11 +41,11 @@ final readonly class DateTimeTransformer implements TransformerInterface
         // if source is scalar, we convert it to DateTimeInterface first
 
         if (\is_scalar($source)) {
-            $sourceTimeZone = $context(SourceAttributes::class)
+            $sourceTimeZone = $context(SourcePropertyAttributes::class)
                 ?->get(DateTimeOptions::class)
                 ?->getTimeZone();
 
-            $sourceFormat = $context(SourceAttributes::class)
+            $sourceFormat = $context(SourcePropertyAttributes::class)
                 ?->get(DateTimeOptions::class)
                 ?->getFormat();
 
@@ -76,7 +76,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
             throw new InvalidArgumentException(\sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)), context: $context);
         }
 
-        $targetTimeZone = $context(TargetAttributes::class)
+        $targetTimeZone = $context(TargetPropertyAttributes::class)
             ?->get(DateTimeOptions::class)
             ?->getTimeZone();
 
@@ -137,7 +137,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
                 $result = $result->setTimezone($targetTimeZone);
             }
 
-            $targetFormat = $context(TargetAttributes::class)
+            $targetFormat = $context(TargetPropertyAttributes::class)
                 ?->get(DateTimeOptions::class)
                 ?->getFormat()
                 ?? \DateTimeInterface::ATOM;
@@ -154,7 +154,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
                 $result = $result->setTimezone($targetTimeZone);
             }
 
-            $targetFormat = $context(TargetAttributes::class)
+            $targetFormat = $context(TargetPropertyAttributes::class)
                 ?->get(DateTimeOptions::class)
                 ?->getFormat()
                 ?? 'U';
@@ -171,7 +171,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
                 $result = $result->setTimezone($targetTimeZone);
             }
 
-            $targetFormat = $context(TargetAttributes::class)
+            $targetFormat = $context(TargetPropertyAttributes::class)
                 ?->get(DateTimeOptions::class)
                 ?->getFormat()
                 ?? 'U';

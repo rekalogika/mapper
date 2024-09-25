@@ -24,8 +24,8 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\Context\SourceAttributes;
-use Rekalogika\Mapper\Transformer\Context\TargetAttributes;
+use Rekalogika\Mapper\Transformer\Context\SourcePropertyAttributes;
+use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
@@ -155,8 +155,8 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
         // determine if target allows deletion
 
         $allowDelete =
-            $context(SourceAttributes::class)?->get(AllowTargetDelete::class) !== null
-            || $context(TargetAttributes::class)?->get(AllowDelete::class) !== null;
+            $context(SourcePropertyAttributes::class)?->get(AllowTargetDelete::class) !== null
+            || $context(TargetPropertyAttributes::class)?->get(AllowDelete::class) !== null;
 
         // Transform the source
 
