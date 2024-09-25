@@ -40,7 +40,8 @@ use Symfony\Component\Clock\MockClock;
 
 class DateTimeMappingTest extends FrameworkTestCase
 {
-    public function setUp(): void
+    #[\Override]
+    protected function setUp(): void
     {
         Clock::set(new MockClock('2025-01-01 00:00:00', 'UTC'));
 
@@ -180,7 +181,6 @@ class DateTimeMappingTest extends FrameworkTestCase
     /**
      * @param class-string<DateTimeTestObjectInterface> $sourceClass
      * @param class-string<DateTimeTestObjectInterface> $targetClass
-     * @param string|int|float $expected
      * @dataProvider dateTimeMappingProvider
      */
     public function testDateTimeMapping(

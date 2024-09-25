@@ -25,6 +25,7 @@
 * feat: save all attributes in metadata, not just our attributes
 * feat: datetime transformation to int & float
 * feat: class attributes are now stored in the metadata
+* chore: rector run
 
 ## 1.8.0
 

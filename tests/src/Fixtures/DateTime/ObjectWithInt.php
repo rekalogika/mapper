@@ -17,14 +17,16 @@ final class ObjectWithInt implements DateTimeTestObjectInterface
 {
     public ?int $property = null;
 
+    #[\Override]
     public static function preinitialized(): static
     {
-        $object = new static();
+        $object = new self();
         $object->property = Constants::SOURCE_DATETIME_EPOCH;
 
         return $object;
     }
 
+    #[\Override]
     public function getProperty(): mixed
     {
         return $this->property;

@@ -17,14 +17,16 @@ final class ObjectWithDateTimeImmutable implements DateTimeTestObjectInterface
 {
     public ?\DateTimeImmutable $property = null;
 
+    #[\Override]
     public static function preinitialized(): static
     {
-        $object = new static();
+        $object = new self();
         $object->property = new \DateTimeImmutable(Constants::SOURCE_DATETIME);
 
         return $object;
     }
 
+    #[\Override]
     public function getProperty(): mixed
     {
         return $this->property;

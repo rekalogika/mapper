@@ -21,7 +21,7 @@ class ObjectWithDateTimeCollection
     /**
      * @var Collection<int,\DateTimeInterface>
      */
-    private Collection $datetimes;
+    private readonly Collection $datetimes;
 
     public function __construct()
     {
