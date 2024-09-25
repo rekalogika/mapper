@@ -12,6 +12,7 @@ use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
+use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Strict\Rector\Ternary\DisallowedShortTernaryRuleFixerRector;
 use Rector\ValueObject\PhpVersion;
@@ -62,6 +63,7 @@ return RectorConfig::configure()
 
         RemoveAlwaysTrueIfConditionRector::class => [
             __DIR__ . '/src/Proxy/Implementation/ProxyFactory.php',
+            __DIR__ . '/src/Transformer/Context/AttributesTrait.php',
         ],
 
         RemoveUnusedPrivatePropertyRector::class => [
@@ -74,5 +76,9 @@ return RectorConfig::configure()
 
         MakeInheritedMethodVisibilitySameAsParentRector::class => [
             __DIR__ . '/tests/src/Common/MapperTestFactory.php',
+        ],
+
+        ClassPropertyAssignToConstructorPromotionRector::class => [
+            __DIR__ . '/tests/src/Fixtures/MapPropertyPathDto/BookWithMapInUnpromotedConstructorDto.php',
         ],
     ]);
