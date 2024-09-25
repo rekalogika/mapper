@@ -19,14 +19,16 @@ final class ObjectWithDateTimeInterface implements DateTimeTestObjectInterface
 {
     public ?\DateTimeInterface $property = null;
 
+    #[\Override]
     public static function preinitialized(): static
     {
-        $object = new static();
+        $object = new self();
         $object->property = new DatePoint(Constants::SOURCE_DATETIME);
 
         return $object;
     }
 
+    #[\Override]
     public function getProperty(): mixed
     {
         return $this->property;

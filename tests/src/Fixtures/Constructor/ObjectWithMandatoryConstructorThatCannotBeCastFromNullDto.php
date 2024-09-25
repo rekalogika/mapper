@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\Constructor;
 
-final class ObjectWithMandatoryConstructorThatCannotBeCastFromNullDto
+final readonly class ObjectWithMandatoryConstructorThatCannotBeCastFromNullDto
 {
     public function __construct(
-        private readonly \DateTimeInterface $a,
+        private \DateTimeInterface $a,
     ) {}
 
     public function getA(): \DateTimeInterface

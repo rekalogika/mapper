@@ -20,14 +20,16 @@ final class ObjectWithStringDDMMYYYY implements DateTimeTestObjectInterface
     #[DateTimeOptions(format: 'd-m-Y')]
     public ?string $property = null;
 
+    #[\Override]
     public static function preinitialized(): static
     {
-        $object = new static();
+        $object = new self();
         $object->property = '01-01-2023';
 
         return $object;
     }
 
+    #[\Override]
     public function getProperty(): mixed
     {
         return $this->property;

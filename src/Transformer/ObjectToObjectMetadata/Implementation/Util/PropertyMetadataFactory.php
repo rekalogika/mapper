@@ -155,19 +155,19 @@ final readonly class PropertyMetadataFactory
         [$constructorWriteMode, $constructorWriteName] =
             $this->processConstructorWriteInfo($constructorWriteInfo);
 
-        $constructorMandatory = $constructorWriteInfo !== null
-            ? $this->isConstructorMandatory(
+        $constructorMandatory =
+            $constructorWriteInfo !== null
+            && $this->isConstructorMandatory(
                 class: $class,
                 constructorArgument: $constructorWriteInfo->getName(),
-            )
-            : false;
+            );
 
-        $constructorVariadic = $constructorWriteInfo !== null
-            ? $this->isConstructorArgumentVariadic(
+        $constructorVariadic =
+            $constructorWriteInfo !== null
+            && $this->isConstructorArgumentVariadic(
                 class: $class,
                 argument: $constructorWriteInfo->getName(),
-            )
-            : false;
+            );
 
         [
             $setterWriteMode,
@@ -187,12 +187,12 @@ final readonly class PropertyMetadataFactory
             $this->getPropertyTypes($class, $property);
 
         $setterVariadic =
-            $setterWriteMode === WriteMode::Method && $setterWriteName !== null
-            ? $this->isSetterVariadic(
+            $setterWriteMode === WriteMode::Method
+            && $setterWriteName !== null
+            && $this->isSetterVariadic(
                 class: $class,
                 setter: $setterWriteName,
-            )
-            : false;
+            );
 
         $attributes = $this->getPropertyAttributes(
             class: $class,

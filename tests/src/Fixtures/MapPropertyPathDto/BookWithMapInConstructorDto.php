@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto;
 
 use Rekalogika\Mapper\Attribute\Map;
 
-final class BookWithMapInConstructorDto
+final readonly class BookWithMapInConstructorDto
 {
     public function __construct(
         #[Map(property: 'shelf.library.name')]

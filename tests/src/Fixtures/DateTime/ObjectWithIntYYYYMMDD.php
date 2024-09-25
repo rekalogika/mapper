@@ -20,14 +20,16 @@ final class ObjectWithIntYYYYMMDD implements DateTimeTestObjectInterface
     #[DateTimeOptions(format: 'Ymd')]
     public ?int $property = null;
 
+    #[\Override]
     public static function preinitialized(): static
     {
-        $object = new static();
+        $object = new self();
         $object->property = 20220105;
 
         return $object;
     }
 
+    #[\Override]
     public function getProperty(): mixed
     {
         return $this->property;
