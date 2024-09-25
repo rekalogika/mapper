@@ -20,6 +20,7 @@
 * refactor: genericize attribute handling
 * feat: attributes now affects the transformation of collection members
 * fix: date time format was not recognized
+* test: attribute with missing class
 
 ## 1.8.0
 

@@ -16,6 +16,8 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Attribute\ObjectWithAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\Attribute\SomeAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\Attribute\SomeObject;
+use Rekalogika\Mapper\Tests\Fixtures\Attribute\SomeObjectWithInvalidPropertyAttribute;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 
@@ -32,5 +34,13 @@ class AttributeTest extends FrameworkTestCase
         $typeStrings = $typeResolver->getAcceptedTransformerInputTypeStrings($type);
 
         $this->assertContainsEquals(SomeAttribute::class, $typeStrings);
+    }
+
+    public function testMappingWithInvalidPropertyAttribute(): void
+    {
+        $source = new SomeObject();
+        $target = $this->mapper->map($source, SomeObjectWithInvalidPropertyAttribute::class);
+
+        $this->assertEquals($source->foo, $target->foo);
     }
 }
