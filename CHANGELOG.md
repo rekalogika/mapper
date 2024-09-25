@@ -22,6 +22,7 @@
 * fix: date time format was not recognized
 * test: attribute with missing class
 * fix: multiple attributes found in inheritance chain now correctly handled
+* feat: save all attributes in metadata, not just our attributes
 
 ## 1.8.0
 

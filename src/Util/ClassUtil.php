@@ -197,17 +197,15 @@ final readonly class ClassUtil
     }
 
     /**
-     * @template T of object
-     *
      * @param class-string $class
-     * @param class-string<T> $attributeClass
+     * @param null|class-string $attributeClass
      * @param list<string>|null $methodPrefixes
-     * @return T|null
+     * @return object|null
      */
     public static function getAttribute(
         string $class,
         string $property,
-        string $attributeClass,
+        ?string $attributeClass,
         ?array $methodPrefixes = null,
     ): ?object {
         $attributes = self::getAttributes(
@@ -222,17 +220,16 @@ final readonly class ClassUtil
 
     /**
      * @template T of object
-     *
      * @param class-string $class
-     * @param class-string<T> $attributeClass
+     * @param null|class-string<T> $attributeClass
      * @param list<string>|null $methodPrefixes
      * @param list<string>|null $methods
-     * @return list<T>
+     * @return ($attributeClass is null ? list<object> : list<T>)
      */
     public static function getAttributes(
         string $class,
         string $property,
-        string $attributeClass,
+        ?string $attributeClass,
         ?array $methodPrefixes = null,
         ?array $methods = null,
     ): array {
@@ -257,15 +254,14 @@ final readonly class ClassUtil
 
     /**
      * @template T of object
-     *
      * @param class-string $class
-     * @param class-string<T> $attributeClass
-     * @return list<T>
+     * @param null|class-string<T> $attributeClass
+     * @return ($attributeClass is null ? list<object> : list<T>)
      */
     private static function getAttributesFromProperty(
         string $class,
         string $property,
-        string $attributeClass,
+        ?string $attributeClass,
     ): array {
         $classes = self::getAllClassesFromObject($class);
 
@@ -280,8 +276,13 @@ final readonly class ClassUtil
                 continue;
             }
 
-            $reflectionAttributes = $reflectionProperty
-                ->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF);
+            if ($attributeClass === null) {
+                $reflectionAttributes = $reflectionProperty
+                    ->getAttributes();
+            } else {
+                $reflectionAttributes = $reflectionProperty
+                    ->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF);
+            }
 
             foreach ($reflectionAttributes as $reflectionAttribute) {
                 try {
@@ -297,15 +298,14 @@ final readonly class ClassUtil
 
     /**
      * @template T of object
-     *
      * @param class-string $class
-     * @param class-string<T> $attributeClass
-     * @return list<T>
+     * @param null|class-string<T> $attributeClass
+     * @return ($attributeClass is null ? list<object> : list<T>)
      */
     private static function getAttributesFromMethod(
         string $class,
         string $method,
-        string $attributeClass,
+        ?string $attributeClass,
     ): array {
         $classes = self::getAllClassesFromObject($class);
 
@@ -320,8 +320,13 @@ final readonly class ClassUtil
                 continue;
             }
 
-            $reflectionAttributes = $reflectionMethod
-                ->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF);
+            if ($attributeClass === null) {
+                $reflectionAttributes = $reflectionMethod
+                    ->getAttributes();
+            } else {
+                $reflectionAttributes = $reflectionMethod
+                    ->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF);
+            }
 
             foreach ($reflectionAttributes as $reflectionAttribute) {
                 try {
