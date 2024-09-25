@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model;
 
-use Rekalogika\Mapper\Attribute\PropertyAttributeInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -27,7 +26,7 @@ final readonly class TargetPropertyMetadata
     /**
      * @param list<Type> $types
      * @param 'int'|'float'|'string'|'bool'|'null'|null $scalarType
-     * @param list<PropertyAttributeInterface> $attributes
+     * @param list<object> $attributes
      */
     public function __construct(
         private ReadMode $readMode,
@@ -136,7 +135,7 @@ final readonly class TargetPropertyMetadata
     }
 
     /**
-     * @return list<PropertyAttributeInterface>
+     * @return list<object>
      */
     public function getAttributes(): array
     {

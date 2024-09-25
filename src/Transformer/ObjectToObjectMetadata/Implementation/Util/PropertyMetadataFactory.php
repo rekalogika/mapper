@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
-use Rekalogika\Mapper\Attribute\PropertyAttributeInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\SourcePropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\TargetPropertyMetadata;
@@ -352,7 +351,7 @@ final readonly class PropertyMetadataFactory
 
     /**
      * @param class-string $class
-     * @return list<PropertyAttributeInterface>
+     * @return list<object>
      */
     private function getPropertyAttributes(
         string $class,
@@ -396,7 +395,7 @@ final readonly class PropertyMetadataFactory
         return ClassUtil::getAttributes(
             class: $class,
             property: $property,
-            attributeClass: PropertyAttributeInterface::class,
+            attributeClass: null,
             methods: $methods,
         );
     }

@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Attribute;
 
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::TARGET_PROPERTY)]
-final readonly class DateTimeOptions implements PropertyAttributeInterface
+final readonly class DateTimeOptions
 {
     /**
      * @param string|null $format The string format for
