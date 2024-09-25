@@ -13,14 +13,17 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\DateTime;
 
-final class ObjectWithDateTime implements DateTimeTestObjectInterface
+use Rekalogika\Mapper\Attribute\DateTimeOptions;
+
+final class ObjectWithFloatYYYYMMDD implements DateTimeTestObjectInterface
 {
-    public ?\DateTime $property = null;
+    #[DateTimeOptions(format: 'Ymd')]
+    public ?float $property = null;
 
     public static function preinitialized(): static
     {
         $object = new static();
-        $object->property = new \DateTime(Constants::SOURCE_DATETIME);
+        $object->property = (float) Constants::SOURCE_DATETIME_EPOCH;
 
         return $object;
     }

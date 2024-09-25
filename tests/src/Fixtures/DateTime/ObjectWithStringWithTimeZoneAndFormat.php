@@ -13,14 +13,20 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\DateTime;
 
-final class ObjectWithDateTime implements DateTimeTestObjectInterface
+use Rekalogika\Mapper\Attribute\DateTimeOptions;
+
+final class ObjectWithStringWithTimeZoneAndFormat implements DateTimeTestObjectInterface
 {
-    public ?\DateTime $property = null;
+    #[DateTimeOptions(
+        timeZone: 'Asia/Jakarta',
+        format: \DateTimeInterface::RFC822,
+    )]
+    public ?string $property = null;
 
     public static function preinitialized(): static
     {
         $object = new static();
-        $object->property = new \DateTime(Constants::SOURCE_DATETIME);
+        $object->property = Constants::SOURCE_DATETIME;
 
         return $object;
     }
