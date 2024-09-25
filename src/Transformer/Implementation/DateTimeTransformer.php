@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Implementation;
 use Rekalogika\Mapper\Attribute\DateTimeOptions;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Transformer\Context\TargetAttributes;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -44,7 +45,9 @@ final readonly class DateTimeTransformer implements TransformerInterface
             throw new InvalidArgumentException(\sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)), context: $context);
         }
 
-        $timeZone = $context(DateTimeOptions::class)?->getTimeZone();
+        $timeZone = $context(TargetAttributes::class)
+            ?->get(DateTimeOptions::class)
+            ?->getTimeZone();
 
         // if target is mutable, just set directly on the instance and return it
         if ($target instanceof \DateTime) {

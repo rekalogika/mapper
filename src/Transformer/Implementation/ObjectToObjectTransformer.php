@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Psr\Container\ContainerInterface;
-use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
@@ -571,19 +570,13 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         $sourceType = $propertyMapping->getCompatibleSourceType($guessedSourceType)
             ?? $guessedSourceType;
 
-        // add AllowDelete to context if target allows deletion
+        // add attributes to context
 
-        if ($propertyMapping->targetAllowsDelete()) {
-            $context = $context->with(new AllowDelete());
-        }
+        $sourceAttributes = $propertyMapping->getSourceAttributes();
+        $context = $context->with($sourceAttributes);
 
-        // date time options
-
-        $dateTimeOptions = $propertyMapping->getDateTimeOptions();
-
-        if ($dateTimeOptions !== null) {
-            $context = $context->with($dateTimeOptions);
-        }
+        $targetAttributes = $propertyMapping->getTargetAttributes();
+        $context = $context->with($targetAttributes);
 
         // transform the value
 

@@ -13,9 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
-use Rekalogika\Mapper\Attribute\AllowDelete;
-use Rekalogika\Mapper\Attribute\AllowTargetDelete;
-use Rekalogika\Mapper\Attribute\DateTimeOptions;
+use Rekalogika\Mapper\Attribute\PropertyAttributeInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\SourcePropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\TargetPropertyMetadata;
@@ -50,6 +48,7 @@ final readonly class PropertyMetadataFactory
     }
 
     /**
+     * @todo collect property path attributes
      * @param class-string $class
      */
     public function createSourcePropertyMetadata(
@@ -67,13 +66,16 @@ final readonly class PropertyMetadataFactory
                 readMode: ReadMode::PropertyPath,
                 readName: $property,
                 readVisibility: Visibility::Public,
-                allowsTargetDelete: false,
                 types: $types,
+                attributes: [],
             );
         }
 
         $readInfo = $this->propertyReadInfoExtractor
             ->getReadInfo($class, $property);
+
+        $writeInfo = $this
+            ->getSetterPropertyWriteInfo($class, $property);
 
         [$readMode, $readName, $readVisibility] = $this->processPropertyReadInfo(
             readInfo: $readInfo,
@@ -81,26 +83,27 @@ final readonly class PropertyMetadataFactory
             allowsDynamicProperties: $allowsDynamicProperties,
         );
 
-        $allowsTargetDelete = $this->sourceAllowsTargetDelete(
+        [$types] = $this->getPropertyTypes($class, $property);
+
+        $attributes = $this->getPropertyAttributes(
             class: $class,
             property: $property,
             readInfo: $readInfo,
+            writeInfo: $writeInfo,
         );
-
-        [$types] = $this->getPropertyTypes($class, $property);
 
         return new SourcePropertyMetadata(
             readMode: $readMode,
             readName: $readName,
             readVisibility: $readVisibility,
-            allowsTargetDelete: $allowsTargetDelete,
             types: $types,
+            attributes: $attributes,
         );
     }
 
     /**
      * @param class-string $class
-     * @todo support DateTimeOptions with property paths
+     * @todo collect property path attributes
      */
     public function createTargetPropertyMetadata(
         string $class,
@@ -128,11 +131,10 @@ final readonly class PropertyMetadataFactory
                 setterVariadic: false,
                 removerWriteName: $property,
                 removerWriteVisibility: Visibility::Public,
-                allowsDelete: false,
                 types: $types,
                 scalarType: $this->determineScalarType($types),
                 nullable: false,
-                dateTimeOptions: null,
+                attributes: [],
             );
         }
 
@@ -182,13 +184,6 @@ final readonly class PropertyMetadataFactory
                 allowsDynamicProperties: $allowsDynamicProperties,
             );
 
-        $allowsDelete = $this->targetAllowsDelete(
-            class: $class,
-            property: $property,
-            readInfo: $readInfo,
-            writeInfo: $writeInfo,
-        );
-
         [$types, $scalarType, $nullable] =
             $this->getPropertyTypes($class, $property);
 
@@ -200,9 +195,11 @@ final readonly class PropertyMetadataFactory
             )
             : false;
 
-        $dateTimeOptions = $this->getDateTimeOptions(
+        $attributes = $this->getPropertyAttributes(
             class: $class,
             property: $property,
+            readInfo: $readInfo,
+            writeInfo: $writeInfo,
         );
 
         return new TargetPropertyMetadata(
@@ -219,11 +216,10 @@ final readonly class PropertyMetadataFactory
             setterVariadic: $setterVariadic,
             removerWriteName: $removerWriteName,
             removerWriteVisibility: $removerWriteVisibility,
-            allowsDelete: $allowsDelete,
             types: $types,
             scalarType: $scalarType,
             nullable: $nullable,
-            dateTimeOptions: $dateTimeOptions,
+            attributes: $attributes,
         );
     }
 
@@ -356,71 +352,53 @@ final readonly class PropertyMetadataFactory
 
     /**
      * @param class-string $class
+     * @return list<PropertyAttributeInterface>
      */
-    private function sourceAllowsTargetDelete(
-        string $class,
-        string $property,
-        ?PropertyReadInfo $readInfo,
-    ): bool {
-        $sourceMethods = [];
-
-        $sourceGetter = $readInfo !== null
-            ? $readInfo->getName()
-            : null;
-
-        if ($sourceGetter !== null) {
-            $sourceMethods[] = $sourceGetter;
-        }
-
-        $allowTargetDeleteAttributes = ClassUtil::getAttributes(
-            class: $class,
-            property: $property,
-            attributeClass: AllowTargetDelete::class,
-            methods: $sourceMethods,
-        );
-
-        return $allowTargetDeleteAttributes !== [];
-    }
-
-    /**
-     * @param class-string $class
-     */
-    private function targetAllowsDelete(
+    private function getPropertyAttributes(
         string $class,
         string $property,
         ?PropertyReadInfo $readInfo,
         ?PropertyWriteInfo $writeInfo,
-    ): bool {
-        $targetMethods = [];
+    ): array {
+        $methods = [];
 
-        $targetGetter = $readInfo !== null
-            ? $readInfo->getName()
-            : null;
+        // getter
 
-        if ($targetGetter !== null) {
-            $targetMethods[] = $targetGetter;
+        if (
+            $readInfo !== null
+            && $readInfo->getType() === PropertyReadInfo::TYPE_METHOD
+        ) {
+            $methods[] = $readInfo->getName();
         }
 
-        $targetRemover =
-            (
-                $writeInfo !== null &&
-                $writeInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER
-            )
-            ? $writeInfo->getRemoverInfo()->getName()
-            : null;
+        // mutators
 
-        if ($targetRemover !== null) {
-            $targetMethods[] = $targetRemover;
+        if ($writeInfo !== null) {
+            if ($writeInfo->getType() === PropertyWriteInfo::TYPE_METHOD) {
+                $methods[] = $writeInfo->getName();
+            } elseif ($writeInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
+                try {
+                    $adderInfo = $writeInfo->getAdderInfo();
+                    $methods[] = $adderInfo->getName();
+                } catch (\LogicException) {
+                    // ignore
+                }
+
+                try {
+                    $removerInfo = $writeInfo->getRemoverInfo();
+                    $methods[] = $removerInfo->getName();
+                } catch (\LogicException) {
+                    // ignore
+                }
+            }
         }
 
-        $allowDeleteAttributes = ClassUtil::getAttributes(
+        return ClassUtil::getAttributes(
             class: $class,
             property: $property,
-            attributeClass: AllowDelete::class,
-            methods: $targetMethods,
+            attributeClass: PropertyAttributeInterface::class,
+            methods: $methods,
         );
-
-        return $allowDeleteAttributes !== [];
     }
 
     /**
@@ -589,22 +567,5 @@ final readonly class PropertyMetadataFactory
         $reflectionParameters = $reflectionMethod->getParameters();
         $reflectionParameter = $reflectionParameters[0];
         return $reflectionParameter->isVariadic();
-    }
-
-    /**
-     * @param class-string $class
-     */
-    private function getDateTimeOptions(
-        string $class,
-        string $property,
-    ): ?DateTimeOptions {
-        $attributes = ClassUtil::getAttributes(
-            class: $class,
-            property: $property,
-            attributeClass: DateTimeOptions::class,
-            methodPrefixes: ['get', 'set'],
-        );
-
-        return $attributes[0] ?? null;
     }
 }

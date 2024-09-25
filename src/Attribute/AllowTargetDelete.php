@@ -14,4 +14,4 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Attribute;
 
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD)]
-final readonly class AllowTargetDelete {}
+final readonly class AllowTargetDelete implements PropertyAttributeInterface {}

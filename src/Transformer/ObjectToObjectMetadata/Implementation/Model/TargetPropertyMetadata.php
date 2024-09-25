@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model;
 
-use Rekalogika\Mapper\Attribute\DateTimeOptions;
+use Rekalogika\Mapper\Attribute\PropertyAttributeInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -27,6 +27,7 @@ final readonly class TargetPropertyMetadata
     /**
      * @param list<Type> $types
      * @param 'int'|'float'|'string'|'bool'|'null'|null $scalarType
+     * @param list<PropertyAttributeInterface> $attributes
      */
     public function __construct(
         private ReadMode $readMode,
@@ -42,11 +43,10 @@ final readonly class TargetPropertyMetadata
         private bool $setterVariadic,
         private ?string $removerWriteName,
         private Visibility $removerWriteVisibility,
-        private bool $allowsDelete,
         private array $types,
         private ?string $scalarType,
         private bool $nullable,
-        private ?DateTimeOptions $dateTimeOptions,
+        private array $attributes,
     ) {}
 
     public function getReadMode(): ReadMode
@@ -114,11 +114,6 @@ final readonly class TargetPropertyMetadata
         return $this->removerWriteVisibility;
     }
 
-    public function allowsDelete(): bool
-    {
-        return $this->allowsDelete;
-    }
-
     /**
      * @return list<Type>
      */
@@ -140,8 +135,11 @@ final readonly class TargetPropertyMetadata
         return $this->nullable;
     }
 
-    public function getDateTimeOptions(): ?DateTimeOptions
+    /**
+     * @return list<PropertyAttributeInterface>
+     */
+    public function getAttributes(): array
     {
-        return $this->dateTimeOptions;
+        return $this->attributes;
     }
 }

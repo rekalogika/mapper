@@ -280,10 +280,15 @@ final readonly class ClassUtil
                 continue;
             }
 
-            $reflectionAttributes = $reflectionProperty->getAttributes($attributeClass);
+            $reflectionAttributes = $reflectionProperty
+                ->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF);
 
             foreach ($reflectionAttributes as $reflectionAttribute) {
-                $attributes[] = $reflectionAttribute->newInstance();
+                try {
+                    $attributes[] = $reflectionAttribute->newInstance();
+                } catch (\Error) {
+                    // Ignore errors
+                }
             }
         }
 
@@ -315,10 +320,15 @@ final readonly class ClassUtil
                 continue;
             }
 
-            $reflectionAttributes = $reflectionMethod->getAttributes($attributeClass);
+            $reflectionAttributes = $reflectionMethod
+                ->getAttributes($attributeClass, \ReflectionAttribute::IS_INSTANCEOF);
 
             foreach ($reflectionAttributes as $reflectionAttribute) {
-                $attributes[] = $reflectionAttribute->newInstance();
+                try {
+                    $attributes[] = $reflectionAttribute->newInstance();
+                } catch (\Error) {
+                    // Ignore errors
+                }
             }
         }
 

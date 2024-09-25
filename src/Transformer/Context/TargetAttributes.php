@@ -11,7 +11,12 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Attribute;
+namespace Rekalogika\Mapper\Transformer\Context;
 
-#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD)]
-final readonly class AllowDelete implements PropertyAttributeInterface {}
+/**
+ * @implements \IteratorAggregate<object>
+ */
+final readonly class TargetAttributes implements \IteratorAggregate
+{
+    use AttributesTrait;
+}
