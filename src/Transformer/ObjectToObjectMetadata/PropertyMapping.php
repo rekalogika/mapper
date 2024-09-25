@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata;
 
+use Rekalogika\Mapper\Attribute\DateTimeOptions;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
@@ -64,6 +65,7 @@ final readonly class PropertyMapping
         private bool $sourceLazy,
         private bool $targetCanAcceptNull,
         private bool $targetAllowsDelete,
+        private ?DateTimeOptions $dateTimeOptions,
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
@@ -215,5 +217,10 @@ final readonly class PropertyMapping
     public function getTargetRemoverWriteVisibility(): Visibility
     {
         return $this->targetRemoverWriteVisibility;
+    }
+
+    public function getDateTimeOptions(): ?DateTimeOptions
+    {
+        return $this->dateTimeOptions;
     }
 }

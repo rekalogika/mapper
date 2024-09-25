@@ -19,18 +19,23 @@ class ObjectWithDateTime
 {
     public const DATETIME = '2024-01-01 00:00:00';
 
+    public function getDateTimeInterface(): \DateTimeInterface
+    {
+        return new \DateTimeImmutable(self::DATETIME, new \DateTimeZone('UTC'));
+    }
+
     public function getDateTimeImmutable(): \DateTimeImmutable
     {
-        return new \DateTimeImmutable(self::DATETIME);
+        return new \DateTimeImmutable(self::DATETIME, new \DateTimeZone('UTC'));
     }
 
     public function getDateTime(): \DateTime
     {
-        return new \DateTime(self::DATETIME);
+        return new \DateTime(self::DATETIME, new \DateTimeZone('UTC'));
     }
 
     public function getDatePoint(): DatePoint
     {
-        return new DatePoint(self::DATETIME);
+        return new DatePoint(self::DATETIME, new \DateTimeZone('UTC'));
     }
 }

@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTime;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeDto;
+use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeWithTimeZoneDto;
 use Symfony\Component\Clock\DatePoint;
 
 class DateTimeMappingTest extends FrameworkTestCase
@@ -63,12 +64,16 @@ class DateTimeMappingTest extends FrameworkTestCase
         $target = $this->mapper->map($source, ObjectWithDateTimeDto::class);
 
         $this->assertInstanceOf(ObjectWithDateTimeDto::class, $target);
+
+        $this->assertInstanceOf(\DateTimeInterface::class, $target->dateTimeInterface);
         $this->assertInstanceOf(\DateTimeImmutable::class, $target->dateTimeImmutable);
         $this->assertInstanceOf(\DateTime::class, $target->dateTime);
         $this->assertInstanceOf(DatePoint::class, $target->datePoint);
-        $this->assertEquals('2024-01-01 00:00:00', $target->dateTimeImmutable->format('Y-m-d H:i:s'));
-        $this->assertEquals('2024-01-01 00:00:00', $target->dateTime->format('Y-m-d H:i:s'));
-        $this->assertEquals('2024-01-01 00:00:00', $target->datePoint->format('Y-m-d H:i:s'));
+
+        $this->assertEquals('2024-01-01 00:00:00 UTC', $target->dateTimeInterface->format('Y-m-d H:i:s e'));
+        $this->assertEquals('2024-01-01 00:00:00 UTC', $target->dateTimeImmutable->format('Y-m-d H:i:s e'));
+        $this->assertEquals('2024-01-01 00:00:00 UTC', $target->dateTime->format('Y-m-d H:i:s e'));
+        $this->assertEquals('2024-01-01 00:00:00 UTC', $target->datePoint->format('Y-m-d H:i:s e'));
     }
 
     public function testObjectWithDateTimeWithTargetHavingExistingValues(): void
@@ -78,11 +83,45 @@ class DateTimeMappingTest extends FrameworkTestCase
         $target = $this->mapper->map($source, $target);
 
         $this->assertInstanceOf(ObjectWithDateTimeDto::class, $target);
+
+        $this->assertInstanceOf(\DateTimeInterface::class, $target->dateTimeInterface);
         $this->assertInstanceOf(\DateTimeImmutable::class, $target->dateTimeImmutable);
         $this->assertInstanceOf(\DateTime::class, $target->dateTime);
         $this->assertInstanceOf(DatePoint::class, $target->datePoint);
-        $this->assertEquals('2024-01-01 00:00:00', $target->dateTimeImmutable->format('Y-m-d H:i:s'));
-        $this->assertEquals('2024-01-01 00:00:00', $target->dateTime->format('Y-m-d H:i:s'));
-        $this->assertEquals('2024-01-01 00:00:00', $target->datePoint->format('Y-m-d H:i:s'));
+
+        $this->assertEquals('2024-01-01 00:00:00 UTC', $target->dateTimeInterface->format('Y-m-d H:i:s e'));
+        $this->assertEquals('2024-01-01 00:00:00 UTC', $target->dateTimeImmutable->format('Y-m-d H:i:s e'));
+        $this->assertEquals('2024-01-01 00:00:00 UTC', $target->dateTime->format('Y-m-d H:i:s e'));
+        $this->assertEquals('2024-01-01 00:00:00 UTC', $target->datePoint->format('Y-m-d H:i:s e'));
+    }
+
+    public function testTimeZoneConversion(): void
+    {
+        $source = new ObjectWithDateTime();
+        $target = $this->mapper->map($source, ObjectWithDateTimeWithTimeZoneDto::class);
+
+        $this->assertInstanceOf(ObjectWithDateTimeWithTimeZoneDto::class, $target);
+
+        $this->assertInstanceOf(\DateTimeInterface::class, $target->dateTimeInterface);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $target->dateTimeImmutable);
+        $this->assertInstanceOf(\DateTime::class, $target->dateTime);
+        $this->assertInstanceOf(DatePoint::class, $target->datePoint);
+
+        $this->assertEquals(
+            '2024-01-01 07:00:00 Asia/Jakarta',
+            $target->dateTimeInterface->format('Y-m-d H:i:s e')
+        );
+        $this->assertEquals(
+            '2024-01-01 07:00:00 Asia/Jakarta',
+            $target->dateTimeImmutable->format('Y-m-d H:i:s e')
+        );
+        $this->assertEquals(
+            '2024-01-01 07:00:00 Asia/Jakarta',
+            $target->dateTime->format('Y-m-d H:i:s e')
+        );
+        $this->assertEquals(
+            '2024-01-01 07:00:00 Asia/Jakarta',
+            $target->datePoint->format('Y-m-d H:i:s e')
+        );
     }
 }
