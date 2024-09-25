@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Implementation;
 
+use Rekalogika\Mapper\Attribute\DateTimeOptions;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
@@ -43,19 +44,37 @@ final readonly class DateTimeTransformer implements TransformerInterface
             throw new InvalidArgumentException(\sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)), context: $context);
         }
 
+        $timeZone = $context(DateTimeOptions::class)?->getTimeZone();
+
         // if target is mutable, just set directly on the instance and return it
         if ($target instanceof \DateTime) {
             $target->setTimestamp($source->getTimestamp());
+
+            if ($timeZone !== null) {
+                $target->setTimezone($timeZone);
+            }
 
             return $target;
         }
 
         if (TypeCheck::isObjectOfType($targetType, \DateTime::class)) {
-            return \DateTime::createFromInterface($source);
+            $result = \DateTime::createFromInterface($source);
+
+            if ($timeZone !== null) {
+                $result = $result->setTimezone($timeZone);
+            }
+
+            return $result;
         }
 
         if (TypeCheck::isObjectOfType($targetType, DatePoint::class)) {
-            return DatePoint::createFromInterface($source);
+            $result = DatePoint::createFromInterface($source);
+
+            if ($timeZone !== null) {
+                $result = $result->setTimezone($timeZone);
+            }
+
+            return $result;
         }
 
         if (TypeCheck::isObjectOfType(
@@ -63,12 +82,27 @@ final readonly class DateTimeTransformer implements TransformerInterface
             \DateTimeInterface::class,
             \DateTimeImmutable::class,
         )) {
-            return \DateTimeImmutable::createFromInterface($source);
+            $result = \DateTimeImmutable::createFromInterface($source);
+
+            if ($timeZone !== null) {
+                $result = $result->setTimezone($timeZone);
+            }
+
+            return $result;
         }
 
-        // @todo: maybe make format configurable. reuse serializer metadata?
         if (TypeCheck::isString($targetType)) {
-            return $source->format(\DateTimeInterface::ATOM);
+            $result = \DateTimeImmutable::createFromInterface($source);
+
+            if ($timeZone !== null) {
+                $result = $result->setTimezone($timeZone);
+            }
+
+            $format = $context(DateTimeOptions::class)
+                ?->getStringFormat()
+                ?? \DateTimeInterface::ATOM;
+
+            return $result->format($format);
         }
 
         throw new InvalidArgumentException(\sprintf('Target must be DateTime, DateTimeImmutable, or DatePoint, "%s" given', get_debug_type($targetType)), context: $context);

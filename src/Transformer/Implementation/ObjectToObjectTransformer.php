@@ -577,6 +577,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $context = $context->with(new AllowDelete());
         }
 
+        // date time options
+
+        $dateTimeOptions = $propertyMapping->getDateTimeOptions();
+
+        if ($dateTimeOptions !== null) {
+            $context = $context->with($dateTimeOptions);
+        }
+
         // transform the value
 
         /** @var mixed */

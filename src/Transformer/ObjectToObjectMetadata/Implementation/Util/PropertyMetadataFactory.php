@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Ut
 
 use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\AllowTargetDelete;
+use Rekalogika\Mapper\Attribute\DateTimeOptions;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\SourcePropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\TargetPropertyMetadata;
@@ -99,6 +100,7 @@ final readonly class PropertyMetadataFactory
 
     /**
      * @param class-string $class
+     * @todo support DateTimeOptions with property paths
      */
     public function createTargetPropertyMetadata(
         string $class,
@@ -130,6 +132,7 @@ final readonly class PropertyMetadataFactory
                 types: $types,
                 scalarType: $this->determineScalarType($types),
                 nullable: false,
+                dateTimeOptions: null,
             );
         }
 
@@ -197,6 +200,11 @@ final readonly class PropertyMetadataFactory
             )
             : false;
 
+        $dateTimeOptions = $this->getDateTimeOptions(
+            class: $class,
+            property: $property,
+        );
+
         return new TargetPropertyMetadata(
             readMode: $readMode,
             readName: $readName,
@@ -215,6 +223,7 @@ final readonly class PropertyMetadataFactory
             types: $types,
             scalarType: $scalarType,
             nullable: $nullable,
+            dateTimeOptions: $dateTimeOptions,
         );
     }
 
@@ -580,5 +589,22 @@ final readonly class PropertyMetadataFactory
         $reflectionParameters = $reflectionMethod->getParameters();
         $reflectionParameter = $reflectionParameters[0];
         return $reflectionParameter->isVariadic();
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function getDateTimeOptions(
+        string $class,
+        string $property,
+    ): ?DateTimeOptions {
+        $attributes = ClassUtil::getAttributes(
+            class: $class,
+            property: $property,
+            attributeClass: DateTimeOptions::class,
+            methodPrefixes: ['get', 'set'],
+        );
+
+        return $attributes[0] ?? null;
     }
 }

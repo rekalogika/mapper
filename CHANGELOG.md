@@ -16,6 +16,7 @@
 * fix: mapping from `stdClass` to object with mandatory constructor arguments
 * feat: variadic setter & constructor arguments support
 * feat: string to `UnitEnum` transformation
+* feat: datetime format & timezone conversion
 
 ## 1.8.0
 

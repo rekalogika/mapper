@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model;
 
+use Rekalogika\Mapper\Attribute\DateTimeOptions;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -45,6 +46,7 @@ final readonly class TargetPropertyMetadata
         private array $types,
         private ?string $scalarType,
         private bool $nullable,
+        private ?DateTimeOptions $dateTimeOptions,
     ) {}
 
     public function getReadMode(): ReadMode
@@ -136,5 +138,10 @@ final readonly class TargetPropertyMetadata
     public function isNullable(): bool
     {
         return $this->nullable;
+    }
+
+    public function getDateTimeOptions(): ?DateTimeOptions
+    {
+        return $this->dateTimeOptions;
     }
 }
