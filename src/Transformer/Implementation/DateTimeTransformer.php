@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Implementation;
 use Rekalogika\Mapper\Attribute\DateTimeOptions;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
+use Rekalogika\Mapper\Transformer\Context\SourceAttributes;
 use Rekalogika\Mapper\Transformer\Context\TargetAttributes;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
@@ -37,34 +38,67 @@ final readonly class DateTimeTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context,
     ): mixed {
-        if (\is_string($source)) {
-            $source = new DatePoint($source);
+        // if source is scalar, we convert it to DateTimeInterface first
+
+        if (\is_scalar($source)) {
+            $sourceTimeZone = $context(SourceAttributes::class)
+                ?->get(DateTimeOptions::class)
+                ?->getTimeZone();
+
+            $sourceFormat = $context(SourceAttributes::class)
+                ?->get(DateTimeOptions::class)
+                ?->getFormat();
+
+            if (!\is_string($source)) {
+                $source = (string) $source;
+
+                if ($sourceFormat === null) {
+                    $sourceFormat = 'U';
+                }
+            }
+
+            if ($sourceFormat !== null) {
+                $source = DatePoint::createFromFormat($sourceFormat, $source);
+
+                if ($sourceTimeZone === null) {
+                    $sourceTimeZone = new \DateTimeZone(date_default_timezone_get());
+                }
+
+                $source = $source->setTimezone($sourceTimeZone);
+            } else {
+                $source = new DatePoint($source, $sourceTimeZone);
+            }
         }
+
+        // now source must be DateTimeInterface
 
         if (!$source instanceof \DateTimeInterface) {
             throw new InvalidArgumentException(\sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)), context: $context);
         }
 
-        $timeZone = $context(TargetAttributes::class)
+        $targetTimeZone = $context(TargetAttributes::class)
             ?->get(DateTimeOptions::class)
             ?->getTimeZone();
 
         // if target is mutable, just set directly on the instance and return it
+
         if ($target instanceof \DateTime) {
             $target->setTimestamp($source->getTimestamp());
 
-            if ($timeZone !== null) {
-                $target->setTimezone($timeZone);
+            if ($targetTimeZone !== null) {
+                $target->setTimezone($targetTimeZone);
             }
 
             return $target;
         }
 
+        // transformations to datetime objects
+
         if (TypeCheck::isObjectOfType($targetType, \DateTime::class)) {
             $result = \DateTime::createFromInterface($source);
 
-            if ($timeZone !== null) {
-                $result = $result->setTimezone($timeZone);
+            if ($targetTimeZone !== null) {
+                $result = $result->setTimezone($targetTimeZone);
             }
 
             return $result;
@@ -73,8 +107,8 @@ final readonly class DateTimeTransformer implements TransformerInterface
         if (TypeCheck::isObjectOfType($targetType, DatePoint::class)) {
             $result = DatePoint::createFromInterface($source);
 
-            if ($timeZone !== null) {
-                $result = $result->setTimezone($timeZone);
+            if ($targetTimeZone !== null) {
+                $result = $result->setTimezone($targetTimeZone);
             }
 
             return $result;
@@ -87,26 +121,62 @@ final readonly class DateTimeTransformer implements TransformerInterface
         )) {
             $result = \DateTimeImmutable::createFromInterface($source);
 
-            if ($timeZone !== null) {
-                $result = $result->setTimezone($timeZone);
+            if ($targetTimeZone !== null) {
+                $result = $result->setTimezone($targetTimeZone);
             }
 
             return $result;
         }
 
+        // transformation to string
+
         if (TypeCheck::isString($targetType)) {
             $result = \DateTimeImmutable::createFromInterface($source);
 
-            if ($timeZone !== null) {
-                $result = $result->setTimezone($timeZone);
+            if ($targetTimeZone !== null) {
+                $result = $result->setTimezone($targetTimeZone);
             }
 
-            $format = $context(TargetAttributes::class)
+            $targetFormat = $context(TargetAttributes::class)
                 ?->get(DateTimeOptions::class)
                 ?->getFormat()
                 ?? \DateTimeInterface::ATOM;
 
-            return $result->format($format);
+            return $result->format($targetFormat);
+        }
+
+        // transformation to integer
+
+        if (TypeCheck::isInt($targetType)) {
+            $result = \DateTimeImmutable::createFromInterface($source);
+
+            if ($targetTimeZone !== null) {
+                $result = $result->setTimezone($targetTimeZone);
+            }
+
+            $targetFormat = $context(TargetAttributes::class)
+                ?->get(DateTimeOptions::class)
+                ?->getFormat()
+                ?? 'U';
+
+            return (int) $result->format($targetFormat);
+        }
+
+        // transformation to float
+
+        if (TypeCheck::isFloat($targetType)) {
+            $result = \DateTimeImmutable::createFromInterface($source);
+
+            if ($targetTimeZone !== null) {
+                $result = $result->setTimezone($targetTimeZone);
+            }
+
+            $targetFormat = $context(TargetAttributes::class)
+                ?->get(DateTimeOptions::class)
+                ?->getFormat()
+                ?? 'U';
+
+            return (float) $result->format($targetFormat);
         }
 
         throw new InvalidArgumentException(\sprintf('Target must be DateTime, DateTimeImmutable, or DatePoint, "%s" given', get_debug_type($targetType)), context: $context);
@@ -115,53 +185,53 @@ final readonly class DateTimeTransformer implements TransformerInterface
     #[\Override]
     public function getSupportedTransformation(): iterable
     {
-        // from string
-
-        yield new TypeMapping(
-            TypeFactory::string(),
-            TypeFactory::objectOfClass(\DateTimeInterface::class),
-        );
-
-        yield new TypeMapping(
-            TypeFactory::string(),
-            TypeFactory::objectOfClass(\DateTime::class),
-        );
-
-        yield new TypeMapping(
-            TypeFactory::string(),
-            TypeFactory::objectOfClass(\DateTimeImmutable::class),
-        );
-
-        yield new TypeMapping(
-            TypeFactory::string(),
-            TypeFactory::objectOfClass(DatePoint::class),
-        );
-
-        // from DateTimeInterface
-
-        yield new TypeMapping(
-            TypeFactory::objectOfClass(\DateTimeInterface::class),
-            TypeFactory::objectOfClass(\DateTimeInterface::class),
-        );
-
-        yield new TypeMapping(
+        $dateTimeTypes = [
             TypeFactory::objectOfClass(\DateTimeInterface::class),
             TypeFactory::objectOfClass(\DateTime::class),
-        );
-
-        yield new TypeMapping(
-            TypeFactory::objectOfClass(\DateTimeInterface::class),
             TypeFactory::objectOfClass(\DateTimeImmutable::class),
-        );
-
-        yield new TypeMapping(
-            TypeFactory::objectOfClass(\DateTimeInterface::class),
             TypeFactory::objectOfClass(DatePoint::class),
-        );
+        ];
 
+        foreach ($dateTimeTypes as $dateTimeType) {
+            // from scalar to datetime types
+            yield new TypeMapping(
+                TypeFactory::string(),
+                $dateTimeType,
+            );
+
+            yield new TypeMapping(
+                TypeFactory::int(),
+                $dateTimeType,
+            );
+
+            yield new TypeMapping(
+                TypeFactory::float(),
+                $dateTimeType,
+            );
+
+            // from DateTimeInterface to datetime types
+            yield new TypeMapping(
+                TypeFactory::objectOfClass(\DateTimeInterface::class),
+                $dateTimeType,
+            );
+        }
+
+        // from datetime to string
         yield new TypeMapping(
             TypeFactory::objectOfClass(\DateTimeInterface::class),
             TypeFactory::string(),
+        );
+
+        // from datetime to integer
+        yield new TypeMapping(
+            TypeFactory::objectOfClass(\DateTimeInterface::class),
+            TypeFactory::int(),
+        );
+
+        // from datetime to float
+        yield new TypeMapping(
+            TypeFactory::objectOfClass(\DateTimeInterface::class),
+            TypeFactory::float(),
         );
     }
 }

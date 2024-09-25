@@ -13,14 +13,16 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\DateTime;
 
-final class ObjectWithDateTime implements DateTimeTestObjectInterface
+use Symfony\Component\Clock\DatePoint;
+
+final class ObjectWithDateTimeInterface implements DateTimeTestObjectInterface
 {
-    public ?\DateTime $property = null;
+    public ?\DateTimeInterface $property = null;
 
     public static function preinitialized(): static
     {
         $object = new static();
-        $object->property = new \DateTime(Constants::SOURCE_DATETIME);
+        $object->property = new DatePoint(Constants::SOURCE_DATETIME);
 
         return $object;
     }

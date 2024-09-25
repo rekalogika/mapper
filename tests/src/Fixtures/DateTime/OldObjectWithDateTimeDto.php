@@ -13,20 +13,27 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\DateTime;
 
-use Rekalogika\Mapper\Attribute\DateTimeOptions;
 use Symfony\Component\Clock\DatePoint;
 
-class ObjectWithDateTimeWithTimeZoneDto
+class OldObjectWithDateTimeDto
 {
-    #[DateTimeOptions(timeZone: 'Asia/Jakarta')]
+    public const DATETIME = '2023-01-01 00:00:00';
+
+    public static function getInitialized(): self
+    {
+        $dto = new self();
+        $dto->dateTimeImmutable = new \DateTimeImmutable(self::DATETIME);
+        $dto->dateTime = new \DateTime(self::DATETIME);
+        $dto->datePoint = new DatePoint(self::DATETIME);
+
+        return $dto;
+    }
+
     public ?\DateTimeInterface $dateTimeInterface = null;
 
-    #[DateTimeOptions(timeZone: 'Asia/Jakarta')]
     public ?\DateTimeImmutable $dateTimeImmutable = null;
 
-    #[DateTimeOptions(timeZone: 'Asia/Jakarta')]
     public ?\DateTime $dateTime = null;
 
-    #[DateTimeOptions(timeZone: 'Asia/Jakarta')]
     public ?DatePoint $datePoint = null;
 }

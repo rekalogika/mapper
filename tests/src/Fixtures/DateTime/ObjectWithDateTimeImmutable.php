@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\DateTime;
 
-final class ObjectWithDateTime implements DateTimeTestObjectInterface
+final class ObjectWithDateTimeImmutable implements DateTimeTestObjectInterface
 {
-    public ?\DateTime $property = null;
+    public ?\DateTimeImmutable $property = null;
 
     public static function preinitialized(): static
     {
         $object = new static();
-        $object->property = new \DateTime(Constants::SOURCE_DATETIME);
+        $object->property = new \DateTimeImmutable(Constants::SOURCE_DATETIME);
 
         return $object;
     }

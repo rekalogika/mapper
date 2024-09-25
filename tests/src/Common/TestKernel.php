@@ -21,6 +21,8 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 
+date_default_timezone_set('UTC');
+
 class TestKernel extends Kernel
 {
     use MicroKernelTrait {
