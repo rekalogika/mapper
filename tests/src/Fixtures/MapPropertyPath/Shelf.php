@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\Collection;
 
 final class Shelf
 {
+    #[SomeAttribute('shelf-library')]
     private ?Library $library = null;
 
     /**
