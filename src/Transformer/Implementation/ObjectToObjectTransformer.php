@@ -338,8 +338,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         foreach ($propertyMappings as $propertyMapping) {
             try {
-                /** @var mixed */
-                $targetPropertyValue = $this->transformValue(
+                /** @var mixed $targetPropertyValue */
+                [$targetPropertyValue,] = $this->transformValue(
                     propertyMapping: $propertyMapping,
                     source: $source,
                     target: null,
@@ -401,8 +401,8 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         Context $context,
     ): void {
         try {
-            /** @var mixed */
-            $targetPropertyValue = $this->transformValue(
+            /** @var mixed $targetPropertyValue */
+            [$targetPropertyValue, $isChanged] = $this->transformValue(
                 propertyMapping: $propertyMapping,
                 source: $source,
                 target: $target,
@@ -415,17 +415,20 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // write
 
-        $this->readerWriter->writeTargetProperty(
-            target: $target,
-            propertyMapping: $propertyMapping,
-            value: $targetPropertyValue,
-            context: $context,
-        );
+        if ($isChanged) {
+            $this->readerWriter->writeTargetProperty(
+                target: $target,
+                propertyMapping: $propertyMapping,
+                value: $targetPropertyValue,
+                context: $context,
+            );
+        }
     }
 
     /**
      * @param object|null $target Target is null if the transformation is for a
      * constructor argument
+     * @return array{mixed,bool} The target value after transformation and whether the value differs from before transformation
      */
     private function transformValue(
         PropertyMapping $propertyMapping,
@@ -443,12 +446,15 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 subMapperFactory: $this->subMapperFactory,
             );
 
-            return $serviceMethodRunner->run(
+            /** @var mixed */
+            $result = $serviceMethodRunner->run(
                 serviceMethodSpecification: $serviceMethodSpecification,
                 source: $source,
                 targetType: null,
                 context: $context,
             );
+
+            return [$result, true];
         }
 
         // if source property name is null, continue. there is nothing to
@@ -483,7 +489,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             // target to null
 
             if ($propertyMapping->targetCanAcceptNull() && $sourcePropertyValue === null) {
-                return null;
+                return [null, true];
             }
 
             // if the the source is null or scalar, and the target is a scalar
@@ -492,21 +498,25 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
             if ($targetScalarType !== null) {
                 if ($sourcePropertyValue === null) {
-                    return match ($targetScalarType) {
+                    $result = match ($targetScalarType) {
                         'int' => 0,
                         'float' => 0.0,
                         'string' => '',
                         'bool' => false,
                         'null' => null,
                     };
+
+                    return [$result, true];
                 } elseif (\is_scalar($sourcePropertyValue)) {
-                    return match ($targetScalarType) {
+                    $result = match ($targetScalarType) {
                         'int' => (int) $sourcePropertyValue,
                         'float' => (float) $sourcePropertyValue,
                         'string' => (string) $sourcePropertyValue,
                         'bool' => (bool) $sourcePropertyValue,
                         'null' => null,
                     };
+
+                    return [$result, true];
                 }
             }
         }
@@ -568,6 +578,9 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // transform the value
 
         /** @var mixed */
+        $originalTargetPropertyValue = $targetPropertyValue;
+
+        /** @var mixed */
         $targetPropertyValue = $this->getMainTransformer()->transform(
             source: $sourcePropertyValue,
             target: $targetPropertyValue,
@@ -577,7 +590,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             path: $propertyMapping->getTargetProperty(),
         );
 
-        return $targetPropertyValue;
+        return [$targetPropertyValue, $targetPropertyValue !== $originalTargetPropertyValue];
     }
 
     private function mapDynamicProperties(

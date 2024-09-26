@@ -30,6 +30,7 @@
 * fix: mapping to property without setter wasn't working
 * fix: mapping string with timezone to datetime should set the timezone on the
   target
+* perf: don't call the setter if the value doesn't change
 
 ## 1.8.0
 
