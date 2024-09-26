@@ -21,6 +21,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
+use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -43,6 +44,7 @@ final readonly class PropertyMetadataFactory
     ) {
         $this->propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
+            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
         );
     }
 
@@ -130,13 +132,14 @@ final readonly class PropertyMetadataFactory
                 setterWriteMode: WriteMode::PropertyPath,
                 setterWriteName: $property,
                 setterWriteVisibility: Visibility::Public,
-                // property access does not support variadic arguments
                 setterVariadic: false,
                 removerWriteName: $property,
                 removerWriteVisibility: Visibility::Public,
                 types: $types,
                 scalarType: $this->determineScalarType($types),
                 nullable: false,
+                replaceable: $propertyPathMetadata->isReplaceable(),
+                immutable: TypeCheck::isRecursivelyImmutable($types),
                 attributes: $propertyPathMetadata->getAttributes(),
             );
         }
@@ -181,6 +184,7 @@ final readonly class PropertyMetadataFactory
             $setterWriteVisibility,
             $removerWriteName,
             $removerWriteVisibility,
+            $replaceable,
         ]
             = $this->processPropertyWriteInfo(
                 readInfo: $readInfo,
@@ -224,6 +228,8 @@ final readonly class PropertyMetadataFactory
             types: $types,
             scalarType: $scalarType,
             nullable: $nullable,
+            replaceable: $replaceable,
+            immutable: TypeCheck::isRecursivelyImmutable($types),
             attributes: $attributes,
         );
     }
@@ -288,7 +294,7 @@ final readonly class PropertyMetadataFactory
     }
 
     /**
-     * @return array{WriteMode,?string,Visibility,?string,Visibility}
+     * @return array{WriteMode,?string,Visibility,?string,Visibility,bool}
      */
     private function processPropertyWriteInfo(
         ?PropertyReadInfo $readInfo,
@@ -300,10 +306,12 @@ final readonly class PropertyMetadataFactory
         $removerWriteVisibility = Visibility::None;
 
         if ($writeInfo === null) {
+            $replaceable = false;
             $setterWriteMode = WriteMode::None;
             $setterWriteName = null;
             $setterWriteVisibility = Visibility::None;
         } elseif ($writeInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
+            $replaceable = false;
             $setterWriteMode = WriteMode::AdderRemover;
             $setterWriteName = $writeInfo->getAdderInfo()->getName();
             $removerWriteName = $writeInfo->getRemoverInfo()->getName();
@@ -331,9 +339,11 @@ final readonly class PropertyMetadataFactory
                     $setterWriteMode = WriteMode::DynamicProperty;
                     $setterWriteName = $property;
                     $setterWriteVisibility = Visibility::Public;
+                    $replaceable = true;
                 } else {
                     $setterWriteName = null;
                     $setterWriteVisibility = Visibility::None;
+                    $replaceable = false;
                 }
             } else {
                 $setterWriteName = $writeInfo->getName();
@@ -343,6 +353,7 @@ final readonly class PropertyMetadataFactory
                     PropertyWriteInfo::VISIBILITY_PRIVATE => Visibility::Private,
                     default => Visibility::None,
                 };
+                $replaceable = $setterWriteVisibility === Visibility::Public;
             }
         }
 
@@ -352,6 +363,7 @@ final readonly class PropertyMetadataFactory
             $setterWriteVisibility,
             $removerWriteName,
             $removerWriteVisibility,
+            $replaceable,
         ];
     }
 

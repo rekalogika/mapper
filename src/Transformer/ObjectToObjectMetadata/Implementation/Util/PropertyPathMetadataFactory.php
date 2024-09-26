@@ -19,6 +19,8 @@ use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfo;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
@@ -28,6 +30,7 @@ final readonly class PropertyPathMetadataFactory
 {
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
     ) {}
 
     /**
@@ -52,6 +55,8 @@ final readonly class PropertyPathMetadataFactory
 
         $lastClass = null;
 
+        $lastIsIndex = false;
+
         /** @var list<Type>|null */
         $types = null;
 
@@ -72,9 +77,11 @@ final readonly class PropertyPathMetadataFactory
             }
 
             if ($iterator->isIndex()) {
+                $lastIsIndex = true;
                 $currentPath .= '[' . $propertyPathPart . ']';
                 $types = $currentType?->getCollectionValueTypes();
             } else {
+                $lastIsIndex = false;
                 if ($currentClass === null) {
                     throw new PropertyPathAwarePropertyInfoExtractorException(
                         message: \sprintf('Trying to resolve path "%s", but the current node is not an object', $propertyPathPart),
@@ -131,12 +138,47 @@ final readonly class PropertyPathMetadataFactory
             $attributes = [];
         }
 
+        $replaceable = $this->isReplaceable(
+            class: $lastClass,
+            property: $currentProperty,
+            isIndex: $lastIsIndex,
+        );
+
         return new PropertyPathMetadata(
             propertyPath: $propertyPath,
             class: $lastClass,
             property: $currentProperty,
             types: array_values($types ?? []),
             attributes: $attributes,
+            replaceable: $replaceable,
         );
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function isReplaceable(
+        string $class,
+        ?string $property,
+        bool $isIndex,
+    ): bool {
+        if ($property === null) {
+            return $isIndex;
+        }
+
+        $writeInfo = $this->propertyWriteInfoExtractor
+            ->getWriteInfo($class, $property);
+
+        if ($writeInfo === null) {
+            return false;
+        }
+
+        return
+            \in_array(
+                $writeInfo->getType(),
+                [PropertyWriteInfo::TYPE_METHOD, PropertyWriteInfo::TYPE_PROPERTY],
+                true,
+            )
+            && $writeInfo->getVisibility() === PropertyWriteInfo::VISIBILITY_PUBLIC;
     }
 }

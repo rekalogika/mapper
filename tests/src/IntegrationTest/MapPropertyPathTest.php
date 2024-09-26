@@ -31,6 +31,7 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathMetadataFactory;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 class MapPropertyPathTest extends FrameworkTestCase
@@ -52,7 +53,8 @@ class MapPropertyPathTest extends FrameworkTestCase
         }
 
         $propertyTypeExtractor = $this->get(PropertyTypeExtractorInterface::class);
-        $propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory($propertyTypeExtractor);
+        $propertyWriteInfoExtractor = $this->get(PropertyWriteInfoExtractorInterface::class);
+        $propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory($propertyTypeExtractor, $propertyWriteInfoExtractor);
 
         $chapter = new Chapter();
 

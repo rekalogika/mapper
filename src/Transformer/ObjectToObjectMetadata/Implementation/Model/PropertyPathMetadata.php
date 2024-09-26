@@ -31,6 +31,7 @@ final readonly class PropertyPathMetadata
         private ?string $property,
         private array $types,
         private array $attributes,
+        private bool $replaceable,
     ) {}
 
     public function getPropertyPath(): string
@@ -62,5 +63,10 @@ final readonly class PropertyPathMetadata
     public function getAttributes(): array
     {
         return $this->attributes;
+    }
+
+    public function isReplaceable(): bool
+    {
+        return $this->replaceable;
     }
 }

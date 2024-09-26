@@ -45,6 +45,8 @@ final readonly class TargetPropertyMetadata
         private array $types,
         private ?string $scalarType,
         private bool $nullable,
+        private bool $replaceable,
+        private bool $immutable,
         private array $attributes,
     ) {}
 
@@ -132,6 +134,16 @@ final readonly class TargetPropertyMetadata
     public function isNullable(): bool
     {
         return $this->nullable;
+    }
+
+    public function isReplaceable(): bool
+    {
+        return $this->replaceable;
+    }
+
+    public function isImmutable(): bool
+    {
+        return $this->immutable;
     }
 
     /**

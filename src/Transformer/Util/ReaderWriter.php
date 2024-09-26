@@ -199,18 +199,25 @@ final readonly class ReaderWriter
         mixed $value,
         Context $context,
     ): void {
-        if ($propertyMapping->getTargetSetterWriteVisibility() !== Visibility::Public) {
-            return;
+        $accessorName = $propertyMapping->getTargetSetterWriteName();
+        $writeMode = $propertyMapping->getTargetSetterWriteMode();
+        $visibility = $propertyMapping->getTargetSetterWriteVisibility();
+
+        if (
+            $visibility !== Visibility::Public || $writeMode === WriteMode::None
+        ) {
+            throw new UnableToWriteException(
+                $target,
+                $propertyMapping->getTargetProperty(),
+                context: $context,
+            );
+        }
+
+        if ($accessorName === null) {
+            throw new UnexpectedValueException('AccessorName is null', context: $context);
         }
 
         try {
-            $accessorName = $propertyMapping->getTargetSetterWriteName();
-            $writeMode = $propertyMapping->getTargetSetterWriteMode();
-
-            if ($accessorName === null) {
-                throw new UnexpectedValueException('AccessorName is null', context: $context);
-            }
-
             if ($writeMode === WriteMode::Property) {
                 $target->{$accessorName} = $value;
             } elseif ($writeMode === WriteMode::Method) {

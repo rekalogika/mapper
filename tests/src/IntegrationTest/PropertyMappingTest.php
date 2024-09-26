@@ -26,6 +26,7 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Foo;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithDateTimeDto;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithClassAttribute;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
@@ -234,5 +235,22 @@ class PropertyMappingTest extends FrameworkTestCase
 
         $baz2 = $this->mapper->map(new Bar(), Baz::class);
         $this->assertEquals('Bar', $baz2->bazName);
+    }
+
+    public function testPropertyMappingToMutableDateTime(): void
+    {
+        $this->markTestSkipped('Revisit this test');
+
+        // $source = new SomeObject();
+        // $target = new SomeObjectWithDateTimeDto();
+        // $dateTimeBefore = $target->getProperty();
+        // $dateTimeFormatBefore = $dateTimeBefore->format('Y-m-d H:i:s');
+
+        // $target = $this->mapper->map($source, $target);
+        // $dateTimeAfter = $target->getProperty();
+        // $dateTimeFormatAfter = $dateTimeAfter->format('Y-m-d H:i:s');
+
+        // $this->assertNotSame($dateTimeBefore, $dateTimeAfter);
+        // $this->assertNotEquals($dateTimeFormatBefore, $dateTimeFormatAfter);
     }
 }
