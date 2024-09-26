@@ -38,43 +38,55 @@ final readonly class DateTimeTransformer implements TransformerInterface
         ?Type $targetType,
         Context $context,
     ): mixed {
+        // determine source time zone
+
+        $sourceTimeZone = $context(SourcePropertyAttributes::class)
+            ?->get(DateTimeOptions::class)
+            ?->getTimeZone()
+            ?? new \DateTimeZone(date_default_timezone_get());
+
         // if source is scalar, we convert it to DateTimeInterface first
 
         if (\is_scalar($source)) {
-            $sourceTimeZone = $context(SourcePropertyAttributes::class)
-                ?->get(DateTimeOptions::class)
-                ?->getTimeZone();
+            $isSourceScalar = true;
 
             $sourceFormat = $context(SourcePropertyAttributes::class)
                 ?->get(DateTimeOptions::class)
                 ?->getFormat();
 
+            // if not string, cast to string, and set source format to 'U' (unix
+            // timestamp) if not set
+
             if (!\is_string($source)) {
                 $source = (string) $source;
-
-                if ($sourceFormat === null) {
-                    $sourceFormat = 'U';
-                }
+                $sourceFormat = $sourceFormat ?? 'U';
             }
 
             if ($sourceFormat !== null) {
-                $source = DatePoint::createFromFormat($sourceFormat, $source);
+                $source = DatePoint::createFromFormat(
+                    format: $sourceFormat,
+                    datetime: $source,
+                    timezone: $sourceTimeZone,
+                );
 
-                if ($sourceTimeZone === null) {
-                    $sourceTimeZone = new \DateTimeZone(date_default_timezone_get());
-                }
+                // "The timezone parameter and the current timezone are ignored
+                // when the datetime parameter either contains a UNIX timestamp
+                // or specifies a timezone" so we do it again here
 
                 $source = $source->setTimezone($sourceTimeZone);
             } else {
                 $source = new DatePoint($source, $sourceTimeZone);
             }
-        }
+        } elseif ($source instanceof \DateTimeInterface) {
+            $isSourceScalar = false;
 
-        // now source must be DateTimeInterface
-
-        if (!$source instanceof \DateTimeInterface) {
+            $source = DatePoint::createFromInterface($source);
+            $source = $source->setTimezone($sourceTimeZone);
+        } else {
             throw new InvalidArgumentException(\sprintf('Source must be DateTimeInterface, "%s" given', get_debug_type($source)), context: $context);
         }
+
+        // get target time zone. null means no conversion
 
         $targetTimeZone = $context(TargetPropertyAttributes::class)
             ?->get(DateTimeOptions::class)
@@ -87,6 +99,8 @@ final readonly class DateTimeTransformer implements TransformerInterface
 
             if ($targetTimeZone !== null) {
                 $target->setTimezone($targetTimeZone);
+            } elseif ($isSourceScalar) {
+                $target->setTimezone($source->getTimezone());
             }
 
             return $target;
@@ -99,6 +113,8 @@ final readonly class DateTimeTransformer implements TransformerInterface
 
             if ($targetTimeZone !== null) {
                 $result = $result->setTimezone($targetTimeZone);
+            } elseif ($isSourceScalar) {
+                $result = $result->setTimezone($source->getTimezone());
             }
 
             return $result;
@@ -109,6 +125,8 @@ final readonly class DateTimeTransformer implements TransformerInterface
 
             if ($targetTimeZone !== null) {
                 $result = $result->setTimezone($targetTimeZone);
+            } elseif ($isSourceScalar) {
+                $result = $result->setTimezone($source->getTimezone());
             }
 
             return $result;
@@ -119,10 +137,12 @@ final readonly class DateTimeTransformer implements TransformerInterface
             \DateTimeInterface::class,
             \DateTimeImmutable::class,
         )) {
-            $result = \DateTimeImmutable::createFromInterface($source);
+            $result = DatePoint::createFromInterface($source);
 
             if ($targetTimeZone !== null) {
                 $result = $result->setTimezone($targetTimeZone);
+            } elseif ($isSourceScalar) {
+                $result = $result->setTimezone($source->getTimezone());
             }
 
             return $result;

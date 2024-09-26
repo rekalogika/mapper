@@ -21,6 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeCollection;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeCollectionDto;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeImmutable;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeInterface;
+use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeWithoutSetter;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithFloat;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithFloatYYYYMMDD;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithInt;
@@ -215,6 +216,7 @@ class DateTimeMappingTest extends FrameworkTestCase
             ObjectWithDateTimeInterface::class,
             ObjectWithDateTimeImmutable::class,
             ObjectWithDateTime::class,
+            ObjectWithDateTimeWithoutSetter::class,
             ObjectWithDatePoint::class,
         ];
 
@@ -343,6 +345,30 @@ class DateTimeMappingTest extends FrameworkTestCase
                     ];
             }
         }
+
+        // from string with timezone to target without time zone. should use
+        // the timezone from the source
+
+        yield
+            self::getDescription(ObjectWithStringWithTimeZone::class, ObjectWithDateTimeImmutable::class) =>
+            [
+                ObjectWithStringWithTimeZone::class,
+                ObjectWithDateTimeImmutable::class,
+                '2024-01-01 12:00:00 +09:00',
+                null,
+            ];
+
+        // from string without timezone to target without time zone, should use
+        // system timezone
+
+        yield
+            self::getDescription(ObjectWithString::class, ObjectWithDateTimeImmutable::class) . ' 2' =>
+            [
+                ObjectWithString::class,
+                ObjectWithDateTimeImmutable::class,
+                '2024-01-01 12:00:00 UTC',
+                null,
+            ];
     }
 
     private static function getShortClass(string $class): string
