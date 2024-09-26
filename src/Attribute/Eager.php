@@ -11,17 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\LazyObject;
+namespace Rekalogika\Mapper\Attribute;
 
-class ObjectWithId
-{
-    public function getId(): string
-    {
-        return 'id';
-    }
-
-    public function getName(): string
-    {
-        throw new \LogicException('If lazy, this method must not be called');
-    }
-}
+#[\Attribute(\Attribute::TARGET_CLASS)]
+final readonly class Eager {}
