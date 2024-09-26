@@ -33,8 +33,6 @@ use Rekalogika\Mapper\Transformer\Model\ConstructorArguments;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
@@ -402,17 +400,6 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         PropertyMapping $propertyMapping,
         Context $context,
     ): void {
-        $targetSetterWriteMode = $propertyMapping->getTargetSetterWriteMode();
-        $targetSetterWriteVisibility = $propertyMapping->getTargetSetterWriteVisibility();
-
-        if ($targetSetterWriteMode === WriteMode::None) {
-            return;
-        }
-
-        if ($targetSetterWriteVisibility !== Visibility::Public) {
-            return;
-        }
-
         try {
             /** @var mixed */
             $targetPropertyValue = $this->transformValue(
