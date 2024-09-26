@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Basic;
 class PersonWithDogDto
 {
     public ?string $name = null;
+
     public ?DogDto $dog = null;
 }

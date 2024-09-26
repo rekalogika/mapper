@@ -17,7 +17,7 @@ final class RootObjectWithoutSetterDto
 {
     public ?string $id = null;
 
-    private InnerObjectWithoutSetterDto $innerObject;
+    private readonly InnerObjectWithoutSetterDto $innerObject;
 
     public function __construct()
     {

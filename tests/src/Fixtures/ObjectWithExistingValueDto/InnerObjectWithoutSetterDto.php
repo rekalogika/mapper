@@ -17,7 +17,7 @@ final class InnerObjectWithoutSetterDto
 {
     public ?string $property = null;
 
-    private FurtherInnerObjectDto $furtherInnerObject;
+    private readonly FurtherInnerObjectDto $furtherInnerObject;
 
     public function __construct()
     {

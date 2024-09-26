@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 class SomeObjectWithDateTimeDto
 {
     // note: a mutable property
-    private \DateTime $property;
+    private readonly \DateTime $property;
 
     public function __construct()
     {

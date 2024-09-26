@@ -33,6 +33,7 @@
 * perf: don't call the setter if the value doesn't change
 * feat: `Eager` attribute to disable proxying on target classes
 * perf: skip property if setting or mutating is impossible
+* chore: rector run
 
 ## 1.8.0
 
