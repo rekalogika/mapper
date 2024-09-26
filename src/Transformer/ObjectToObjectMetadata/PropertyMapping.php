@@ -65,6 +65,8 @@ final readonly class PropertyMapping
         private ?ServiceMethodSpecification $propertyMapper,
         private bool $sourceLazy,
         private bool $targetCanAcceptNull,
+        private bool $targetReplaceable,
+        private bool $targetImmutable,
         private SourcePropertyAttributes $sourceAttributes,
         private TargetPropertyAttributes $targetAttributes,
     ) {
@@ -203,6 +205,16 @@ final readonly class PropertyMapping
     public function targetCanAcceptNull(): bool
     {
         return $this->targetCanAcceptNull;
+    }
+
+    public function isTargetReplaceable(): bool
+    {
+        return $this->targetReplaceable;
+    }
+
+    public function isTargetImmutable(): bool
+    {
+        return $this->targetImmutable;
     }
 
     public function getTargetRemoverWriteName(): ?string
