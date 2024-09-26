@@ -28,6 +28,8 @@
 * chore: rector run
 * feat: collect attributes if using property path mapping
 * fix: mapping to property without setter wasn't working
+* fix: mapping string with timezone to datetime should set the timezone on the
+  target
 
 ## 1.8.0
 
