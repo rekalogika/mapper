@@ -85,14 +85,12 @@ final readonly class ObjectToObjectMetadata
                 $constructorPropertyMappings[] = $propertyMapping;
             }
 
-            if ($propertyMapping->getTargetSetterWriteMode() !== WriteMode::None) {
-                $propertyPropertyMappings[] = $propertyMapping;
+            $propertyPropertyMappings[] = $propertyMapping;
 
-                if ($propertyMapping->isSourceLazy()) {
-                    $lazyPropertyMappings[] = $propertyMapping;
-                } else {
-                    $eagerPropertyMappings[] = $propertyMapping;
-                }
+            if ($propertyMapping->isSourceLazy()) {
+                $lazyPropertyMappings[] = $propertyMapping;
+            } else {
+                $eagerPropertyMappings[] = $propertyMapping;
             }
         }
 

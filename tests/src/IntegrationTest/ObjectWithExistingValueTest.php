@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValue\RootObject;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValueDto\FurtherInnerObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValueDto\InnerObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValueDto\RootObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectWithExistingValueDto\RootObjectWithoutSetterDto;
 
 class ObjectWithExistingValueTest extends FrameworkTestCase
 {
@@ -45,6 +46,22 @@ class ObjectWithExistingValueTest extends FrameworkTestCase
         $dto->innerObject->property = 'foo';
         $dto->innerObject->furtherInnerObject = new FurtherInnerObjectDto();
         $dto->innerObject->furtherInnerObject->property = 'bar';
+
+        $object = new RootObject();
+
+        $this->mapper->map($dto, $object);
+
+        $this->assertSame('id', $object->getId());
+        $this->assertSame('foo', $object->getInnerObject()->getProperty());
+        $this->assertSame('bar', $object->getInnerObject()->getFurtherInnerObject()->getProperty());
+    }
+
+    public function testObjectWithExistingValueWithoutTargetSetterDto(): void
+    {
+        $dto = new RootObjectWithoutSetterDto();
+        $dto->id = 'id';
+        $dto->getInnerObject()->property = 'foo';
+        $dto->getInnerObject()->getFurtherInnerObject()->property = 'bar';
 
         $object = new RootObject();
 
