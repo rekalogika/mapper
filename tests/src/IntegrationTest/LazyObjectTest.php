@@ -21,6 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameInConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameMustBeCalled;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdDto;
+use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdEagerDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdFinalDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdReadOnlyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
@@ -39,7 +40,7 @@ class LazyObjectTest extends FrameworkTestCase
     public function testLazyObjectHydration(): void
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('This method should not be called');
+        $this->expectExceptionMessage('If lazy, this method must not be called');
         $source = new ObjectWithId();
         $target = $this->mapper->map($source, ObjectWithIdDto::class);
         $this->initialize($target);
@@ -49,10 +50,18 @@ class LazyObjectTest extends FrameworkTestCase
     {
         // final class can't be lazy
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('This method should not be called');
+        $this->expectExceptionMessage('If lazy, this method must not be called');
         $source = new ObjectWithId();
-        $target = $this->mapper->map($source, ObjectWithIdFinalDto::class);
-        $this->initialize($target);
+        $this->mapper->map($source, ObjectWithIdFinalDto::class);
+    }
+
+    public function testEagerAttribute(): void
+    {
+        // eager-marked class can't be lazy
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('If lazy, this method must not be called');
+        $source = new ObjectWithId();
+        $this->mapper->map($source, ObjectWithIdEagerDto::class);
     }
 
     /**
@@ -66,7 +75,7 @@ class LazyObjectTest extends FrameworkTestCase
         // should not use proxy. if a proxy is not used, it should throw an
         // exception
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('This method should not be called');
+        $this->expectExceptionMessage('If lazy, this method must not be called');
         $source = new ObjectWithId();
         $target = $this->mapper->map($source, ObjectWithIdReadOnlyDto::class);
     }
@@ -93,7 +102,7 @@ class LazyObjectTest extends FrameworkTestCase
     public function testIdInParentClassInitialized(): void
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('This method should not be called');
+        $this->expectExceptionMessage('If lazy, this method must not be called');
 
         $source = new ObjectWithId();
         $target = $this->mapper->map($source, ChildObjectWithIdDto::class);

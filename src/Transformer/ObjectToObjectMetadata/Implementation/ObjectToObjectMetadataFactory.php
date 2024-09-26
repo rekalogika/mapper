@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
+use Rekalogika\Mapper\Attribute\Eager;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
@@ -277,6 +278,15 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             sourceClassAttributes: $sourceClassAttributes,
             targetClassAttributes: $targetClassAttributes,
         );
+
+        // if target is marked as eager, then we don't use proxy
+
+        if ($objectToObjectMetadata->getTargetClassAttributes()->get(Eager::class) !== null) {
+            $objectToObjectMetadata = $objectToObjectMetadata
+                ->withReasonCannotUseProxy('Target class has Eager attribute');
+
+            return $objectToObjectMetadata;
+        }
 
         // create proxy if possible
 

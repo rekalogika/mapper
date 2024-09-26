@@ -13,15 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\LazyObject;
 
-class ObjectWithId
-{
-    public function getId(): string
-    {
-        return 'id';
-    }
+use Rekalogika\Mapper\Attribute\Eager;
 
-    public function getName(): string
-    {
-        throw new \LogicException('If lazy, this method must not be called');
-    }
+#[Eager]
+class ObjectWithIdEagerDto
+{
+    public ?string $id = null;
+
+    public ?string $name = null;
 }
