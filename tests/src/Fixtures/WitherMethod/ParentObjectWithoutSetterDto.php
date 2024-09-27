@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\WitherMethod;
 
+use Rekalogika\Mapper\Attribute\ValueObject;
+
+#[ValueObject(false)]
 class ParentObjectWithoutSetterDto
 {
     private ObjectWithImmutableSetter $object;

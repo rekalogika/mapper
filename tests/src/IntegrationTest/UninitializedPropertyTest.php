@@ -30,7 +30,7 @@ class UninitializedPropertyTest extends FrameworkTestCase
         $object = new ObjectWithInitializedProperty();
         $dto = $this->mapper->map($object, ObjectWithInitializedPropertyDto::class);
         $this->initialize($dto);
-        $this->assertSame('foo', $dto->property->name);
+        $this->assertSame('foo', $dto->property->getName());
     }
 
     public function testInitializedToFinalInitialized(): void
@@ -38,7 +38,7 @@ class UninitializedPropertyTest extends FrameworkTestCase
         $object = new ObjectWithInitializedProperty();
         $dto = $this->mapper->map($object, FinalObjectWithInitializedPropertyDto::class);
         $this->initialize($dto);
-        $this->assertSame('foo', $dto->property->name);
+        $this->assertSame('foo', $dto->property->getName());
     }
 
     public function testInitializedToUnitialized(): void
@@ -46,7 +46,7 @@ class UninitializedPropertyTest extends FrameworkTestCase
         $object = new ObjectWithInitializedProperty();
         $dto = $this->mapper->map($object, ObjectWithUninitializedPropertyDto::class);
         $this->initialize($dto);
-        $this->assertSame('foo', $dto->property->name);
+        $this->assertSame('foo', $dto->property->getName());
     }
 
     public function testInitializedToFinalUnitialized(): void
@@ -54,7 +54,7 @@ class UninitializedPropertyTest extends FrameworkTestCase
         $object = new ObjectWithInitializedProperty();
         $dto = $this->mapper->map($object, FinalObjectWithUninitializedPropertyDto::class);
         $this->initialize($dto);
-        $this->assertSame('foo', $dto->property->name);
+        $this->assertSame('foo', $dto->property->getName());
     }
 
     // from uninitialized
@@ -64,7 +64,7 @@ class UninitializedPropertyTest extends FrameworkTestCase
         $object = new ObjectWithUninitializedProperty();
         $dto = $this->mapper->map($object, ObjectWithInitializedPropertyDto::class);
         $this->initialize($dto);
-        $this->assertSame('bar', $dto->property->name);
+        $this->assertSame('bar', $dto->property->getName());
     }
 
     public function testUninitializedToFinalInitialized(): void
@@ -72,7 +72,7 @@ class UninitializedPropertyTest extends FrameworkTestCase
         $object = new ObjectWithUninitializedProperty();
         $dto = $this->mapper->map($object, FinalObjectWithInitializedPropertyDto::class);
         $this->initialize($dto);
-        $this->assertSame('bar', $dto->property->name);
+        $this->assertSame('bar', $dto->property->getName());
     }
 
     public function testUninitializedToUnitialized(): void
@@ -81,7 +81,7 @@ class UninitializedPropertyTest extends FrameworkTestCase
         $object = new ObjectWithUninitializedProperty();
         $dto = $this->mapper->map($object, ObjectWithUninitializedPropertyDto::class);
         $this->initialize($dto);
-        $this->assertSame('foo', $dto->property->name);
+        $this->assertSame('foo', $dto->property->getName());
     }
 
     public function testUninitializedToFinalUnitialized(): void
@@ -90,6 +90,6 @@ class UninitializedPropertyTest extends FrameworkTestCase
         $object = new ObjectWithUninitializedProperty();
         $dto = $this->mapper->map($object, FinalObjectWithUninitializedPropertyDto::class);
         $this->initialize($dto);
-        $this->assertSame('foo', $dto->property->name);
+        $this->assertSame('foo', $dto->property->getName());
     }
 }

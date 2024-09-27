@@ -11,9 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\UninitializedProperty;
+namespace Rekalogika\Mapper\Tests\Fixtures\ValueObject;
 
-final readonly class ValueObject
+class PublicGetter
 {
     public function __construct(
         private string $name,
