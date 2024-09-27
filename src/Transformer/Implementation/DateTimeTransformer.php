@@ -59,7 +59,7 @@ final readonly class DateTimeTransformer implements TransformerInterface
 
             if (!\is_string($source)) {
                 $source = (string) $source;
-                $sourceFormat = $sourceFormat ?? 'U';
+                $sourceFormat ??= 'U';
             }
 
             if ($sourceFormat !== null) {
