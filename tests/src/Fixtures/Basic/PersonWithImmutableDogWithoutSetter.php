@@ -17,7 +17,7 @@ class PersonWithImmutableDogWithoutSetter
 {
     public function __construct(
         private string $name,
-        private ImmutableDog $dog,
+        private readonly ImmutableDog $dog,
     ) {}
 
     public function getName(): string

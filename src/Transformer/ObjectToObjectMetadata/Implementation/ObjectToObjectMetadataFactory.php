@@ -204,14 +204,14 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             // generate source & target property metadata
 
             $sourcePropertyMetadata = $this->propertyMetadataFactory
-                ->createSourcePropertyMetadata(
+                ->createPropertyMetadata(
                     class: $sourceClass,
                     property: $sourceProperty,
                     allowsDynamicProperties: $sourceAllowsDynamicProperties,
                 );
 
             $targetPropertyMetadata = $this->propertyMetadataFactory
-                ->createTargetPropertyMetadata(
+                ->createPropertyMetadata(
                     class: $targetClass,
                     property: $targetProperty,
                     allowsDynamicProperties: $targetAllowsDynamicProperties,

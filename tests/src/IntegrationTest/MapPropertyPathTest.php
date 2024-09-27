@@ -40,9 +40,9 @@ class MapPropertyPathTest extends FrameworkTestCase
      * @param class-string $class
      * @param list<Type>|class-string<ExceptionInterface> $expectedTypes
      * @param list<object> $expectedAttributes
-     * @dataProvider propertyPathAwarePropertyPathExtractorDataProvider
+     * @dataProvider propertyPathMetadataFactoryDataProvider
      */
-    public function testPropertyPathAwarePropertyInfoExtractor(
+    public function testPropertyPathMetadataFactory(
         string $class,
         string $path,
         array|string $expectedTypes,
@@ -67,16 +67,20 @@ class MapPropertyPathTest extends FrameworkTestCase
         $library = new Library();
         $library->addShelf($shelf);
 
-        $metadata = $propertyPathAwarePropertyTypeExtractor->getMetadata($class, $path);
+        $metadata = $propertyPathAwarePropertyTypeExtractor
+            ->createPropertyMetadata($class, $path, false);
 
-        $this->assertEquals($expectedTypes, $metadata->getTypes());
-        $this->assertEquals($expectedAttributes, $metadata->getAttributes());
+        $types = $metadata->getTypes();
+        $attributes = $metadata->getAttributes();
+
+        $this->assertEquals($expectedTypes, $types);
+        $this->assertEquals($expectedAttributes, $attributes);
     }
 
     /**
      * @return iterable<int|string,array{0:class-string,1:string,2:list<Type>|class-string<ExceptionInterface>,3?:list<object>}>
      */
-    public static function propertyPathAwarePropertyPathExtractorDataProvider(): iterable
+    public static function propertyPathMetadataFactoryDataProvider(): iterable
     {
         yield [
             Book::class,
@@ -326,5 +330,4 @@ class MapPropertyPathTest extends FrameworkTestCase
 
         $this->assertEquals($expected, $actual);
     }
-
 }

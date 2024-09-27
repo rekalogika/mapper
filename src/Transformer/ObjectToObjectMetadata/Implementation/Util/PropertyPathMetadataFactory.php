@@ -14,9 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyPathMetadata;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\SourcePropertyMetadata;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\TargetPropertyMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -39,62 +37,13 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
     ) {}
 
-    public function createSourcePropertyMetadata(
+    #[\Override]
+    public function createPropertyMetadata(
         string $class,
         string $property,
         bool $allowsDynamicProperties,
-    ): SourcePropertyMetadata {
-        $metadata = $this->getMetadata($class, $property);
-
-        return new SourcePropertyMetadata(
-            readMode: ReadMode::PropertyPath,
-            readName: $property,
-            readVisibility: Visibility::Public,
-            types: $metadata->getTypes(),
-            attributes: $metadata->getAttributes(),
-        );
-    }
-
-    public function createTargetPropertyMetadata(
-        string $class,
-        string $property,
-        bool $allowsDynamicProperties,
-    ): TargetPropertyMetadata {
-        $metadata = $this->getMetadata($class, $property);
-
-        $types = $metadata->getTypes();
-
-        return new TargetPropertyMetadata(
-            readMode: ReadMode::PropertyPath,
-            readName: $property,
-            readVisibility: Visibility::Public,
-            constructorWriteMode: WriteMode::None,
-            constructorWriteName: null,
-            constructorMandatory: false,
-            constructorVariadic: false,
-            setterWriteMode: WriteMode::PropertyPath,
-            setterWriteName: $property,
-            setterWriteVisibility: Visibility::Public,
-            setterVariadic: false,
-            removerWriteName: $property,
-            removerWriteVisibility: Visibility::Public,
-            types: $metadata->getTypes(),
-            scalarType: Util::determineScalarType($types),
-            nullable: false,
-            replaceable: $metadata->isReplaceable(),
-            immutable: TypeCheck::isRecursivelyImmutable($types),
-            attributes: $metadata->getAttributes(),
-        );
-    }
-
-    /**
-     * @param class-string $class
-     */
-    public function getMetadata(
-        string $class,
-        string $propertyPath,
-    ): PropertyPathMetadata {
-        $propertyPathObject = new PropertyPath($propertyPath);
+    ): PropertyMetadata {
+        $propertyPathObject = new PropertyPath($property);
 
         /** @var \Iterator&PropertyPathIteratorInterface */
         $iterator = $propertyPathObject->getIterator();
@@ -122,7 +71,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
                     throw new PropertyPathAwarePropertyInfoExtractorException(
                         message: \sprintf('Cannot proceed because property "%s" has multiple types in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                         class: $class,
-                        propertyPath: $propertyPath,
+                        propertyPath: $property,
                     );
                 }
 
@@ -140,7 +89,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
                     throw new PropertyPathAwarePropertyInfoExtractorException(
                         message: \sprintf('Trying to resolve path "%s", but the current node is not an object', $propertyPathPart),
                         class: $class,
-                        propertyPath: $propertyPath,
+                        propertyPath: $property,
                     );
                 }
 
@@ -155,22 +104,22 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
                 throw new PropertyPathAwarePropertyInfoExtractorException(
                     message: \sprintf('Property "%s" not found in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                     class: $class,
-                    propertyPath: $propertyPath,
+                    propertyPath: $property,
                 );
             } elseif (\count($types) === 0) {
                 throw new PropertyPathAwarePropertyInfoExtractorException(
                     message: \sprintf('Cannot determine the type of property "%s" in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                     class: $class,
-                    propertyPath: $propertyPath,
+                    propertyPath: $property,
                 );
             }
         }
 
         if ($lastClass === null) {
             throw new PropertyPathAwarePropertyInfoExtractorException(
-                message: \sprintf('Property path "%s" is empty', $propertyPath),
+                message: \sprintf('Property path "%s" is empty', $property),
                 class: $class,
-                propertyPath: $propertyPath,
+                propertyPath: $property,
             );
         }
 
@@ -178,7 +127,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
             throw new PropertyPathAwarePropertyInfoExtractorException(
                 message: \sprintf('Class "%s" not found', $lastClass),
                 class: $class,
-                propertyPath: $propertyPath,
+                propertyPath: $property,
             );
         }
 
@@ -198,13 +147,28 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
             isIndex: $lastIsIndex,
         );
 
-        return new PropertyPathMetadata(
-            propertyPath: $propertyPath,
-            class: $lastClass,
-            property: $currentProperty,
-            types: array_values($types ?? []),
-            attributes: $attributes,
+        $types = array_values($types ?? []);
+
+        return new PropertyMetadata(
+            readMode: ReadMode::PropertyPath,
+            readName: $property,
+            readVisibility: Visibility::Public,
+            constructorWriteMode: WriteMode::None,
+            constructorWriteName: null,
+            constructorMandatory: false,
+            constructorVariadic: false,
+            setterWriteMode: WriteMode::PropertyPath,
+            setterWriteName: $property,
+            setterWriteVisibility: Visibility::Public,
+            setterVariadic: false,
+            removerWriteName: $property,
+            removerWriteVisibility: Visibility::Public,
+            types: $types,
+            scalarType: Util::determineScalarType($types),
+            nullable: false,
             replaceable: $replaceable,
+            immutable: TypeCheck::isRecursivelyImmutable($types),
+            attributes: $attributes,
         );
     }
 

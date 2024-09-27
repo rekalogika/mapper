@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\SourcePropertyMetadata;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\TargetPropertyMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyMetadata;
 
 /**
  * @internal
@@ -23,20 +22,11 @@ interface PropertyMetadataFactoryInterface
 {
     /**
      * @param class-string $class
-     */
-    public function createSourcePropertyMetadata(
-        string $class,
-        string $property,
-        bool $allowsDynamicProperties,
-    ): SourcePropertyMetadata;
-
-    /**
-     * @param class-string $class
      * @todo collect property path attributes
      */
-    public function createTargetPropertyMetadata(
+    public function createPropertyMetadata(
         string $class,
         string $property,
         bool $allowsDynamicProperties,
-    ): TargetPropertyMetadata;
+    ): PropertyMetadata;
 }

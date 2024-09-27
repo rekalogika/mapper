@@ -14,8 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
 use Rekalogika\Mapper\Transformer\MixedType;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\SourcePropertyMetadata;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\TargetPropertyMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -49,69 +48,19 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     }
 
     /**
-     * @todo collect property path attributes
-     * @param class-string $class
-     */
-    public function createSourcePropertyMetadata(
-        string $class,
-        string $property,
-        bool $allowsDynamicProperties,
-    ): SourcePropertyMetadata {
-        // property path
-
-        if ($this->isPropertyPath($property)) {
-            return $this->propertyPathMetadataFactory->createSourcePropertyMetadata(
-                class: $class,
-                property: $property,
-                allowsDynamicProperties: $allowsDynamicProperties,
-            );
-        }
-
-        // normal, non property path
-
-        $readInfo = $this->propertyReadInfoExtractor
-            ->getReadInfo($class, $property);
-
-        $writeInfo = $this
-            ->getSetterPropertyWriteInfo($class, $property);
-
-        [$readMode, $readName, $readVisibility] = $this->processPropertyReadInfo(
-            readInfo: $readInfo,
-            property: $property,
-            allowsDynamicProperties: $allowsDynamicProperties,
-        );
-
-        [$types] = $this->getPropertyTypes($class, $property);
-
-        $attributes = $this->getPropertyAttributes(
-            class: $class,
-            property: $property,
-            readInfo: $readInfo,
-            writeInfo: $writeInfo,
-        );
-
-        return new SourcePropertyMetadata(
-            readMode: $readMode,
-            readName: $readName,
-            readVisibility: $readVisibility,
-            types: $types,
-            attributes: $attributes,
-        );
-    }
-
-    /**
      * @param class-string $class
      * @todo collect property path attributes
      */
-    public function createTargetPropertyMetadata(
+    #[\Override]
+    public function createPropertyMetadata(
         string $class,
         string $property,
         bool $allowsDynamicProperties,
-    ): TargetPropertyMetadata {
+    ): PropertyMetadata {
         // property path
 
         if ($this->isPropertyPath($property)) {
-            return $this->propertyPathMetadataFactory->createTargetPropertyMetadata(
+            return $this->propertyPathMetadataFactory->createPropertyMetadata(
                 class: $class,
                 property: $property,
                 allowsDynamicProperties: $allowsDynamicProperties,
@@ -185,7 +134,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             writeInfo: $writeInfo,
         );
 
-        return new TargetPropertyMetadata(
+        return new PropertyMetadata(
             readMode: $readMode,
             readName: $readName,
             readVisibility: $readVisibility,
