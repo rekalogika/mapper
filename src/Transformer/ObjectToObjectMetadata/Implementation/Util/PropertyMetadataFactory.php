@@ -51,6 +51,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
      * @param class-string $class
      * @todo collect property path attributes
      */
+    #[\Override]
     public function createPropertyMetadata(
         string $class,
         string $property,

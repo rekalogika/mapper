@@ -37,6 +37,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
     ) {}
 
+    #[\Override]
     public function createPropertyMetadata(
         string $class,
         string $property,
