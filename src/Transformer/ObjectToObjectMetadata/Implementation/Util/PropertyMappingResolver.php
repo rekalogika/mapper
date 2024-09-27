@@ -95,7 +95,7 @@ final readonly class PropertyMappingResolver
             class: $class,
             property: $property,
             attributeClass: Map::class,
-            methodPrefixes: ['get', 'set', 'is', 'has', 'can'],
+            methodPrefixes: ['get', 'set', 'is', 'has', 'can', 'with'],
         );
 
         // process attributes with pairedClass first

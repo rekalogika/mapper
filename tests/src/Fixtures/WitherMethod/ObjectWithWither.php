@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\WitherMethod;
 
-class ObjectWithImmutableSetter
+class ObjectWithWither
 {
     private ?string $property = null;
 
-    public function setProperty(?string $property): self
+    public function withProperty(?string $property): self
     {
         $result = new self();
         $result->property = $property;
