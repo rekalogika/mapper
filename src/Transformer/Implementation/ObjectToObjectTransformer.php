@@ -172,7 +172,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 );
             }
 
-            $this->readSourceAndWriteTarget(
+            $target = $this->readSourceAndWriteTarget(
                 source: $source,
                 target: $target,
                 propertyMappings: $objectToObjectMetadata->getPropertyMappings(),
@@ -282,7 +282,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
         // map eager properties
 
-        $this->readSourceAndWriteTarget(
+        $target = $this->readSourceAndWriteTarget(
             source: $source,
             target: $target,
             propertyMappings: $objectToObjectMetadata->getEagerPropertyMappings(),
@@ -386,28 +386,34 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         object $target,
         array $propertyMappings,
         Context $context,
-    ): void {
+    ): object {
         foreach ($propertyMappings as $propertyMapping) {
-            $this->readSourcePropertyAndWriteTargetProperty(
+            $target = $this->readSourcePropertyAndWriteTargetProperty(
                 source: $source,
                 target: $target,
                 propertyMapping: $propertyMapping,
                 context: $context,
             );
         }
+
+        return $target;
     }
 
+    /**
+     * @return object The target object after writing the property, can be of a
+     * different instance but should be of the same class
+     */
     private function readSourcePropertyAndWriteTargetProperty(
         object $source,
         object $target,
         PropertyMapping $propertyMapping,
         Context $context,
-    ): void {
+    ): object {
         if (
             $propertyMapping->getTargetReadMode() === ReadMode::None
             && $propertyMapping->getTargetSetterWriteMode() === WriteMode::None
         ) {
-            return;
+            return $target;
         }
 
         try {
@@ -420,19 +426,21 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
                 context: $context,
             );
         } catch (UninitializedSourcePropertyException | UnsupportedPropertyMappingException) {
-            return;
+            return $target;
         }
 
         // write
 
         if ($isChanged) {
-            $this->readerWriter->writeTargetProperty(
+            return $this->readerWriter->writeTargetProperty(
                 target: $target,
                 propertyMapping: $propertyMapping,
                 value: $targetPropertyValue,
                 context: $context,
             );
         }
+
+        return $target;
     }
 
     /**

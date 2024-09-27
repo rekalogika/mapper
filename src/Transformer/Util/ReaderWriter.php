@@ -199,7 +199,7 @@ final readonly class ReaderWriter
         PropertyMapping $propertyMapping,
         mixed $value,
         Context $context,
-    ): void {
+    ): object {
         $accessorName = $propertyMapping->getTargetSetterWriteName();
         $writeMode = $propertyMapping->getTargetSetterWriteMode();
         $visibility = $propertyMapping->getTargetSetterWriteVisibility();
@@ -230,22 +230,41 @@ final readonly class ReaderWriter
                     /** @psalm-suppress MixedArgument */
                     $value = iterator_to_array($value);
 
-                    /** @psalm-suppress MixedMethodCall */
-                    $target->{$accessorName}(...$value);
+                    /**
+                     * @psalm-suppress MixedMethodCall
+                     * @var mixed
+                     */
+                    $result = $target->{$accessorName}(...$value);
                 } else {
-                    /** @psalm-suppress MixedMethodCall */
-                    $target->{$accessorName}($value);
+                    /**
+                     * @psalm-suppress MixedMethodCall
+                     * @var mixed
+                     */
+                    $result = $target->{$accessorName}($value);
+                }
+
+                // if the setter returns the a value with the same type as the
+                // target object, we assume that the setter method is a fluent
+                // interface or an immutable setter, and we return the result
+
+                if (
+                    \is_object($result) && is_a($result, $target::class, true)
+                ) {
+                    return $result;
                 }
             } elseif ($writeMode === WriteMode::AdderRemover) {
                 // noop
             } elseif ($writeMode === WriteMode::PropertyPath) {
+                // PropertyAccessor might modify the target object
+                $temporaryTarget = $target;
+
                 $this->propertyAccessor
-                    ->setValue($target, $accessorName, $value);
+                    ->setValue($temporaryTarget, $accessorName, $value);
             } elseif ($writeMode === WriteMode::DynamicProperty) {
                 $target->{$accessorName} = $value;
             }
         } catch (\BadMethodCallException) {
-            return;
+            return $target;
         } catch (\Throwable $e) {
             throw new UnableToWriteException(
                 $target,
@@ -254,5 +273,7 @@ final readonly class ReaderWriter
                 previous: $e,
             );
         }
+
+        return $target;
     }
 }
