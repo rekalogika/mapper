@@ -34,6 +34,7 @@
 * feat: `Eager` attribute to disable proxying on target classes
 * perf: skip property if setting or mutating is impossible
 * chore: rector run
+* test: setting new instance to a target without setter
 
 ## 1.8.0
 

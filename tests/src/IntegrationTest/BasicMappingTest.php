@@ -16,12 +16,15 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\Dog;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\DogDto;
+use Rekalogika\Mapper\Tests\Fixtures\Basic\ImmutableDog;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\Person;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonDto;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithDog;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithDogDto;
+use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithImmutableDogWithoutSetter;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithoutAge;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithoutAgeDto;
+use Rekalogika\Mapper\Transformer\Exception\NewInstanceReturnedButCannotBeSetOnTargetException;
 
 class BasicMappingTest extends FrameworkTestCase
 {
@@ -53,6 +56,14 @@ class BasicMappingTest extends FrameworkTestCase
 
     public function testSetterNotCalledIfValueDoesntChange(): void
     {
+        // source
+        $personDto = new PersonWithDogDto();
+        $dogDto = new DogDto();
+        $dogDto->name = 'Hoop';
+        $personDto->dog = $dogDto;
+        $personDto->name = 'John';
+
+        // target
         $dog = new Dog('Rex');
         $person = new PersonWithDog('Jon', $dog);
 
@@ -60,11 +71,6 @@ class BasicMappingTest extends FrameworkTestCase
         $this->assertEquals('Jon', $person->getName());
         $this->assertEquals('Rex', $person->getDog()?->getName());
 
-        $personDto = new PersonWithDogDto();
-        $dogDto = new DogDto();
-        $dogDto->name = 'Hoop';
-        $personDto->dog = $dogDto;
-        $personDto->name = 'John';
 
         $this->mapper->map($personDto, $person);
 
@@ -72,5 +78,34 @@ class BasicMappingTest extends FrameworkTestCase
         $this->assertFalse($person->dogSetterCalled);
         $this->assertEquals('John', $person->getName());
         $this->assertEquals('Hoop', $person->getDog()?->getName());
+    }
+
+    /**
+     * @todo immutability should be recursive for this to happen
+     */
+    public function testSettingImmutableEntityButNoSetterOnTarget(): void
+    {
+        $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
+
+        // source
+        $personDto = new PersonWithDogDto();
+        $dogDto = new DogDto();
+        $dogDto->name = 'Hoop';
+        $personDto->dog = $dogDto;
+        $personDto->name = 'John';
+
+        // target
+        $dog = new ImmutableDog('Rex');
+        $person = new PersonWithImmutableDogWithoutSetter('Jon', $dog);
+
+        $this->assertEquals('Jon', $person->getName());
+        $this->assertEquals('Rex', $person->getDog()->getName());
+
+
+        $this->mapper->map($personDto, $person);
+
+        $this->assertEquals('John', $person->getName());
+        // ImmutableDog has no setter, so the value should not change
+        $this->assertEquals('Rex', $person->getDog()->getName());
     }
 }
