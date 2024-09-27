@@ -14,4 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Attribute;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final readonly class ValueObject {}
+final readonly class ValueObject
+{
+    public function __construct(
+        public bool $isValueObject = true,
+    ) {}
+}

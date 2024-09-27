@@ -84,7 +84,7 @@ class BasicMappingTest extends FrameworkTestCase
     {
         // this threw an exception before. previously a readonly target entity
         // was ignored and assumed to be null
-        // $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
+        $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
 
         // source
         $personDto = new PersonWithDogDto();

@@ -74,6 +74,7 @@
                 <file name="src/Util/ClassUtil.php" />
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyMetadataFactory.php" />
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyPathMetadataFactory.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/ClassMetadataFactory.php" />
             </errorLevel>
         </InternalMethod>
         <InternalClass>
@@ -82,6 +83,7 @@
                 <file name="src/Util/ClassUtil.php" />
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyMetadataFactory.php" />
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyPathMetadataFactory.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/ClassMetadataFactory.php" />
             </errorLevel>
         </InternalClass>
         <UndefinedClass>

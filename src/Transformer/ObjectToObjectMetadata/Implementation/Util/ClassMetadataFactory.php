@@ -17,6 +17,9 @@ use Rekalogika\Mapper\Attribute\ValueObject;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\ClassMetadata;
 use Rekalogika\Mapper\Util\ClassUtil;
+use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyWriteInfo;
+use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 
 /**
  * @internal
@@ -25,6 +28,8 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
 {
     public function __construct(
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
+        private PropertyListExtractorInterface $propertyListExtractor,
+        private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
     ) {}
 
     /**
@@ -50,7 +55,12 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         $instantiable = $reflection->isInstantiable();
         $cloneable = $reflection->isCloneable();
         $readOnly = $reflection->isReadOnly();
-        $valueObject = $this->isValueObject($attributes);
+
+        $valueObject = $this->isValueObject(
+            class: $class,
+            attributes: $attributes,
+            hasWritableDynamicProperties: $hasWritableDynamicProperties,
+        );
 
         $eagerProperties = $this->eagerPropertiesResolver
             ->getEagerProperties($class);
@@ -86,17 +96,61 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
     }
 
     /**
+     * @param class-string $class
      * @param list<object> $attributes
      */
     private function isValueObject(
+        string $class,
         array $attributes,
+        bool $hasWritableDynamicProperties,
     ): bool {
+        // if dynamic, then it is not a value object
+
+        if ($hasWritableDynamicProperties) {
+            return false;
+        }
+
+        // common value object classes
+
+        if (
+            is_a($class, \DateTimeImmutable::class, true)
+            || is_a($class, \DateInterval::class, true)
+            || is_a($class, \DateTimeZone::class, true)
+            || is_a($class, \DatePeriod::class, true)
+            || is_a($class, \UnitEnum::class, true)
+        ) {
+            return true;
+        }
+
+        // if tagged by ValueObject attribute, then it is a value object
+
         foreach ($attributes as $attribute) {
             if ($attribute instanceof ValueObject) {
-                return true;
+                return $attribute->isValueObject;
             }
         }
 
-        return false;
+        // if all properties are not writable, then it is a value object
+
+        $properties = $this->propertyListExtractor->getProperties($class) ?? [];
+
+        foreach ($properties as $property) {
+            $writeInfo = $this->propertyWriteInfoExtractor
+                ->getWriteInfo($class, $property, [
+                    'enable_getter_setter_extraction' => true,
+                    'enable_constructor_extraction' => false,
+                    'enable_magic_methods_extraction' => true,
+                    'enable_adder_remover_extraction' => true,
+                ]);
+
+            if (
+                $writeInfo !== null
+                && $writeInfo->getType() !== PropertyWriteInfo::TYPE_NONE
+            ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

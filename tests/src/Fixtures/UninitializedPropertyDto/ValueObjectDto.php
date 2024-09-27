@@ -13,12 +13,14 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto;
 
-use Rekalogika\Mapper\Attribute\ValueObject;
-
-#[ValueObject]
-final readonly class ValueObjectDto
+final class ValueObjectDto
 {
     public function __construct(
         public string $name,
     ) {}
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }

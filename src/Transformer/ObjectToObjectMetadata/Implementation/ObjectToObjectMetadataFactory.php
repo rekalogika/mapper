@@ -71,6 +71,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
         $this->classMetadataFactory = new ClassMetadataFactory(
             eagerPropertiesResolver: $eagerPropertiesResolver,
+            propertyListExtractor: $propertyListExtractor,
+            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
         );
 
         $this->propertyMappingResolver = new PropertyMappingResolver(
