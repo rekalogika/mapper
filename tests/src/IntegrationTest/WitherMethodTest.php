@@ -16,6 +16,8 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObject;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectWithoutSetterDto;
+use Rekalogika\Mapper\Transformer\Exception\NewInstanceReturnedButCannotBeSetOnTargetException;
 
 class WitherMethodTest extends FrameworkTestCase
 {
@@ -29,5 +31,14 @@ class WitherMethodTest extends FrameworkTestCase
         $resultObject = $result->getObject();
 
         $this->assertNotSame($originalObject, $resultObject);
+    }
+
+    public function testChildImmutableSetterWithoutSetterOnParent(): void
+    {
+        $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
+
+        $source = new ParentObject();
+        $target = new ParentObjectWithoutSetterDto();
+        $this->mapper->map($source, $target);
     }
 }

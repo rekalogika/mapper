@@ -39,6 +39,7 @@
 * refactor: consolidate source & target metadata classes
 * refactor: add general class metadata
 * feat: support for immutable setters
+* test: immutable setter without setter on parent object error
 
 ## 1.8.0
 
