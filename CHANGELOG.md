@@ -35,6 +35,7 @@
 * perf: skip property if setting or mutating is impossible
 * chore: rector run
 * test: setting new instance to a target without setter
+* refactor: consolidate property & property path metadata into single interface
 
 ## 1.8.0
 
