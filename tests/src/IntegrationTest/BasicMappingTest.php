@@ -80,12 +80,11 @@ class BasicMappingTest extends FrameworkTestCase
         $this->assertEquals('Hoop', $person->getDog()?->getName());
     }
 
-    /**
-     * @todo immutability should be recursive for this to happen
-     */
     public function testSettingImmutableEntityButNoSetterOnTarget(): void
     {
-        $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
+        // this threw an exception before. previously a readonly target entity
+        // was ignored and assumed to be null
+        // $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
 
         // source
         $personDto = new PersonWithDogDto();
@@ -105,7 +104,6 @@ class BasicMappingTest extends FrameworkTestCase
         $this->mapper->map($personDto, $person);
 
         $this->assertEquals('John', $person->getName());
-        // ImmutableDog has no setter, so the value should not change
         $this->assertEquals('Rex', $person->getDog()->getName());
     }
 }

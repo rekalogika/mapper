@@ -41,25 +41,30 @@ class ReadOnlyTest extends FrameworkTestCase
         $this->assertSame('foo', $target->name);
     }
 
-    public function testToExistingFinalReadOnly(): void
-    {
-        $source = new Source('foo');
-        $target = new FinalReadOnlyObjectDto('bar');
-        $newTarget = $this->mapper->map($source, $target);
-        $this->assertNotInstanceOf(LazyObjectInterface::class, $newTarget);
-        $this->assertSame('foo', $newTarget->name);
-    }
+    // Previously, existing target readonly object is ignored, and the
+    // transformation does not involve the target object. Now, the target object
+    // is no longer ignored, and the transformation will involve the target
+    // readonly object.
 
-    /**
-     * In PHP 8.2, readonly class can't be lazy
-     * @requires PHP >= 8.3.0
-     */
-    public function testToExistingReadOnly(): void
-    {
-        $source = new Source('foo');
-        $target = new ReadOnlyObjectDto('bar');
-        $newTarget = $this->mapper->map($source, $target);
-        $this->assertInstanceOf(LazyObjectInterface::class, $newTarget);
-        $this->assertSame('foo', $newTarget->name);
-    }
+    // public function testToExistingFinalReadOnly(): void
+    // {
+    //     $source = new Source('foo');
+    //     $target = new FinalReadOnlyObjectDto('bar');
+    //     $newTarget = $this->mapper->map($source, $target);
+    //     $this->assertNotInstanceOf(LazyObjectInterface::class, $newTarget);
+    //     $this->assertSame('foo', $newTarget->name);
+    // }
+
+    // /**
+    //  * In PHP 8.2, readonly class can't be lazy
+    //  * @requires PHP >= 8.3.0
+    //  */
+    // public function testToExistingReadOnly(): void
+    // {
+    //     $source = new Source('foo');
+    //     $target = new ReadOnlyObjectDto('bar');
+    //     $newTarget = $this->mapper->map($source, $target);
+    //     $this->assertInstanceOf(LazyObjectInterface::class, $newTarget);
+    //     $this->assertSame('foo', $newTarget->name);
+    // }
 }
