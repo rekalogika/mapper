@@ -13,20 +13,22 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\WitherMethod;
 
-class ObjectWithImmutableSetter
+class ParentObjectWithObjectWithWitherChildDto
 {
-    private ?string $property = null;
+    private ObjectWithWither $object;
 
-    public function setProperty(?string $property): self
+    public function __construct()
     {
-        $result = new self();
-        $result->property = $property;
-
-        return $result;
+        $this->object = new ObjectWithWither();
     }
 
-    public function getProperty(): ?string
+    public function getObject(): ObjectWithWither
     {
-        return $this->property;
+        return $this->object;
+    }
+
+    public function setObject(ObjectWithWither $object): void
+    {
+        $this->object = $object;
     }
 }

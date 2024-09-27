@@ -16,8 +16,10 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObject;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectWithObjectWithWitherChildDto;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectWithoutSetterDto;
 use Rekalogika\Mapper\Transformer\Exception\NewInstanceReturnedButCannotBeSetOnTargetException;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class WitherMethodTest extends FrameworkTestCase
 {
@@ -33,6 +35,18 @@ class WitherMethodTest extends FrameworkTestCase
         $this->assertNotSame($originalObject, $resultObject);
     }
 
+    public function testWither(): void
+    {
+        $source = new ParentObject();
+        $target = new ParentObjectWithObjectWithWitherChildDto();
+
+        $originalObject = $target->getObject();
+        $result = $this->mapper->map($source, $target);
+        $resultObject = $result->getObject();
+
+        $this->assertNotSame($originalObject, $resultObject);
+    }
+
     public function testChildImmutableSetterWithoutSetterOnParent(): void
     {
         $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
@@ -40,5 +54,15 @@ class WitherMethodTest extends FrameworkTestCase
         $source = new ParentObject();
         $target = new ParentObjectWithoutSetterDto();
         $this->mapper->map($source, $target);
+    }
+
+    public function testImmutableSetterWithProxy(): void
+    {
+        $source = new ParentObject();
+        $result = $this->mapper->map($source, ParentObjectDto::class);
+
+        $this->assertInstanceOf(LazyObjectInterface::class, $result);
+        $this->assertInstanceOf(ParentObjectDto::class, $result);
+        $this->assertSame($source->getObject()->property, $result->getObject()->getProperty());
     }
 }

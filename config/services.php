@@ -68,9 +68,9 @@ use Rekalogika\Mapper\TypeResolver\Implementation\CachingTypeResolver;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyInfo\Extractor\PhpStanExtractor;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
-use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\Uid\Factory\UuidFactory;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
@@ -84,20 +84,32 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     # Property info
 
     $services
+        ->set('rekalogika.mapper.property_info.reflection_extractor', ReflectionExtractor::class)
+        ->args([
+            '$mutatorPrefixes' => ['add', 'remove', 'set', 'with'],
+        ]);
+
+    $services
+        ->set('rekalogika.mapper.property_info.phpstan_extractor', PhpStanExtractor::class)
+        ->args([
+            '$mutatorPrefixes' => ['add', 'remove', 'set', 'with'],
+        ]);
+
+    $services
         ->set('rekalogika.mapper.property_info', PropertyInfoExtractor::class)
         ->args([
             '$listExtractors' => [
-                service('property_info.reflection_extractor'),
+                service('rekalogika.mapper.property_info.reflection_extractor'),
             ],
             '$typeExtractors' => [
-                service('property_info.phpstan_extractor'),
-                service('property_info.reflection_extractor'),
+                service('rekalogika.mapper.property_info.phpstan_extractor'),
+                service('rekalogika.mapper.property_info.reflection_extractor'),
             ],
             '$accessExtractors' => [
-                service('property_info.reflection_extractor'),
+                service('rekalogika.mapper.property_info.reflection_extractor'),
             ],
             '$initializableExtractors' => [
-                service('property_info.reflection_extractor'),
+                service('rekalogika.mapper.property_info.reflection_extractor'),
             ],
 
         ]);
@@ -262,8 +274,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_info'),
             service('rekalogika.mapper.property_mapper.resolver'),
-            service(PropertyReadInfoExtractorInterface::class),
-            service(PropertyWriteInfoExtractorInterface::class),
+            service('rekalogika.mapper.property_info.reflection_extractor'),
+            service('rekalogika.mapper.property_info.reflection_extractor'),
             service('rekalogika.mapper.eager_properties_resolver'),
             service('rekalogika.mapper.proxy.factory'),
             service('rekalogika.mapper.type_resolver'),
