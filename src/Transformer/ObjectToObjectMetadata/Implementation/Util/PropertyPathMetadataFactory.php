@@ -15,7 +15,13 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Ut
 
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyPathMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\SourcePropertyMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\TargetPropertyMetadata;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\Util\ClassUtil;
+use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -26,12 +32,60 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final readonly class PropertyPathMetadataFactory
+final readonly class PropertyPathMetadataFactory implements PropertyMetadataFactoryInterface
 {
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
     ) {}
+
+    public function createSourcePropertyMetadata(
+        string $class,
+        string $property,
+        bool $allowsDynamicProperties,
+    ): SourcePropertyMetadata {
+        $metadata = $this->getMetadata($class, $property);
+
+        return new SourcePropertyMetadata(
+            readMode: ReadMode::PropertyPath,
+            readName: $property,
+            readVisibility: Visibility::Public,
+            types: $metadata->getTypes(),
+            attributes: $metadata->getAttributes(),
+        );
+    }
+
+    public function createTargetPropertyMetadata(
+        string $class,
+        string $property,
+        bool $allowsDynamicProperties,
+    ): TargetPropertyMetadata {
+        $metadata = $this->getMetadata($class, $property);
+
+        $types = $metadata->getTypes();
+
+        return new TargetPropertyMetadata(
+            readMode: ReadMode::PropertyPath,
+            readName: $property,
+            readVisibility: Visibility::Public,
+            constructorWriteMode: WriteMode::None,
+            constructorWriteName: null,
+            constructorMandatory: false,
+            constructorVariadic: false,
+            setterWriteMode: WriteMode::PropertyPath,
+            setterWriteName: $property,
+            setterWriteVisibility: Visibility::Public,
+            setterVariadic: false,
+            removerWriteName: $property,
+            removerWriteVisibility: Visibility::Public,
+            types: $metadata->getTypes(),
+            scalarType: Util::determineScalarType($types),
+            nullable: false,
+            replaceable: $metadata->isReplaceable(),
+            immutable: TypeCheck::isRecursivelyImmutable($types),
+            attributes: $metadata->getAttributes(),
+        );
+    }
 
     /**
      * @param class-string $class

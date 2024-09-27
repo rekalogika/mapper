@@ -32,9 +32,9 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final readonly class PropertyMetadataFactory
+final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryInterface
 {
-    private PropertyPathMetadataFactory $propertyPathAwarePropertyTypeExtractor;
+    private PropertyMetadataFactoryInterface $propertyPathMetadataFactory;
 
     public function __construct(
         private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
@@ -42,7 +42,7 @@ final readonly class PropertyMetadataFactory
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
     ) {
-        $this->propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory(
+        $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
         );
@@ -60,15 +60,10 @@ final readonly class PropertyMetadataFactory
         // property path
 
         if ($this->isPropertyPath($property)) {
-            $propertyPathMetadata = $this->propertyPathAwarePropertyTypeExtractor
-                ->getMetadata($class, $property);
-
-            return new SourcePropertyMetadata(
-                readMode: ReadMode::PropertyPath,
-                readName: $property,
-                readVisibility: Visibility::Public,
-                types: $propertyPathMetadata->getTypes(),
-                attributes: $propertyPathMetadata->getAttributes(),
+            return $this->propertyPathMetadataFactory->createSourcePropertyMetadata(
+                class: $class,
+                property: $property,
+                allowsDynamicProperties: $allowsDynamicProperties,
             );
         }
 
@@ -116,31 +111,10 @@ final readonly class PropertyMetadataFactory
         // property path
 
         if ($this->isPropertyPath($property)) {
-            $propertyPathMetadata = $this->propertyPathAwarePropertyTypeExtractor
-                ->getMetadata($class, $property);
-
-            $types = $propertyPathMetadata->getTypes();
-
-            return new TargetPropertyMetadata(
-                readMode: ReadMode::PropertyPath,
-                readName: $property,
-                readVisibility: Visibility::Public,
-                constructorWriteMode: WriteMode::None,
-                constructorWriteName: null,
-                constructorMandatory: false,
-                constructorVariadic: false,
-                setterWriteMode: WriteMode::PropertyPath,
-                setterWriteName: $property,
-                setterWriteVisibility: Visibility::Public,
-                setterVariadic: false,
-                removerWriteName: $property,
-                removerWriteVisibility: Visibility::Public,
-                types: $types,
-                scalarType: $this->determineScalarType($types),
-                nullable: false,
-                replaceable: $propertyPathMetadata->isReplaceable(),
-                immutable: TypeCheck::isRecursivelyImmutable($types),
-                attributes: $propertyPathMetadata->getAttributes(),
+            return $this->propertyPathMetadataFactory->createTargetPropertyMetadata(
+                class: $class,
+                property: $property,
+                allowsDynamicProperties: $allowsDynamicProperties,
             );
         }
 
@@ -489,7 +463,7 @@ final readonly class PropertyMetadataFactory
         // determine if it is a lone scalar type
 
         /** @var 'int'|'float'|'string'|'bool'|'null'|null */
-        $scalarType = $this->determineScalarType($originalPropertyTypes);
+        $scalarType = Util::determineScalarType($originalPropertyTypes);
 
         // determine if nullable
 
@@ -503,31 +477,6 @@ final readonly class PropertyMetadataFactory
         }
 
         return [$types, $scalarType, $nullable];
-    }
-
-    /**
-     * @param list<Type> $types
-     * @return 'int'|'float'|'string'|'bool'|'null'|null
-     */
-    private function determineScalarType(array $types): ?string
-    {
-        /** @var 'int'|'float'|'string'|'bool'|'null'|null */
-        $scalarType = null;
-
-        if (\count($types) === 1) {
-            $propertyType = $types[0];
-            $propertyBuiltInType = $propertyType->getBuiltinType();
-
-            if (\in_array(
-                $propertyBuiltInType,
-                ['int', 'float', 'string', 'bool', 'null'],
-                true,
-            )) {
-                $scalarType = $propertyBuiltInType;
-            }
-        }
-
-        return $scalarType;
     }
 
     private function isPropertyPath(string $property): bool
