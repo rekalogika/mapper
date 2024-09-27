@@ -27,6 +27,7 @@ final readonly class ClassMetadata
         private bool $instantiable,
         private bool $cloneable,
         private bool $readonly,
+        private bool $valueObject,
         private bool $readableDynamicProperties,
         private bool $writableDynamicProperties,
         private array $attributes,
@@ -52,6 +53,11 @@ final readonly class ClassMetadata
     public function isReadonly(): bool
     {
         return $this->readonly;
+    }
+
+    public function isValueObject(): bool
+    {
+        return $this->valueObject;
     }
 
     public function hasReadableDynamicProperties(): bool

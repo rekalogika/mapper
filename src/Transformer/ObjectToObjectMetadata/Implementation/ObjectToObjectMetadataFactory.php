@@ -254,6 +254,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             allPropertyMappings: $propertyMappings,
             instantiable: $targetClassMetadata->isInstantiable(),
             cloneable: $targetClassMetadata->isCloneable(),
+            targetValueObject: $targetClassMetadata->isValueObject(),
             sourceModifiedTime: $sourceClassMetadata->getLastModified(),
             targetModifiedTime: $targetClassMetadata->getLastModified(),
             targetReadOnly: $targetClassMetadata->isReadonly(),

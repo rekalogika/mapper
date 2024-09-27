@@ -66,6 +66,7 @@ final readonly class ObjectToObjectMetadata
         array $allPropertyMappings,
         private bool $instantiable,
         private bool $cloneable,
+        private bool $targetValueObject,
         private int $sourceModifiedTime,
         private int $targetModifiedTime,
         private bool $targetReadOnly,
@@ -125,6 +126,7 @@ final readonly class ObjectToObjectMetadata
             allPropertyMappings: $this->allPropertyMappings,
             instantiable: $this->instantiable,
             cloneable: $this->cloneable,
+            targetValueObject: $this->targetValueObject,
             sourceModifiedTime: $this->sourceModifiedTime,
             targetModifiedTime: $this->targetModifiedTime,
             targetReadOnly: $this->targetReadOnly,
@@ -149,6 +151,7 @@ final readonly class ObjectToObjectMetadata
             allPropertyMappings: $this->allPropertyMappings,
             instantiable: $this->instantiable,
             cloneable: $this->cloneable,
+            targetValueObject: $this->targetValueObject,
             sourceModifiedTime: $this->sourceModifiedTime,
             targetModifiedTime: $this->targetModifiedTime,
             targetReadOnly: $this->targetReadOnly,
@@ -192,6 +195,11 @@ final readonly class ObjectToObjectMetadata
     public function isCloneable(): bool
     {
         return $this->cloneable;
+    }
+
+    public function isTargetValueObject(): bool
+    {
+        return $this->targetValueObject;
     }
 
     /**

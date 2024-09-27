@@ -111,7 +111,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // disregard target if target is read only or target value reading is
         // disabled
 
-        if ($context(MapperOptions::class)?->readTargetValue !== true) {
+        if (
+            $objectToObjectMetadata->isTargetValueObject()
+            || $context(MapperOptions::class)?->readTargetValue !== true
+        ) {
             $target = null;
         }
 

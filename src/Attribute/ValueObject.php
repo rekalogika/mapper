@@ -11,14 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\UninitializedPropertyDto;
+namespace Rekalogika\Mapper\Attribute;
 
-use Rekalogika\Mapper\Attribute\ValueObject;
-
-#[ValueObject]
-final readonly class ValueObjectDto
-{
-    public function __construct(
-        public string $name,
-    ) {}
-}
+#[\Attribute(\Attribute::TARGET_CLASS)]
+final readonly class ValueObject {}
