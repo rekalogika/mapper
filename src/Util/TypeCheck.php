@@ -367,15 +367,4 @@ final readonly class TypeCheck
 
         return false;
     }
-
-    /**
-     * @param class-string $class
-     */
-    private static function isImmutable(string $class): bool
-    {
-        return is_a($class, \DateTimeImmutable::class, true)
-            || is_a($class, \DateTimeZone::class, true)
-            || is_a($class, \DateInterval::class, true)
-            || is_a($class, \DatePeriod::class, true);
-    }
 }
