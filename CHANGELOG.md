@@ -37,6 +37,7 @@
 * test: setting new instance to a target without setter
 * refactor: consolidate property & property path metadata into single interface
 * refactor: consolidate source & target metadata classes
+* refactor: add general class metadata
 
 ## 1.8.0
 

@@ -25,8 +25,11 @@ use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactory;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactory;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
@@ -43,7 +46,9 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
  */
 final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
-    private PropertyMetadataFactory $propertyMetadataFactory;
+    private PropertyMetadataFactoryInterface $propertyMetadataFactory;
+
+    private ClassMetadataFactoryInterface $classMetadataFactory;
 
     private PropertyMappingResolver $propertyMappingResolver;
 
@@ -53,7 +58,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private PropertyMapperResolverInterface $propertyMapperResolver,
         PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
         PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
-        private EagerPropertiesResolverInterface $eagerPropertiesResolver,
+        EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private ProxyFactoryInterface $proxyFactory,
         TypeResolverInterface $typeResolver,
     ) {
@@ -62,6 +67,10 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
             propertyTypeExtractor: $propertyTypeExtractor,
             typeResolver: $typeResolver,
+        );
+
+        $this->classMetadataFactory = new ClassMetadataFactory(
+            eagerPropertiesResolver: $eagerPropertiesResolver,
         );
 
         $this->propertyMappingResolver = new PropertyMappingResolver(
@@ -130,54 +139,24 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         string $targetClass,
     ): ObjectToObjectMetadata {
         $providedTargetClass = $targetClass;
-        $sourceReflection = new \ReflectionClass($sourceClass);
-
         $targetClass = $this->resolveTargetClass($sourceClass, $providedTargetClass);
-        $targetReflection = new \ReflectionClass($targetClass);
 
-        // dynamic properties
+        $sourceClassMetadata = $this->classMetadataFactory->createClassMetadata($sourceClass);
+        $targetClassMetadata = $this->classMetadataFactory->createClassMetadata($targetClass);
 
-        $sourceAllowsDynamicProperties =
-            $this->allowsDynamicProperties($sourceReflection)
-            || method_exists($sourceClass, '__get');
+        // internal classes are unsupported, except stdClass
 
-        $targetAllowsDynamicProperties =
-            $this->allowsDynamicProperties($targetReflection)
-            || method_exists($targetClass, '__set');
-
-        // internal classes are unsupported
-
-        if (!$sourceAllowsDynamicProperties && $sourceReflection->isInternal()) {
+        if (
+            $sourceClassMetadata->isInternal() && !$sourceClassMetadata->hasReadableDynamicProperties()
+        ) {
             throw new InternalClassUnsupportedException($sourceClass);
         }
 
-        if (!$targetAllowsDynamicProperties && $targetReflection->isInternal()) {
+        if (
+            $targetClassMetadata->isInternal() && !$targetClassMetadata->hasWritableDynamicProperties()
+        ) {
             throw new InternalClassUnsupportedException($targetClass);
         }
-
-        // get class attributes
-
-        $sourceClassAttributes = new SourceClassAttributes(ClassUtil::getClassAttributes($sourceClass, null));
-        $targetClassAttributes = new TargetClassAttributes(ClassUtil::getClassAttributes($targetClass, null));
-
-        // queries
-
-        $instantiable = $targetReflection->isInstantiable();
-        $cloneable = $targetReflection->isCloneable();
-
-        // determine the list of eager properties
-
-        $eagerProperties = $this->eagerPropertiesResolver
-            ->getEagerProperties($sourceClass);
-
-        // determine if target read only
-
-        $targetReadOnly = $targetReflection->isReadOnly();
-
-        // determine last modified
-
-        $sourceModifiedTime = ClassUtil::getLastModifiedTime($sourceReflection);
-        $targetModifiedTime = ClassUtil::getLastModifiedTime($targetReflection);
 
         // process properties mapping
 
@@ -188,8 +167,10 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         $propertiesToMap = $this->propertyMappingResolver->getPropertiesToMap(
             sourceClass: $sourceClass,
             targetClass: $targetClass,
-            targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
+            targetAllowsDynamicProperties: $targetClassMetadata->hasWritableDynamicProperties(),
         );
+
+        $eagerProperties = $sourceClassMetadata->getEagerProperties();
 
         // iterate over properties to map
 
@@ -207,14 +188,14 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 ->createPropertyMetadata(
                     class: $sourceClass,
                     property: $sourceProperty,
-                    allowsDynamicProperties: $sourceAllowsDynamicProperties,
+                    allowsDynamicProperties: $sourceClassMetadata->hasReadableDynamicProperties(),
                 );
 
             $targetPropertyMetadata = $this->propertyMetadataFactory
                 ->createPropertyMetadata(
                     class: $targetClass,
                     property: $targetProperty,
-                    allowsDynamicProperties: $targetAllowsDynamicProperties,
+                    allowsDynamicProperties: $targetClassMetadata->hasWritableDynamicProperties(),
                 );
 
             // determine if source property is lazy
@@ -267,18 +248,18 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             sourceClass: $sourceClass,
             targetClass: $targetClass,
             providedTargetClass: $providedTargetClass,
-            sourceAllowsDynamicProperties: $sourceAllowsDynamicProperties,
-            targetAllowsDynamicProperties: $targetAllowsDynamicProperties,
+            sourceAllowsDynamicProperties: $sourceClassMetadata->hasReadableDynamicProperties(),
+            targetAllowsDynamicProperties: $targetClassMetadata->hasWritableDynamicProperties(),
             sourceProperties: $effectivePropertiesToMap,
             allPropertyMappings: $propertyMappings,
-            instantiable: $instantiable,
-            cloneable: $cloneable,
-            sourceModifiedTime: $sourceModifiedTime,
-            targetModifiedTime: $targetModifiedTime,
-            targetReadOnly: $targetReadOnly,
+            instantiable: $targetClassMetadata->isInstantiable(),
+            cloneable: $targetClassMetadata->isCloneable(),
+            sourceModifiedTime: $sourceClassMetadata->getLastModified(),
+            targetModifiedTime: $targetClassMetadata->getLastModified(),
+            targetReadOnly: $targetClassMetadata->isReadonly(),
             constructorIsEager: false,
-            sourceClassAttributes: $sourceClassAttributes,
-            targetClassAttributes: $targetClassAttributes,
+            sourceClassAttributes: new SourceClassAttributes($sourceClassMetadata->getAttributes()),
+            targetClassAttributes: new TargetClassAttributes($targetClassMetadata->getAttributes()),
         );
 
         // if target is marked as eager, then we don't use proxy
@@ -359,19 +340,5 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         );
 
         return [$skippedProperties, $constructorIsEager];
-    }
-
-    /**
-     * @param \ReflectionClass<object> $class
-     */
-    private function allowsDynamicProperties(\ReflectionClass $class): bool
-    {
-        do {
-            if ($class->getAttributes(\AllowDynamicProperties::class) !== []) {
-                return true;
-            }
-        } while ($class = $class->getParentClass());
-
-        return false;
     }
 }
