@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Transformer\Util;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
+use Rekalogika\Mapper\Transformer\Exception\NewInstanceReturnedButCannotBeSetOnTargetException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
@@ -206,7 +207,7 @@ final readonly class ReaderWriter
         if (
             $visibility !== Visibility::Public || $writeMode === WriteMode::None
         ) {
-            throw new UnableToWriteException(
+            throw new NewInstanceReturnedButCannotBeSetOnTargetException(
                 $target,
                 $propertyMapping->getTargetProperty(),
                 context: $context,
