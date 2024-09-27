@@ -38,6 +38,7 @@
 * refactor: consolidate property & property path metadata into single interface
 * refactor: consolidate source & target metadata classes
 * refactor: add general class metadata
+* feat: support for immutable setters
 
 ## 1.8.0
 
