@@ -41,6 +41,7 @@
 * feat: support for immutable setters
 * test: immutable setter without setter on parent object error
 * test: immutable setter now works using 'wither' method
+* fix: readonly objects no longer assumed to be value objects
 
 ## 1.8.0
 

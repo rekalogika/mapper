@@ -111,11 +111,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // disregard target if target is read only or target value reading is
         // disabled
 
-        if (
-            // @todo change to isTargetRecursivelyImmutable() when implemented
-            $objectToObjectMetadata->isTargetReadOnly()
-            || $context(MapperOptions::class)?->readTargetValue !== true
-        ) {
+        if ($context(MapperOptions::class)?->readTargetValue !== true) {
             $target = null;
         }
 
