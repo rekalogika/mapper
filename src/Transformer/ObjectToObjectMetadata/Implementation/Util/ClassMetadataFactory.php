@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
+use Rekalogika\Mapper\Attribute\ValueObject;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\ClassMetadata;
 use Rekalogika\Mapper\Util\ClassUtil;
@@ -49,6 +50,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         $instantiable = $reflection->isInstantiable();
         $cloneable = $reflection->isCloneable();
         $readOnly = $reflection->isReadOnly();
+        $valueObject = $this->isValueObject($attributes);
 
         $eagerProperties = $this->eagerPropertiesResolver
             ->getEagerProperties($class);
@@ -60,6 +62,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
             instantiable: $instantiable,
             cloneable: $cloneable,
             readonly: $readOnly,
+            valueObject: $valueObject,
             readableDynamicProperties: $hasReadableDynamicProperties,
             writableDynamicProperties: $hasWritableDynamicProperties,
             attributes: $attributes,
@@ -78,6 +81,21 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
                 return true;
             }
         } while ($class = $class->getParentClass());
+
+        return false;
+    }
+
+    /**
+     * @param list<object> $attributes
+     */
+    private function isValueObject(
+        array $attributes,
+    ): bool {
+        foreach ($attributes as $attribute) {
+            if ($attribute instanceof ValueObject) {
+                return true;
+            }
+        }
 
         return false;
     }

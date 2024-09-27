@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\UninitializedProperty;
 
+use Rekalogika\Mapper\Attribute\ValueObject as AttributeValueObject;
+
+#[AttributeValueObject]
 final readonly class ValueObject
 {
     public function __construct(
