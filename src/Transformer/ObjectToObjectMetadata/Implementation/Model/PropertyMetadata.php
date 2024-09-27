@@ -21,7 +21,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final readonly class TargetPropertyMetadata
+final readonly class PropertyMetadata
 {
     /**
      * @param list<Type> $types

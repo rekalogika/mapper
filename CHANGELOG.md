@@ -36,6 +36,7 @@
 * chore: rector run
 * test: setting new instance to a target without setter
 * refactor: consolidate property & property path metadata into single interface
+* refactor: consolidate source & target metadata classes
 
 ## 1.8.0
 
