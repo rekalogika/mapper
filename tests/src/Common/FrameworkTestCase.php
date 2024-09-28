@@ -24,26 +24,31 @@ use Rekalogika\Mapper\MapperInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
+/**
+ * @property MapperInterface $mapper
+ * @property IterableMapperInterface $iterableMapper
+ */
 abstract class FrameworkTestCase extends KernelTestCase
 {
-    /** @psalm-suppress MissingConstructor */
-    protected MapperInterface $mapper;
+    protected ?MapperInterface $mapperCache = null;
 
-    /** @psalm-suppress MissingConstructor */
-    protected IterableMapperInterface $iterableMapper;
+    protected ?IterableMapperInterface $iterableMapperCache = null;
 
-    #[\Override]
-    protected function setUp(): void
+    public function __get(string $name): object
     {
-        $this->mapper = new MapperDecorator(
-            $this->get(MapperInterface::class),
-            $this->getMapperContext(),
-        );
+        if ($name === 'mapper') {
+            return $this->mapperCache ??= new MapperDecorator(
+                $this->get(MapperInterface::class),
+                $this->getMapperContext(),
+            );
+        } elseif ($name === 'iterableMapper') {
+            return $this->iterableMapperCache ??= new IterableMapperDecorator(
+                $this->get(IterableMapperInterface::class),
+                $this->getMapperContext(),
+            );
+        }
 
-        $this->iterableMapper = new IterableMapperDecorator(
-            $this->get(IterableMapperInterface::class),
-            $this->getMapperContext(),
-        );
+        throw new \BadMethodCallException();
     }
 
     /**

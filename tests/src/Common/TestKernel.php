@@ -15,11 +15,19 @@ namespace Rekalogika\Mapper\Tests\Common;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Rekalogika\Mapper\RekalogikaMapperBundle;
+use Rekalogika\Mapper\Tests\PHPUnit\PHPUnitProfilerBundle;
+use Rekalogika\Mapper\Tests\PHPUnit\TestRequest;
+use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\MonologBundle\MonologBundle;
+use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\HttpKernel\Profiler\Profiler;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 date_default_timezone_set('UTC');
 
@@ -44,7 +52,12 @@ class TestKernel extends Kernel
     {
         yield new FrameworkBundle();
         yield new DoctrineBundle();
+        yield new TwigBundle();
+        yield new WebProfilerBundle();
         yield new RekalogikaMapperBundle();
+        yield new DebugBundle();
+        yield new MonologBundle();
+        yield new PHPUnitProfilerBundle();
     }
 
     #[\Override]
@@ -55,6 +68,31 @@ class TestKernel extends Kernel
         parent::build($container);
 
     }
+
+    // public function boot(): void
+    // {
+    //     parent::boot();
+
+    //     dump(\debug_backtrace());
+    // }
+
+    // public function shutdown(): void
+    // {
+    //     $stopwatch = $this->getContainer()->get('debug.stopwatch');
+    //     assert($stopwatch instanceof Stopwatch);
+
+    //     $request = new TestRequest();
+
+    //     $profiler = $this->getContainer()->get('profiler');
+    //     assert($profiler instanceof Profiler);
+
+    //     $profile = $profiler->collect($request, $request->getResponse(), null);
+    //     assert($profile !== null);
+
+    //     $profiler->saveProfile($profile);
+
+    //     parent::shutdown();
+    // }
 
     #[\Override]
     public function registerContainerConfiguration(LoaderInterface $loader): void

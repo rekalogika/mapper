@@ -1,6 +1,8 @@
 PHP=php
 # PHP=docker run -it --rm --user $$(id -u):$$(id -g) -v "$$PWD":/usr/src/myapp -w /usr/src/myapp php:8.4.0beta5-cli php
+SYMFONY=symfony
 COMPOSER=composer
+export APP_ENV=test
 
 .PHONY: test
 test: dump phpstan psalm phpunit
@@ -38,3 +40,9 @@ tools/php-cs-fixer:
 rector:
 	$(PHP) vendor/bin/rector process > rector.log
 	make php-cs-fixer
+
+.PHONY: serve
+serve:
+	$(PHP) tests/bin/console cache:clear
+	$(PHP) tests/bin/console asset:install tests/public/
+	cd tests && sh -c "APP_ENV=test $(SYMFONY) server:start --document-root=public"
