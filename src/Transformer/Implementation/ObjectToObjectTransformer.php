@@ -431,6 +431,10 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // write
 
         if ($isChanged) {
+            if ($targetPropertyValue instanceof AdderRemoverProxy) {
+                $target = $targetPropertyValue->getHostObject();
+            }
+
             return $this->readerWriter->writeTargetProperty(
                 target: $target,
                 propertyMapping: $propertyMapping,

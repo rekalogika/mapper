@@ -23,9 +23,14 @@ use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDto;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDtoWithAllowTargetDeleteAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayDtoWithAllowTargetDeleteAttributeAttachedToGetter;
 use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithArrayWithoutAllowDeleteAttribute;
+use Rekalogika\Mapper\Tests\Fixtures\Remove\ObjectWithImmutableAdderRemover;
 use Rekalogika\Mapper\Tests\Services\Remove\MemberRepository;
 
-/** @psalm-suppress MissingConstructor */
+/**
+ * This tests depends on MemberDtoToMemberMapper and MemberRepository
+ *
+ * @psalm-suppress MissingConstructor
+ * */
 class RemoveTest extends FrameworkTestCase
 {
     private MemberRepository $repository;
@@ -147,6 +152,31 @@ class RemoveTest extends FrameworkTestCase
         $this->assertSame('2', $objectWithArray->getMembers()[1]->getId());
         $this->assertSame($this->repository->get('1'), $objectWithArray->getMembers()[0]);
         $this->assertSame($this->repository->get('2'), $objectWithArray->getMembers()[1]);
+    }
+
+    public function testRemoveUsingImmutableRemover(): void
+    {
+        $objectWithArrayDto = new ObjectWithArrayDto();
+        $objectWithArrayDto->members[] = new MemberDto('1');
+        $objectWithArrayDto->members[] = new MemberDto('2');
+        // 3 is missing, and this should remove 3 from the target object
+
+        $objectWithImmutableAdderRemover = new ObjectWithImmutableAdderRemover([
+            $this->repository->get('1'),
+            $this->repository->get('2'),
+            $this->repository->get('3'),
+        ]);
+        $this->assertCount(3, $objectWithImmutableAdderRemover->getMembers());
+
+        $returned = $this->mapper->map($objectWithArrayDto, $objectWithImmutableAdderRemover);
+
+        $this->assertNotSame($objectWithImmutableAdderRemover, $returned);
+
+        $this->assertCount(2, $returned->getMembers());
+        $this->assertSame('1', $returned->getMembers()[0]->getId());
+        $this->assertSame('2', $returned->getMembers()[1]->getId());
+        $this->assertSame($this->repository->get('1'), $returned->getMembers()[0]);
+        $this->assertSame($this->repository->get('2'), $returned->getMembers()[1]);
     }
 
     public function testRemoveUsingRemoverWithAllowDeleteAttachedToGetter(): void
