@@ -28,6 +28,11 @@
         </testsuite>
     </testsuites>
 
+    <extensions>
+        <bootstrap class="Rekalogika\Mapper\Tests\PHPUnit\PHPUnitExtension">
+        </bootstrap>
+    </extensions>
+
     <source>
         <include>
             <directory suffix=".php">src</directory>

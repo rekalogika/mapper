@@ -28,7 +28,8 @@ class ArrayGetterSetterTest extends FrameworkTestCase
         $target = $this->mapper->map($source, ObjectWithArraySetterDto::class);
 
         $this->assertNotNull($target->getProperty());
-        $this->assertCount(3, $target->getProperty() ?? []);
+        /** @psalm-suppress PossiblyNullArgument */
+        $this->assertCount(3, $target->getProperty());
         /** @psalm-suppress PossiblyNullArrayAccess */
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target->getProperty()[0]);
         /** @psalm-suppress PossiblyNullArrayAccess */
@@ -43,7 +44,8 @@ class ArrayGetterSetterTest extends FrameworkTestCase
         $target = $this->mapper->map($source, ObjectWithVariadicArraySetterDto::class);
 
         $this->assertNotNull($target->getProperty());
-        $this->assertCount(3, $target->getProperty() ?? []);
+        /** @psalm-suppress PossiblyNullArgument */
+        $this->assertCount(3, $target->getProperty());
         /** @psalm-suppress PossiblyNullArrayAccess */
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target->getProperty()[0]);
         /** @psalm-suppress PossiblyNullArrayAccess */
@@ -58,7 +60,8 @@ class ArrayGetterSetterTest extends FrameworkTestCase
         $target = $this->mapper->map($source, ObjectWithVariadicArrayConstructorDto::class);
 
         $this->assertNotNull($target->getProperty());
-        $this->assertCount(3, $target->getProperty() ?? []);
+        /** @psalm-suppress PossiblyNullArgument */
+        $this->assertCount(3, $target->getProperty());
         /** @psalm-suppress PossiblyNullArrayAccess */
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target->getProperty()[0]);
         /** @psalm-suppress PossiblyNullArrayAccess */
