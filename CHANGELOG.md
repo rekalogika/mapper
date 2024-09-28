@@ -45,6 +45,7 @@
 * feat: `ValueObject` attribute to explicitly mark classes as value objects
 * feat: heuristics to detect value objects
 * test: integrate profiler with phpunit
+* feat: timing using Symfony stopwatch
 
 ## 1.8.0
 

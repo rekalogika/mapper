@@ -23,6 +23,7 @@ use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * @internal
@@ -36,6 +37,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
     public function __construct(
         private TransformerInterface $decorated,
         private MapperDataCollector $dataCollector,
+        private Stopwatch $stopwatch,
     ) {}
 
     #[\Override]
@@ -105,10 +107,13 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         }
 
         try {
-            $start = microtime(true);
+            $id = substr(hash('sha256', uniqid((string) mt_rand(), true)), 0, 6);
+            $start = $this->stopwatch->start('transform()-' . $id, 'mapper');
             /** @var mixed */
             $result = $this->decorated->transform($source, $target, $sourceType, $targetType, $context);
-            $time = microtime(true) - $start;
+            $end = $this->stopwatch->stop('transform()-' . $id);
+
+            $time = $end->getDuration();
 
             $traceData->finalize($time, $result);
 
