@@ -46,6 +46,7 @@
 * feat: heuristics to detect value objects
 * test: integrate profiler with phpunit
 * feat: timing using Symfony stopwatch
+* test: test different setter return types
 
 ## 1.8.0
 
