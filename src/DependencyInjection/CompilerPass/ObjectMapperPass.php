@@ -42,12 +42,12 @@ final readonly class ObjectMapperPass implements CompilerPassInterface
                 $objectMapperTableFactory->addMethodCall(
                     'addObjectMapper',
                     [
-                        $tag['sourceClass'],
-                        $tag['targetClass'],
-                        $serviceId,
-                        $method,
-                        false,
-                        ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
+                        '$sourceClass' => $tag['sourceClass'],
+                        '$targetClass' => $tag['targetClass'],
+                        '$serviceId' => $serviceId,
+                        '$method' => $method,
+                        '$hasExistingTarget' => false,
+                        '$extraArguments' => ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
                     ],
                 );
             }

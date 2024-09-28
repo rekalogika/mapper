@@ -42,13 +42,13 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
                 $propertyMapperResolver->addMethodCall(
                     'addPropertyMapper',
                     [
-                        $tag['sourceClass'],
-                        $tag['targetClass'],
-                        $tag['property'],
-                        $serviceId,
-                        $method,
-                        false,
-                        ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
+                        '$sourceClass' => $tag['sourceClass'],
+                        '$targetClass' => $tag['targetClass'],
+                        '$property' => $tag['property'],
+                        '$serviceId' => $serviceId,
+                        '$method' => $method,
+                        '$hasExistingTarget' => false,
+                        '$extraArguments' => ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
                     ],
                 );
             }
