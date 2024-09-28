@@ -32,11 +32,18 @@ final readonly class ServiceMethodExtraArgumentUtil
     public static function getExtraArguments(
         string $serviceClass,
         string $method,
+        bool $hasExistingTarget,
     ): array {
         $reflectionClass = new \ReflectionClass($serviceClass);
         $parameters = $reflectionClass->getMethod($method)->getParameters();
+
         // remove first element, which is always the source class
         array_shift($parameters);
+
+        // remove second element, if hasExistingTarget is true
+        if ($hasExistingTarget) {
+            array_shift($parameters);
+        }
 
         $extraArguments = [];
 

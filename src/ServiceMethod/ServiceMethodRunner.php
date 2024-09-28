@@ -52,6 +52,7 @@ final readonly class ServiceMethodRunner
         $arguments = [$source];
 
         if ($serviceMethodSpecification->hasExistingTarget()) {
+            /** @psalm-suppress MixedAssignment */
             $arguments[] = $target;
         }
 

@@ -73,10 +73,9 @@ class PHPUnitProfilerBundle extends Bundle
             ) : null,
         );
 
-        \assert($profile !== null);
-
-        $profiler->saveProfile($profile);
-
+        if ($profile !== null) {
+            $profiler->saveProfile($profile);
+        }
 
         self::$lastError = null;
         self::$testClass = 'unknown';

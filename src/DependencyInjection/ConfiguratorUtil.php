@@ -13,7 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection;
 
+use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
+use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 
 /**
@@ -21,6 +24,18 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
  */
 final class ConfiguratorUtil
 {
+    /**
+     * @return list<class-string>
+     */
+    private static function getExtraArgumentClasses(): array
+    {
+        return [
+            Context::class,
+            MainTransformerInterface::class,
+            SubMapperInterface::class,
+        ];
+    }
+
     /**
      * @return list<string>
      */
@@ -105,17 +120,20 @@ final class ConfiguratorUtil
             return true;
         }
 
+
         if ($type->isBuiltin()) {
             return true;
         }
 
         $name = $type->getName();
 
-        if (!class_exists($name)) {
-            return true;
+        foreach (self::getExtraArgumentClasses() as $extraArgumentClass) {
+            if ($name === $extraArgumentClass) {
+                return false;
+            }
         }
 
-        return false;
+        return true;
     }
 
     public static function getReturnTypeClass(

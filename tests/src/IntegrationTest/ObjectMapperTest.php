@@ -21,6 +21,9 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\FinalPersonDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Foo;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetInvalidTypeHint;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetModification;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetReplacement;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto;
 use Rekalogika\Mapper\Tests\Services\ObjectMapper\MoneyObjectMapper;
@@ -72,6 +75,45 @@ class ObjectMapperTest extends FrameworkTestCase
         $this->assertTrue($result->isLazyObjectInitialized());
     }
 
+    public function testMoneyToMoneyDtoForTargetModification(): void
+    {
+        $money = Money::of('100.00', 'USD');
+        $target = new MoneyDtoForTargetModification('10000000.00', 'IDR');
+        $result = $this->mapper->map($money, $target);
+
+        $this->assertInstanceOf(MoneyDtoForTargetModification::class, $result);
+
+        $this->assertEquals('100.00', $result->getAmount());
+        $this->assertEquals('USD', $result->getCurrency());
+        $this->assertSame($target, $result);
+    }
+
+    public function testMoneyToMoneyDtoForTargetReplacement(): void
+    {
+        $money = Money::of('100.00', 'USD');
+        $target = new MoneyDtoForTargetReplacement('10000000.00', 'IDR');
+        $result = $this->mapper->map($money, $target);
+
+        $this->assertInstanceOf(MoneyDtoForTargetReplacement::class, $result);
+
+        $this->assertEquals('100.00', $result->getAmount());
+        $this->assertEquals('USD', $result->getCurrency());
+        $this->assertNotSame($target, $result);
+    }
+
+    public function testMoneyToMoneyDtoForInvalidTypeHint(): void
+    {
+        $money = Money::of('100.00', 'USD');
+        $target = new MoneyDtoForTargetInvalidTypeHint('10000000.00', 'IDR');
+        $result = $this->mapper->map($money, $target);
+
+        $this->assertInstanceOf(MoneyDtoForTargetInvalidTypeHint::class, $result);
+
+        $this->assertEquals('100.00', $result->getAmount());
+        $this->assertEquals('USD', $result->getCurrency());
+        $this->assertNotSame($target, $result);
+    }
+
     public function testProxyWithEagerProperty(): void
     {
         $person = new Person('1', 'John Doe');
@@ -109,5 +151,4 @@ class ObjectMapperTest extends FrameworkTestCase
 
         $this->assertInstanceOf(Baz::class, $result);
     }
-
 }
