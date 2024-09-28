@@ -103,15 +103,10 @@ class ObjectMapperTest extends FrameworkTestCase
 
     public function testMoneyToMoneyDtoForInvalidTypeHint(): void
     {
+        $this->expectException(\TypeError::class);
         $money = Money::of('100.00', 'USD');
         $target = new MoneyDtoForTargetInvalidTypeHint('10000000.00', 'IDR');
         $result = $this->mapper->map($money, $target);
-
-        $this->assertInstanceOf(MoneyDtoForTargetInvalidTypeHint::class, $result);
-
-        $this->assertEquals('100.00', $result->getAmount());
-        $this->assertEquals('USD', $result->getCurrency());
-        $this->assertNotSame($target, $result);
     }
 
     public function testProxyWithEagerProperty(): void
