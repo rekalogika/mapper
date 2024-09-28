@@ -88,6 +88,7 @@ final class ObjectMapperTransformer implements
         return $serviceMethodRunner->run(
             serviceMethodSpecification: $serviceMethodSpecification,
             source: $source,
+            target: $target,
             targetType: $targetType,
             context: $context,
         );

@@ -471,6 +471,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             $result = $serviceMethodRunner->run(
                 serviceMethodSpecification: $serviceMethodSpecification,
                 source: $source,
+                target: $target,
                 targetType: null,
                 context: $context,
             );

@@ -41,15 +41,21 @@ final readonly class ServiceMethodRunner
     public function run(
         ServiceMethodSpecification $serviceMethodSpecification,
         mixed $source,
+        mixed $target,
         ?Type $targetType,
         Context $context,
     ): mixed {
         /** @var object */
         $service = $this->serviceLocator->get($serviceMethodSpecification->getServiceId());
         $method = $serviceMethodSpecification->getMethod();
-        $extraArguments = $serviceMethodSpecification->getExtraArguments();
 
-        $arguments = [];
+        $arguments = [$source];
+
+        if ($serviceMethodSpecification->hasExistingTarget()) {
+            $arguments[] = $target;
+        }
+
+        $extraArguments = $serviceMethodSpecification->getExtraArguments();
 
         foreach ($extraArguments as $extraArgument) {
             $arguments[] = match ($extraArgument) {
@@ -65,6 +71,6 @@ final readonly class ServiceMethodRunner
         }
 
         /** @psalm-suppress MixedMethodCall */
-        return $service->{$method}($source, ...$arguments);
+        return $service->{$method}(...$arguments);
     }
 }
