@@ -47,6 +47,7 @@
 * test: integrate profiler with phpunit
 * feat: timing using Symfony stopwatch
 * test: test different setter return types
+* feat: support for immutable adder and remover
 
 ## 1.8.0
 

@@ -29,6 +29,7 @@ use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
+use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\LazyArray;
 use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
@@ -173,15 +174,25 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
             $values = null;
         }
 
-        foreach ($transformed as $key => $value) {
-            if ($key === null) {
-                $target[] = $value;
-            } else {
-                $target[$key] = $value;
-            }
+        if ($target instanceof AdderRemoverProxy) {
+            foreach ($transformed as $key => $value) {
+                $target = $target->add($value);
 
-            if (\is_array($values)) {
-                $values[] = $value;
+                if (\is_array($values)) {
+                    $values[] = $value;
+                }
+            }
+        } else {
+            foreach ($transformed as $key => $value) {
+                if ($key === null) {
+                    $target[] = $value;
+                } else {
+                    $target[$key] = $value;
+                }
+
+                if (\is_array($values)) {
+                    $values[] = $value;
+                }
             }
         }
 
@@ -194,9 +205,17 @@ final class TraversableToArrayAccessTransformer implements TransformerInterface,
              */
             $isList = \is_array($target) && array_is_list($target);
 
-            foreach ($target as $key => $value) {
-                if (!\in_array($value, $values, true)) {
-                    unset($target[$key]);
+            if ($target instanceof AdderRemoverProxy) {
+                foreach ($target as $key => $value) {
+                    if (!\in_array($value, $values, true)) {
+                        $target = $target->remove($value);
+                    }
+                }
+            } else {
+                foreach ($target as $key => $value) {
+                    if (!\in_array($value, $values, true)) {
+                        unset($target[$key]);
+                    }
                 }
             }
 

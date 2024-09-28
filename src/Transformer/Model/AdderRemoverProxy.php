@@ -22,16 +22,16 @@ use Rekalogika\Mapper\Exception\LogicException;
  * @implements \IteratorAggregate<TKey,TValue>
  * @internal
  */
-final readonly class AdderRemoverProxy implements
+final class AdderRemoverProxy implements
     \ArrayAccess,
     \IteratorAggregate,
     \Countable
 {
     public function __construct(
-        private object $hostObject,
-        private ?string $getterMethodName,
-        private ?string $adderMethodName,
-        private ?string $removerMethodName,
+        private readonly object $hostObject,
+        private readonly ?string $getterMethodName,
+        private readonly ?string $adderMethodName,
+        private readonly ?string $removerMethodName,
     ) {}
 
     /**
@@ -116,5 +116,68 @@ final readonly class AdderRemoverProxy implements
         }
 
         throw new LogicException('Value is not countable');
+    }
+
+    //
+    // Additional methods for immutable adder and remover compatibility
+    //
+
+    public function getHostObject(): object
+    {
+        return $this->hostObject;
+    }
+
+    /**
+     * @param 'add'|'remove' $addOrRemove
+     * @param TValue $value
+     * @return self<TKey,TValue>
+     */
+    private function addOrRemove(string $addOrRemove, mixed $value): self
+    {
+        if ($this->adderMethodName === null) {
+            throw new LogicException('Adder method is not available');
+        }
+
+        $method = $addOrRemove === 'add' ? $this->adderMethodName : $this->removerMethodName;
+
+        /**
+         * @psalm-suppress MixedMethodCall
+         * @psalm-suppress MixedAssignment
+         */
+        $result = $this->hostObject->{$method}($value);
+
+        if (
+            \is_object($result)
+            && is_a($result, $this->hostObject::class, true)
+            && $result !== $this->hostObject
+        ) {
+            /** @var self<TKey,TValue> */
+            return new self(
+                hostObject: $result,
+                getterMethodName: $this->getterMethodName,
+                adderMethodName: $this->adderMethodName,
+                removerMethodName: $this->removerMethodName,
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param TValue $value
+     * @return self<TKey,TValue>
+     */
+    public function add(mixed $value): self
+    {
+        return $this->addOrRemove('add', $value);
+    }
+
+    /**
+     * @param TValue $value
+     * @return self<TKey,TValue>
+     */
+    public function remove(mixed $value): self
+    {
+        return $this->addOrRemove('remove', $value);
     }
 }
