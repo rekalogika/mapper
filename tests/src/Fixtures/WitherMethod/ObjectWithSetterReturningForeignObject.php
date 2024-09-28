@@ -13,22 +13,19 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\WitherMethod;
 
-class ParentObjectWithObjectWithWitherChildDto
+class ObjectWithSetterReturningForeignObject
 {
-    private ObjectWithWither $object;
+    private ?string $property = null;
 
-    public function __construct()
+    public function setProperty(?string $property): \DateTimeInterface
     {
-        $this->object = new ObjectWithWither();
+        $this->property = $property;
+
+        return new \DateTimeImmutable();
     }
 
-    public function getObject(): ObjectWithWither
+    public function getProperty(): ?string
     {
-        return $this->object;
-    }
-
-    public function setObject(ObjectWithWither $object): void
-    {
-        $this->object = $object;
+        return $this->property;
     }
 }
