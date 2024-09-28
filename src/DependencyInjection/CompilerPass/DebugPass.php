@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection\CompilerPass;
 
+use Rekalogika\Mapper\Debug\TraceableMapper;
 use Rekalogika\Mapper\Debug\TraceableMappingFactory;
 use Rekalogika\Mapper\Debug\TraceableObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
@@ -41,6 +42,7 @@ final readonly class DebugPass implements CompilerPassInterface
                 ->setArguments([
                     new Reference($decoratedServiceId . '.inner'),
                     $dataCollector,
+                    new Reference('debug.stopwatch'),
                 ]);
         }
 
@@ -64,5 +66,15 @@ final readonly class DebugPass implements CompilerPassInterface
                 $dataCollector,
             ])
             ->addTag('kernel.reset', ['method' => 'reset']);
+
+        // decorates mapper
+
+        $serviceId = 'rekalogika.mapper.mapper';
+        $container->register('debug.' . $serviceId, TraceableMapper::class)
+            ->setDecoratedService($serviceId, null, 50)
+            ->setArguments([
+                new Reference('debug.' . $serviceId . '.inner'),
+                new Reference('debug.stopwatch'),
+            ]);
     }
 }

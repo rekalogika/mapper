@@ -23,8 +23,18 @@ class PHPUnitProfilerBundle extends Bundle
     public static string $testClass = 'unknown';
     public static string $testMethod = 'unknown';
     public static string $testId = 'unknown';
+    public static ?string $stopwatchToken = null;
 
     public static ?Throwable $lastError = null;
+
+    public function boot()
+    {
+        $stopwatch = $this->container?->get('debug.stopwatch');
+        \assert($stopwatch instanceof Stopwatch);
+
+        self::$stopwatchToken = substr(hash('sha256', uniqid((string) mt_rand(), true)), 0, 6);
+        $stopwatch->openSection();
+    }
 
     public function shutdown()
     {
@@ -36,12 +46,18 @@ class PHPUnitProfilerBundle extends Bundle
         $stopwatch = $this->container?->get('debug.stopwatch');
         \assert($stopwatch instanceof Stopwatch);
 
+        if (self::$stopwatchToken !== null) {
+            $stopwatch->stopSection(self::$stopwatchToken);
+        }
+
         $request = new TestRequest(
             argv: $argv,
             testClass: self::$testClass,
             testMethod: self::$testMethod,
             hasError: self::$lastError !== null,
         );
+
+        $request->attributes->set('_stopwatch_token', self::$stopwatchToken);
 
         $profiler = $this->container?->get('profiler');
         \assert($profiler instanceof Profiler);
@@ -66,5 +82,6 @@ class PHPUnitProfilerBundle extends Bundle
         self::$testClass = 'unknown';
         self::$testMethod = 'unknown';
         self::$testId = 'unknown';
+        self::$stopwatchToken = null;
     }
 }
