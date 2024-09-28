@@ -22,5 +22,6 @@ class TestResponse extends Response
         parent::__construct();
 
         $this->statusCode = $hasError ? 500 : 200;
+        $this->charset = '';
     }
 }
