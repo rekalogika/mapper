@@ -23,6 +23,8 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Baz;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Foo;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithDateTime;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithDateTimeImmutable;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
@@ -258,5 +260,30 @@ class PropertyMappingTest extends FrameworkTestCase
 
         // $this->assertNotSame($dateTimeBefore, $dateTimeAfter);
         // $this->assertNotEquals($dateTimeFormatBefore, $dateTimeFormatAfter);
+    }
+
+    public function testTargetModification(): void
+    {
+        $source = new SomeObject();
+        $target = new ObjectWithDateTime();
+        $originalDateTime = $target->dateTime;
+        $result = $this->mapper->map($source, $target);
+        dump($result);
+
+        $this->assertInstanceOf(ObjectWithDateTime::class, $result);
+        $this->assertEquals('1999-02-03', $result->dateTime->format('Y-m-d'));
+        $this->assertSame($originalDateTime, $result->dateTime);
+    }
+
+    public function testTargetReplacement(): void
+    {
+        $source = new SomeObject();
+        $target = new ObjectWithDateTimeImmutable();
+        $originalDateTime = $target->dateTime;
+        $result = $this->mapper->map($source, $target);
+
+        $this->assertInstanceOf(ObjectWithDateTimeImmutable::class, $result);
+        $this->assertEquals('1999-02-03', $result->dateTime->format('Y-m-d'));
+        $this->assertNotSame($originalDateTime, $result->dateTime);
     }
 }

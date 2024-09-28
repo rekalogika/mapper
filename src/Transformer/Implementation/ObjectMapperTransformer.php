@@ -85,7 +85,7 @@ final class ObjectMapperTransformer implements
             subMapperFactory: $this->subMapperFactory,
         );
 
-        return $serviceMethodRunner->run(
+        return $serviceMethodRunner->runObjectMapper(
             serviceMethodSpecification: $serviceMethodSpecification,
             source: $source,
             target: $target,
