@@ -79,9 +79,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectDto::class,
             'propertyA',
             new ServiceMethodSpecification(
-                PropertyMapperWithoutClassAttribute::class,
-                'mapPropertyA',
-                [],
+                serviceId: PropertyMapperWithoutClassAttribute::class,
+                method: 'mapPropertyA',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -90,9 +91,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectDto::class,
             'propertyB',
             new ServiceMethodSpecification(
-                PropertyMapperWithClassAttribute::class,
-                'mapPropertyB',
-                [],
+                serviceId: PropertyMapperWithClassAttribute::class,
+                method: 'mapPropertyB',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -108,9 +110,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectWithConstructorDto::class,
             'propertyA',
             new ServiceMethodSpecification(
-                PropertyMapperWithConstructorWithoutClassAttribute::class,
-                'mapPropertyA',
-                [],
+                serviceId: PropertyMapperWithConstructorWithoutClassAttribute::class,
+                method: 'mapPropertyA',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -119,9 +122,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectWithConstructorDto::class,
             'propertyB',
             new ServiceMethodSpecification(
-                PropertyMapperWithConstructorWithClassAttribute::class,
-                'mapPropertyB',
-                [],
+                serviceId: PropertyMapperWithConstructorWithClassAttribute::class,
+                method: 'mapPropertyB',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -130,9 +134,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectDto::class,
             'propertyD',
             new ServiceMethodSpecification(
-                PropertyMapperWithClassAttributeWithoutExplicitProperty::class,
-                'mapPropertyD',
-                [],
+                serviceId: PropertyMapperWithClassAttributeWithoutExplicitProperty::class,
+                method: 'mapPropertyD',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -141,9 +146,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectDto::class,
             'propertyE',
             new ServiceMethodSpecification(
-                PropertyMapperWithExtraArguments::class,
-                'mapPropertyE',
-                [
+                serviceId: PropertyMapperWithExtraArguments::class,
+                method: 'mapPropertyE',
+                hasExistingTarget: false,
+                extraArguments: [
                     ServiceMethodSpecification::ARGUMENT_CONTEXT,
                     ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
                 ],

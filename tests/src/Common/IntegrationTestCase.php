@@ -41,11 +41,12 @@ abstract class IntegrationTestCase extends TestCase
 
         foreach ($this->getPropertyMappers() as $propertyMapper) {
             $this->factory->addPropertyMapper(
-                $propertyMapper['sourceClass'],
-                $propertyMapper['targetClass'],
-                $propertyMapper['property'],
-                $propertyMapper['service'],
-                $propertyMapper['method'],
+                sourceClass: $propertyMapper['sourceClass'],
+                targetClass: $propertyMapper['targetClass'],
+                property: $propertyMapper['property'],
+                service: $propertyMapper['service'],
+                method: $propertyMapper['method'],
+                hasExistingTarget: $propertyMapper['hasExistingTarget'],
             );
         }
 
@@ -64,7 +65,7 @@ abstract class IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return iterable<array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string}>
+     * @return iterable<array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,hasExistingTarget:bool}>
      */
     protected function getPropertyMappers(): iterable
     {

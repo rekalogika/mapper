@@ -40,10 +40,16 @@ final class PropertyMapperResolver implements PropertyMapperResolverInterface
         string $property,
         string $serviceId,
         string $method,
+        bool $hasExistingTarget,
         array $extraArguments = [],
     ): void {
         $this->propertyMappers[$targetClass][$property][$sourceClass]
-            = new ServiceMethodSpecification($serviceId, $method, $extraArguments);
+            = new ServiceMethodSpecification(
+                serviceId: $serviceId,
+                method: $method,
+                hasExistingTarget: $hasExistingTarget,
+                extraArguments: $extraArguments,
+            );
     }
 
     /**

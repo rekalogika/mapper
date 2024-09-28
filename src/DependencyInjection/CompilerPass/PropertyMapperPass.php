@@ -47,6 +47,7 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
                         $tag['property'],
                         $serviceId,
                         $method,
+                        false,
                         ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
                     ],
                 );

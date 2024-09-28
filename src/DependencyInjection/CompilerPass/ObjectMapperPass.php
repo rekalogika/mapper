@@ -46,6 +46,7 @@ final readonly class ObjectMapperPass implements CompilerPassInterface
                         $tag['targetClass'],
                         $serviceId,
                         $method,
+                        false,
                         ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
                     ],
                 );

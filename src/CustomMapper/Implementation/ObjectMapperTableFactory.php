@@ -45,6 +45,7 @@ final readonly class ObjectMapperTableFactory implements ObjectMapperTableFactor
         string $targetClass,
         string $serviceId,
         string $method,
+        bool $hasExistingTarget,
         array $extraArguments = [],
     ): void {
         $this->objectMapperTable->addObjectMapper(
@@ -52,6 +53,7 @@ final readonly class ObjectMapperTableFactory implements ObjectMapperTableFactor
             targetClass: $targetClass,
             serviceId: $serviceId,
             method: $method,
+            hasExistingTarget: $hasExistingTarget,
             extraArguments: $extraArguments,
         );
     }
