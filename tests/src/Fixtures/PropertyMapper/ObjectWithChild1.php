@@ -13,12 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 
-use Rekalogika\Mapper\Attribute\ValueObject;
-
-/**
- * @todo should not be detected as valueobject
- */
-#[ValueObject(false)]
 class ObjectWithChild1
 {
     public readonly ChildObject $child;

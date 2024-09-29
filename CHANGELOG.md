@@ -54,6 +54,7 @@
 * refactor: separate attributes extraction to dedicated class
 * refactor: encapsulate attributes in a class
 * refactor: separate value object determination to a dedicated class
+* fix: improve value object detection heuristics
 
 ## 1.8.0
 
