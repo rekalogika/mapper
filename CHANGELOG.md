@@ -55,6 +55,7 @@
 * refactor: encapsulate attributes in a class
 * refactor: separate value object determination to a dedicated class
 * fix: improve value object detection heuristics
+* chore: change hashing algorithm from sha256 to xxh128
 
 ## 1.8.0
 
