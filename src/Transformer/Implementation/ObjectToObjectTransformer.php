@@ -17,7 +17,6 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
@@ -646,7 +645,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             context: $context,
         );
 
-        return [$result, true];
+        return [$result, $result !== $targetPropertyValue];
     }
 
     private function mapDynamicProperties(

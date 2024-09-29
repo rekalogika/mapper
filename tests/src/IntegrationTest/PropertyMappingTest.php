@@ -23,8 +23,8 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Baz;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Foo;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithDateTime;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithDateTimeImmutable;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithChild1;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithChild2;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
@@ -262,28 +262,29 @@ class PropertyMappingTest extends FrameworkTestCase
         // $this->assertNotEquals($dateTimeFormatBefore, $dateTimeFormatAfter);
     }
 
-    public function testTargetModification(): void
+    public function testModifiesExistingTargetValue(): void
     {
         $source = new SomeObject();
-        $target = new ObjectWithDateTime();
-        $originalDateTime = $target->dateTime;
-        $result = $this->mapper->map($source, $target);
-        dump($result);
+        $target = new ObjectWithChild1();
+        $originalTargetValue = $target->child;
 
-        $this->assertInstanceOf(ObjectWithDateTime::class, $result);
-        $this->assertEquals('1999-02-03', $result->dateTime->format('Y-m-d'));
-        $this->assertSame($originalDateTime, $result->dateTime);
+        $result = $this->mapper->map($source, $target);
+
+        $this->assertInstanceOf(ObjectWithChild1::class, $result);
+        $this->assertSame($originalTargetValue, $result->child);
+        $this->assertEquals('bar', $result->child->name);
     }
 
-    public function testTargetReplacement(): void
+    public function testReplacesExistingTargetValue(): void
     {
         $source = new SomeObject();
-        $target = new ObjectWithDateTimeImmutable();
-        $originalDateTime = $target->dateTime;
+        $target = new ObjectWithChild2();
+        $originalTargetValue = $target->child;
+
         $result = $this->mapper->map($source, $target);
 
-        $this->assertInstanceOf(ObjectWithDateTimeImmutable::class, $result);
-        $this->assertEquals('1999-02-03', $result->dateTime->format('Y-m-d'));
-        $this->assertNotSame($originalDateTime, $result->dateTime);
+        $this->assertInstanceOf(ObjectWithChild2::class, $result);
+        $this->assertNotSame($originalTargetValue, $result->child);
+        $this->assertEquals('bar', $result->child->name);
     }
 }

@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 
-class ObjectWithDateTimeImmutable
+class ObjectWithChild2
 {
-    public \DateTimeImmutable $dateTime;
+    public ChildObject $child;
 
     public function __construct()
     {
-        $this->dateTime = new \DateTimeImmutable('1990-01-01');
+        $this->child = new ChildObject();
     }
 }

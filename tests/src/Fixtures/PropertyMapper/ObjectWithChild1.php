@@ -13,12 +13,18 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 
-class ObjectWithDateTime
+use Rekalogika\Mapper\Attribute\ValueObject;
+
+/**
+ * @todo should not be detected as valueobject
+ */
+#[ValueObject(false)]
+class ObjectWithChild1
 {
-    public readonly \DateTime $dateTime;
+    public readonly ChildObject $child;
 
     public function __construct()
     {
-        $this->dateTime = new \DateTime('1990-01-01');
+        $this->child = new ChildObject();
     }
 }
