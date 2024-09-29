@@ -26,7 +26,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
         private AttributesExtractor $attributesExtractor,
-        private ValueObjectDeterminer $valueObjectDeterminer,
+        private UnalterableDeterminer $unalterableDeterminer,
     ) {}
 
     /**
@@ -53,7 +53,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         $cloneable = $reflection->isCloneable();
         $readOnly = $reflection->isReadOnly();
 
-        $valueObject = $this->valueObjectDeterminer->isValueObject($class);
+        $unalterable = $this->unalterableDeterminer->isUnalterable($class);
 
         $eagerProperties = $this->eagerPropertiesResolver
             ->getEagerProperties($class);
@@ -65,7 +65,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
             instantiable: $instantiable,
             cloneable: $cloneable,
             readonly: $readOnly,
-            valueObject: $valueObject,
+            unalterable: $unalterable,
             readableDynamicProperties: $hasReadableDynamicProperties,
             writableDynamicProperties: $hasWritableDynamicProperties,
             attributes: $attributes,

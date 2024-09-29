@@ -11,12 +11,16 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Attribute;
+namespace Rekalogika\Mapper\Tests\Fixtures\Unalterable;
 
-#[\Attribute(\Attribute::TARGET_CLASS)]
-final readonly class ValueObject
+class PublicPropertyPublicGetter
 {
     public function __construct(
-        public bool $isValueObject = true,
+        public string $name,
     ) {}
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }
