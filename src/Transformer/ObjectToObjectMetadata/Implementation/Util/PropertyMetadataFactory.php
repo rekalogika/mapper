@@ -22,10 +22,8 @@ use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
-use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
-use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
@@ -36,16 +34,16 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     private PropertyMetadataFactoryInterface $propertyPathMetadataFactory;
 
     public function __construct(
-        private PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
-        private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
+        private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
     ) {
         $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
-            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
+            propertyAccessInfoExtractor: $this->propertyAccessInfoExtractor,
         );
+
     }
 
     /**
@@ -69,14 +67,14 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
 
         // normal, non property path
 
-        $readInfo = $this->propertyReadInfoExtractor
+        $readInfo = $this->propertyAccessInfoExtractor
             ->getReadInfo($class, $property);
 
-        $writeInfo = $this
-            ->getSetterPropertyWriteInfo($class, $property);
+        $writeInfo = $this->propertyAccessInfoExtractor
+            ->getWriteInfo($class, $property);
 
-        $constructorWriteInfo = $this
-            ->getConstructorPropertyWriteInfo($class, $property);
+        $constructorWriteInfo = $this->propertyAccessInfoExtractor
+            ->getConstructorInfo($class, $property);
 
         [$readMode, $readName, $readVisibility] = $this->processPropertyReadInfo(
             class: $class,
@@ -347,47 +345,6 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             attributeClass: null,
             methods: $methods,
         );
-    }
-
-    /**
-     * @param class-string $class
-     */
-    private function getSetterPropertyWriteInfo(
-        string $class,
-        string $property,
-    ): ?PropertyWriteInfo {
-        return $this->propertyWriteInfoExtractor->getWriteInfo(
-            class: $class,
-            property: $property,
-            context: [
-                'enable_constructor_extraction' => false,
-            ],
-        );
-    }
-
-    private function getConstructorPropertyWriteInfo(
-        string $class,
-        string $property,
-    ): ?PropertyWriteInfo {
-        $writeInfo = $this->propertyWriteInfoExtractor->getWriteInfo(
-            class: $class,
-            property: $property,
-            context: [
-                'enable_getter_setter_extraction' => false,
-                'enable_magic_methods_extraction' => false,
-                'enable_adder_remover_extraction' => false,
-            ],
-        );
-
-        if ($writeInfo === null) {
-            return null;
-        }
-
-        if ($writeInfo->getType() === PropertyWriteInfo::TYPE_CONSTRUCTOR) {
-            return $writeInfo;
-        }
-
-        return null;
     }
 
     /**
