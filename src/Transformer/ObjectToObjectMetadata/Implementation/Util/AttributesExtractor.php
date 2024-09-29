@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\Attributes;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
@@ -23,12 +24,12 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 final class AttributesExtractor
 {
     /**
-     * @var array<class-string,list<object>>
+     * @var array<class-string,Attributes>
      */
     private array $classAttributesCache = [];
 
     /**
-     * @var array<class-string,array<string,list<object>>>
+     * @var array<class-string,array<string,Attributes>>
      */
     private array $propertyAttributesCache = [];
 
@@ -38,9 +39,8 @@ final class AttributesExtractor
 
     /**
      * @param class-string $class
-     * @return list<object>
      */
-    public function getClassAttributes(string $class): array
+    public function getClassAttributes(string $class): Attributes
     {
         $attributes = $this->classAttributesCache[$class] ?? null;
 
@@ -48,7 +48,7 @@ final class AttributesExtractor
             return $attributes;
         }
 
-        $attributes = ClassUtil::getClassAttributes($class, null);
+        $attributes = new Attributes(ClassUtil::getClassAttributes($class, null));
 
         return $this->classAttributesCache[$class] = $attributes;
     }
@@ -56,9 +56,8 @@ final class AttributesExtractor
     /**
      * @param class-string $class
      * @param string $property
-     * @return list<object>
      */
-    public function getPropertyAttributes(string $class, string $property): array
+    public function getPropertyAttributes(string $class, string $property): Attributes
     {
         $attributes = $this->propertyAttributesCache[$class][$property] ?? null;
 
@@ -111,6 +110,8 @@ final class AttributesExtractor
             attributeClass: null,
             methods: $methods,
         );
+
+        $attributes = new Attributes($attributes);
 
         return $this->propertyAttributesCache[$class][$property] = $attributes;
     }

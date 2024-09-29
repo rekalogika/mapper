@@ -42,6 +42,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
         $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
             propertyAccessInfoExtractor: $this->propertyAccessInfoExtractor,
+            attributesExtractor: $this->attributesExtractor,
         );
 
     }

@@ -86,4 +86,12 @@ trait AttributesTrait
         /** @var list<T> */
         return $this->classToObjects[$class] ?? [];
     }
+
+    /**
+     * @return list<object>
+     */
+    public function toArray(): array
+    {
+        return $this->objects;
+    }
 }

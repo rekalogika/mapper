@@ -61,7 +61,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
 
         $valueObject = $this->isValueObject(
             class: $class,
-            attributes: $attributes,
+            attributes: $attributes->toArray(),
             hasWritableDynamicProperties: $hasWritableDynamicProperties,
         );
 

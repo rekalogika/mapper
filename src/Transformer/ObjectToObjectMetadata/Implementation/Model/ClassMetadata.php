@@ -19,7 +19,6 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Mo
 final readonly class ClassMetadata
 {
     /**
-     * @param list<object> $attributes
      * @param list<string> $eagerProperties
      */
     public function __construct(
@@ -30,7 +29,7 @@ final readonly class ClassMetadata
         private bool $valueObject,
         private bool $readableDynamicProperties,
         private bool $writableDynamicProperties,
-        private array $attributes,
+        private Attributes $attributes,
         private array $eagerProperties,
         private int $lastModified,
     ) {}
@@ -70,10 +69,7 @@ final readonly class ClassMetadata
         return $this->writableDynamicProperties;
     }
 
-    /**
-     * @return list<object>
-     */
-    public function getAttributes(): array
+    public function getAttributes(): Attributes
     {
         return $this->attributes;
     }

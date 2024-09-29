@@ -52,6 +52,7 @@
 * refactor: separate dynamic properties determination to dedicated class
 * refactor: add an abstraction for property read/write info extractor
 * refactor: separate attributes extraction to dedicated class
+* refactor: encapsulate attributes in a class
 
 ## 1.8.0
 
