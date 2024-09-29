@@ -71,13 +71,13 @@ final class RekalogikaMapperExtension extends Extension
     private function propertyMapperConfigurator(
         ChildDefinition $definition,
         AsPropertyMapper $attribute,
-        \ReflectionMethod $reflector,
+        \ReflectionMethod $reflection,
     ): void {
         $tagAttributes = [];
 
         // get the AsPropertyMapper attribute attached to the class
 
-        $classReflection = $reflector->getDeclaringClass();
+        $classReflection = $reflection->getDeclaringClass();
         $classAttributeReflection = $classReflection
             ->getAttributes(AsPropertyMapper::class)[0] ?? null;
 
@@ -98,7 +98,7 @@ final class RekalogikaMapperExtension extends Extension
 
         // populate tag attributes from AsPropertyMapper attribute
 
-        $tagAttributes['method'] = $reflector->getName();
+        $tagAttributes['method'] = $reflection->getName();
 
         if ($attribute->property !== null) {
             $tagAttributes['property'] = $attribute->property;
@@ -110,51 +110,31 @@ final class RekalogikaMapperExtension extends Extension
 
         // Use the class of the first argument of the method as the source class
 
-        $parameters = $reflector->getParameters();
-        $firstParameter = $parameters[0] ?? null;
-        $type = $firstParameter?->getType();
+        $parameters = $reflection->getParameters();
+        $firstParameter = array_shift($parameters);
 
-        if ($type === null) {
-            throw new LogicException(\sprintf(
-                'Cannot set up property mapper, the type of the first argument cannot be determined. Service ID "%s", method "%s".',
-                $definition->getClass() ?? 'unknown',
-                $reflector->getName(),
-            ));
-        } elseif ($type instanceof \ReflectionNamedType) {
-            $sourceClasses = [$type->getName()];
-        } elseif ($type instanceof \ReflectionUnionType) {
-            $sourceClasses = [];
+        $sourceClasses = ConfiguratorUtil::getSourceClassesFromFirstArgument(
+            method: $reflection,
+            parameter: $firstParameter,
+            definition: $definition,
+        );
 
-            foreach ($type->getTypes() as $type) {
-                if ($type instanceof \ReflectionIntersectionType) {
-                    throw new LogicException(\sprintf(
-                        'Cannot set up property mapper, the type of the first argument contains an intersection type, which is not supported. Service ID "%s", method "%s".',
-                        $definition->getClass() ?? '?',
-                        $reflector->getName(),
-                    ));
-                } elseif (!$type instanceof \ReflectionNamedType) {
-                    throw new LogicException(\sprintf(
-                        'Cannot set up property mapper, the type of the first argument contains a non-named type, which is not supported. Service ID "%s", method "%s".',
-                        $definition->getClass() ?? '?',
-                        $reflector->getName(),
-                    ));
-                }
+        // check the second argument if it should contains the existing target
+        // value
 
-                $sourceClasses[] = $type->getName();
-            }
-        } else {
-            throw new LogicException(\sprintf(
-                'Cannot set up property mapper, the type of the first argument is unsupported. Service ID "%s", method "%s".',
-                $definition->getClass() ?? '?',
-                $reflector->getName(),
-            ));
-        }
+        $secondParameter = array_shift($parameters);
+
+        $hasExistingTarget = ConfiguratorUtil::hasExistingTargetParameter(
+            parameter: $secondParameter,
+        );
+
+        $tagAttributes['hasExistingTarget'] = $hasExistingTarget;
 
         // if the property is missing, assume it is the same as the
         // method name
 
         if (!isset($tagAttributes['property'])) {
-            $name = $reflector->getName();
+            $name = $reflection->getName();
             // remove 'map' prefix if exists
             $name = preg_replace('/^map/', '', $name);
             if ($name === null) {
@@ -162,7 +142,7 @@ final class RekalogikaMapperExtension extends Extension
                     \sprintf(
                         'Unable to determine the property name for property mapper service "%s", method "%s".',
                         $definition->getClass() ?? '?',
-                        $reflector->getName(),
+                        $reflection->getName(),
                     ),
                 );
             }
@@ -180,7 +160,7 @@ final class RekalogikaMapperExtension extends Extension
                 \sprintf(
                     'Unable to determine the target class for property mapper service "%s", method "%s".',
                     $definition->getClass() ?? '?',
-                    $reflector->getName(),
+                    $reflection->getName(),
                 ),
             );
         }
@@ -193,7 +173,7 @@ final class RekalogikaMapperExtension extends Extension
                     'Target class "%s" for property mapper service "%s", method "%s" does not exist.',
                     $tagAttributes['targetClass'],
                     $definition->getClass() ?? '?',
-                    $reflector->getName(),
+                    $reflection->getName(),
                 ),
             );
         }
@@ -211,71 +191,44 @@ final class RekalogikaMapperExtension extends Extension
     private function objectMapperConfigurator(
         ChildDefinition $definition,
         AsObjectMapper $attribute,
-        \ReflectionMethod $reflector,
+        \ReflectionMethod $reflection,
     ): void {
         $tagAttributes = [];
 
         // add the method
 
-        $tagAttributes['method'] = $reflector->getName();
+        $tagAttributes['method'] = $reflection->getName();
 
         // Use the class of the first argument of the method as the source class
 
-        $parameters = $reflector->getParameters();
-        $firstParameter = $parameters[0] ?? null;
-        $type = $firstParameter?->getType();
+        $parameters = $reflection->getParameters();
+        $firstParameter = array_shift($parameters);
 
-        if ($type === null) {
-            throw new LogicException(\sprintf(
-                'Cannot set up object mapper, the type of the first argument cannot be determined. Service ID "%s", method "%s".',
-                $definition->getClass() ?? 'unknown',
-                $reflector->getName(),
-            ));
-        } elseif ($type instanceof \ReflectionNamedType) {
-            $sourceClasses = [$type->getName()];
-        } elseif ($type instanceof \ReflectionUnionType) {
-            $sourceClasses = [];
+        $sourceClasses = ConfiguratorUtil::getSourceClassesFromFirstArgument(
+            method: $reflection,
+            parameter: $firstParameter,
+            definition: $definition,
+        );
 
-            foreach ($type->getTypes() as $type) {
-                if ($type instanceof \ReflectionIntersectionType) {
-                    throw new LogicException(\sprintf(
-                        'Cannot set up object mapper, the type of the first argument contains an intersection type, which is not supported. Service ID "%s", method "%s".',
-                        $definition->getClass() ?? '?',
-                        $reflector->getName(),
-                    ));
-                } elseif (!$type instanceof \ReflectionNamedType) {
-                    throw new LogicException(\sprintf(
-                        'Cannot set up object mapper, the type of the first argument contains a non-named type, which is not supported. Service ID "%s", method "%s".',
-                        $definition->getClass() ?? '?',
-                        $reflector->getName(),
-                    ));
-                }
+        // check the second argument if it should contains the existing target
+        // value
 
-                $sourceClasses[] = $type->getName();
-            }
-        } else {
-            throw new LogicException(\sprintf(
-                'Cannot set up object mapper, the type of the first argument cannot be determined. Service ID "%s", method "%s".',
-                $definition->getClass() ?? '?',
-                $reflector->getName(),
-            ));
-        }
+        $secondParameter = array_shift($parameters);
+
+        $hasExistingTarget = ConfiguratorUtil::hasExistingTargetParameter(
+            parameter: $secondParameter,
+        );
+
+        $tagAttributes['hasExistingTarget'] = $hasExistingTarget;
 
         // use the class of the return type as the target class
 
-        $returnType = $reflector->getReturnType();
+        $returnType = ConfiguratorUtil::getReturnTypeClass(
+            method: $reflection,
+            definition: $definition,
+        );
 
-        if ($returnType === null || !$returnType instanceof \ReflectionNamedType) {
-            throw new LogicException(
-                \sprintf(
-                    'Unable to determine the target class for property mapper service "%s", method "%s".',
-                    $definition->getClass() ?? '?',
-                    $reflector->getName(),
-                ),
-            );
-        }
-
-        $tagAttributes['targetClass'] = $returnType->getName();
+        $tagAttributes['targetClass'] = $returnType;
 
         // finally
 

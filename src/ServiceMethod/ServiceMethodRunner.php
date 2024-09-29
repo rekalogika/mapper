@@ -38,15 +38,80 @@ final readonly class ServiceMethodRunner
         private SubMapperFactoryInterface $subMapperFactory,
     ) {}
 
-    public function run(
+    public function runObjectMapper(
         ServiceMethodSpecification $serviceMethodSpecification,
         mixed $source,
+        mixed $target,
         ?Type $targetType,
         Context $context,
     ): mixed {
         /** @var object */
         $service = $this->serviceLocator->get($serviceMethodSpecification->getServiceId());
         $method = $serviceMethodSpecification->getMethod();
+
+        $arguments = [$source];
+
+        if ($serviceMethodSpecification->hasExistingTarget()) {
+            /** @psalm-suppress MixedAssignment */
+            $arguments[] = $target;
+        }
+
+        $arguments = [
+            ...$arguments,
+            ...$this->createExtraArguments(
+                serviceMethodSpecification: $serviceMethodSpecification,
+                context: $context,
+                source: $source,
+                targetType: $targetType,
+            ),
+        ];
+
+        /** @psalm-suppress MixedMethodCall */
+        return $service->{$method}(...$arguments);
+    }
+
+    public function runPropertyMapper(
+        ServiceMethodSpecification $serviceMethodSpecification,
+        mixed $source,
+        mixed $target,
+        mixed $targetPropertyValue,
+        ?Type $targetType,
+        Context $context,
+    ): mixed {
+        /** @var object */
+        $service = $this->serviceLocator->get($serviceMethodSpecification->getServiceId());
+        $method = $serviceMethodSpecification->getMethod();
+
+        $arguments = [$source];
+
+        if ($serviceMethodSpecification->hasExistingTarget()) {
+            /** @psalm-suppress MixedAssignment */
+            $arguments[] = $targetPropertyValue;
+        }
+
+        $arguments = [
+            ...$arguments,
+            ...$this->createExtraArguments(
+                serviceMethodSpecification: $serviceMethodSpecification,
+                context: $context,
+                source: $source,
+                targetType: $targetType,
+            ),
+        ];
+
+        /** @psalm-suppress MixedMethodCall */
+        return $service->{$method}(...$arguments);
+    }
+
+    /**
+     * @return list<mixed>
+     */
+    private function createExtraArguments(
+        ServiceMethodSpecification $serviceMethodSpecification,
+        Context $context,
+        mixed $source,
+        ?Type $targetType,
+    ): array {
         $extraArguments = $serviceMethodSpecification->getExtraArguments();
 
         $arguments = [];
@@ -64,7 +129,6 @@ final readonly class ServiceMethodRunner
             };
         }
 
-        /** @psalm-suppress MixedMethodCall */
-        return $service->{$method}($source, ...$arguments);
+        return $arguments;
     }
 }

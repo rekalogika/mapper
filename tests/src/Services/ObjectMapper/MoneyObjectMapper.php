@@ -18,6 +18,9 @@ use Rekalogika\Mapper\Attribute\AsObjectMapper;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetInvalidTypeHint;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetModification;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetReplacement;
 
 class MoneyObjectMapper
 {
@@ -51,5 +54,34 @@ class MoneyObjectMapper
                 );
             },
         );
+    }
+
+    #[AsObjectMapper]
+    public function mapMoneyToMoneyDtoForTargetModification(
+        Money $money,
+        MoneyDtoForTargetModification $currentValue,
+    ): MoneyDtoForTargetModification {
+        $currentValue->setAmount($money->getAmount()->__toString());
+        $currentValue->setCurrency($money->getCurrency()->getCurrencyCode());
+
+        return $currentValue;
+    }
+
+    #[AsObjectMapper]
+    public function mapMoneyToMoneyDtoForTargetReplacement(
+        Money $money,
+        MoneyDtoForTargetReplacement $currentValue,
+    ): MoneyDtoForTargetReplacement {
+        return $currentValue
+            ->withAmount($money->getAmount()->__toString())
+            ->withCurrency($money->getCurrency()->getCurrencyCode());
+    }
+
+    #[AsObjectMapper]
+    public function mapMoneyToMoneyDtoForInvalidTypeHint(
+        Money $money,
+        \DateTime $currentValue,
+    ): MoneyDtoForTargetInvalidTypeHint {
+        throw new \RuntimeException('This method should not be called');
     }
 }

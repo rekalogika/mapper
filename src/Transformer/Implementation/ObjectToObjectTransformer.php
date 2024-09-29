@@ -20,6 +20,7 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
+use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
@@ -461,21 +462,14 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // if a custom property mapper is set, then use it
 
         if (($serviceMethodSpecification = $propertyMapping->getPropertyMapper()) !== null) {
-            $serviceMethodRunner = ServiceMethodRunner::create(
-                serviceLocator: $this->propertyMapperLocator,
-                mainTransformer: $this->getMainTransformer(),
-                subMapperFactory: $this->subMapperFactory,
-            );
-
-            /** @var mixed */
-            $result = $serviceMethodRunner->run(
+            /** @psalm-suppress MixedReturnStatement */
+            return $this->transformValueUsingPropertyMapper(
+                propertyMapping: $propertyMapping,
                 serviceMethodSpecification: $serviceMethodSpecification,
                 source: $source,
-                targetType: null,
+                target: $target,
                 context: $context,
             );
-
-            return [$result, true];
         }
 
         // if source property name is null, continue. there is nothing to
@@ -612,6 +606,46 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         );
 
         return [$targetPropertyValue, $targetPropertyValue !== $originalTargetPropertyValue];
+    }
+
+    /**
+     * @return array{mixed,bool} The target value after transformation and whether the value differs from before transformation
+     */
+    private function transformValueUsingPropertyMapper(
+        PropertyMapping $propertyMapping,
+        ServiceMethodSpecification $serviceMethodSpecification,
+        object $source,
+        ?object $target,
+        Context $context,
+    ): array {
+        if ($target === null) {
+            $targetPropertyValue = null;
+        } else {
+            /** @var mixed */
+            $targetPropertyValue = $this->readerWriter->readTargetProperty(
+                $target,
+                $propertyMapping,
+                $context,
+            );
+        }
+
+        $serviceMethodRunner = ServiceMethodRunner::create(
+            serviceLocator: $this->propertyMapperLocator,
+            mainTransformer: $this->getMainTransformer(),
+            subMapperFactory: $this->subMapperFactory,
+        );
+
+        /** @var mixed */
+        $result = $serviceMethodRunner->runPropertyMapper(
+            serviceMethodSpecification: $serviceMethodSpecification,
+            source: $source,
+            target: $target,
+            targetPropertyValue: $targetPropertyValue,
+            targetType: null,
+            context: $context,
+        );
+
+        return [$result, $result !== $targetPropertyValue];
     }
 
     private function mapDynamicProperties(

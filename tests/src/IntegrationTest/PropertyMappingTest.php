@@ -23,6 +23,8 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Baz;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Foo;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithChild1;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithChild2;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
@@ -79,9 +81,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectDto::class,
             'propertyA',
             new ServiceMethodSpecification(
-                PropertyMapperWithoutClassAttribute::class,
-                'mapPropertyA',
-                [],
+                serviceId: PropertyMapperWithoutClassAttribute::class,
+                method: 'mapPropertyA',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -90,9 +93,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectDto::class,
             'propertyB',
             new ServiceMethodSpecification(
-                PropertyMapperWithClassAttribute::class,
-                'mapPropertyB',
-                [],
+                serviceId: PropertyMapperWithClassAttribute::class,
+                method: 'mapPropertyB',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -108,9 +112,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectWithConstructorDto::class,
             'propertyA',
             new ServiceMethodSpecification(
-                PropertyMapperWithConstructorWithoutClassAttribute::class,
-                'mapPropertyA',
-                [],
+                serviceId: PropertyMapperWithConstructorWithoutClassAttribute::class,
+                method: 'mapPropertyA',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -119,9 +124,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectWithConstructorDto::class,
             'propertyB',
             new ServiceMethodSpecification(
-                PropertyMapperWithConstructorWithClassAttribute::class,
-                'mapPropertyB',
-                [],
+                serviceId: PropertyMapperWithConstructorWithClassAttribute::class,
+                method: 'mapPropertyB',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -130,9 +136,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectDto::class,
             'propertyD',
             new ServiceMethodSpecification(
-                PropertyMapperWithClassAttributeWithoutExplicitProperty::class,
-                'mapPropertyD',
-                [],
+                serviceId: PropertyMapperWithClassAttributeWithoutExplicitProperty::class,
+                method: 'mapPropertyD',
+                hasExistingTarget: false,
+                extraArguments: [],
             ),
         ];
 
@@ -141,9 +148,10 @@ class PropertyMappingTest extends FrameworkTestCase
             SomeObjectDto::class,
             'propertyE',
             new ServiceMethodSpecification(
-                PropertyMapperWithExtraArguments::class,
-                'mapPropertyE',
-                [
+                serviceId: PropertyMapperWithExtraArguments::class,
+                method: 'mapPropertyE',
+                hasExistingTarget: false,
+                extraArguments: [
                     ServiceMethodSpecification::ARGUMENT_CONTEXT,
                     ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
                 ],
@@ -252,5 +260,31 @@ class PropertyMappingTest extends FrameworkTestCase
 
         // $this->assertNotSame($dateTimeBefore, $dateTimeAfter);
         // $this->assertNotEquals($dateTimeFormatBefore, $dateTimeFormatAfter);
+    }
+
+    public function testModifiesExistingTargetValue(): void
+    {
+        $source = new SomeObject();
+        $target = new ObjectWithChild1();
+        $originalTargetValue = $target->child;
+
+        $result = $this->mapper->map($source, $target);
+
+        $this->assertInstanceOf(ObjectWithChild1::class, $result);
+        $this->assertSame($originalTargetValue, $result->child);
+        $this->assertEquals('bar', $result->child->name);
+    }
+
+    public function testReplacesExistingTargetValue(): void
+    {
+        $source = new SomeObject();
+        $target = new ObjectWithChild2();
+        $originalTargetValue = $target->child;
+
+        $result = $this->mapper->map($source, $target);
+
+        $this->assertInstanceOf(ObjectWithChild2::class, $result);
+        $this->assertNotSame($originalTargetValue, $result->child);
+        $this->assertEquals('bar', $result->child->name);
     }
 }

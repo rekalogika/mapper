@@ -30,6 +30,7 @@ final readonly class ServiceMethodSpecification
     public function __construct(
         private string $serviceId,
         private string $method,
+        private bool $hasExistingTarget,
         private array $extraArguments,
     ) {}
 
@@ -49,5 +50,10 @@ final readonly class ServiceMethodSpecification
     public function getExtraArguments(): array
     {
         return $this->extraArguments;
+    }
+
+    public function hasExistingTarget(): bool
+    {
+        return $this->hasExistingTarget;
     }
 }

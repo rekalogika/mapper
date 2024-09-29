@@ -105,12 +105,12 @@ use Symfony\Component\Uid\Factory\UuidFactory;
 class MapperFactory
 {
     /**
-     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,extraArguments:array<int,ServiceMethodSpecification::ARGUMENT_*>}>
+     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,hasExistingTarget:bool,extraArguments:array<int,ServiceMethodSpecification::ARGUMENT_*>}>
      */
     private array $propertyMappers = [];
 
     /**
-     * @var array<int,array{sourceClass:class-string,targetClass:class-string,service:object,method:string,extraArguments:array<int,ServiceMethodSpecification::ARGUMENT_*>}>
+     * @var array<int,array{sourceClass:class-string,targetClass:class-string,service:object,method:string,hasExistingTarget:bool,extraArguments:array<int,ServiceMethodSpecification::ARGUMENT_*>}>
      */
     private array $objectMappers = [];
 
@@ -227,6 +227,7 @@ class MapperFactory
         string $property,
         object $service,
         string $method,
+        bool $hasExistingTarget,
         array $extraArguments = [],
     ): void {
         $this->propertyMappers[] = [
@@ -235,6 +236,7 @@ class MapperFactory
             'property' => $property,
             'service' => $service,
             'method' => $method,
+            'hasExistingTarget' => $hasExistingTarget,
             'extraArguments' => $extraArguments,
         ];
     }
@@ -249,6 +251,7 @@ class MapperFactory
         string $targetClass,
         object $service,
         string $method,
+        bool $hasExistingTarget,
         array $extraArguments = [],
     ): void {
         $this->objectMappers[] = [
@@ -256,6 +259,7 @@ class MapperFactory
             'targetClass' => $targetClass,
             'service' => $service,
             'method' => $method,
+            'hasExistingTarget' => $hasExistingTarget,
             'extraArguments' => $extraArguments,
         ];
     }
@@ -766,6 +770,7 @@ class MapperFactory
                     $propertyMapper['property'],
                     $propertyMapper['service']::class,
                     $propertyMapper['method'],
+                    $propertyMapper['hasExistingTarget'],
                     $propertyMapper['extraArguments'],
                 );
             }
@@ -781,11 +786,12 @@ class MapperFactory
 
             foreach ($this->objectMappers as $objectMapper) {
                 $this->objectMapperTableFactory->addObjectMapper(
-                    $objectMapper['sourceClass'],
-                    $objectMapper['targetClass'],
-                    $objectMapper['service']::class,
-                    $objectMapper['method'],
-                    $objectMapper['extraArguments'],
+                    sourceClass: $objectMapper['sourceClass'],
+                    targetClass: $objectMapper['targetClass'],
+                    serviceId: $objectMapper['service']::class,
+                    method: $objectMapper['method'],
+                    hasExistingTarget: $objectMapper['hasExistingTarget'],
+                    extraArguments: $objectMapper['extraArguments'],
                 );
             }
         }

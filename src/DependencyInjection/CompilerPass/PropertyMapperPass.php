@@ -35,19 +35,20 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
             $serviceDefinition = $container->getDefinition($serviceId);
             $serviceClass = $serviceDefinition->getClass() ?? throw new InvalidArgumentException('Class is required');
 
-            /** @var array<string,string> $tag */
+            /** @var array{sourceClass:class-string,targetClass:class-string,property:string,serviceId:string,method:string,hasExistingTarget:bool,extraArguments:array<string,int>} $tag */
             foreach ($tags as $tag) {
                 $method = $tag['method'] ?? throw new InvalidArgumentException('Method is required');
 
                 $propertyMapperResolver->addMethodCall(
                     'addPropertyMapper',
                     [
-                        $tag['sourceClass'],
-                        $tag['targetClass'],
-                        $tag['property'],
-                        $serviceId,
-                        $method,
-                        ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method),
+                        '$sourceClass' => $tag['sourceClass'],
+                        '$targetClass' => $tag['targetClass'],
+                        '$property' => $tag['property'],
+                        '$serviceId' => $serviceId,
+                        '$method' => $method,
+                        '$hasExistingTarget' => $tag['hasExistingTarget'],
+                        '$extraArguments' => ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method, $tag['hasExistingTarget']),
                     ],
                 );
             }

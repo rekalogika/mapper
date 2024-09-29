@@ -47,10 +47,16 @@ final class ObjectMapperTable implements \IteratorAggregate
         string $targetClass,
         string $serviceId,
         string $method,
+        bool $hasExistingTarget,
         array $extraArguments = [],
     ): void {
         $this->objectMappers[$targetClass][$sourceClass]
-            = new ServiceMethodSpecification($serviceId, $method, $extraArguments);
+            = new ServiceMethodSpecification(
+                serviceId: $serviceId,
+                method: $method,
+                hasExistingTarget: $hasExistingTarget,
+                extraArguments: $extraArguments,
+            );
     }
 
     /**

@@ -48,6 +48,7 @@
 * feat: timing using Symfony stopwatch
 * test: test different setter return types
 * feat: support for immutable adder and remover
+* feat: optional second argument for getting the existing target value
 
 ## 1.8.0
 
