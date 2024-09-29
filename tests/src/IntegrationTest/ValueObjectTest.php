@@ -24,6 +24,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\Att
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ValueObjectDeterminer;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
@@ -88,12 +89,18 @@ class ValueObjectTest extends FrameworkTestCase
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
         );
 
-        $classMetadataFactory = new ClassMetadataFactory(
-            eagerPropertiesResolver: $eagerPropertiesResolver,
-            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
+        $valueObjectDeterminer = new ValueObjectDeterminer(
             propertyListExtractor: $propertyListExtractor,
+            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
             dynamicPropertiesDeterminer: new DynamicPropertiesDeterminer(),
             attributesExtractor: $attributesExtractor,
+        );
+
+        $classMetadataFactory = new ClassMetadataFactory(
+            eagerPropertiesResolver: $eagerPropertiesResolver,
+            dynamicPropertiesDeterminer: new DynamicPropertiesDeterminer(),
+            attributesExtractor: $attributesExtractor,
+            valueObjectDeterminer: $valueObjectDeterminer,
         );
 
         $classMetadata = $classMetadataFactory->createClassMetadata($class);

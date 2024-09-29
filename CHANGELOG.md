@@ -53,6 +53,7 @@
 * refactor: add an abstraction for property read/write info extractor
 * refactor: separate attributes extraction to dedicated class
 * refactor: encapsulate attributes in a class
+* refactor: separate value object determination to a dedicated class
 
 ## 1.8.0
 

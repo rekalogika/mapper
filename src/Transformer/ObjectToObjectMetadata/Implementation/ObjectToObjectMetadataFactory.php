@@ -33,6 +33,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\Pro
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ValueObjectDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
@@ -84,12 +85,18 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             attributesExtractor: $attributesExtractor,
         );
 
-        $this->classMetadataFactory = new ClassMetadataFactory(
-            eagerPropertiesResolver: $eagerPropertiesResolver,
+        $valueObjectDeterminer = new ValueObjectDeterminer(
             propertyListExtractor: $propertyListExtractor,
-            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
+            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
             dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
             attributesExtractor: $attributesExtractor,
+        );
+
+        $this->classMetadataFactory = new ClassMetadataFactory(
+            eagerPropertiesResolver: $eagerPropertiesResolver,
+            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
+            attributesExtractor: $attributesExtractor,
+            valueObjectDeterminer: $valueObjectDeterminer,
         );
 
         $this->propertyMappingResolver = new PropertyMappingResolver(
