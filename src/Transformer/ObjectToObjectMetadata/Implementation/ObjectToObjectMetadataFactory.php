@@ -25,6 +25,7 @@ use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\DynamicPropertiesDeterminer;
@@ -71,11 +72,16 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
         );
 
+        $attributesExtractor = new AttributesExtractor(
+            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
+        );
+
         $this->propertyMetadataFactory = new PropertyMetadataFactory(
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
             propertyTypeExtractor: $propertyTypeExtractor,
             typeResolver: $typeResolver,
             dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
+            attributesExtractor: $attributesExtractor,
         );
 
         $this->classMetadataFactory = new ClassMetadataFactory(
@@ -83,6 +89,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             propertyListExtractor: $propertyListExtractor,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
             dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
+            attributesExtractor: $attributesExtractor,
         );
 
         $this->propertyMappingResolver = new PropertyMappingResolver(
