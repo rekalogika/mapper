@@ -14,29 +14,29 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
-use Rekalogika\Mapper\Tests\Fixtures\ValueObject\PublicGetter;
-use Rekalogika\Mapper\Tests\Fixtures\ValueObject\PublicPropertyPublicGetter;
-use Rekalogika\Mapper\Tests\Fixtures\ValueObject\PublicSetter;
-use Rekalogika\Mapper\Tests\Fixtures\ValueObject\ReadonlyPublicProperty;
+use Rekalogika\Mapper\Tests\Fixtures\Unalterable\PublicGetter;
+use Rekalogika\Mapper\Tests\Fixtures\Unalterable\PublicPropertyPublicGetter;
+use Rekalogika\Mapper\Tests\Fixtures\Unalterable\PublicSetter;
+use Rekalogika\Mapper\Tests\Fixtures\Unalterable\ReadonlyPublicProperty;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ObjectWithImmutableSetter;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyAccessInfoExtractor;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ValueObjectDeterminer;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\UnalterableDeterminer;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 
-class ValueObjectTest extends FrameworkTestCase
+class UnalterableTest extends FrameworkTestCase
 {
     /**
      * @return iterable<array-key,array{class-string,bool}>
      */
-    public static function provideValueObject(): iterable
+    public static function provideUnalterable(): iterable
     {
         yield self::desc(ObjectWithImmutableSetter::class) => [
             ObjectWithImmutableSetter::class,
@@ -71,9 +71,9 @@ class ValueObjectTest extends FrameworkTestCase
 
     /**
      * @param class-string $class
-     * @dataProvider provideValueObject
+     * @dataProvider provideUnalterable
      */
-    public function testValueObject(string $class, bool $isValueObject): void
+    public function testUnalterable(string $class, bool $isUnalterable): void
     {
         $eagerPropertiesResolver = $this->get(EagerPropertiesResolverInterface::class);
         $propertyListExtractor = $this->get(PropertyListExtractorInterface::class);
@@ -93,7 +93,7 @@ class ValueObjectTest extends FrameworkTestCase
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
         );
 
-        $valueObjectDeterminer = new ValueObjectDeterminer(
+        $unalterableDeterminer = new UnalterableDeterminer(
             propertyListExtractor: $propertyListExtractor,
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
             dynamicPropertiesDeterminer: new DynamicPropertiesDeterminer(),
@@ -105,12 +105,12 @@ class ValueObjectTest extends FrameworkTestCase
             eagerPropertiesResolver: $eagerPropertiesResolver,
             dynamicPropertiesDeterminer: new DynamicPropertiesDeterminer(),
             attributesExtractor: $attributesExtractor,
-            valueObjectDeterminer: $valueObjectDeterminer,
+            unalterableDeterminer: $unalterableDeterminer,
         );
 
         $classMetadata = $classMetadataFactory->createClassMetadata($class);
 
-        $this->assertSame($isValueObject, $classMetadata->isValueObject());
+        $this->assertSame($isUnalterable, $classMetadata->isUnalterable());
     }
 
     private static function desc(string $class): string

@@ -33,7 +33,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\Pro
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ValueObjectDeterminer;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\UnalterableDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
@@ -85,7 +85,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             attributesExtractor: $attributesExtractor,
         );
 
-        $valueObjectDeterminer = new ValueObjectDeterminer(
+        $unalterableDeterminer = new UnalterableDeterminer(
             propertyListExtractor: $propertyListExtractor,
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
             dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
@@ -97,7 +97,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             eagerPropertiesResolver: $eagerPropertiesResolver,
             dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
             attributesExtractor: $attributesExtractor,
-            valueObjectDeterminer: $valueObjectDeterminer,
+            unalterableDeterminer: $unalterableDeterminer,
         );
 
         $this->propertyMappingResolver = new PropertyMappingResolver(
@@ -279,7 +279,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             allPropertyMappings: $propertyMappings,
             instantiable: $targetClassMetadata->isInstantiable(),
             cloneable: $targetClassMetadata->isCloneable(),
-            targetValueObject: $targetClassMetadata->isValueObject(),
+            targetUnalterable: $targetClassMetadata->isUnalterable(),
             sourceModifiedTime: $sourceClassMetadata->getLastModified(),
             targetModifiedTime: $targetClassMetadata->getLastModified(),
             targetReadOnly: $targetClassMetadata->isReadonly(),

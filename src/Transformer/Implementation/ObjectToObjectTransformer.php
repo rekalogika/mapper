@@ -113,7 +113,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         // disabled
 
         if (
-            $objectToObjectMetadata->isTargetValueObject()
+            $objectToObjectMetadata->isTargetUnalterable()
             || $context(MapperOptions::class)?->readTargetValue !== true
         ) {
             $target = null;

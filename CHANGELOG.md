@@ -58,6 +58,7 @@
 * chore: change hashing algorithm from sha256 to xxh128
 * feat: remove `hasExistingTarget` tag attribute from object & property mapper
   service definition.
+* chore: rename term from 'value object' to 'unalterable' to reduce ambiguity
 
 ## 1.8.0
 

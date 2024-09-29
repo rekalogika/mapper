@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
-use Rekalogika\Mapper\Attribute\ValueObject;
+use Rekalogika\Mapper\Attribute\Unalterable;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
@@ -22,7 +22,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final class ValueObjectDeterminer
+final class UnalterableDeterminer
 {
     private const STATUS_PENDING = 1;
     private const STATUS_YES = 2;
@@ -44,7 +44,7 @@ final class ValueObjectDeterminer
     /**
      * @param class-string $class
      */
-    public function isValueObject(string $class): bool
+    public function isUnalterable(string $class): bool
     {
         $status = $this->cache[$class] ?? null;
 
@@ -59,7 +59,7 @@ final class ValueObjectDeterminer
         }
 
         $this->cache[$class] = self::STATUS_PENDING;
-        $result = $this->realIsValueObject($class);
+        $result = $this->realIsUnalterable($class);
         $this->cache[$class] = $result ? self::STATUS_YES : self::STATUS_NO;
 
         return $result;
@@ -68,11 +68,11 @@ final class ValueObjectDeterminer
     /**
      * @param class-string $class
      */
-    private function realIsValueObject(string $class): bool
+    private function realIsUnalterable(string $class): bool
     {
         $reflectionClass = new \ReflectionClass($class);
 
-        // common value object classes
+        // common unalterable value object classes
 
         if (
             is_a($class, \DateTimeImmutable::class, true)
@@ -84,7 +84,7 @@ final class ValueObjectDeterminer
             return true;
         }
 
-        // common not value object classes
+        // common not unalterable value object classes
 
         if (
             is_a($class, \ArrayAccess::class, true)
@@ -92,32 +92,32 @@ final class ValueObjectDeterminer
             return false;
         }
 
-        // if allows dynamic properties, then it is not a value object
+        // if allows dynamic properties, then it is not an unalterable value object
 
         if ($this->dynamicPropertiesDeterminer->allowsDynamicProperties($class)) {
             return false;
         }
 
-        // if has magic __set() method, then it is not a value object
+        // if has magic __set() method, then it is not an unalterable value object
 
         if ($reflectionClass->hasMethod('__set')) {
             return false;
         }
 
-        // if tagged by ValueObject attribute, then it is a value object
+        // if tagged by Unalterable attribute, then it is an unalterable value object
 
         $attributes = $this->attributesExtractor->getClassAttributes($class);
-        $valueObjectAttribute = $attributes->get(ValueObject::class);
+        $unalterableAttribute = $attributes->get(Unalterable::class);
 
-        if ($valueObjectAttribute !== null) {
-            return $valueObjectAttribute->isValueObject;
+        if ($unalterableAttribute !== null) {
+            return $unalterableAttribute->isUnalterable;
         }
 
         // gets the list of properties
 
         $properties = $this->propertyListExtractor->getProperties($class) ?? [];
 
-        // if any of the property is writable, then it is not a value object
+        // if any of the property is writable, then it is not an unalterable value object
 
         foreach ($properties as $property) {
             if ($this->isPropertyWritable($class, $property)) {
@@ -125,13 +125,13 @@ final class ValueObjectDeterminer
             }
         }
 
-        // if a property is readable and the type is not a value object, then it
-        // is not a value object
+        // if a property is readable and the type is not an unalterable value object, then it
+        // is not an unalterable value object
 
         foreach ($properties as $property) {
             if (
                 $this->isPropertyReadable($class, $property)
-                && !$this->isPropertyTypeValueObject($class, $property)
+                && !$this->isPropertyTypeUnalterable($class, $property)
             ) {
                 return false;
             }
@@ -163,7 +163,7 @@ final class ValueObjectDeterminer
         return $readInfo !== null;
     }
 
-    private function isPropertyTypeValueObject(string $class, string $property): bool
+    private function isPropertyTypeUnalterable(string $class, string $property): bool
     {
         $types = $this->propertyTypeExtractor->getTypes($class, $property);
 
@@ -171,13 +171,14 @@ final class ValueObjectDeterminer
             return false;
         }
 
-        // not value object if any of the property type is not a value object
+        // not unalterable value object if any of the property type is not a
+        // unalterable value object
 
         foreach ($types as $type) {
             $builtInType = $type->getBuiltinType();
 
-            // if not an object, then it is a value object, we cannot change it
-            // if we only have a read access to the variable
+            // if not an object, then it is an unalterable value object, we
+            // cannot change it if we only have a read access to the variable
 
             if ($builtInType !== Type::BUILTIN_TYPE_OBJECT) {
                 continue;
@@ -185,21 +186,23 @@ final class ValueObjectDeterminer
 
             $class = $type->getClassName();
 
-            // if class is not known, then we consider it not a value object
+            // if class is not known, then we consider it not an unalterable
+            // value object
 
             if ($class === null) {
                 return false;
             }
 
-            // if the class is invalid, then we consider it not a value object
+            // if the class is invalid, then we consider it not an unalterable
+            // value object
 
             if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
                 return false;
             }
 
-            // check the class if it is a value object
+            // check the class if it is an unalterable value object
 
-            if (!$this->isValueObject($class)) {
+            if (!$this->isUnalterable($class)) {
                 return false;
             }
         }

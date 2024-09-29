@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\WitherMethod;
 
-use Rekalogika\Mapper\Attribute\ValueObject;
+use Rekalogika\Mapper\Attribute\Unalterable;
 
-#[ValueObject(false)]
+#[Unalterable(false)]
 class ParentObjectWithObjectWithVoidSetter
 {
     private ObjectWithVoidSetter $object;
