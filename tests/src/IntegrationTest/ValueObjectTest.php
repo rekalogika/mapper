@@ -20,10 +20,13 @@ use Rekalogika\Mapper\Tests\Fixtures\ValueObject\PublicSetter;
 use Rekalogika\Mapper\Tests\Fixtures\ValueObject\ReadonlyPublicProperty;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ObjectWithImmutableSetter;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\DynamicPropertiesDeterminer;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyAccessInfoExtractor;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 
 class ValueObjectTest extends FrameworkTestCase
@@ -72,13 +75,25 @@ class ValueObjectTest extends FrameworkTestCase
     {
         $eagerPropertiesResolver = $this->get(EagerPropertiesResolverInterface::class);
         $propertyListExtractor = $this->get(PropertyListExtractorInterface::class);
+
+        $propertyReadInfoExtractor = $this->get(PropertyReadInfoExtractorInterface::class);
         $propertyWriteInfoExtractor = $this->get(PropertyWriteInfoExtractorInterface::class);
+
+        $propertyAccessInfoExtractor = new PropertyAccessInfoExtractor(
+            propertyReadInfoExtractor: $propertyReadInfoExtractor,
+            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
+        );
+
+        $attributesExtractor = new AttributesExtractor(
+            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
+        );
 
         $classMetadataFactory = new ClassMetadataFactory(
             eagerPropertiesResolver: $eagerPropertiesResolver,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
             propertyListExtractor: $propertyListExtractor,
             dynamicPropertiesDeterminer: new DynamicPropertiesDeterminer(),
+            attributesExtractor: $attributesExtractor,
         );
 
         $classMetadata = $classMetadataFactory->createClassMetadata($class);

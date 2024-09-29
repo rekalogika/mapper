@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
+use Attribute;
 use Rekalogika\Mapper\Attribute\ValueObject;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\ClassMetadata;
@@ -31,6 +32,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
+        private AttributesExtractor $attributesExtractor,
     ) {}
 
     /**
@@ -51,7 +53,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
 
         $internal = $reflection->isInternal();
 
-        $attributes = ClassUtil::getClassAttributes($class, null);
+        $attributes = $this->attributesExtractor->getClassAttributes($class);
 
         $instantiable = $reflection->isInstantiable();
         $cloneable = $reflection->isCloneable();

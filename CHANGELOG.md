@@ -51,6 +51,7 @@
 * feat: optional second argument for getting the existing target value
 * refactor: separate dynamic properties determination to dedicated class
 * refactor: add an abstraction for property read/write info extractor
+* refactor: separate attributes extraction to dedicated class
 
 ## 1.8.0
 

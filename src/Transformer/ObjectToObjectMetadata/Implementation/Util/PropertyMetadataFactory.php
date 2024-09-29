@@ -19,7 +19,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
-use Rekalogika\Mapper\Util\ClassUtil;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -38,6 +37,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
+        private AttributesExtractor $attributesExtractor,
     ) {
         $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
@@ -125,11 +125,9 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
                 setter: $setterWriteName,
             );
 
-        $attributes = $this->getPropertyAttributes(
+        $attributes = $this->attributesExtractor->getPropertyAttributes(
             class: $class,
             property: $property,
-            readInfo: $readInfo,
-            writeInfo: $writeInfo,
         );
 
         return new PropertyMetadata(
@@ -294,57 +292,6 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             $removerWriteVisibility,
             $replaceable,
         ];
-    }
-
-    /**
-     * @param class-string $class
-     * @return list<object>
-     */
-    private function getPropertyAttributes(
-        string $class,
-        string $property,
-        ?PropertyReadInfo $readInfo,
-        ?PropertyWriteInfo $writeInfo,
-    ): array {
-        $methods = [];
-
-        // getter
-
-        if (
-            $readInfo !== null
-            && $readInfo->getType() === PropertyReadInfo::TYPE_METHOD
-        ) {
-            $methods[] = $readInfo->getName();
-        }
-
-        // mutators
-
-        if ($writeInfo !== null) {
-            if ($writeInfo->getType() === PropertyWriteInfo::TYPE_METHOD) {
-                $methods[] = $writeInfo->getName();
-            } elseif ($writeInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
-                try {
-                    $adderInfo = $writeInfo->getAdderInfo();
-                    $methods[] = $adderInfo->getName();
-                } catch (\LogicException) {
-                    // ignore
-                }
-
-                try {
-                    $removerInfo = $writeInfo->getRemoverInfo();
-                    $methods[] = $removerInfo->getName();
-                } catch (\LogicException) {
-                    // ignore
-                }
-            }
-        }
-
-        return ClassUtil::getPropertyAttributes(
-            class: $class,
-            property: $property,
-            attributeClass: null,
-            methods: $methods,
-        );
     }
 
     /**
