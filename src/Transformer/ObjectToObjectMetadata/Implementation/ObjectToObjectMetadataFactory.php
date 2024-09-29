@@ -90,6 +90,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
             dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
             attributesExtractor: $attributesExtractor,
+            propertyTypeExtractor: $propertyTypeExtractor,
         );
 
         $this->classMetadataFactory = new ClassMetadataFactory(

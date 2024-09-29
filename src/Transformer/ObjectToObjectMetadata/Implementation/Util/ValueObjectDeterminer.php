@@ -15,7 +15,9 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Ut
 
 use Rekalogika\Mapper\Attribute\ValueObject;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
+use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
+use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal
@@ -36,6 +38,7 @@ final class ValueObjectDeterminer
         private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
         private AttributesExtractor $attributesExtractor,
+        private PropertyTypeExtractorInterface $propertyTypeExtractor,
     ) {}
 
     /**
@@ -122,6 +125,18 @@ final class ValueObjectDeterminer
             }
         }
 
+        // if a property is readable and the type is not a value object, then it
+        // is not a value object
+
+        foreach ($properties as $property) {
+            if (
+                $this->isPropertyReadable($class, $property)
+                && !$this->isPropertyTypeValueObject($class, $property)
+            ) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -135,5 +150,60 @@ final class ValueObjectDeterminer
 
         return $writeInfo !== null
             && $writeInfo->getType() !== PropertyWriteInfo::TYPE_NONE;
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function isPropertyReadable(string $class, string $property): bool
+    {
+        $readInfo = $this->propertyAccessInfoExtractor
+            ->getReadInfo($class, $property);
+
+        return $readInfo !== null;
+    }
+
+    private function isPropertyTypeValueObject(string $class, string $property): bool
+    {
+        $types = $this->propertyTypeExtractor->getTypes($class, $property);
+
+        if ($types === null || $types === []) {
+            return false;
+        }
+
+        // not value object if any of the property type is not a value object
+
+        foreach ($types as $type) {
+            $builtInType = $type->getBuiltinType();
+
+            // if not an object, then it is a value object, we cannot change it
+            // if we only have a read access to the variable
+
+            if ($builtInType !== Type::BUILTIN_TYPE_OBJECT) {
+                continue;
+            }
+
+            $class = $type->getClassName();
+
+            // if class is not known, then we consider it not a value object
+
+            if ($class === null) {
+                return false;
+            }
+
+            // if the class is invalid, then we consider it not a value object
+
+            if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
+                return false;
+            }
+
+            // check the class if it is a value object
+
+            if (!$this->isValueObject($class)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
