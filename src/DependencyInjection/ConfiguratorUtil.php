@@ -103,6 +103,21 @@ final class ConfiguratorUtil
         return $sourceClasses;
     }
 
+    /**
+     * The method has the optional second parameter containing the existing
+     * target value.
+     *
+     * @param class-string $class
+     */
+    public static function methodHasExistingTargetParameter(
+        string $class,
+        string $method,
+    ): bool {
+        $reflection = new \ReflectionMethod($class, $method);
+
+        return self::hasExistingTargetParameter($reflection->getParameters()[1] ?? null);
+    }
+
     public static function hasExistingTargetParameter(
         ?\ReflectionParameter $parameter,
     ): bool {

@@ -56,6 +56,8 @@
 * refactor: separate value object determination to a dedicated class
 * fix: improve value object detection heuristics
 * chore: change hashing algorithm from sha256 to xxh128
+* feat: remove `hasExistingTarget` tag attribute from object & property mapper
+  service definition.
 
 ## 1.8.0
 

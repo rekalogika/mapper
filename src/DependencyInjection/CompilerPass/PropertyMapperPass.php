@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\DependencyInjection\CompilerPass;
 
+use Rekalogika\Mapper\DependencyInjection\ConfiguratorUtil;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodExtraArgumentUtil;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -35,9 +36,15 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
             $serviceDefinition = $container->getDefinition($serviceId);
             $serviceClass = $serviceDefinition->getClass() ?? throw new InvalidArgumentException('Class is required');
 
+            if (!class_exists($serviceClass)) {
+                throw new InvalidArgumentException(\sprintf('Class "%s" does not exist', $serviceClass));
+            }
+
             /** @var array{sourceClass:class-string,targetClass:class-string,property:string,serviceId:string,method:string,hasExistingTarget:bool,extraArguments:array<string,int>} $tag */
             foreach ($tags as $tag) {
                 $method = $tag['method'] ?? throw new InvalidArgumentException('Method is required');
+
+                $hasExistingTargetParameter = ConfiguratorUtil::methodHasExistingTargetParameter($serviceClass, $method);
 
                 $propertyMapperResolver->addMethodCall(
                     'addPropertyMapper',
@@ -47,8 +54,8 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
                         '$property' => $tag['property'],
                         '$serviceId' => $serviceId,
                         '$method' => $method,
-                        '$hasExistingTarget' => $tag['hasExistingTarget'],
-                        '$extraArguments' => ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method, $tag['hasExistingTarget']),
+                        '$hasExistingTarget' => $hasExistingTargetParameter,
+                        '$extraArguments' => ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method, $hasExistingTargetParameter),
                     ],
                 );
             }
