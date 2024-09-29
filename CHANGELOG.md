@@ -49,6 +49,7 @@
 * test: test different setter return types
 * feat: support for immutable adder and remover
 * feat: optional second argument for getting the existing target value
+* refactor: separate dynamic properties determination to dedicated class
 
 ## 1.8.0
 

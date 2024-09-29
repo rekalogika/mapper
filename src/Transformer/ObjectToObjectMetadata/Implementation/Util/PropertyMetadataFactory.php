@@ -40,6 +40,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
+        private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
     ) {
         $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
@@ -55,15 +56,14 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     public function createPropertyMetadata(
         string $class,
         string $property,
-        bool $allowsDynamicProperties,
     ): PropertyMetadata {
+
         // property path
 
         if ($this->isPropertyPath($property)) {
             return $this->propertyPathMetadataFactory->createPropertyMetadata(
                 class: $class,
                 property: $property,
-                allowsDynamicProperties: $allowsDynamicProperties,
             );
         }
 
@@ -79,9 +79,9 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             ->getConstructorPropertyWriteInfo($class, $property);
 
         [$readMode, $readName, $readVisibility] = $this->processPropertyReadInfo(
-            readInfo: $readInfo,
+            class: $class,
             property: $property,
-            allowsDynamicProperties: $allowsDynamicProperties,
+            readInfo: $readInfo,
         );
 
         [$constructorWriteMode, $constructorWriteName] =
@@ -110,10 +110,10 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             $replaceable,
         ]
             = $this->processPropertyWriteInfo(
+                class: $class,
+                property: $property,
                 readInfo: $readInfo,
                 writeInfo: $writeInfo,
-                property: $property,
-                allowsDynamicProperties: $allowsDynamicProperties,
             );
 
         [$types, $scalarType, $nullable] =
@@ -158,13 +158,17 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     }
 
     /**
+     * @param class-string $class
      * @return array{ReadMode,?string,Visibility}
      */
     private function processPropertyReadInfo(
-        ?PropertyReadInfo $readInfo,
+        string $class,
         string $property,
-        bool $allowsDynamicProperties,
+        ?PropertyReadInfo $readInfo,
     ): array {
+        $allowsDynamicProperties = $this->dynamicPropertiesDeterminer
+            ->allowsDynamicProperties($class);
+
         if ($readInfo === null) {
             // if source allows dynamic properties, including stdClass
             if ($allowsDynamicProperties) {
@@ -217,14 +221,18 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     }
 
     /**
+     * @param class-string $class
      * @return array{WriteMode,?string,Visibility,?string,Visibility,bool}
      */
     private function processPropertyWriteInfo(
+        string $class,
+        string $property,
         ?PropertyReadInfo $readInfo,
         ?PropertyWriteInfo $writeInfo,
-        string $property,
-        bool $allowsDynamicProperties,
     ): array {
+        $allowsDynamicProperties = $this->dynamicPropertiesDeterminer
+            ->allowsDynamicProperties($class);
+
         $removerWriteName = null;
         $removerWriteVisibility = Visibility::None;
 

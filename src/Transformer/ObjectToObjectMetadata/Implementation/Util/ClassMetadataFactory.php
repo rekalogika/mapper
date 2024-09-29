@@ -30,6 +30,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
+        private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
     ) {}
 
     /**
@@ -41,11 +42,11 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         $reflection = new \ReflectionClass($class);
 
         $hasReadableDynamicProperties =
-            $this->allowsDynamicProperties($reflection)
+            $this->dynamicPropertiesDeterminer->allowsDynamicProperties($class)
             || method_exists($class, '__get');
 
         $hasWritableDynamicProperties =
-            $this->allowsDynamicProperties($reflection)
+            $this->dynamicPropertiesDeterminer->allowsDynamicProperties($class)
             || method_exists($class, '__set');
 
         $internal = $reflection->isInternal();
@@ -79,20 +80,6 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
             eagerProperties: $eagerProperties,
             lastModified: $lastModified,
         );
-    }
-
-    /**
-     * @param \ReflectionClass<object> $class
-     */
-    private function allowsDynamicProperties(\ReflectionClass $class): bool
-    {
-        do {
-            if ($class->getAttributes(\AllowDynamicProperties::class) !== []) {
-                return true;
-            }
-        } while ($class = $class->getParentClass());
-
-        return false;
     }
 
     /**

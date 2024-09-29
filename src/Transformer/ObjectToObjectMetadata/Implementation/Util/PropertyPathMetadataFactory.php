@@ -41,7 +41,6 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
     public function createPropertyMetadata(
         string $class,
         string $property,
-        bool $allowsDynamicProperties,
     ): PropertyMetadata {
         $propertyPathObject = new PropertyPath($property);
 
