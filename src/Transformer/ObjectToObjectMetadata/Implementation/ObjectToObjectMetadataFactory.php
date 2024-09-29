@@ -27,6 +27,7 @@ use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactoryInterface;
@@ -62,17 +63,21 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private ProxyFactoryInterface $proxyFactory,
         TypeResolverInterface $typeResolver,
     ) {
+        $dynamicPropertiesDeterminer = new DynamicPropertiesDeterminer();
+
         $this->propertyMetadataFactory = new PropertyMetadataFactory(
             propertyReadInfoExtractor: $propertyReadInfoExtractor,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
             propertyTypeExtractor: $propertyTypeExtractor,
             typeResolver: $typeResolver,
+            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
         );
 
         $this->classMetadataFactory = new ClassMetadataFactory(
             eagerPropertiesResolver: $eagerPropertiesResolver,
             propertyListExtractor: $propertyListExtractor,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
+            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
         );
 
         $this->propertyMappingResolver = new PropertyMappingResolver(
@@ -190,14 +195,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 ->createPropertyMetadata(
                     class: $sourceClass,
                     property: $sourceProperty,
-                    allowsDynamicProperties: $sourceClassMetadata->hasReadableDynamicProperties(),
                 );
 
             $targetPropertyMetadata = $this->propertyMetadataFactory
                 ->createPropertyMetadata(
                     class: $targetClass,
                     property: $targetProperty,
-                    allowsDynamicProperties: $targetClassMetadata->hasWritableDynamicProperties(),
                 );
 
             // determine if source property is lazy

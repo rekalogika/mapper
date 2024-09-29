@@ -354,4 +354,24 @@ final readonly class ClassUtil
 
         return $attributes;
     }
+
+    /**
+     * @param class-string $class
+     */
+    public static function allowsDynamicProperties(string $class): bool
+    {
+        if (is_a($class, \stdClass::class, true)) {
+            return true;
+        }
+
+        $class = new \ReflectionClass($class);
+
+        do {
+            if ($class->getAttributes(\AllowDynamicProperties::class) !== []) {
+                return true;
+            }
+        } while ($class = $class->getParentClass());
+
+        return false;
+    }
 }

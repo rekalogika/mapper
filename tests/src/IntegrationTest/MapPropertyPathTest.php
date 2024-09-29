@@ -68,7 +68,7 @@ class MapPropertyPathTest extends FrameworkTestCase
         $library->addShelf($shelf);
 
         $metadata = $propertyPathAwarePropertyTypeExtractor
-            ->createPropertyMetadata($class, $path, false);
+            ->createPropertyMetadata($class, $path);
 
         $types = $metadata->getTypes();
         $attributes = $metadata->getAttributes();

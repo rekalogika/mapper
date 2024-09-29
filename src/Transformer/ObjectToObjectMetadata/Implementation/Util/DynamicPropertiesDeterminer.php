@@ -13,19 +13,27 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyMetadata;
+use Rekalogika\Mapper\Util\ClassUtil;
 
 /**
  * @internal
  */
-interface PropertyMetadataFactoryInterface
+final class DynamicPropertiesDeterminer
 {
     /**
-     * @param class-string $class
-     * @todo collect property path attributes
+     * @var array<class-string,bool>
      */
-    public function createPropertyMetadata(
-        string $class,
-        string $property,
-    ): PropertyMetadata;
+    private array $cache = [];
+
+    /**
+     * @param class-string $class
+     */
+    public function allowsDynamicProperties(string $class): bool
+    {
+        if (isset($this->cache[$class])) {
+            return $this->cache[$class];
+        }
+
+        return $this->cache[$class] = ClassUtil::allowsDynamicProperties($class);
+    }
 }

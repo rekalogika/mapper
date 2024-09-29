@@ -21,9 +21,70 @@ use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWith
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectWithNonNullPropertyThatCannotBeCastFromNull;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\DynamicPropertiesDeterminer;
 
 class DynamicPropertyTest extends FrameworkTestCase
 {
+    /**
+     * @param class-string $class
+     * @dataProvider provideDynamicPropertiesDetermination
+     */
+    public function testDynamicPropertiesDetermination(
+        string $class,
+        bool $expected,
+    ): void {
+        $determiner = new DynamicPropertiesDeterminer();
+        $actual = $determiner->allowsDynamicProperties($class);
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * @return iterable<array-key,array{class-string,bool}>
+     */
+    public static function provideDynamicPropertiesDetermination(): iterable
+    {
+        yield 'stdClass' => [
+            \stdClass::class,
+            true,
+        ];
+
+        yield 'ObjectExtendingStdClass' => [
+            ObjectExtendingStdClass::class,
+            true,
+        ];
+
+        yield 'ObjectWithScalarProperties' => [
+            ObjectWithScalarProperties::class,
+            false,
+        ];
+
+        yield 'ObjectWithScalarPropertiesDto' => [
+            ObjectWithScalarPropertiesDto::class,
+            false,
+        ];
+
+        yield 'AnotherObjectExtendingStdClass' => [
+            AnotherObjectExtendingStdClass::class,
+            true,
+        ];
+
+        yield 'ObjectExtendingStdClassWithExplicitScalarProperties' => [
+            ObjectExtendingStdClassWithExplicitScalarProperties::class,
+            true,
+        ];
+
+        yield 'ObjectExtendingStdClassWithProperties' => [
+            ObjectExtendingStdClassWithProperties::class,
+            true,
+        ];
+
+        yield 'ObjectWithNonNullPropertyThatCannotBeCastFromNull' => [
+            ObjectWithNonNullPropertyThatCannotBeCastFromNull::class,
+            false,
+        ];
+    }
+
     // from stdclass to object
 
     public function testStdClassToObject(): void

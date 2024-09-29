@@ -21,6 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ValueObject\ReadonlyPublicProperty;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ObjectWithImmutableSetter;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactory;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\DynamicPropertiesDeterminer;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
@@ -77,6 +78,7 @@ class ValueObjectTest extends FrameworkTestCase
             eagerPropertiesResolver: $eagerPropertiesResolver,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
             propertyListExtractor: $propertyListExtractor,
+            dynamicPropertiesDeterminer: new DynamicPropertiesDeterminer(),
         );
 
         $classMetadata = $classMetadataFactory->createClassMetadata($class);
