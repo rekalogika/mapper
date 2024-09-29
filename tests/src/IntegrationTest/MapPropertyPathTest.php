@@ -29,7 +29,9 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInUnpromotedC
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Chapter2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathMetadataFactory;
+use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
@@ -52,9 +54,24 @@ class MapPropertyPathTest extends FrameworkTestCase
             $this->expectException($expectedTypes);
         }
 
-        $propertyTypeExtractor = $this->get(PropertyTypeExtractorInterface::class);
-        $propertyWriteInfoExtractor = $this->get(PropertyWriteInfoExtractorInterface::class);
-        $propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory($propertyTypeExtractor, $propertyWriteInfoExtractor);
+        $propertyTypeExtractor = $this
+            ->get(PropertyTypeExtractorInterface::class);
+
+        $propertyWriteInfoExtractor = $this
+            ->get(PropertyWriteInfoExtractorInterface::class);
+
+        $propertyReadInfoExtractor = $this
+            ->get(PropertyReadInfoExtractorInterface::class);
+
+        $propertyAccessInfoExtractor = new PropertyAccessInfoExtractor(
+            propertyReadInfoExtractor: $propertyReadInfoExtractor,
+            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
+        );
+
+        $propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory(
+            propertyTypeExtractor: $propertyTypeExtractor,
+            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
+        );
 
         $chapter = new Chapter();
 

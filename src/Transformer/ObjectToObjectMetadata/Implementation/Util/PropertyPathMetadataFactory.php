@@ -24,7 +24,6 @@ use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
-use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
@@ -34,7 +33,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
 {
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
-        private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
+        private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
     ) {}
 
     #[\Override]
@@ -183,7 +182,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
             return $isIndex;
         }
 
-        $writeInfo = $this->propertyWriteInfoExtractor
+        $writeInfo = $this->propertyAccessInfoExtractor
             ->getWriteInfo($class, $property);
 
         if ($writeInfo === null) {
