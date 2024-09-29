@@ -77,6 +77,7 @@
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/ClassMetadataFactory.php" />
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyAccessInfoExtractor.php" />
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/AttributesExtractor.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/ValueObjectDeterminer.php" />
             </errorLevel>
         </InternalMethod>
         <InternalClass>
@@ -88,6 +89,7 @@
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/ClassMetadataFactory.php" />
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyAccessInfoExtractor.php" />
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/AttributesExtractor.php" />
+                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/ValueObjectDeterminer.php" />
             </errorLevel>
         </InternalClass>
         <UndefinedClass>

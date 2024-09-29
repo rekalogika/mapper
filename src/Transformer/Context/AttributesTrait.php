@@ -76,6 +76,11 @@ trait AttributesTrait
         return $result;
     }
 
+    public function has(string $class): bool
+    {
+        return isset($this->classToObjects[$class]);
+    }
+
     /**
      * @template T of object
      * @param class-string<T> $class
