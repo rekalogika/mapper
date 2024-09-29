@@ -14,11 +14,11 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
 
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\Attributes;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
-use Rekalogika\Mapper\Util\ClassUtil;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
@@ -34,6 +34,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
+        private AttributesExtractor $attributesExtractor,
     ) {}
 
     #[\Override]
@@ -130,14 +131,13 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
         }
 
         if ($currentProperty !== null) {
-            $attributes = ClassUtil::getPropertyAttributes(
-                class: $lastClass,
-                property: $currentProperty,
-                attributeClass: null,
-            );
+            $attributes = $this->attributesExtractor
+                ->getPropertyAttributes($lastClass, $currentProperty);
         } else {
             $attributes = [];
         }
+
+        $attributes = new Attributes($attributes);
 
         $replaceable = $this->isReplaceable(
             class: $lastClass,

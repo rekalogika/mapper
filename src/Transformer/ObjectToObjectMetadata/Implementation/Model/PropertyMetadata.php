@@ -26,7 +26,6 @@ final readonly class PropertyMetadata
     /**
      * @param list<Type> $types
      * @param 'int'|'float'|'string'|'bool'|'null'|null $scalarType
-     * @param list<object> $attributes
      */
     public function __construct(
         private ReadMode $readMode,
@@ -47,7 +46,7 @@ final readonly class PropertyMetadata
         private bool $nullable,
         private bool $replaceable,
         private bool $immutable,
-        private array $attributes,
+        private Attributes $attributes,
     ) {}
 
     public function getReadMode(): ReadMode
@@ -146,10 +145,7 @@ final readonly class PropertyMetadata
         return $this->immutable;
     }
 
-    /**
-     * @return list<object>
-     */
-    public function getAttributes(): array
+    public function getAttributes(): Attributes
     {
         return $this->attributes;
     }

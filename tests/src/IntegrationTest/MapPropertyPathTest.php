@@ -29,6 +29,7 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInUnpromotedC
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Chapter2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathMetadataFactory;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
@@ -68,9 +69,14 @@ class MapPropertyPathTest extends FrameworkTestCase
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
         );
 
+        $attributesExtractor = new AttributesExtractor(
+            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
+        );
+
         $propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
+            attributesExtractor: $attributesExtractor,
         );
 
         $chapter = new Chapter();
@@ -91,7 +97,7 @@ class MapPropertyPathTest extends FrameworkTestCase
         $attributes = $metadata->getAttributes();
 
         $this->assertEquals($expectedTypes, $types);
-        $this->assertEquals($expectedAttributes, $attributes);
+        $this->assertEquals($expectedAttributes, $attributes->toArray());
     }
 
     /**
