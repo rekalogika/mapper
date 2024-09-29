@@ -119,17 +119,6 @@ final class RekalogikaMapperExtension extends Extension
             definition: $definition,
         );
 
-        // check the second argument if it should contains the existing target
-        // value
-
-        $secondParameter = array_shift($parameters);
-
-        $hasExistingTarget = ConfiguratorUtil::hasExistingTargetParameter(
-            parameter: $secondParameter,
-        );
-
-        $tagAttributes['hasExistingTarget'] = $hasExistingTarget;
-
         // if the property is missing, assume it is the same as the
         // method name
 
@@ -209,17 +198,6 @@ final class RekalogikaMapperExtension extends Extension
             parameter: $firstParameter,
             definition: $definition,
         );
-
-        // check the second argument if it should contains the existing target
-        // value
-
-        $secondParameter = array_shift($parameters);
-
-        $hasExistingTarget = ConfiguratorUtil::hasExistingTargetParameter(
-            parameter: $secondParameter,
-        );
-
-        $tagAttributes['hasExistingTarget'] = $hasExistingTarget;
 
         // use the class of the return type as the target class
 
