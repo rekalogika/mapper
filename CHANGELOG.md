@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.9.1
+
+* test: property/object mapper second argument with unalterable object
+
 ## 1.9.0
 
 * feat: target properties with `Collection` & `ReadableCollection` typehint will
@@ -22,7 +26,7 @@
 * fix: date time format was not recognized
 * test: attribute with missing class
 * fix: multiple attributes found in inheritance chain now correctly handled
-* feat: save all attributes in metadata,   not just our attributes
+* feat: save all attributes in metadata, not just our attributes
 * feat: datetime transformation to int & float
 * feat: class attributes are now stored in the metadata
 * chore: rector run

@@ -146,4 +146,13 @@ class ObjectMapperTest extends FrameworkTestCase
 
         $this->assertInstanceOf(Baz::class, $result);
     }
+
+    public function testUnalterableExistingTarget(): void
+    {
+        $baz = new Baz();
+        $foo = new Foo();
+
+        $result = $this->mapper->map($baz, $foo);
+        $this->assertNotSame($foo, $result);
+    }
 }
