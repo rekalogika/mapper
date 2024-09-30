@@ -5,3 +5,5 @@ tools
 .php-cs-fixer.cache
 var
 rector.log
+.vscode
+.env.local
