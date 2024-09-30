@@ -23,7 +23,7 @@ class FooOrBarToBazMapper
     #[AsObjectMapper]
     public function mapPersonToPersonDto(
         Foo|Bar $fooOrBar,
-    ): Baz
+    ): Baz {
         return new Baz();
     }
 
