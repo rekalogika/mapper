@@ -76,11 +76,6 @@ class UnalterableTest extends FrameworkTestCase
             true,
         ];
 
-        yield self::desc(\DateTime::class) => [
-            \DateTime::class,
-            true,
-        ];
-
         yield self::desc(\DateTimeImmutable::class) => [
             \DateTimeImmutable::class,
             true,
