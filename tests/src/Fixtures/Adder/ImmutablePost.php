@@ -17,11 +17,11 @@ readonly class ImmutablePost
 {
     /**
      * @param array<int,Comment> $comments
-     * @param string $contents
+     * @param string $content
      */
     public function __construct(
         private array $comments = [],
-        private string $contents = '',
+        private string $content = '',
     ) {}
 
     /**
@@ -37,7 +37,7 @@ readonly class ImmutablePost
         $comments = $this->comments;
         $comments[] = $comment;
 
-        return new self($comments, $this->contents);
+        return new self($comments, $this->content);
     }
 
     public function removeComment(Comment $comment): self
@@ -49,16 +49,16 @@ readonly class ImmutablePost
             unset($comments[$key]);
         }
 
-        return new self($comments, $this->contents);
+        return new self($comments, $this->content);
     }
 
-    public function getContents(): string
+    public function getContent(): string
     {
-        return $this->contents;
+        return $this->content;
     }
 
-    public function setContents(string $contents): self
+    public function setContent(string $content): self
     {
-        return new self($this->comments, $contents);
+        return new self($this->comments, $content);
     }
 }

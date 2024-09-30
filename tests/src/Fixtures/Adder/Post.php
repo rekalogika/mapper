@@ -18,7 +18,7 @@ class Post
     /** @var array<int,Comment> */
     private array $comments = [];
 
-    private string $contents = '';
+    private string $content = '';
 
     /**
      * @return array<int,Comment>
@@ -42,14 +42,14 @@ class Post
         }
     }
 
-    public function getContents(): string
+    public function getContent(): string
     {
-        return $this->contents;
+        return $this->content;
     }
 
-    public function setContents(string $contents): self
+    public function setContent(string $content): self
     {
-        $this->contents = $contents;
+        $this->content = $content;
 
         return $this;
     }
