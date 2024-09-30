@@ -3,6 +3,7 @@
 ## 1.9.1
 
 * test: property/object mapper second argument with unalterable object
+* refactor: saner metadata factory organization
 
 ## 1.9.0
 

@@ -22,88 +22,29 @@ use Rekalogika\Mapper\Transformer\Context\SourceClassAttributes;
 use Rekalogika\Mapper\Transformer\Context\SourcePropertyAttributes;
 use Rekalogika\Mapper\Transformer\Context\TargetClassAttributes;
 use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
-use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\AttributesExtractor;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactory;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\ClassMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\DynamicPropertiesDeterminer;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyAccessInfoExtractor;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMappingResolver;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactory;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\UnalterableDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
-use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
-use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
-use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 
 /**
  * @internal
  */
 final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
 {
-    private PropertyMetadataFactoryInterface $propertyMetadataFactory;
-
-    private ClassMetadataFactoryInterface $classMetadataFactory;
-
-    private PropertyMappingResolver $propertyMappingResolver;
-
     public function __construct(
-        PropertyListExtractorInterface $propertyListExtractor,
-        PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyMapperResolverInterface $propertyMapperResolver,
-        PropertyReadInfoExtractorInterface $propertyReadInfoExtractor,
-        PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
-        EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private ProxyFactoryInterface $proxyFactory,
-        TypeResolverInterface $typeResolver,
-    ) {
-        $dynamicPropertiesDeterminer = new DynamicPropertiesDeterminer();
-
-        $propertyAccessInfoExtractor = new PropertyAccessInfoExtractor(
-            propertyReadInfoExtractor: $propertyReadInfoExtractor,
-            propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
-        );
-
-        $attributesExtractor = new AttributesExtractor(
-            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
-        );
-
-        $this->propertyMetadataFactory = new PropertyMetadataFactory(
-            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
-            propertyTypeExtractor: $propertyTypeExtractor,
-            typeResolver: $typeResolver,
-            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
-            attributesExtractor: $attributesExtractor,
-        );
-
-        $unalterableDeterminer = new UnalterableDeterminer(
-            propertyListExtractor: $propertyListExtractor,
-            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
-            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
-            attributesExtractor: $attributesExtractor,
-            propertyTypeExtractor: $propertyTypeExtractor,
-        );
-
-        $this->classMetadataFactory = new ClassMetadataFactory(
-            eagerPropertiesResolver: $eagerPropertiesResolver,
-            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
-            attributesExtractor: $attributesExtractor,
-            unalterableDeterminer: $unalterableDeterminer,
-        );
-
-        $this->propertyMappingResolver = new PropertyMappingResolver(
-            propertyListExtractor: $propertyListExtractor,
-        );
-    }
+        private PropertyMetadataFactoryInterface $propertyMetadataFactory,
+        private ClassMetadataFactoryInterface $classMetadataFactory,
+        private PropertyMappingResolver $propertyMappingResolver,
+    ) {}
 
     /**
      * @param class-string $sourceClass

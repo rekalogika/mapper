@@ -29,9 +29,9 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInUnpromotedC
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Chapter2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\AttributesExtractor;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyAccessInfoExtractor;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util\PropertyPathMetadataFactory;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyPathMetadataFactory;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;

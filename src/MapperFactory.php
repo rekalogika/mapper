@@ -64,8 +64,7 @@ use Rekalogika\Mapper\Transformer\Implementation\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\SymfonyUidTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\TraversableToTraversableTransformer;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyResolvingObjectToObjectMetadataFactory;
+use Rekalogika\Mapper\Transformer\MetadataUtil\MetadataUtilLocator;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\TransformerRegistry;
@@ -155,6 +154,8 @@ class MapperFactory
     private null|(PropertyInfoExtractorInterface&PropertyInitializableExtractorInterface) $propertyInfoExtractor = null;
 
     private ?TypeResolverInterface $typeResolver = null;
+
+    private ?MetadataUtilLocator $metadataUtilLocator = null;
 
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
 
@@ -595,28 +596,25 @@ class MapperFactory
         return $this->typeResolver;
     }
 
+    protected function getMetadataUtilLocator(): MetadataUtilLocator
+    {
+        return $this->metadataUtilLocator ??= new MetadataUtilLocator(
+            propertyListExtractor: $this->getPropertyInfoExtractor(),
+            propertyTypeExtractor: $this->getPropertyInfoExtractor(),
+            propertyReadInfoExtractor: $this->getPropertyReadInfoExtractor(),
+            propertyWriteInfoExtractor: $this->getPropertyWriteInfoExtractor(),
+            typeResolver: $this->getTypeResolver(),
+            eagerPropertiesResolver: $this->getEagerPropertiesResolver(),
+            proxyFactory: $this->getProxyFactory(),
+            propertyMapperResolver: $this->getPropertyMapperResolver(),
+        );
+    }
+
     protected function getObjectToObjectMetadataFactory(): ObjectToObjectMetadataFactoryInterface
     {
-        if (null === $this->objectToObjectMetadataFactory) {
-            $objectToObjectMetadataFactory = new ObjectToObjectMetadataFactory(
-                $this->getPropertyInfoExtractor(),
-                $this->getPropertyInfoExtractor(),
-                $this->getPropertyMapperResolver(),
-                $this->getPropertyReadInfoExtractor(),
-                $this->getPropertyWriteInfoExtractor(),
-                $this->getEagerPropertiesResolver(),
-                $this->getProxyFactory(),
-                $this->getTypeResolver(),
-            );
-
-            $objectToObjectMetadataFactory = new ProxyResolvingObjectToObjectMetadataFactory(
-                $objectToObjectMetadataFactory,
-            );
-
-            $this->objectToObjectMetadataFactory = $objectToObjectMetadataFactory;
-        }
-
-        return $this->objectToObjectMetadataFactory;
+        return $this->objectToObjectMetadataFactory
+            ??= $this->getMetadataUtilLocator()
+            ->getObjectToObjectMetadataFactory();
     }
 
     protected function getArrayLikeMetadataFactory(): ArrayLikeMetadataFactoryInterface
