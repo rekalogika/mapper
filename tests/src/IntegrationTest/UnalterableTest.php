@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use Brick\Money\Money;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ReadableCollection;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Unalterable\PublicGetter;
 use Rekalogika\Mapper\Tests\Fixtures\Unalterable\PublicPropertyPublicGetter;
@@ -66,6 +69,31 @@ class UnalterableTest extends FrameworkTestCase
         yield self::desc(ReadonlyPublicProperty::class) => [
             ReadonlyPublicProperty::class,
             true,
+        ];
+
+        yield self::desc(Money::class) => [
+            Money::class,
+            true,
+        ];
+
+        yield self::desc(\DateTime::class) => [
+            \DateTime::class,
+            true,
+        ];
+
+        yield self::desc(\DateTimeImmutable::class) => [
+            \DateTimeImmutable::class,
+            true,
+        ];
+
+        yield self::desc(Collection::class) => [
+            Collection::class,
+            false,
+        ];
+
+        yield self::desc(ReadableCollection::class) => [
+            ReadableCollection::class,
+            false,
         ];
     }
 

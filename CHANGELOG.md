@@ -60,6 +60,8 @@
   service definition.
 * chore: rename term from 'value object' to 'unalterable' to reduce ambiguity
 * build: makefile & workflow schedule
+* fix: if array is list, don't match the targets using their keys
+* test: more unalterable tests
 
 ## 1.8.0
 
