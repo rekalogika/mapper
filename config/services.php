@@ -59,6 +59,7 @@ use Rekalogika\Mapper\Transformer\Implementation\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\SymfonyUidTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\TraversableToArrayAccessTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\TraversableToTraversableTransformer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\MetadataUtilLocator;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\CachingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyResolvingObjectToObjectMetadataFactory;
@@ -266,19 +267,28 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.type_resolver.caching.inner'),
         ]);
 
+    # metadata util locator
+
+    $services
+        ->set('rekalogika.mapper.metadata_util_locator', MetadataUtilLocator::class)
+        ->args([
+            '$propertyListExtractor' => service('rekalogika.mapper.property_info'),
+            '$propertyTypeExtractor' => service('rekalogika.mapper.property_info'),
+            '$propertyReadInfoExtractor' => service('rekalogika.mapper.property_info.reflection_extractor'),
+            '$propertyWriteInfoExtractor' => service('rekalogika.mapper.property_info.reflection_extractor'),
+            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
+            '$eagerPropertiesResolver' => service('rekalogika.mapper.eager_properties_resolver'),
+            '$proxyFactory' => service('rekalogika.mapper.proxy.factory'),
+            '$propertyMapperResolver' => service('rekalogika.mapper.property_mapper.resolver'),
+        ]);
+
     # object to object metadata factory
 
     $services
         ->set('rekalogika.mapper.object_to_object_metadata_factory', ObjectToObjectMetadataFactory::class)
-        ->args([
-            service('rekalogika.mapper.property_info'),
-            service('rekalogika.mapper.property_info'),
-            service('rekalogika.mapper.property_mapper.resolver'),
-            service('rekalogika.mapper.property_info.reflection_extractor'),
-            service('rekalogika.mapper.property_info.reflection_extractor'),
-            service('rekalogika.mapper.eager_properties_resolver'),
-            service('rekalogika.mapper.proxy.factory'),
-            service('rekalogika.mapper.type_resolver'),
+        ->factory([
+            service('rekalogika.mapper.metadata_util_locator'),
+            'getObjectToObjectMetadataFactory',
         ]);
 
     $services

@@ -11,10 +11,10 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Util;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil;
 
+use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\MixedType;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;

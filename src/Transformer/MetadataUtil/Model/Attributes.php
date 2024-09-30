@@ -11,12 +11,13 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\Model;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil\Model;
 
 use Rekalogika\Mapper\Transformer\Context\AttributesTrait;
 
 /**
  * @implements \IteratorAggregate<object>
+ * @internal
  */
 final readonly class Attributes implements \IteratorAggregate
 {

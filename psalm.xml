@@ -72,24 +72,24 @@
             <errorLevel type="suppress">
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
                 <file name="src/Util/ClassUtil.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyMetadataFactory.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyPathMetadataFactory.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/ClassMetadataFactory.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyAccessInfoExtractor.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/AttributesExtractor.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/UnalterableDeterminer.php" />
+                <file name="src/Transformer/MetadataUtil/PropertyMetadataFactory.php" />
+                <file name="src/Transformer/MetadataUtil/PropertyPathMetadataFactory.php" />
+                <file name="src/Transformer/MetadataUtil/ClassMetadataFactory.php" />
+                <file name="src/Transformer/MetadataUtil/PropertyAccessInfoExtractor.php" />
+                <file name="src/Transformer/MetadataUtil/AttributesExtractor.php" />
+                <file name="src/Transformer/MetadataUtil/UnalterableDeterminer.php" />
             </errorLevel>
         </InternalMethod>
         <InternalClass>
             <errorLevel type="suppress">
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
                 <file name="src/Util/ClassUtil.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyMetadataFactory.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyPathMetadataFactory.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/ClassMetadataFactory.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/PropertyAccessInfoExtractor.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/AttributesExtractor.php" />
-                <file name="src/Transformer/ObjectToObjectMetadata/Implementation/Util/UnalterableDeterminer.php" />
+                <file name="src/Transformer/MetadataUtil/PropertyMetadataFactory.php" />
+                <file name="src/Transformer/MetadataUtil/PropertyPathMetadataFactory.php" />
+                <file name="src/Transformer/MetadataUtil/ClassMetadataFactory.php" />
+                <file name="src/Transformer/MetadataUtil/PropertyAccessInfoExtractor.php" />
+                <file name="src/Transformer/MetadataUtil/AttributesExtractor.php" />
+                <file name="src/Transformer/MetadataUtil/UnalterableDeterminer.php" />
             </errorLevel>
         </InternalClass>
         <UndefinedClass>
