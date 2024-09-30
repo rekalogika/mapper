@@ -28,7 +28,7 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithChild2;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
-use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithDateTimeDto;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithDateTimeImmutableDto;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithClassAttribute;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
@@ -286,5 +286,18 @@ class PropertyMappingTest extends FrameworkTestCase
         $this->assertInstanceOf(ObjectWithChild2::class, $result);
         $this->assertNotSame($originalTargetValue, $result->child);
         $this->assertEquals('bar', $result->child->name);
+    }
+
+    public function testExistingUnalterableObject(): void
+    {
+        $source = new SomeObject();
+        $target = new SomeObjectWithDateTimeImmutableDto();
+        $originalTargetValue = $target->getProperty();
+
+        $result = $this->mapper->map($source, $target);
+
+        $this->assertInstanceOf(SomeObjectWithDateTimeImmutableDto::class, $result);
+        $this->assertNotSame($originalTargetValue, $result->getProperty());
+
     }
 }

@@ -26,4 +26,12 @@ class FooOrBarToBazMapper
     ): Baz {
         return new Baz();
     }
+
+    #[AsObjectMapper]
+    public function mapBazToFoo(
+        Baz $baz,
+        Foo $foo,
+    ): Foo {
+        return new Foo();
+    }
 }
