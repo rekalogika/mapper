@@ -187,7 +187,9 @@ trait ArrayLikeTransformerTrait
         // Get the existing member value from the target
 
         try {
-            if ($target !== null && $targetMemberKey !== null) {
+            if ($metadata->targetMemberKeyCanBeIntOnly()) {
+                $targetMemberValue = null;
+            } elseif ($target !== null && $targetMemberKey !== null) {
                 /**
                  * @var mixed
                  * @psalm-suppress MixedArrayOffset
