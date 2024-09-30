@@ -1,8 +1,9 @@
 PHP=php
-# PHP=docker run -it --rm --user $$(id -u):$$(id -g) -v "$$PWD":/usr/src/myapp -w /usr/src/myapp php:8.4.0beta5-cli php
 SYMFONY=symfony
 COMPOSER=composer
 export APP_ENV=test
+
+-include .env.local
 
 .PHONY: test
 test: dump phpstan psalm phpunit

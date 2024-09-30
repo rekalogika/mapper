@@ -59,6 +59,7 @@
 * feat: remove `hasExistingTarget` tag attribute from object & property mapper
   service definition.
 * chore: rename term from 'value object' to 'unalterable' to reduce ambiguity
+* build: makefile & workflow schedule
 
 ## 1.8.0
 
