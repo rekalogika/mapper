@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWith
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectWithNonNullPropertyThatCannotBeCastFromNull;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
-use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
 
 class DynamicPropertyTest extends FrameworkTestCase
 {

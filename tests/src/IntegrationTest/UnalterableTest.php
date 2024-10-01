@@ -25,7 +25,7 @@ use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ObjectWithImmutableSetter;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactory\ClassMetadataFactory;
-use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
 use Symfony\Component\Clock\DatePoint;
@@ -116,17 +116,19 @@ class UnalterableTest extends FrameworkTestCase
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
         );
 
+        $dynamicPropertiesDeterminer = new DynamicPropertiesDeterminer();
+
         $unalterableDeterminer = new UnalterableDeterminer(
             propertyListExtractor: $propertyListExtractor,
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
-            dynamicPropertiesDeterminer: new DynamicPropertiesDeterminer(),
+            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
             attributesExtractor: $attributesExtractor,
             propertyTypeExtractor: $propertyTypeExtractor,
         );
 
         $classMetadataFactory = new ClassMetadataFactory(
             eagerPropertiesResolver: $eagerPropertiesResolver,
-            dynamicPropertiesDeterminer: new DynamicPropertiesDeterminer(),
+            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
             attributesExtractor: $attributesExtractor,
             unalterableDeterminer: $unalterableDeterminer,
         );

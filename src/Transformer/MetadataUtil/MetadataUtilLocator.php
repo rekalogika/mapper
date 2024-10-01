@@ -19,6 +19,8 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolve
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\CachingAttributesExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactory\ClassMetadataFactory;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\CachingDynamicPropertiesDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -32,7 +34,7 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
  */
 final class MetadataUtilLocator
 {
-    private ?DynamicPropertiesDeterminer $dynamicPropertiesDeterminer = null;
+    private ?DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer = null;
     private ?PropertyAccessInfoExtractor $propertyAccessInfoExtractor = null;
     private ?AttributesExtractorInterface $attributesExtractor = null;
     private ?PropertyMetadataFactory $propertyMetadataFactory = null;
@@ -52,10 +54,10 @@ final class MetadataUtilLocator
         private readonly PropertyMapperResolverInterface $propertyMapperResolver,
     ) {}
 
-    private function getDynamicPropertiesDeterminer(): DynamicPropertiesDeterminer
+    private function getDynamicPropertiesDeterminer(): DynamicPropertiesDeterminerInterface
     {
-        return $this->dynamicPropertiesDeterminer
-            ??= new DynamicPropertiesDeterminer();
+        return $this->dynamicPropertiesDeterminer ??=
+            new CachingDynamicPropertiesDeterminer(new DynamicPropertiesDeterminer());
     }
 
     private function getPropertyAccessInfoExtractor(): PropertyAccessInfoExtractor

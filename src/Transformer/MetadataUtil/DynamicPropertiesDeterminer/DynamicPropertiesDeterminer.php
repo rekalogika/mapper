@@ -11,29 +11,18 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\MetadataUtil;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer;
 
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminerInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 
 /**
  * @internal
  */
-final class DynamicPropertiesDeterminer
+final readonly class DynamicPropertiesDeterminer implements DynamicPropertiesDeterminerInterface
 {
-    /**
-     * @var array<class-string,bool>
-     */
-    private array $cache = [];
-
-    /**
-     * @param class-string $class
-     */
     public function allowsDynamicProperties(string $class): bool
     {
-        if (isset($this->cache[$class])) {
-            return $this->cache[$class];
-        }
-
-        return $this->cache[$class] = ClassUtil::allowsDynamicProperties($class);
+        return ClassUtil::allowsDynamicProperties($class);
     }
 }

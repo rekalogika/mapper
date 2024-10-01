@@ -36,7 +36,7 @@ final class UnalterableDeterminer
     public function __construct(
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
-        private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
+        private DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer,
         private AttributesExtractorInterface $attributesExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
     ) {}
