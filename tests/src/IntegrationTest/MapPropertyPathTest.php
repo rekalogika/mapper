@@ -29,7 +29,7 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
-use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyPathMetadataFactory;
 use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;

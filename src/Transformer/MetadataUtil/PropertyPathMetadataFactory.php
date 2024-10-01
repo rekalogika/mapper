@@ -32,7 +32,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
 {
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
-        private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
+        private PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
         private AttributesExtractorInterface $attributesExtractor,
         private UnalterableDeterminer $unalterableDeterminer,
     ) {}

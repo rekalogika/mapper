@@ -32,7 +32,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     private PropertyMetadataFactoryInterface $propertyPathMetadataFactory;
 
     public function __construct(
-        private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
+        private PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
         private DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer,

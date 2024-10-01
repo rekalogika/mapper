@@ -26,7 +26,7 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolve
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactory\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
-use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
 use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;

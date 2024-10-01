@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor;
 
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\Attributes;
-use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
@@ -26,7 +26,7 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 final readonly class AttributesExtractor implements AttributesExtractorInterface
 {
     public function __construct(
-        private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
+        private PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
     ) {}
 
     public function getClassAttributes(string $class): Attributes

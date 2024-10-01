@@ -21,6 +21,8 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\CachingAttrib
 use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactory\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\CachingDynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\CachingPropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -35,7 +37,7 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 final class MetadataUtilLocator
 {
     private ?DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer = null;
-    private ?PropertyAccessInfoExtractor $propertyAccessInfoExtractor = null;
+    private ?PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor = null;
     private ?AttributesExtractorInterface $attributesExtractor = null;
     private ?PropertyMetadataFactory $propertyMetadataFactory = null;
     private ?ClassMetadataFactoryInterface $classMetadataFactory = null;
@@ -60,13 +62,13 @@ final class MetadataUtilLocator
             new CachingDynamicPropertiesDeterminer(new DynamicPropertiesDeterminer());
     }
 
-    private function getPropertyAccessInfoExtractor(): PropertyAccessInfoExtractor
+    private function getPropertyAccessInfoExtractor(): PropertyAccessInfoExtractorInterface
     {
-        return $this->propertyAccessInfoExtractor
-            ??= new PropertyAccessInfoExtractor(
+        return $this->propertyAccessInfoExtractor ??=
+            new CachingPropertyAccessInfoExtractor(new PropertyAccessInfoExtractor(
                 propertyReadInfoExtractor: $this->propertyReadInfoExtractor,
                 propertyWriteInfoExtractor: $this->propertyWriteInfoExtractor,
-            );
+            ));
     }
 
     private function getAttributesExtractor(): AttributesExtractorInterface
