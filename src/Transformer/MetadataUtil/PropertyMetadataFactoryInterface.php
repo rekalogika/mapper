@@ -22,7 +22,6 @@ interface PropertyMetadataFactoryInterface
 {
     /**
      * @param class-string $class
-     * @todo collect property path attributes
      */
     public function createPropertyMetadata(
         string $class,

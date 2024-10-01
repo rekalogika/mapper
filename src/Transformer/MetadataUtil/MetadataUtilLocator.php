@@ -24,6 +24,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\Dynam
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\CachingPropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver\PropertyMappingResolver;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory\PropertyMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -40,7 +41,7 @@ final class MetadataUtilLocator
     private ?DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer = null;
     private ?PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor = null;
     private ?AttributesExtractorInterface $attributesExtractor = null;
-    private ?PropertyMetadataFactory $propertyMetadataFactory = null;
+    private ?PropertyMetadataFactoryInterface $propertyMetadataFactory = null;
     private ?ClassMetadataFactoryInterface $classMetadataFactory = null;
     private ?UnalterableDeterminer $unalterableDeterminer = null;
     private ?PropertyMappingResolverInterface $propertyMappingResolver = null;
@@ -80,10 +81,10 @@ final class MetadataUtilLocator
             ));
     }
 
-    private function getPropertyMetadataFactory(): PropertyMetadataFactory
+    private function getPropertyMetadataFactory(): PropertyMetadataFactoryInterface
     {
-        return $this->propertyMetadataFactory
-            ??= new PropertyMetadataFactory(
+        return $this->propertyMetadataFactory ??=
+            new PropertyMetadataFactory(
                 propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
                 propertyTypeExtractor: $this->propertyTypeExtractor,
                 typeResolver: $this->typeResolver,
