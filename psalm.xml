@@ -76,7 +76,7 @@
                 <file name="src/Transformer/MetadataUtil/PropertyPathMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/ClassMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/PropertyAccessInfoExtractor.php" />
-                <file name="src/Transformer/MetadataUtil/AttributesExtractor.php" />
+                <file name="src/Transformer/MetadataUtil/AttributesExtractor/AttributesExtractor.php" />
                 <file name="src/Transformer/MetadataUtil/UnalterableDeterminer.php" />
             </errorLevel>
         </InternalMethod>
@@ -88,7 +88,7 @@
                 <file name="src/Transformer/MetadataUtil/PropertyPathMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/ClassMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/PropertyAccessInfoExtractor.php" />
-                <file name="src/Transformer/MetadataUtil/AttributesExtractor.php" />
+                <file name="src/Transformer/MetadataUtil/AttributesExtractor/AttributesExtractor.php" />
                 <file name="src/Transformer/MetadataUtil/UnalterableDeterminer.php" />
             </errorLevel>
         </InternalClass>

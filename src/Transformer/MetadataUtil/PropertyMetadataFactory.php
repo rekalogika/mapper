@@ -36,7 +36,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
-        private AttributesExtractor $attributesExtractor,
+        private AttributesExtractorInterface $attributesExtractor,
         private UnalterableDeterminer $unalterableDeterminer,
     ) {
         $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(

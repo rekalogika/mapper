@@ -11,9 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\MetadataUtil;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor;
 
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\Attributes;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
@@ -21,50 +23,19 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfo;
 /**
  * @internal
  */
-final class AttributesExtractor
+final readonly class AttributesExtractor implements AttributesExtractorInterface
 {
-    /**
-     * @var array<class-string,Attributes>
-     */
-    private array $classAttributesCache = [];
-
-    /**
-     * @var array<class-string,array<string,Attributes>>
-     */
-    private array $propertyAttributesCache = [];
-
     public function __construct(
         private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
     ) {}
 
-    /**
-     * @param class-string $class
-     */
     public function getClassAttributes(string $class): Attributes
     {
-        $attributes = $this->classAttributesCache[$class] ?? null;
-
-        if ($attributes !== null) {
-            return $attributes;
-        }
-
-        $attributes = new Attributes(ClassUtil::getClassAttributes($class, null));
-
-        return $this->classAttributesCache[$class] = $attributes;
+        return new Attributes(ClassUtil::getClassAttributes($class, null));
     }
 
-    /**
-     * @param class-string $class
-     * @param string $property
-     */
     public function getPropertyAttributes(string $class, string $property): Attributes
     {
-        $attributes = $this->propertyAttributesCache[$class][$property] ?? null;
-
-        if ($attributes !== null) {
-            return $attributes;
-        }
-
         $readInfo = $this->propertyAccessInfoExtractor
             ->getReadInfo($class, $property);
 
@@ -111,8 +82,6 @@ final class AttributesExtractor
             methods: $methods,
         );
 
-        $attributes = new Attributes($attributes);
-
-        return $this->propertyAttributesCache[$class][$property] = $attributes;
+        return new Attributes($attributes);
     }
 }

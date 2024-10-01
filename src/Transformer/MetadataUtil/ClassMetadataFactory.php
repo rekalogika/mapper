@@ -25,7 +25,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
     public function __construct(
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
-        private AttributesExtractor $attributesExtractor,
+        private AttributesExtractorInterface $attributesExtractor,
         private UnalterableDeterminer $unalterableDeterminer,
     ) {}
 

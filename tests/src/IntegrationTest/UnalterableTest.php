@@ -23,7 +23,7 @@ use Rekalogika\Mapper\Tests\Fixtures\Unalterable\PublicSetter;
 use Rekalogika\Mapper\Tests\Fixtures\Unalterable\ReadonlyPublicProperty;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ObjectWithImmutableSetter;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
-use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;

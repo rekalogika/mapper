@@ -27,7 +27,7 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Chapter2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
-use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyPathMetadataFactory;

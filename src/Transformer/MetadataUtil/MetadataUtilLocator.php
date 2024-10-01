@@ -16,6 +16,8 @@ namespace Rekalogika\Mapper\Transformer\MetadataUtil;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\CachingAttributesExtractor;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -31,7 +33,7 @@ final class MetadataUtilLocator
 {
     private ?DynamicPropertiesDeterminer $dynamicPropertiesDeterminer = null;
     private ?PropertyAccessInfoExtractor $propertyAccessInfoExtractor = null;
-    private ?AttributesExtractor $attributesExtractor = null;
+    private ?AttributesExtractorInterface $attributesExtractor = null;
     private ?PropertyMetadataFactory $propertyMetadataFactory = null;
     private ?ClassMetadataFactory $classMetadataFactory = null;
     private ?UnalterableDeterminer $unalterableDeterminer = null;
@@ -64,11 +66,13 @@ final class MetadataUtilLocator
             );
     }
 
-    private function getAttributesExtractor(): AttributesExtractor
+    private function getAttributesExtractor(): AttributesExtractorInterface
     {
-        return $this->attributesExtractor
-            ??= new AttributesExtractor(
-                propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
+        return $this->attributesExtractor ??=
+            new CachingAttributesExtractor(
+                new AttributesExtractor(
+                    propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
+                ),
             );
     }
 

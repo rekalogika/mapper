@@ -37,7 +37,7 @@ final class UnalterableDeterminer
         private PropertyListExtractorInterface $propertyListExtractor,
         private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
-        private AttributesExtractor $attributesExtractor,
+        private AttributesExtractorInterface $attributesExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
     ) {}
 
