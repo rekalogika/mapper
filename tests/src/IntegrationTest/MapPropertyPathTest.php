@@ -24,14 +24,15 @@ use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Shelf;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\SomeAttribute;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Book2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookDto;
-use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInConstructorDto;
-use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookWithMapInUnpromotedConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Chapter2Dto;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\ChapterDto;
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyPathMetadataFactory;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
+use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
@@ -64,6 +65,9 @@ class MapPropertyPathTest extends FrameworkTestCase
         $propertyReadInfoExtractor = $this
             ->get(PropertyReadInfoExtractorInterface::class);
 
+        $propertyListExtractor = $this
+            ->get(PropertyListExtractorInterface::class);
+
         $propertyAccessInfoExtractor = new PropertyAccessInfoExtractor(
             propertyReadInfoExtractor: $propertyReadInfoExtractor,
             propertyWriteInfoExtractor: $propertyWriteInfoExtractor,
@@ -73,10 +77,21 @@ class MapPropertyPathTest extends FrameworkTestCase
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
         );
 
+        $dynamicPropertiesDeterminer = new DynamicPropertiesDeterminer();
+
+        $unalterableDeterminer = new UnalterableDeterminer(
+            propertyListExtractor: $propertyListExtractor,
+            propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
+            dynamicPropertiesDeterminer: $dynamicPropertiesDeterminer,
+            attributesExtractor: $attributesExtractor,
+            propertyTypeExtractor: $propertyTypeExtractor,
+        );
+
         $propertyPathAwarePropertyTypeExtractor = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
             propertyAccessInfoExtractor: $propertyAccessInfoExtractor,
             attributesExtractor: $attributesExtractor,
+            unalterableDeterminer: $unalterableDeterminer,
         );
 
         $chapter = new Chapter();

@@ -35,6 +35,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
         private AttributesExtractor $attributesExtractor,
+        private UnalterableDeterminer $unalterableDeterminer,
     ) {}
 
     #[\Override]
@@ -147,6 +148,15 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
 
         $types = array_values($types ?? []);
 
+        $unalterable = $this->unalterableDeterminer
+            ->isTypesUnalterable($types);
+
+        $mutableByHost = $this->isMutableByHost(
+            class: $lastClass,
+            property: $currentProperty,
+            isIndex: $lastIsIndex,
+        );
+
         return new PropertyMetadata(
             readMode: ReadMode::PropertyPath,
             readName: $property,
@@ -166,6 +176,8 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
             nullable: false,
             replaceable: $replaceable,
             immutable: TypeCheck::isRecursivelyImmutable($types),
+            unalterable: $unalterable,
+            mutableByHost: $mutableByHost,
             attributes: $attributes,
         );
     }
@@ -196,5 +208,28 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
                 true,
             )
             && $writeInfo->getVisibility() === PropertyWriteInfo::VISIBILITY_PUBLIC;
+    }
+
+    /**
+     * @param class-string $class
+     */
+    private function isMutableByHost(
+        string $class,
+        ?string $property,
+        bool $isIndex,
+    ): bool {
+        if ($property === null) {
+            return $isIndex;
+        }
+
+        $writeInfo = $this->propertyAccessInfoExtractor
+            ->getWriteInfo($class, $property);
+
+        if ($writeInfo === null) {
+            return false;
+        }
+
+        return
+            $writeInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER;
     }
 }

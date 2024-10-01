@@ -81,6 +81,7 @@ final class MetadataUtilLocator
                 typeResolver: $this->typeResolver,
                 dynamicPropertiesDeterminer: $this->getDynamicPropertiesDeterminer(),
                 attributesExtractor: $this->getAttributesExtractor(),
+                unalterableDeterminer: $this->getUnalterableDeterminer(),
             );
     }
 

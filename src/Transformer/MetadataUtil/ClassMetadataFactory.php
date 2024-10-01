@@ -53,7 +53,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         $cloneable = $reflection->isCloneable();
         $readOnly = $reflection->isReadOnly();
 
-        $unalterable = $this->unalterableDeterminer->isUnalterable($class);
+        $unalterable = $this->unalterableDeterminer->isClassUnalterable($class);
 
         $eagerProperties = $this->eagerPropertiesResolver
             ->getEagerProperties($class);

@@ -30,7 +30,9 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDtoWithIntKey;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithCompatibleHintDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyWithoutTypeHintDto;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayWithGetterNoSetterDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionWithGetterNoSetterDto;
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithNotNullArrayAccessPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
@@ -393,5 +395,42 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
         $this->assertEquals("string", $result->property[1]?->b);
         $this->assertEquals(true, $result->property[1]?->c);
         $this->assertEquals(1.1, $result->property[1]?->d);
+    }
+
+    public function testMappingToCollectionWithGetterButNoSetter(): void
+    {
+        $source = new ObjectWithTraversableProperties();
+        $target = new ObjectWithCollectionWithGetterNoSetterDto();
+
+        $this->assertCount(0, $target->getProperty());
+
+        $result = $this->mapper->map($source, $target);
+
+        $this->assertCount(3, $result->getProperty());
+
+        $this->assertInstanceOf(ObjectWithCollectionWithGetterNoSetterDto::class, $result);
+
+        $property = $result->getProperty();
+
+        $member = $property->get(1);
+        $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $member);
+
+        $this->assertEquals(1, $member->a);
+        $this->assertEquals("string", $member->b);
+        $this->assertEquals(true, $member->c);
+        $this->assertEquals(1.1, $member->d);
+    }
+
+    public function testMappingToArrayWithGetterButNoSetter(): void
+    {
+        // the property should be skipped, cannot mutate object's
+        // array without a setter
+
+        $source = new ObjectWithTraversableProperties();
+        $target = new ObjectWithArrayWithGetterNoSetterDto();
+
+        $this->assertCount(0, $target->getProperty());
+        $result = $this->mapper->map($source, $target);
+        $this->assertCount(0, $result->getProperty());
     }
 }

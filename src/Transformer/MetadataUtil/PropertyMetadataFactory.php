@@ -38,11 +38,13 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
         private TypeResolverInterface $typeResolver,
         private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
         private AttributesExtractor $attributesExtractor,
+        private UnalterableDeterminer $unalterableDeterminer,
     ) {
         $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,
             propertyAccessInfoExtractor: $this->propertyAccessInfoExtractor,
             attributesExtractor: $this->attributesExtractor,
+            unalterableDeterminer: $this->unalterableDeterminer,
         );
 
     }
@@ -107,6 +109,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             $removerWriteName,
             $removerWriteVisibility,
             $replaceable,
+            $mutableByHost,
         ]
             = $this->processPropertyWriteInfo(
                 class: $class,
@@ -125,6 +128,9 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
                 class: $class,
                 setter: $setterWriteName,
             );
+
+        $unalterable = $this->unalterableDeterminer
+            ->isTypesUnalterable($types);
 
         $attributes = $this->attributesExtractor->getPropertyAttributes(
             class: $class,
@@ -150,6 +156,8 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             nullable: $nullable,
             replaceable: $replaceable,
             immutable: TypeCheck::isRecursivelyImmutable($types),
+            unalterable: $unalterable,
+            mutableByHost: $mutableByHost,
             attributes: $attributes,
         );
     }
@@ -219,7 +227,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
 
     /**
      * @param class-string $class
-     * @return array{WriteMode,?string,Visibility,?string,Visibility,bool}
+     * @return array{WriteMode,?string,Visibility,?string,Visibility,bool,bool}
      */
     private function processPropertyWriteInfo(
         string $class,
@@ -235,11 +243,13 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
 
         if ($writeInfo === null) {
             $replaceable = false;
+            $mutableByHost = false;
             $setterWriteMode = WriteMode::None;
             $setterWriteName = null;
             $setterWriteVisibility = Visibility::None;
         } elseif ($writeInfo->getType() === PropertyWriteInfo::TYPE_ADDER_AND_REMOVER) {
             $replaceable = false;
+            $mutableByHost = true;
             $setterWriteMode = WriteMode::AdderRemover;
             $setterWriteName = $writeInfo->getAdderInfo()->getName();
             $removerWriteName = $writeInfo->getRemoverInfo()->getName();
@@ -268,10 +278,12 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
                     $setterWriteName = $property;
                     $setterWriteVisibility = Visibility::Public;
                     $replaceable = true;
+                    $mutableByHost = false;
                 } else {
                     $setterWriteName = null;
                     $setterWriteVisibility = Visibility::None;
                     $replaceable = false;
+                    $mutableByHost = false;
                 }
             } else {
                 $setterWriteName = $writeInfo->getName();
@@ -282,6 +294,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
                     default => Visibility::None,
                 };
                 $replaceable = $setterWriteVisibility === Visibility::Public;
+                $mutableByHost = false;
             }
         }
 
@@ -292,6 +305,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             $removerWriteName,
             $removerWriteVisibility,
             $replaceable,
+            $mutableByHost,
         ];
     }
 
