@@ -11,11 +11,16 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\MetadataUtil;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory;
 
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\Attributes;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\Util;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;

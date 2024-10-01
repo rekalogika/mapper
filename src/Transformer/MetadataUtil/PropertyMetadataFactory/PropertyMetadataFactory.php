@@ -18,7 +18,6 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminerInterf
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyPathMetadataFactory;
 use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Util;
 use Rekalogika\Mapper\Transformer\MixedType;

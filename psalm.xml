@@ -73,7 +73,7 @@
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
                 <file name="src/Util/ClassUtil.php" />
                 <file name="src/Transformer/MetadataUtil/PropertyMetadataFactory/PropertyMetadataFactory.php" />
-                <file name="src/Transformer/MetadataUtil/PropertyPathMetadataFactory.php" />
+                <file name="src/Transformer/MetadataUtil/PropertyMetadataFactory/PropertyPathMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/ClassMetadataFactory/ClassMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/PropertyAccessInfoExtractor/PropertyAccessInfoExtractor.php" />
                 <file name="src/Transformer/MetadataUtil/AttributesExtractor/AttributesExtractor.php" />
@@ -85,7 +85,7 @@
                 <file name="src/Transformer/ObjectToObjectMetadata/Implementation/ObjectToObjectMetadataFactory.php" />
                 <file name="src/Util/ClassUtil.php" />
                 <file name="src/Transformer/MetadataUtil/PropertyMetadataFactory/PropertyMetadataFactory.php" />
-                <file name="src/Transformer/MetadataUtil/PropertyPathMetadataFactory.php" />
+                <file name="src/Transformer/MetadataUtil/PropertyMetadataFactory/PropertyPathMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/ClassMetadataFactory/ClassMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/PropertyAccessInfoExtractor/PropertyAccessInfoExtractor.php" />
                 <file name="src/Transformer/MetadataUtil/AttributesExtractor/AttributesExtractor.php" />
