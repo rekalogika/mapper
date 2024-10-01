@@ -19,7 +19,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
-use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
@@ -155,7 +154,6 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
             scalarType: $scalarType,
             nullable: $nullable,
             replaceable: $replaceable,
-            immutable: TypeCheck::isRecursivelyImmutable($types),
             unalterable: $unalterable,
             mutableByHost: $mutableByHost,
             attributes: $attributes,

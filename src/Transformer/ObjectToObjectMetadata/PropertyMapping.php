@@ -66,7 +66,6 @@ final readonly class PropertyMapping
         private bool $sourceLazy,
         private bool $targetCanAcceptNull,
         private bool $targetReplaceable,
-        private bool $targetImmutable,
         private bool $hostCanMutateTarget,
         private bool $targetUnalterable,
         private SourcePropertyAttributes $sourceAttributes,
@@ -212,11 +211,6 @@ final readonly class PropertyMapping
     public function isTargetReplaceable(): bool
     {
         return $this->targetReplaceable;
-    }
-
-    public function isTargetImmutable(): bool
-    {
-        return $this->targetImmutable;
     }
 
     public function isTargetUnalterable(): bool

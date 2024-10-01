@@ -19,7 +19,6 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
-use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
@@ -175,7 +174,6 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
             scalarType: Util::determineScalarType($types),
             nullable: false,
             replaceable: $replaceable,
-            immutable: TypeCheck::isRecursivelyImmutable($types),
             unalterable: $unalterable,
             mutableByHost: $mutableByHost,
             attributes: $attributes,

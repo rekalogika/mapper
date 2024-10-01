@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.9.2
+
+* style: remove unused immutability check
+
 ## 1.9.1
 
 * test: property/object mapper second argument with unalterable object
