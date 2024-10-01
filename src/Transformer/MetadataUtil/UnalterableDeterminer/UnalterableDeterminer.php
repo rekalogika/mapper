@@ -11,9 +11,13 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\MetadataUtil;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
 
 use Rekalogika\Mapper\Attribute\Unalterable;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractorInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminerInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminerInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
@@ -22,7 +26,7 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final class UnalterableDeterminer
+final class UnalterableDeterminer implements UnalterableDeterminerInterface
 {
     private const STATUS_PENDING = 1;
     private const STATUS_YES = 2;
@@ -34,11 +38,11 @@ final class UnalterableDeterminer
     private array $cache = [];
 
     public function __construct(
-        private PropertyListExtractorInterface $propertyListExtractor,
-        private PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
-        private DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer,
-        private AttributesExtractorInterface $attributesExtractor,
-        private PropertyTypeExtractorInterface $propertyTypeExtractor,
+        private readonly PropertyListExtractorInterface $propertyListExtractor,
+        private readonly PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
+        private readonly DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer,
+        private readonly AttributesExtractorInterface $attributesExtractor,
+        private readonly PropertyTypeExtractorInterface $propertyTypeExtractor,
     ) {}
 
     /**

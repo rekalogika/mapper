@@ -18,8 +18,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminerInterf
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
-use Rekalogika\Mapper\Transformer\MetadataUtil\Util;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminerInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
@@ -43,7 +42,7 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
         private TypeResolverInterface $typeResolver,
         private DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer,
         private AttributesExtractorInterface $attributesExtractor,
-        private UnalterableDeterminer $unalterableDeterminer,
+        private UnalterableDeterminerInterface $unalterableDeterminer,
     ) {
         $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,

@@ -77,7 +77,7 @@
                 <file name="src/Transformer/MetadataUtil/ClassMetadataFactory/ClassMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/PropertyAccessInfoExtractor/PropertyAccessInfoExtractor.php" />
                 <file name="src/Transformer/MetadataUtil/AttributesExtractor/AttributesExtractor.php" />
-                <file name="src/Transformer/MetadataUtil/UnalterableDeterminer.php" />
+                <file name="src/Transformer/MetadataUtil/UnalterableDeterminer/UnalterableDeterminer.php" />
             </errorLevel>
         </InternalMethod>
         <InternalClass>
@@ -89,7 +89,7 @@
                 <file name="src/Transformer/MetadataUtil/ClassMetadataFactory/ClassMetadataFactory.php" />
                 <file name="src/Transformer/MetadataUtil/PropertyAccessInfoExtractor/PropertyAccessInfoExtractor.php" />
                 <file name="src/Transformer/MetadataUtil/AttributesExtractor/AttributesExtractor.php" />
-                <file name="src/Transformer/MetadataUtil/UnalterableDeterminer.php" />
+                <file name="src/Transformer/MetadataUtil/UnalterableDeterminer/UnalterableDeterminer.php" />
             </errorLevel>
         </InternalClass>
         <UndefinedClass>

@@ -25,6 +25,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\Cachi
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory\PropertyMetadataFactory;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer\UnalterableDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -43,7 +44,7 @@ final class MetadataUtilLocator
     private ?AttributesExtractorInterface $attributesExtractor = null;
     private ?PropertyMetadataFactoryInterface $propertyMetadataFactory = null;
     private ?ClassMetadataFactoryInterface $classMetadataFactory = null;
-    private ?UnalterableDeterminer $unalterableDeterminer = null;
+    private ?UnalterableDeterminerInterface $unalterableDeterminer = null;
     private ?PropertyMappingResolverInterface $propertyMappingResolver = null;
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
 
@@ -94,10 +95,10 @@ final class MetadataUtilLocator
             );
     }
 
-    private function getUnalterableDeterminer(): UnalterableDeterminer
+    private function getUnalterableDeterminer(): UnalterableDeterminerInterface
     {
-        return $this->unalterableDeterminer
-            ??= new UnalterableDeterminer(
+        return $this->unalterableDeterminer ??=
+            new UnalterableDeterminer(
                 propertyListExtractor: $this->propertyListExtractor,
                 propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
                 dynamicPropertiesDeterminer: $this->getDynamicPropertiesDeterminer(),

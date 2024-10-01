@@ -19,8 +19,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\Model\Attributes;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
-use Rekalogika\Mapper\Transformer\MetadataUtil\Util;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminerInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -39,7 +38,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
         private AttributesExtractorInterface $attributesExtractor,
-        private UnalterableDeterminer $unalterableDeterminer,
+        private UnalterableDeterminerInterface $unalterableDeterminer,
     ) {}
 
     #[\Override]

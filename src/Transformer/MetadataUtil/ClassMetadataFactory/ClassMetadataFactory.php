@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminerInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\ClassMetadata;
-use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminerInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 
 /**
@@ -30,7 +30,7 @@ final readonly class ClassMetadataFactory implements ClassMetadataFactoryInterfa
         private EagerPropertiesResolverInterface $eagerPropertiesResolver,
         private DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer,
         private AttributesExtractorInterface $attributesExtractor,
-        private UnalterableDeterminer $unalterableDeterminer,
+        private UnalterableDeterminerInterface $unalterableDeterminer,
     ) {}
 
     /**

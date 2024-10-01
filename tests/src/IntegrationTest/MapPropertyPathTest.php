@@ -31,7 +31,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExt
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory\PropertyPathMetadataFactory;
-use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer\UnalterableDeterminer;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
