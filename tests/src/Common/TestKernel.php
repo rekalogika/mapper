@@ -37,7 +37,7 @@ class TestKernel extends Kernel
      * @param array<string,mixed> $config
      */
     public function __construct(
-        string $env = 'test',
+        private string $env = 'test',
         bool $debug = true,
         private readonly array $config = [],
     ) {
@@ -68,7 +68,7 @@ class TestKernel extends Kernel
 
     public function getBuildDir(): string
     {
-        return $this->getProjectDir() . '/var/build/' . $this->environment;
+        return $this->getProjectDir() . '/var/build/' . $this->env;
     }
 
     #[\Override]
