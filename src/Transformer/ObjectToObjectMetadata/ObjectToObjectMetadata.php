@@ -88,7 +88,8 @@ final readonly class ObjectToObjectMetadata
 
             if (
                 !$propertyMapping->isTargetReplaceable()
-                && $propertyMapping->isTargetImmutable()
+                && !$propertyMapping->hostCanMutateTarget()
+                && $propertyMapping->isTargetUnalterable()
             ) {
                 continue;
             }

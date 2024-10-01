@@ -44,7 +44,7 @@ final class UnalterableDeterminer
     /**
      * @param class-string $class
      */
-    public function isUnalterable(string $class): bool
+    public function isClassUnalterable(string $class): bool
     {
         $status = $this->cache[$class] ?? null;
 
@@ -165,12 +165,21 @@ final class UnalterableDeterminer
 
     private function isPropertyTypeUnalterable(string $class, string $property): bool
     {
-        $types = $this->propertyTypeExtractor->getTypes($class, $property);
+        $types = $this->propertyTypeExtractor->getTypes($class, $property) ?? [];
+        $types = array_values($types);
 
-        if ($types === null || $types === []) {
+        if ($types === []) {
             return false;
         }
 
+        return $this->isTypesUnalterable($types);
+    }
+
+    /**
+     * @param list<Type> $types
+     */
+    public function isTypesUnalterable(array $types): bool
+    {
         // not unalterable value object if any of the property type is not a
         // unalterable value object
 
@@ -202,7 +211,7 @@ final class UnalterableDeterminer
 
             // check the class if it is an unalterable value object
 
-            if (!$this->isUnalterable($class)) {
+            if (!$this->isClassUnalterable($class)) {
                 return false;
             }
         }

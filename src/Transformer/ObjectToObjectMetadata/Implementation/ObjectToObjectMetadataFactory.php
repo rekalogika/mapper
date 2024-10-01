@@ -202,6 +202,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
                 targetCanAcceptNull: $targetPropertyMetadata->isNullable(),
                 targetReplaceable: $targetPropertyMetadata->isReplaceable(),
                 targetImmutable: $targetPropertyMetadata->isImmutable(),
+                targetUnalterable: $targetPropertyMetadata->isUnalterable(),
+                hostCanMutateTarget: $targetPropertyMetadata->isMutableByHost(),
                 sourceAttributes: $sourceAttributes,
                 targetAttributes: $targetAttributes,
             );

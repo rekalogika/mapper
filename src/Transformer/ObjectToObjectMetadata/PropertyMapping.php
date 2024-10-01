@@ -67,6 +67,8 @@ final readonly class PropertyMapping
         private bool $targetCanAcceptNull,
         private bool $targetReplaceable,
         private bool $targetImmutable,
+        private bool $hostCanMutateTarget,
+        private bool $targetUnalterable,
         private SourcePropertyAttributes $sourceAttributes,
         private TargetPropertyAttributes $targetAttributes,
     ) {
@@ -215,6 +217,16 @@ final readonly class PropertyMapping
     public function isTargetImmutable(): bool
     {
         return $this->targetImmutable;
+    }
+
+    public function isTargetUnalterable(): bool
+    {
+        return $this->targetUnalterable;
+    }
+
+    public function hostCanMutateTarget(): bool
+    {
+        return $this->hostCanMutateTarget;
     }
 
     public function getTargetRemoverWriteName(): ?string

@@ -46,6 +46,8 @@ final readonly class PropertyMetadata
         private bool $nullable,
         private bool $replaceable,
         private bool $immutable,
+        private bool $unalterable,
+        private bool $mutableByHost,
         private Attributes $attributes,
     ) {}
 
@@ -143,6 +145,16 @@ final readonly class PropertyMetadata
     public function isImmutable(): bool
     {
         return $this->immutable;
+    }
+
+    public function isUnalterable(): bool
+    {
+        return $this->unalterable;
+    }
+
+    public function isMutableByHost(): bool
+    {
+        return $this->mutableByHost;
     }
 
     public function getAttributes(): Attributes

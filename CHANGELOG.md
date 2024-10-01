@@ -4,6 +4,8 @@
 
 * test: property/object mapper second argument with unalterable object
 * refactor: saner metadata factory organization
+* fix: target property that is unalterable & not mutable by the host should be
+  skipped
 
 ## 1.9.0
 
