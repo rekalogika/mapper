@@ -23,6 +23,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\Cachi
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\CachingPropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -42,7 +43,7 @@ final class MetadataUtilLocator
     private ?PropertyMetadataFactory $propertyMetadataFactory = null;
     private ?ClassMetadataFactoryInterface $classMetadataFactory = null;
     private ?UnalterableDeterminer $unalterableDeterminer = null;
-    private ?PropertyMappingResolver $propertyMappingResolver = null;
+    private ?PropertyMappingResolverInterface $propertyMappingResolver = null;
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
 
     public function __construct(
@@ -115,10 +116,10 @@ final class MetadataUtilLocator
             );
     }
 
-    private function getPropertyMappingResolver(): PropertyMappingResolver
+    private function getPropertyMappingResolver(): PropertyMappingResolverInterface
     {
-        return $this->propertyMappingResolver
-            ??= new PropertyMappingResolver(
+        return $this->propertyMappingResolver ??=
+            new PropertyMappingResolver(
                 propertyListExtractor: $this->propertyListExtractor,
             );
     }

@@ -25,7 +25,7 @@ use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolverInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
@@ -43,7 +43,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private ProxyFactoryInterface $proxyFactory,
         private PropertyMetadataFactoryInterface $propertyMetadataFactory,
         private ClassMetadataFactoryInterface $classMetadataFactory,
-        private PropertyMappingResolver $propertyMappingResolver,
+        private PropertyMappingResolverInterface $propertyMappingResolver,
     ) {}
 
     /**
