@@ -16,7 +16,6 @@ namespace Rekalogika\Mapper\Tests\Common;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Rekalogika\Mapper\RekalogikaMapperBundle;
 use Rekalogika\Mapper\Tests\PHPUnit\PHPUnitProfilerBundle;
-use Rekalogika\Mapper\Tests\PHPUnit\TestRequest;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -26,8 +25,6 @@ use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\HttpKernel\Profiler\Profiler;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 date_default_timezone_set('UTC');
 
@@ -69,30 +66,10 @@ class TestKernel extends Kernel
 
     }
 
-    // public function boot(): void
-    // {
-    //     parent::boot();
-
-    //     dump(\debug_backtrace());
-    // }
-
-    // public function shutdown(): void
-    // {
-    //     $stopwatch = $this->getContainer()->get('debug.stopwatch');
-    //     assert($stopwatch instanceof Stopwatch);
-
-    //     $request = new TestRequest();
-
-    //     $profiler = $this->getContainer()->get('profiler');
-    //     assert($profiler instanceof Profiler);
-
-    //     $profile = $profiler->collect($request, $request->getResponse(), null);
-    //     assert($profile !== null);
-
-    //     $profiler->saveProfile($profile);
-
-    //     parent::shutdown();
-    // }
+    public function getBuildDir(): string
+    {
+        return $this->getProjectDir() . '/var/build/' . $this->environment;
+    }
 
     #[\Override]
     public function registerContainerConfiguration(LoaderInterface $loader): void

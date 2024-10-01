@@ -57,6 +57,7 @@
         "ramsey/uuid": "^3.0 || ^4.0",
         "rector/rector": "^1.2",
         "symfony/debug-bundle": "^6.4 || ^7.0",
+        "symfony/dotenv": "^6.4 || ^7.0",
         "symfony/framework-bundle": "^6.4 || ^7.0",
         "symfony/http-kernel": "^6.4 || ^7.0",
         "symfony/monolog-bundle": "^2.0 || ^3.0",

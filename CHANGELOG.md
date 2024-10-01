@@ -6,6 +6,7 @@
 * refactor: saner metadata factory organization
 * fix: target property that is unalterable & not mutable by the host should be
   skipped
+* build: use dotenv for test environment
 
 ## 1.9.0
 
