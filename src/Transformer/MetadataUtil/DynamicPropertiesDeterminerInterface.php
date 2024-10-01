@@ -13,18 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\MetadataUtil;
 
-use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
-
 /**
  * @internal
  */
-interface PropertyMetadataFactoryInterface
+interface DynamicPropertiesDeterminerInterface
 {
     /**
      * @param class-string $class
      */
-    public function createPropertyMetadata(
-        string $class,
-        string $property,
-    ): PropertyMetadata;
+    public function allowsDynamicProperties(string $class): bool;
 }

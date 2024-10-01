@@ -3,6 +3,7 @@
 ## 1.9.2
 
 * style: remove unused immutability check
+* refactor: separate caching
 
 ## 1.9.1
 

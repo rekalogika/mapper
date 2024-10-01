@@ -13,18 +13,20 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\MetadataUtil;
 
-use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
+use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal
  */
-interface PropertyMetadataFactoryInterface
+interface UnalterableDeterminerInterface
 {
     /**
      * @param class-string $class
      */
-    public function createPropertyMetadata(
-        string $class,
-        string $property,
-    ): PropertyMetadata;
+    public function isClassUnalterable(string $class): bool;
+
+    /**
+     * @param list<Type> $types
+     */
+    public function isTypesUnalterable(array $types): bool;
 }

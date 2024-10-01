@@ -11,26 +11,22 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\MetadataUtil;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver;
 
 use Rekalogika\Mapper\Attribute\Map;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 
 /**
  * @internal
  */
-final readonly class PropertyMappingResolver
+final readonly class PropertyMappingResolver implements PropertyMappingResolverInterface
 {
     public function __construct(
         private PropertyListExtractorInterface $propertyListExtractor,
     ) {}
 
-    /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
-     * @return array<int,array{string,string}>
-     */
     public function getPropertiesToMap(
         string $sourceClass,
         string $targetClass,

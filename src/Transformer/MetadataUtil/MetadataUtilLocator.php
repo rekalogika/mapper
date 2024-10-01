@@ -16,6 +16,16 @@ namespace Rekalogika\Mapper\Transformer\MetadataUtil;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\CachingAttributesExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactory\ClassMetadataFactory;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\CachingDynamicPropertiesDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\CachingPropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver\PropertyMappingResolver;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory\PropertyMetadataFactory;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer\UnalterableDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -29,13 +39,13 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
  */
 final class MetadataUtilLocator
 {
-    private ?DynamicPropertiesDeterminer $dynamicPropertiesDeterminer = null;
-    private ?PropertyAccessInfoExtractor $propertyAccessInfoExtractor = null;
-    private ?AttributesExtractor $attributesExtractor = null;
-    private ?PropertyMetadataFactory $propertyMetadataFactory = null;
-    private ?ClassMetadataFactory $classMetadataFactory = null;
-    private ?UnalterableDeterminer $unalterableDeterminer = null;
-    private ?PropertyMappingResolver $propertyMappingResolver = null;
+    private ?DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer = null;
+    private ?PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor = null;
+    private ?AttributesExtractorInterface $attributesExtractor = null;
+    private ?PropertyMetadataFactoryInterface $propertyMetadataFactory = null;
+    private ?ClassMetadataFactoryInterface $classMetadataFactory = null;
+    private ?UnalterableDeterminerInterface $unalterableDeterminer = null;
+    private ?PropertyMappingResolverInterface $propertyMappingResolver = null;
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
 
     public function __construct(
@@ -49,33 +59,33 @@ final class MetadataUtilLocator
         private readonly PropertyMapperResolverInterface $propertyMapperResolver,
     ) {}
 
-    private function getDynamicPropertiesDeterminer(): DynamicPropertiesDeterminer
+    private function getDynamicPropertiesDeterminer(): DynamicPropertiesDeterminerInterface
     {
-        return $this->dynamicPropertiesDeterminer
-            ??= new DynamicPropertiesDeterminer();
+        return $this->dynamicPropertiesDeterminer ??=
+            new CachingDynamicPropertiesDeterminer(new DynamicPropertiesDeterminer());
     }
 
-    private function getPropertyAccessInfoExtractor(): PropertyAccessInfoExtractor
+    private function getPropertyAccessInfoExtractor(): PropertyAccessInfoExtractorInterface
     {
-        return $this->propertyAccessInfoExtractor
-            ??= new PropertyAccessInfoExtractor(
+        return $this->propertyAccessInfoExtractor ??=
+            new CachingPropertyAccessInfoExtractor(new PropertyAccessInfoExtractor(
                 propertyReadInfoExtractor: $this->propertyReadInfoExtractor,
                 propertyWriteInfoExtractor: $this->propertyWriteInfoExtractor,
-            );
+            ));
     }
 
-    private function getAttributesExtractor(): AttributesExtractor
+    private function getAttributesExtractor(): AttributesExtractorInterface
     {
-        return $this->attributesExtractor
-            ??= new AttributesExtractor(
+        return $this->attributesExtractor ??=
+            new CachingAttributesExtractor(new AttributesExtractor(
                 propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
-            );
+            ));
     }
 
-    private function getPropertyMetadataFactory(): PropertyMetadataFactory
+    private function getPropertyMetadataFactory(): PropertyMetadataFactoryInterface
     {
-        return $this->propertyMetadataFactory
-            ??= new PropertyMetadataFactory(
+        return $this->propertyMetadataFactory ??=
+            new PropertyMetadataFactory(
                 propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
                 propertyTypeExtractor: $this->propertyTypeExtractor,
                 typeResolver: $this->typeResolver,
@@ -85,10 +95,10 @@ final class MetadataUtilLocator
             );
     }
 
-    private function getUnalterableDeterminer(): UnalterableDeterminer
+    private function getUnalterableDeterminer(): UnalterableDeterminerInterface
     {
-        return $this->unalterableDeterminer
-            ??= new UnalterableDeterminer(
+        return $this->unalterableDeterminer ??=
+            new UnalterableDeterminer(
                 propertyListExtractor: $this->propertyListExtractor,
                 propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
                 dynamicPropertiesDeterminer: $this->getDynamicPropertiesDeterminer(),
@@ -97,7 +107,7 @@ final class MetadataUtilLocator
             );
     }
 
-    private function getClassMetadataFactory(): ClassMetadataFactory
+    private function getClassMetadataFactory(): ClassMetadataFactoryInterface
     {
         return $this->classMetadataFactory
             ??= new ClassMetadataFactory(
@@ -108,10 +118,10 @@ final class MetadataUtilLocator
             );
     }
 
-    private function getPropertyMappingResolver(): PropertyMappingResolver
+    private function getPropertyMappingResolver(): PropertyMappingResolverInterface
     {
-        return $this->propertyMappingResolver
-            ??= new PropertyMappingResolver(
+        return $this->propertyMappingResolver ??=
+            new PropertyMappingResolver(
                 propertyListExtractor: $this->propertyListExtractor,
             );
     }

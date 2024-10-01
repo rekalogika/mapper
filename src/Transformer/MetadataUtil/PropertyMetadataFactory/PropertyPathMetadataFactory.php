@@ -11,11 +11,15 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\MetadataUtil;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory;
 
 use Rekalogika\Mapper\Transformer\Exception\PropertyPathAwarePropertyInfoExtractorException;
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\Attributes;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminerInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -32,9 +36,9 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
 {
     public function __construct(
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
-        private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
-        private AttributesExtractor $attributesExtractor,
-        private UnalterableDeterminer $unalterableDeterminer,
+        private PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
+        private AttributesExtractorInterface $attributesExtractor,
+        private UnalterableDeterminerInterface $unalterableDeterminer,
     ) {}
 
     #[\Override]

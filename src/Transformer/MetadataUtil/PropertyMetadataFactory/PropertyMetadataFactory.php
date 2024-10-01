@@ -11,9 +11,14 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\MetadataUtil;
+namespace Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory;
 
+use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractorInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminerInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminerInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
@@ -32,12 +37,12 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     private PropertyMetadataFactoryInterface $propertyPathMetadataFactory;
 
     public function __construct(
-        private PropertyAccessInfoExtractor $propertyAccessInfoExtractor,
+        private PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private TypeResolverInterface $typeResolver,
-        private DynamicPropertiesDeterminer $dynamicPropertiesDeterminer,
-        private AttributesExtractor $attributesExtractor,
-        private UnalterableDeterminer $unalterableDeterminer,
+        private DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer,
+        private AttributesExtractorInterface $attributesExtractor,
+        private UnalterableDeterminerInterface $unalterableDeterminer,
     ) {
         $this->propertyPathMetadataFactory = new PropertyPathMetadataFactory(
             propertyTypeExtractor: $propertyTypeExtractor,

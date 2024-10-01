@@ -13,27 +13,21 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\MetadataUtil;
 
-use Rekalogika\Mapper\Util\ClassUtil;
+use Rekalogika\Mapper\Transformer\MetadataUtil\Model\Attributes;
 
 /**
  * @internal
  */
-final class DynamicPropertiesDeterminer
+interface AttributesExtractorInterface
 {
-    /**
-     * @var array<class-string,bool>
-     */
-    private array $cache = [];
-
     /**
      * @param class-string $class
      */
-    public function allowsDynamicProperties(string $class): bool
-    {
-        if (isset($this->cache[$class])) {
-            return $this->cache[$class];
-        }
+    public function getClassAttributes(string $class): Attributes;
 
-        return $this->cache[$class] = ClassUtil::allowsDynamicProperties($class);
-    }
+    /**
+     * @param class-string $class
+     * @param string $property
+     */
+    public function getPropertyAttributes(string $class, string $property): Attributes;
 }
