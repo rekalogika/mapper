@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Util;
 
+use Psr\Log\LoggerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\Exception\NewInstanceReturnedButCannotBeSetOnTargetException;
@@ -28,11 +29,13 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * @internal
+ * @todo inject logger
  */
 final readonly class ReaderWriter
 {
     public function __construct(
         private PropertyAccessorInterface $propertyAccessor,
+        private ?LoggerInterface $logger = null,
     ) {}
 
     /**
@@ -207,11 +210,15 @@ final readonly class ReaderWriter
         if (
             $visibility !== Visibility::Public || $writeMode === WriteMode::None
         ) {
-            throw new NewInstanceReturnedButCannotBeSetOnTargetException(
-                $target,
-                $propertyMapping->getTargetProperty(),
-                context: $context,
+            $this->logger?->debug(
+                'Transformation of property {property} on object type {object_type} results in a different object instance from the original instance, but the new instance cannot be set on the target object. You may wish to add a setter method to the target class.',
+                [
+                    'property' => $propertyMapping->getTargetProperty(),
+                    'object_type' => get_debug_type($target),
+                ],
             );
+
+            return $target;
         }
 
         if ($accessorName === null) {

@@ -4,6 +4,7 @@
 
 * style: remove unused immutability check
 * refactor: separate caching
+* fix: no longer throws exception if the target has no setter
 
 ## 1.9.1
 
