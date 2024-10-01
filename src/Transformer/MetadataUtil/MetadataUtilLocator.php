@@ -18,6 +18,7 @@ use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\AttributesExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\AttributesExtractor\CachingAttributesExtractor;
+use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactory\ClassMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -35,7 +36,7 @@ final class MetadataUtilLocator
     private ?PropertyAccessInfoExtractor $propertyAccessInfoExtractor = null;
     private ?AttributesExtractorInterface $attributesExtractor = null;
     private ?PropertyMetadataFactory $propertyMetadataFactory = null;
-    private ?ClassMetadataFactory $classMetadataFactory = null;
+    private ?ClassMetadataFactoryInterface $classMetadataFactory = null;
     private ?UnalterableDeterminer $unalterableDeterminer = null;
     private ?PropertyMappingResolver $propertyMappingResolver = null;
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
@@ -69,11 +70,9 @@ final class MetadataUtilLocator
     private function getAttributesExtractor(): AttributesExtractorInterface
     {
         return $this->attributesExtractor ??=
-            new CachingAttributesExtractor(
-                new AttributesExtractor(
-                    propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
-                ),
-            );
+            new CachingAttributesExtractor(new AttributesExtractor(
+                propertyAccessInfoExtractor: $this->getPropertyAccessInfoExtractor(),
+            ));
     }
 
     private function getPropertyMetadataFactory(): PropertyMetadataFactory
@@ -101,7 +100,7 @@ final class MetadataUtilLocator
             );
     }
 
-    private function getClassMetadataFactory(): ClassMetadataFactory
+    private function getClassMetadataFactory(): ClassMetadataFactoryInterface
     {
         return $this->classMetadataFactory
             ??= new ClassMetadataFactory(
