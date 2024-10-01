@@ -45,7 +45,6 @@ final readonly class PropertyMetadata
         private ?string $scalarType,
         private bool $nullable,
         private bool $replaceable,
-        private bool $immutable,
         private bool $unalterable,
         private bool $mutableByHost,
         private Attributes $attributes,
@@ -140,11 +139,6 @@ final readonly class PropertyMetadata
     public function isReplaceable(): bool
     {
         return $this->replaceable;
-    }
-
-    public function isImmutable(): bool
-    {
-        return $this->immutable;
     }
 
     public function isUnalterable(): bool
