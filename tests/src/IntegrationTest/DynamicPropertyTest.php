@@ -19,6 +19,7 @@ use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWithExplicitScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWithProperties;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectWithNonNullPropertyThatCannotBeCastFromNull;
+use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectWithNullProperty;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
 use Rekalogika\Mapper\Transformer\MetadataUtil\DynamicPropertiesDeterminer\DynamicPropertiesDeterminer;
@@ -301,5 +302,13 @@ class DynamicPropertyTest extends FrameworkTestCase
         $result = $this->mapper->map($source, ObjectWithNonNullPropertyThatCannotBeCastFromNull::class);
 
         $this->assertFalse(isset($result->date));
+    }
+
+    public function testNullToStdClass(): void
+    {
+        $source = new ObjectWithNullProperty();
+        $target = $this->mapper->map($source, \stdClass::class);
+
+        $this->assertNull($target->property);
     }
 }

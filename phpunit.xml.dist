@@ -6,7 +6,7 @@
         executionOrder="depends,defects"
         beStrictAboutOutputDuringTests="true"
         failOnRisky="true"
-        failOnWarning="false"
+        failOnWarning="true"
         cacheDirectory=".phpunit.cache"
         beStrictAboutCoverageMetadata="true"
         displayDetailsOnIncompleteTests="true"
