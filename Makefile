@@ -1,8 +1,6 @@
-PHP=php
-SYMFONY=symfony
-COMPOSER=composer
-export APP_ENV=test
+export APP_ENV
 
+include .env
 -include .env.local
 
 .PHONY: test
