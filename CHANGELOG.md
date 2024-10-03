@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.9.3
+
+* fix: null values were skipped if the target allows dynamic properties
+
 ## 1.9.2
 
 * style: remove unused immutability check

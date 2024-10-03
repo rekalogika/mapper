@@ -605,7 +605,11 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
             path: $propertyMapping->getTargetProperty(),
         );
 
-        return [$targetPropertyValue, $targetPropertyValue !== $originalTargetPropertyValue];
+        return [
+            $targetPropertyValue,
+            $targetPropertyValue !== $originalTargetPropertyValue
+            || $propertyMapping->getTargetSetterWriteMode() === WriteMode::DynamicProperty,
+        ];
     }
 
     /**
