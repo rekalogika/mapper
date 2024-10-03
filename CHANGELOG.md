@@ -3,6 +3,7 @@
 ## 1.9.3
 
 * fix: null values were skipped if the target allows dynamic properties
+* build: reorganize build variables
 
 ## 1.9.2
 
