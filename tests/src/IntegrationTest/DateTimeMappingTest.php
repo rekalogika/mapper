@@ -20,6 +20,7 @@ use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTime;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeCollection;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeCollectionDto;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeImmutable;
+use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeImmutableGetterOnly;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeInterface;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDateTimeWithoutSetter;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithFloat;
@@ -367,6 +368,15 @@ class DateTimeMappingTest extends FrameworkTestCase
                 ObjectWithString::class,
                 ObjectWithDateTimeImmutable::class,
                 '2024-01-01 12:00:00 UTC',
+                null,
+            ];
+
+        yield
+            self::getDescription(ObjectWithDateTimeInterface::class, ObjectWithDateTimeImmutableGetterOnly::class) . ' 2' =>
+            [
+                ObjectWithString::class,
+                ObjectWithDateTimeImmutableGetterOnly::class,
+                '2024-01-01 13:00:00 UTC',
                 null,
             ];
     }

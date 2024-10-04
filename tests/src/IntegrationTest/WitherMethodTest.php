@@ -86,12 +86,9 @@ class WitherMethodTest extends FrameworkTestCase
         $this->assertNotSame($originalObject, $resultObject);
     }
 
-    /**
-     * @todo no longer throws exception, test the warning instead
-     */
     public function testChildImmutableSetterWithoutSetterOnParent(): void
     {
-        // $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
+        $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
 
         $source = new ParentObject();
         $target = new ParentObjectWithoutSetterDto();

@@ -3,6 +3,7 @@
 ## 1.10.0
 
 * fix: `Map` now works with unpromoted constructor parameters
+* fix: restore throwing `NewInstanceReturnedButCannotBeSetOnTargetException`
 
 ## 1.9.3
 
