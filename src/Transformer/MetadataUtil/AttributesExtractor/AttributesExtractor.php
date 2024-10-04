@@ -80,6 +80,7 @@ final readonly class AttributesExtractor implements AttributesExtractorInterface
             property: $property,
             attributeClass: null,
             methods: $methods,
+            constructor: true,
         );
 
         return new Attributes($attributes);

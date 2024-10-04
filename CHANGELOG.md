@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.10.0
+
+* fix: `Map` now works with unpromoted constructor parameters
+
 ## 1.9.3
 
 * fix: null values were skipped if the target allows dynamic properties

@@ -92,6 +92,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
             property: $property,
             attributeClass: Map::class,
             methodPrefixes: ['get', 'set', 'is', 'has', 'can', 'with'],
+            constructor: true,
         );
 
         // process attributes with pairedClass first
