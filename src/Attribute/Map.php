@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Attribute;
 /**
  * Defines the property to be mapped from or to.
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD | \Attribute::TARGET_PARAMETER | \Attribute::IS_REPEATABLE)]
 final readonly class Map
 {
     /**

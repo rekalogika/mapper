@@ -20,6 +20,7 @@ use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectOverridingSomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\OtherObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectWithUnpromotedConstructorDto;
 
 class MapAttributeTest extends FrameworkTestCase
 {
@@ -121,5 +122,13 @@ class MapAttributeTest extends FrameworkTestCase
         $this->assertEquals('targetPropertyA', $target->otherSourcePropertyA);
         $this->assertEquals('targetPropertyB', $target->otherSourcePropertyB);
         $this->assertEquals('targetPropertyC', $target->otherSourcePropertyC);
+    }
+
+    public function testMapAttributeToUnpromotedConstructorParameter(): void
+    {
+        $source = SomeObject::preinitialized();
+        $target = $this->mapper->map($source, SomeObjectWithUnpromotedConstructorDto::class);
+
+        $this->assertEquals('sourcePropertyA', $target->targetPropertyA);
     }
 }
