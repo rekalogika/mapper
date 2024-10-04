@@ -1,7 +1,7 @@
-export APP_ENV
-
 include .env
 -include .env.local
+
+export APP_ENV
 
 .PHONY: test
 test: dump phpstan psalm phpunit
