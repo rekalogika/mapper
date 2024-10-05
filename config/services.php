@@ -301,7 +301,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
-        ->set('rekalogika.mapper.cache.object_to_object_metadata_factory.persistent')
+        ->set('rekalogika.mapper.persistent.object_to_object_metadata_factory')
         ->class(WarmableCacheDecorator::class)
         ->args([
             '$namespace' => 'object_to_object_metadata',
@@ -314,7 +314,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.object_to_object_metadata_factory', null, 500)
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.object_to_object_metadata_factory.persistent'),
+            service('rekalogika.mapper.persistent.object_to_object_metadata_factory'),
             param('kernel.debug'),
         ]);
 
@@ -336,7 +336,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
-        ->set('rekalogika.mapper.cache.array_like_metadata_factory.persistent')
+        ->set('rekalogika.mapper.persistent.array_like_metadata_factory')
         ->class(WarmableCacheDecorator::class)
         ->args([
             '$namespace' => 'array_like_metadata',
@@ -349,7 +349,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.array_like_metadata_factory')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.array_like_metadata_factory.persistent'),
+            service('rekalogika.mapper.persistent.array_like_metadata_factory'),
         ]);
 
     # transformer registry
@@ -368,7 +368,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
-        ->set('rekalogika.mapper.cache.transformer_registry.persistent')
+        ->set('rekalogika.mapper.persistent.transformer_registry')
         ->class(WarmableCacheDecorator::class)
         ->args([
             '$namespace' => 'transformer_registry',
@@ -381,7 +381,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.transformer_registry')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.transformer_registry.persistent'),
+            service('rekalogika.mapper.persistent.transformer_registry'),
         ]);
 
     # sub mapper
@@ -427,7 +427,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
-        ->set('rekalogika.mapper.cache.object_mapper_resolver.persistent')
+        ->set('rekalogika.mapper.persistent.object_mapper_resolver')
         ->class(WarmableCacheDecorator::class)
         ->args([
             '$namespace' => 'object_mapper_resolver',
@@ -440,7 +440,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->decorate('rekalogika.mapper.object_mapper.resolver')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.object_mapper_resolver.persistent'),
+            service('rekalogika.mapper.persistent.object_mapper_resolver'),
         ]);
 
     # eager properties resolver

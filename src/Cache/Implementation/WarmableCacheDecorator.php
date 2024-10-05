@@ -15,10 +15,11 @@ namespace Rekalogika\Mapper\Cache\Implementation;
 
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
+use Rekalogika\Mapper\Cache\WarmableCacheInterface;
 use Rekalogika\Mapper\Exception\BadMethodCallException;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 
-final readonly class WarmableCacheDecorator implements CacheItemPoolInterface
+final readonly class WarmableCacheDecorator implements WarmableCacheInterface
 {
     private CacheItemPoolInterface $readonlyCache;
 
