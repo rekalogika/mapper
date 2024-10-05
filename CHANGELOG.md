@@ -4,6 +4,7 @@
 
 * fix: `Map` now works with unpromoted constructor parameters
 * fix: restore throwing `NewInstanceReturnedButCannotBeSetOnTargetException`
+* deps: `symfony/stopwatch` is required by non-dev
 
 ## 1.9.3
 
