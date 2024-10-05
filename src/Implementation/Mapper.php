@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Implementation;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\IterableMapperInterface;
+use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -114,5 +115,24 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
 
             yield $result;
         }
+    }
+
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     */
+    public function warmCache(string $sourceClass, string $targetClass): void
+    {
+        if (!$this->transformer instanceof MainTransformer) {
+            return;
+        }
+
+        $sourceType = TypeFactory::objectOfClass($sourceClass);
+        $targetType = TypeFactory::objectOfClass($targetClass);
+
+        $this->transformer->cacheTransform(
+            sourceTypes: [$sourceType],
+            targetTypes: [$targetType],
+        );
     }
 }

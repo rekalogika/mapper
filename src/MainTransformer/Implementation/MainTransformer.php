@@ -29,6 +29,7 @@ use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
+use Rekalogika\Mapper\TransformerRegistry\Implementation\CachingTransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -251,5 +252,25 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         }
 
         throw new CannotFindTransformerException($sourceTypes, $targetTypes, context: $context);
+    }
+
+    /**
+     * @param array<array-key,Type> $sourceTypes
+     * @param array<array-key,Type> $targetTypes
+     */
+    public function cacheTransform(
+        array $sourceTypes,
+        array $targetTypes,
+    ): void {
+        if (!$this->transformerRegistry instanceof CachingTransformerRegistry) {
+            return;
+        }
+
+        foreach ($sourceTypes as $sourceType) {
+            $this->transformerRegistry->cacheFindBySourceAndTargetTypes(
+                [$sourceType],
+                $targetTypes,
+            );
+        }
     }
 }
