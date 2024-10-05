@@ -6,6 +6,8 @@
 * fix: `Map` now works with unpromoted constructor parameters
 * fix: restore throwing `NewInstanceReturnedButCannotBeSetOnTargetException`
 * fix: do not run DebugPass if symfony/stopwatch is not present
+* deps: `symfony/stopwatch` is required by non-dev
+* perf: warmable cache
 
 ## 1.9.3
 

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\UuidInterface;
+use Rekalogika\Mapper\Cache\Implementation\WarmableCacheDecorator;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
@@ -81,6 +82,9 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_lo
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
+    $parameters = $containerConfigurator->parameters();
+
+    $parameters->set('rekalogika.mapper.persistent_cache_directory', '%kernel.build_dir%/rekalogika-mapper/persistent');
 
     # Property info
 
@@ -297,11 +301,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
+        ->set('rekalogika.mapper.cache.object_to_object_metadata_factory.persistent')
+        ->class(WarmableCacheDecorator::class)
+        ->args([
+            '$namespace' => 'object_to_object_metadata',
+            '$writableCache' => service('rekalogika.mapper.cache.object_to_object_metadata_factory'),
+            '$readOnlyCacheDirectory' => '%rekalogika.mapper.persistent_cache_directory%',
+        ]);
+
+    $services
         ->set('rekalogika.mapper.object_to_object_metadata_factory.cache', CachingObjectToObjectMetadataFactory::class)
         ->decorate('rekalogika.mapper.object_to_object_metadata_factory', null, 500)
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.object_to_object_metadata_factory'),
+            service('rekalogika.mapper.cache.object_to_object_metadata_factory.persistent'),
             param('kernel.debug'),
         ]);
 
@@ -323,11 +336,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
+        ->set('rekalogika.mapper.cache.array_like_metadata_factory.persistent')
+        ->class(WarmableCacheDecorator::class)
+        ->args([
+            '$namespace' => 'array_like_metadata',
+            '$writableCache' => service('rekalogika.mapper.cache.array_like_metadata_factory'),
+            '$readOnlyCacheDirectory' => '%rekalogika.mapper.persistent_cache_directory%',
+        ]);
+
+    $services
         ->set('rekalogika.mapper.array_like_metadata_factory.cache', CachingArrayLikeMetadataFactory::class)
         ->decorate('rekalogika.mapper.array_like_metadata_factory')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.array_like_metadata_factory'),
+            service('rekalogika.mapper.cache.array_like_metadata_factory.persistent'),
         ]);
 
     # transformer registry
@@ -346,11 +368,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
+        ->set('rekalogika.mapper.cache.transformer_registry.persistent')
+        ->class(WarmableCacheDecorator::class)
+        ->args([
+            '$namespace' => 'transformer_registry',
+            '$writableCache' => service('rekalogika.mapper.cache.transformer_registry'),
+            '$readOnlyCacheDirectory' => '%rekalogika.mapper.persistent_cache_directory%',
+        ]);
+
+    $services
         ->set('rekalogika.mapper.transformer_registry.cache', CachingTransformerRegistry::class)
         ->decorate('rekalogika.mapper.transformer_registry')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.transformer_registry'),
+            service('rekalogika.mapper.cache.transformer_registry.persistent'),
         ]);
 
     # sub mapper
@@ -396,11 +427,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('cache.pool');
 
     $services
+        ->set('rekalogika.mapper.cache.object_mapper_resolver.persistent')
+        ->class(WarmableCacheDecorator::class)
+        ->args([
+            '$namespace' => 'object_mapper_resolver',
+            '$writableCache' => service('rekalogika.mapper.cache.object_mapper_resolver'),
+            '$readOnlyCacheDirectory' => '%rekalogika.mapper.persistent_cache_directory%',
+        ]);
+
+    $services
         ->set('rekalogika.mapper.object_mapper.resolver.cache', CachingObjectMapperResolver::class)
         ->decorate('rekalogika.mapper.object_mapper.resolver')
         ->args([
             service('.inner'),
-            service('rekalogika.mapper.cache.object_mapper_resolver'),
+            service('rekalogika.mapper.cache.object_mapper_resolver.persistent'),
         ]);
 
     # eager properties resolver
