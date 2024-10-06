@@ -31,6 +31,9 @@ final class MapperCollector implements Collector
 
     public function processNode(Node $node, Scope $scope)
     {
+        // $fileName = $scope->getFile();
+        // $line = $node->getLine();
+
         // ensure method name is identifier
         if (!$node->name instanceof Node\Identifier) {
             return null;
@@ -66,12 +69,10 @@ final class MapperCollector implements Collector
             return null;
         }
 
-        // get second arg type
+        // get second arg class names
         $secondArgType = $scope->getType($secondArg->value);
-
-        // get second arg classnames
-        $secondArgClassNames = $secondArgType->getObjectClassNames();
-
+        $objectType = $secondArgType->getObjectTypeOrClassStringObjectType();
+        $secondArgClassNames = $objectType->getObjectClassNames();
 
         $result = [];
 
