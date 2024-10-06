@@ -1,0 +1,20 @@
+parameters:
+    rekalogika-mapper:
+        mapperDumpFile: null
+
+parametersSchema:
+	rekalogika-mapper: structure([
+		mapperDumpFile: schema(string(), nullable())
+	])
+
+services:
+    -
+        class: Rekalogika\Mapper\PHPStan\MapperCollector
+        tags:
+            - phpstan.collector
+    -
+        class: Rekalogika\Mapper\PHPStan\MapperRule
+        arguments:
+            mapperDumpFile: %rekalogika-mapper.mapperDumpFile%
+        tags:
+            - phpstan.rules.rule

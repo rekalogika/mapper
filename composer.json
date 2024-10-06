@@ -88,5 +88,12 @@
         "allow-plugins": {
             "symfony/runtime": true
         }
+    },
+    "extra": {
+        "phpstan": {
+            "includes": [
+                "config/phpstan-extension.neon"
+            ]
+        }
     }
 }
