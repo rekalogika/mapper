@@ -14,6 +14,7 @@ declare(strict_types=1);
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\UuidInterface;
 use Rekalogika\Mapper\Cache\Implementation\WarmableCacheDecorator;
+use Rekalogika\Mapper\Cache\MapperCacheWarmer;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;
@@ -86,6 +87,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters = $containerConfigurator->parameters();
 
     $parameters->set('rekalogika.mapper.persistent_cache_directory', '%kernel.build_dir%/rekalogika-mapper/persistent');
+    $parameters->set('rekalogika.mapper.config_dir', '%kernel.project_dir%/config/rekalogika-mapper');
 
     # create cache function
 
@@ -93,11 +95,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         $readWriteCacheServiceName = 'rekalogika.mapper.cache.' . $serviceName;
         $readOnlyCacheServiceName = 'rekalogika.mapper.persistent.' . $serviceName;
 
+        # append only writable cache, using the default symfony cache.system
         $services
             ->set($readWriteCacheServiceName)
             ->parent('cache.system')
             ->tag('cache.pool');
 
+        # readonly cache, stored in build directory, meant to be warmed before
+        # deployment
         $services
             ->set($readOnlyCacheServiceName)
             ->class(WarmableCacheDecorator::class)
@@ -280,6 +285,16 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.mapping_factory.warmer', MappingCacheWarmer::class)
         ->args([
             service('rekalogika.mapper.mapping_factory.caching'),
+        ])
+        ->tag('kernel.cache_warmer');
+
+    # general cache warmer
+
+    $services
+        ->set('rekalogika.mapper.cache_warmer', MapperCacheWarmer::class)
+        ->args([
+            '$configDir' => '%rekalogika.mapper.config_dir%',
+            '$mapper' => service('rekalogika.mapper.mapper'),
         ])
         ->tag('kernel.cache_warmer');
 

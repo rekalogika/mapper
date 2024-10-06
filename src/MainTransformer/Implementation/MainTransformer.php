@@ -258,7 +258,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
      * @param array<array-key,Type> $sourceTypes
      * @param array<array-key,Type> $targetTypes
      */
-    public function cacheTransform(
+    public function warmTransform(
         array $sourceTypes,
         array $targetTypes,
     ): void {
@@ -267,7 +267,7 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         }
 
         foreach ($sourceTypes as $sourceType) {
-            $this->transformerRegistry->cacheFindBySourceAndTargetTypes(
+            $this->transformerRegistry->warmFindBySourceAndTargetTypes(
                 [$sourceType],
                 $targetTypes,
             );

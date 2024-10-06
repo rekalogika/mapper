@@ -92,7 +92,7 @@ final class CachingTransformerRegistry implements TransformerRegistryInterface
      * @param array<array-key,Type|MixedType> $sourceTypes
      * @param array<array-key,Type|MixedType> $targetTypes
      */
-    public function cacheFindBySourceAndTargetTypes(
+    public function warmFindBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,
     ): ?SearchResult {
