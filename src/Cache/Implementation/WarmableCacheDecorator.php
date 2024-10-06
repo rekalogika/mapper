@@ -40,11 +40,11 @@ final readonly class WarmableCacheDecorator implements WarmableCacheInterface
     {
         $item = $this->readonlyCache->getItem($key);
 
-        if (!$item->isHit()) {
-            $item = $this->writableCache->getItem($key);
+        if ($item->isHit()) {
+            return $item;
         }
 
-        return $item;
+        return $this->writableCache->getItem($key);
     }
 
     public function getWarmedUpItem(string $key): CacheItemInterface
