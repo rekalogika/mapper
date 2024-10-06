@@ -35,5 +35,5 @@ includes:
     - vendor/dave-liddament/phpstan-php-language-extensions/extension.neon
     # - vendor/tomasvotruba/unused-public/config/extension.neon
     - phar://phpstan.phar/conf/bleedingEdge.neon
-    - config/phpstan-extension.neon
+    - phpstan-extension.neon
 
