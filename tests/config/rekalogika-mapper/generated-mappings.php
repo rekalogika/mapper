@@ -13,7 +13,6 @@
 use Rekalogika\Mapper\Cache\MappingCollection;
 
 return function (MappingCollection $mappingCollection) : void {
-    
     $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/MethodMapperTest.php on line 33
         source: \Brick\Money\Money::class,
@@ -1024,9 +1023,9 @@ return function (MappingCollection $mappingCollection) : void {
         target: \stdClass::class
     );
     
-    // Mapper was unable to detect the types of the following mappings. This is
-    // harmless and not an error, and should not affect the normal operation of
-    // Mapper.
+    // Mapper was unable to detect the types of the following mappings. Most of
+    // the time, this is harmless and not an error, and should not affect the
+    // normal operation of Mapper.
     
     // source: unknown
     // target: unknown

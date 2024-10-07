@@ -25,7 +25,7 @@ parameters:
     banned_code:
         non_ignorable: false
     rekalogika-mapper:
-        mapperDumpFile: tests/config/rekalogika-mapper/mappings.php
+        mapperDumpFile: tests/config/rekalogika-mapper/generated-mappings.php
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon

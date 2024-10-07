@@ -101,6 +101,8 @@ final class MapperRule implements Rule
         $stmts = [];
         $failed = [];
 
+        $i = 0;
+
         foreach ($data as $record) {
             $source = $record['source'];
             $target = $record['target'];
@@ -127,8 +129,14 @@ final class MapperRule implements Rule
                 $comments[] = new Comment($commentText);
             }
 
+            if ($i === 0) {
+                $attributes = [];
+            } else {
+                $attributes = ['comments' => [new Comment('')]];
+            }
+
             $stmts[] = new Expression(
-                attributes: ['comments' => [new Comment('')]],
+                attributes: $attributes,
                 expr: new MethodCall(
                     var: new Variable(name: 'mappingCollection'),
                     name: new Identifier(name: 'addObjectMapping'),
@@ -152,21 +160,22 @@ final class MapperRule implements Rule
                     ],
                 ),
             );
+
+            $i++;
         }
 
         if ($failed !== []) {
+            // this will be indented once on output
             $commentText = <<<COMMENT
-
-// Mapper was unable to detect the types of the following mappings. This is
-// harmless and not an error, and should not affect the normal operation of
-// Mapper.
+// Mapper was unable to detect the types of the following mappings. Most of
+// the time, this is harmless and not an error, and should not affect the
+// normal operation of Mapper.
 COMMENT;
 
-            $comments = [];
-
-            foreach (explode("\n", $commentText) as $line) {
-                $comments[] = new Comment($line);
-            }
+            $comments = [
+                new Comment(''),
+                new Comment($commentText),
+            ];
 
             foreach ($failed as $record) {
                 $source = $record['source'];
@@ -233,17 +242,16 @@ COMMENT;
 // improve performance especially on read-only deployments, but not strictly
 // required for normal operation of Mapper. Mapper should be able to work
 // normally without pre-warmed metadata.
-
 COMMENT;
 
-        $comments = [];
-
-        foreach (explode("\n", $commentText) as $line) {
-            $comments[] = new Comment($line);
-        }
+        $nodes[] = new Nop(attributes: [
+            'comments' => [
+                new Comment($commentText),
+                new Comment(''),
+            ],
+        ]);
 
         $nodes[] = new Use_(
-            attributes: ['comments' => $comments],
             uses: [
                 new UseUse(
                     name: new Name(MappingCollection::class),

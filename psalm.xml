@@ -16,7 +16,7 @@
         <ignoreFiles>
             <directory name="vendor" />
             <directory name="src/PHPStan" />
-            <file name="tests/config/rekalogika-mapper/mappings.php" />
+            <file name="tests/config/rekalogika-mapper/generated-mappings.php" />
         </ignoreFiles>
     </projectFiles>
 

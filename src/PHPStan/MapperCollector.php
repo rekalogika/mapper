@@ -20,6 +20,7 @@ use PHPStan\Type\ObjectType;
 use Rekalogika\Mapper\MapperInterface;
 
 /**
+ * @todo collect from mapiterable
  * @implements Collector<Node\Expr\MethodCall,list<array{class-string|false,class-string|false,int}>>
  */
 final class MapperCollector implements Collector
