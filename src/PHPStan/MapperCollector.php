@@ -20,7 +20,7 @@ use PHPStan\Type\ObjectType;
 use Rekalogika\Mapper\MapperInterface;
 
 /**
- * @implements Collector<Node\Expr\MethodCall,list<array{class-string,class-string}>>
+ * @implements Collector<Node\Expr\MethodCall,list<array{class-string|false,class-string|false,int}>>
  */
 final class MapperCollector implements Collector
 {
@@ -31,8 +31,8 @@ final class MapperCollector implements Collector
 
     public function processNode(Node $node, Scope $scope)
     {
-        // $fileName = $scope->getFile();
-        // $line = $node->getLine();
+        $fileName = $scope->getFile();
+        $line = $node->getLine();
 
         // ensure method name is identifier
         if (!$node->name instanceof Node\Identifier) {
@@ -62,6 +62,11 @@ final class MapperCollector implements Collector
         // get first arg classnames
         $firstArgClassNames = $firstArgType->getObjectClassNames();
 
+        // if not found set to false
+        if ($firstArgClassNames === []) {
+            $firstArgClassNames = [false];
+        }
+
         // get second arg
         $secondArg = $node->args[1];
 
@@ -74,20 +79,21 @@ final class MapperCollector implements Collector
         $objectType = $secondArgType->getObjectTypeOrClassStringObjectType();
         $secondArgClassNames = $objectType->getObjectClassNames();
 
+        // if not found set to false
+        if ($secondArgClassNames === []) {
+            $secondArgClassNames = [false];
+        }
+
         $result = [];
 
         foreach ($firstArgClassNames as $firstArgClassName) {
             foreach ($secondArgClassNames as $secondArgClassName) {
                 /**
-                 * @var class-string $firstArgClassName
-                 * @var class-string $secondArgClassName
+                 * @var class-string|false $firstArgClassName
+                 * @var class-string|false $secondArgClassName
                  */
-                $result[] = [$firstArgClassName, $secondArgClassName, $node->getLine()];
+                $result[] = [$firstArgClassName, $secondArgClassName, $line];
             }
-        }
-
-        if ($result === []) {
-            return null;
         }
 
         return $result;

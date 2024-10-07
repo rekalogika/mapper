@@ -73,6 +73,10 @@
         "twig/twig": "^2.12|^3.0",
         "vimeo/psalm": "^5.26"
     },
+    "suggest": {
+        "phpstan/phpstan": "Required to automatically dump mapping metadata to a file (use --dev option to install)",
+        "phpstan/extension-installer": "Configures PHPStan automatically (use --dev option to install)"
+    },
     "autoload": {
         "psr-4": {
             "Rekalogika\\Mapper\\": "src/"
