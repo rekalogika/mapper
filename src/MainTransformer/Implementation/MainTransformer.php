@@ -275,10 +275,6 @@ final class MainTransformer implements
             $searchResult = $this->transformerRegistry
                 ->warmFindBySourceAndTargetTypes([$sourceType], $targetTypes);
 
-            if ($searchResult === null) {
-                continue;
-            }
-
             foreach ($searchResult as $searchResultEntry) {
                 // TransformerInterface doesn't accept MixedType, so we need to
                 // convert it to null

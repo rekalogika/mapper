@@ -98,7 +98,7 @@ final class CachingTransformerRegistry implements
     public function warmFindBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,
-    ): ?SearchResult {
+    ): SearchResult {
         $result = $this->decorated
             ->findBySourceAndTargetTypes($sourceTypes, $targetTypes);
 

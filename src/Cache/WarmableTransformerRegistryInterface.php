@@ -26,5 +26,5 @@ interface WarmableTransformerRegistryInterface
     public function warmFindBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,
-    ): ?SearchResult;
+    ): SearchResult;
 }
