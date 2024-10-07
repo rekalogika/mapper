@@ -19,6 +19,7 @@ use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
 use PHPStan\Type\ObjectType;
+use Rekalogika\Mapper\IterableMapperInterface;
 use Rekalogika\Mapper\MapperInterface;
 
 /**
@@ -50,6 +51,12 @@ final class MapperCollector implements Collector
         ) {
             [$sourceClassNames, $targetClassNames] =
                 $this->processMapperInterfaceMap($node, $scope);
+        } elseif (
+            $scope->getType($node->var)->isSuperTypeOf(new ObjectType(IterableMapperInterface::class))->yes()
+            && $node->name->toString() === 'mapIterable'
+        ) {
+            [$sourceClassNames, $targetClassNames] =
+                $this->processIterableMapperInterfaceMapIterable($node, $scope);
         } else {
             return null;
         }
@@ -78,7 +85,6 @@ final class MapperCollector implements Collector
         return $result;
     }
 
-
     /**
      * @return array{list<class-string>,list<class-string>}
      */
@@ -92,6 +98,48 @@ final class MapperCollector implements Collector
         } else {
             $firstArgType = $scope->getType($firstArg->value);
             $sourceClassNames = $firstArgType->getObjectClassNames();
+        }
+
+        // get second arg
+        $secondArg = $node->args[1];
+
+        if (!$secondArg instanceof Arg) {
+            $targetClassNames = [];
+        } else {
+            $secondArgType = $scope->getType($secondArg->value);
+            $objectType = $secondArgType->getObjectTypeOrClassStringObjectType();
+            $targetClassNames = $objectType->getObjectClassNames();
+        }
+
+        /**
+         * @var list<class-string> $sourceClassNames
+         * @var list<class-string> $targetClassNames
+         */
+
+        return [$sourceClassNames, $targetClassNames];
+    }
+
+    /**
+     * @return array{list<class-string>,list<class-string>}
+     */
+    private function processIterableMapperInterfaceMapIterable(
+        MethodCall $node,
+        Scope $scope
+    ): array {
+        // get first argument
+        $firstArg = $node->args[0];
+
+        if (!$firstArg instanceof Arg) {
+            $sourceClassNames = [];
+        } else {
+            $firstArgType = $scope->getType($firstArg->value);
+
+            if (!$firstArgType->isIterable()->yes()) {
+                $sourceClassNames = [];
+            } else {
+                $itemType = $firstArgType->getIterableValueType();
+                $sourceClassNames = $itemType->getObjectClassNames();
+            }
         }
 
         // get second arg

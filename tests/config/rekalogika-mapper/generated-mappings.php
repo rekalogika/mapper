@@ -262,6 +262,7 @@ return function (MappingCollection $mappingCollection) : void {
     
     $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/BasicMappingTest.php on line 33
+        // tests/src/IntegrationTest/IterableMapperTest.php on line 24
         source: \Rekalogika\Mapper\Tests\Fixtures\Basic\Person::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Basic\PersonDto::class
     );
@@ -1030,6 +1031,7 @@ return function (MappingCollection $mappingCollection) : void {
     // source: unknown
     // target: unknown
     // occurrences:
+    // tests/src/Common/IterableMapperDecorator.php on line 29
     // tests/src/Common/MapperDecorator.php on line 37
     // tests/src/IntegrationTest/DateTimeMappingTest.php on line 62
     // tests/src/Services/RememberingMapper/RememberingMapper.php on line 51
