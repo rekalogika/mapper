@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\PHPStan;
 
 use PhpParser\Node;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\MethodCall;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
 use PHPStan\Type\ObjectType;
@@ -27,12 +29,12 @@ final class MapperCollector implements Collector
 {
     public function getNodeType(): string
     {
-        return Node\Expr\MethodCall::class;
+        return MethodCall::class;
     }
 
     public function processNode(Node $node, Scope $scope)
     {
-        $fileName = $scope->getFile();
+        // $fileName = $scope->getFile();
         $line = $node->getLine();
 
         // ensure method name is identifier
@@ -40,55 +42,31 @@ final class MapperCollector implements Collector
             return null;
         }
 
-        // check if the method name is 'map'
-        if ($node->name->toString() !== 'map') {
+        // check if the variable is an instance of MapperInterface & the method
+        // name is 'map'
+        if (
+            $scope->getType($node->var)->isSuperTypeOf(new ObjectType(MapperInterface::class))->yes()
+            && $node->name->toString() === 'map'
+        ) {
+            [$sourceClassNames, $targetClassNames] =
+                $this->processMapperInterfaceMap($node, $scope);
+        } else {
             return null;
         }
-
-        // check if the type of the variable is MapperInterface
-        if (!$scope->getType($node->var)->isSuperTypeOf(new ObjectType(MapperInterface::class))->yes()) {
-            return null;
-        }
-
-        // get first argument
-        $firstArg = $node->args[0];
-
-        if (!$firstArg instanceof Node\Arg) {
-            return null;
-        }
-
-        // get first arg type
-        $firstArgType = $scope->getType($firstArg->value);
-
-        // get first arg classnames
-        $firstArgClassNames = $firstArgType->getObjectClassNames();
 
         // if not found set to false
-        if ($firstArgClassNames === []) {
-            $firstArgClassNames = [false];
+        if ($sourceClassNames === []) {
+            $sourceClassNames = [false];
         }
 
-        // get second arg
-        $secondArg = $node->args[1];
-
-        if (!$secondArg instanceof Node\Arg) {
-            return null;
-        }
-
-        // get second arg class names
-        $secondArgType = $scope->getType($secondArg->value);
-        $objectType = $secondArgType->getObjectTypeOrClassStringObjectType();
-        $secondArgClassNames = $objectType->getObjectClassNames();
-
-        // if not found set to false
-        if ($secondArgClassNames === []) {
-            $secondArgClassNames = [false];
+        if ($targetClassNames === []) {
+            $targetClassNames = [false];
         }
 
         $result = [];
 
-        foreach ($firstArgClassNames as $firstArgClassName) {
-            foreach ($secondArgClassNames as $secondArgClassName) {
+        foreach ($sourceClassNames as $firstArgClassName) {
+            foreach ($targetClassNames as $secondArgClassName) {
                 /**
                  * @var class-string|false $firstArgClassName
                  * @var class-string|false $secondArgClassName
@@ -98,5 +76,40 @@ final class MapperCollector implements Collector
         }
 
         return $result;
+    }
+
+
+    /**
+     * @return array{list<class-string>,list<class-string>}
+     */
+    private function processMapperInterfaceMap(MethodCall $node, Scope $scope): array
+    {
+        // get first argument
+        $firstArg = $node->args[0];
+
+        if (!$firstArg instanceof Arg) {
+            $sourceClassNames = [];
+        } else {
+            $firstArgType = $scope->getType($firstArg->value);
+            $sourceClassNames = $firstArgType->getObjectClassNames();
+        }
+
+        // get second arg
+        $secondArg = $node->args[1];
+
+        if (!$secondArg instanceof Arg) {
+            $targetClassNames = [];
+        } else {
+            $secondArgType = $scope->getType($secondArg->value);
+            $objectType = $secondArgType->getObjectTypeOrClassStringObjectType();
+            $targetClassNames = $objectType->getObjectClassNames();
+        }
+
+        /**
+         * @var list<class-string> $sourceClassNames
+         * @var list<class-string> $targetClassNames
+         */
+
+        return [$sourceClassNames, $targetClassNames];
     }
 }
