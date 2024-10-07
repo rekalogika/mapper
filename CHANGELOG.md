@@ -8,6 +8,7 @@
 ## 1.9.4
 
 * deps: fix `symfony/stopwatch` dependency
+* fix: do not run DebugPass if symfony/stopwatch is not present
 
 ## 1.9.3
 

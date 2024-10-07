@@ -29,6 +29,12 @@ final readonly class DebugPass implements CompilerPassInterface
     #[\Override]
     public function process(ContainerBuilder $container): void
     {
+        // return if debug.stopwatch does not exist
+
+        if (!$container->has('debug.stopwatch')) {
+            return;
+        }
+
         // decorates all transformers using TraceableTransformer
 
         $dataCollector = new Reference('rekalogika.mapper.data_collector');
