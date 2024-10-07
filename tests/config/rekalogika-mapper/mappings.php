@@ -88,7 +88,7 @@ return function (MappingCollection $mappingCollection) : void {
     
     $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/ArrayAndObjectMappingTest.php on line 26
-        // tests/src/IntegrationTest/DataCollectorTest.php on line 28
+        // tests/src/IntegrationTest/DataCollectorTest.php on line 32
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayAndObject\ContainsArray::class
     );

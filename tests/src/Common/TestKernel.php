@@ -50,11 +50,14 @@ class TestKernel extends Kernel
         yield new FrameworkBundle();
         yield new DoctrineBundle();
         yield new TwigBundle();
-        yield new WebProfilerBundle();
         yield new RekalogikaMapperBundle();
-        yield new DebugBundle();
         yield new MonologBundle();
-        yield new PHPUnitProfilerBundle();
+
+        if ($this->debug) {
+            yield new WebProfilerBundle();
+            yield new PHPUnitProfilerBundle();
+            yield new DebugBundle();
+        }
     }
 
     #[\Override]

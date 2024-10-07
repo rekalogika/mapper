@@ -27,7 +27,7 @@ class MapperCacheWarmer implements CacheWarmerInterface
 
     public function isOptional(): bool
     {
-        return false;
+        return true;
     }
 
     /**
