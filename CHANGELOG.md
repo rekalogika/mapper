@@ -1,13 +1,10 @@
 # CHANGELOG
 
-## 1.10.0
-
-* fix: `Map` now works with unpromoted constructor parameters
-* fix: restore throwing `NewInstanceReturnedButCannotBeSetOnTargetException`
-
 ## 1.9.4
 
 * deps: fix `symfony/stopwatch` dependency
+* fix: `Map` now works with unpromoted constructor parameters
+* fix: restore throwing `NewInstanceReturnedButCannotBeSetOnTargetException`
 * fix: do not run DebugPass if symfony/stopwatch is not present
 
 ## 1.9.3
