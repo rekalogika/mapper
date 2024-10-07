@@ -19,5 +19,8 @@ interface WarmableMapperInterface
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
-    public function warmMap(string $sourceClass, string $targetClass): void;
+    public function warmMap(
+        string $sourceClass,
+        string $targetClass,
+    ): void;
 }

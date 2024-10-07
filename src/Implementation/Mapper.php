@@ -129,10 +129,12 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface,
 
         $sourceType = TypeFactory::objectOfClass($sourceClass);
         $targetType = TypeFactory::objectOfClass($targetClass);
+        $context = Context::create();
 
         $transformer->warmTransform(
             sourceTypes: [$sourceType],
             targetTypes: [$targetType],
+            context: $context,
         );
     }
 }

@@ -109,7 +109,7 @@ final class MapperRule implements Rule
             $occurrences = $record['occurrences'];
 
             if ($source === false || $target === false) {
-                $key = sprintf('%s-%s', $source, $target);
+                $key = \sprintf('%s-%s', $source, $target);
                 $failed[$key] = $record;
                 continue;
             }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer\Implementation;
 
+use Rekalogika\Mapper\Cache\MappingCache;
 use Rekalogika\Mapper\Cache\WarmableMainTransformerInterface;
 use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
@@ -266,9 +267,15 @@ final class MainTransformer implements
     public function warmTransform(
         array $sourceTypes,
         array $targetTypes,
+        Context $context,
     ): void {
         if (!$this->transformerRegistry instanceof CachingTransformerRegistry) {
             return;
+        }
+
+        if (($mappingCache = $context(MappingCache::class)) === null) {
+            $mappingCache = new MappingCache();
+            $context = $context->with($mappingCache);
         }
 
         foreach ($sourceTypes as $sourceType) {
@@ -297,9 +304,19 @@ final class MainTransformer implements
                     && $sourceTypeForTransformer !== null
                     && $targetTypeForTransformer !== null
                 ) {
+                    if ($mappingCache->containsMapping($sourceTypeForTransformer, $targetTypeForTransformer)) {
+                        continue;
+                    }
+
+                    $mappingCache->saveMapping(
+                        source: $sourceTypeForTransformer,
+                        target: $targetTypeForTransformer,
+                    );
+
                     $transformer->warmTransform(
                         sourceType: $sourceTypeForTransformer,
                         targetType: $targetTypeForTransformer,
+                        context: $context,
                     );
                 }
             }

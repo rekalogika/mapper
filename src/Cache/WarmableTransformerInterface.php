@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Cache;
 
+use Rekalogika\Mapper\Context\Context;
 use Symfony\Component\PropertyInfo\Type;
 
 interface WarmableTransformerInterface
@@ -20,5 +21,6 @@ interface WarmableTransformerInterface
     public function warmTransform(
         Type $sourceType,
         Type $targetType,
+        Context $context,
     ): void;
 }

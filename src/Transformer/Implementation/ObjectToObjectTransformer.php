@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Psr\Container\ContainerInterface;
+use Rekalogika\Mapper\Cache\WarmableMainTransformerInterface;
 use Rekalogika\Mapper\Cache\WarmableObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
@@ -703,8 +704,11 @@ final class ObjectToObjectTransformer implements
         }
     }
 
-    public function warmTransform(Type $sourceType, Type $targetType): void
-    {
+    public function warmTransform(
+        Type $sourceType,
+        Type $targetType,
+        Context $context,
+    ): void {
         if (!$this->objectToObjectMetadataFactory instanceof WarmableObjectToObjectMetadataFactoryInterface) {
             return;
         }
@@ -726,6 +730,23 @@ final class ObjectToObjectTransformer implements
                 ->warmingCreateObjectToObjectMetadata($sourceClass, $targetClass);
         } catch (\Throwable) {
             return;
+        }
+
+        $mainTransformer = $this->getMainTransformer();
+
+        if (!$mainTransformer instanceof WarmableMainTransformerInterface) {
+            return;
+        }
+
+        foreach ($objectToObjectMetadata->getPropertyMappings() as $propertyMapping) {
+            $sourceTypes = $propertyMapping->getSourceTypes();
+            $targetTypes = $propertyMapping->getTargetTypes();
+
+            if ($sourceTypes === [] || $targetTypes === []) {
+                continue;
+            }
+
+            $mainTransformer->warmTransform($sourceTypes, $targetTypes, $context);
         }
     }
 
