@@ -68,7 +68,7 @@
         "symfony/var-dumper": "^6.4 || ^7.0",
         "symfony/web-profiler-bundle": "^6.4 || ^7.0",
         "symfony/yaml": "^6.4 || ^7.0",
-        "tomasvotruba/unused-public": "^0.4.0",
+        "tomasvotruba/unused-public": "^1.0.0",
         "twig/twig": "^2.12|^3.0",
         "vimeo/psalm": "^5.26"
     },
