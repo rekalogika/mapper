@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Implementation;
 
+use Rekalogika\Mapper\Cache\WarmableMainTransformerInterface;
 use Rekalogika\Mapper\Cache\WarmableMapperInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\IterableMapperInterface;
-use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MapperInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -123,7 +123,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface,
     {
         $transformer = $this->transformer;
 
-        if (!$transformer instanceof MainTransformer) {
+        if (!$transformer instanceof WarmableMainTransformerInterface) {
             return;
         }
 

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
+use Rekalogika\Mapper\Cache\WarmableObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
@@ -20,7 +21,9 @@ use Rekalogika\Mapper\Util\ClassUtil;
 /**
  * @internal
  */
-final readonly class ProxyResolvingObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
+final readonly class ProxyResolvingObjectToObjectMetadataFactory implements
+    ObjectToObjectMetadataFactoryInterface,
+    WarmableObjectToObjectMetadataFactoryInterface
 {
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $decorated,
@@ -35,5 +38,19 @@ final readonly class ProxyResolvingObjectToObjectMetadataFactory implements Obje
             ClassUtil::determineRealClassFromPossibleProxy($sourceClass),
             $targetClass,
         );
+    }
+
+    public function warmingCreateObjectToObjectMetadata(
+        string $sourceClass,
+        string $targetClass,
+    ): ObjectToObjectMetadata {
+        if ($this->decorated instanceof WarmableObjectToObjectMetadataFactoryInterface) {
+            return $this->decorated->warmingCreateObjectToObjectMetadata(
+                ClassUtil::determineRealClassFromPossibleProxy($sourceClass),
+                $targetClass,
+            );
+        }
+
+        return $this->createObjectToObjectMetadata($sourceClass, $targetClass);
     }
 }

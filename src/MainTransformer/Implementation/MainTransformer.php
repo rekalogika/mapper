@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer\Implementation;
 
+use Rekalogika\Mapper\Cache\WarmableMainTransformerInterface;
+use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
@@ -40,7 +42,10 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal
  */
-final class MainTransformer implements MainTransformerInterface, ResetInterface
+final class MainTransformer implements
+    MainTransformerInterface,
+    ResetInterface,
+    WarmableMainTransformerInterface
 {
     public static int $manualGcInterval = 500;
 
@@ -267,10 +272,41 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         }
 
         foreach ($sourceTypes as $sourceType) {
-            $this->transformerRegistry->warmFindBySourceAndTargetTypes(
-                [$sourceType],
-                $targetTypes,
-            );
+            $searchResult = $this->transformerRegistry
+                ->warmFindBySourceAndTargetTypes([$sourceType], $targetTypes);
+
+            if ($searchResult === null) {
+                continue;
+            }
+
+            foreach ($searchResult as $searchResultEntry) {
+                // TransformerInterface doesn't accept MixedType, so we need to
+                // convert it to null
+
+                $sourceType = $searchResultEntry->getSourceType();
+                $sourceTypeForTransformer = $sourceType instanceof MixedType ? null : $sourceType;
+
+                $targetType = $searchResultEntry->getTargetType();
+                $targetTypeForTransformer = $targetType instanceof MixedType ? null : $targetType;
+
+                // get and prepare transformer
+                $transformer = $this->processTransformer(
+                    $this->transformerRegistry->get(
+                        $searchResultEntry->getTransformerServiceId(),
+                    ),
+                );
+
+                if (
+                    $transformer instanceof WarmableTransformerInterface
+                    && $sourceTypeForTransformer !== null
+                    && $targetTypeForTransformer !== null
+                ) {
+                    $transformer->warmTransform(
+                        sourceType: $sourceTypeForTransformer,
+                        targetType: $targetTypeForTransformer,
+                    );
+                }
+            }
         }
     }
 }

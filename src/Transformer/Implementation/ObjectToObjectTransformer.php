@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Psr\Container\ContainerInterface;
+use Rekalogika\Mapper\Cache\WarmableObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
@@ -45,7 +47,10 @@ use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
-final class ObjectToObjectTransformer implements TransformerInterface, MainTransformerAwareInterface
+final class ObjectToObjectTransformer implements
+    TransformerInterface,
+    MainTransformerAwareInterface,
+    WarmableTransformerInterface
 {
     use MainTransformerAwareTrait;
 
@@ -608,7 +613,7 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
         return [
             $targetPropertyValue,
             $targetPropertyValue !== $originalTargetPropertyValue
-            || $propertyMapping->getTargetSetterWriteMode() === WriteMode::DynamicProperty,
+                || $propertyMapping->getTargetSetterWriteMode() === WriteMode::DynamicProperty,
         ];
     }
 
@@ -695,6 +700,32 @@ final class ObjectToObjectTransformer implements TransformerInterface, MainTrans
 
                 $target->{$sourceProperty} = $targetPropertyValue;
             }
+        }
+    }
+
+    public function warmTransform(Type $sourceType, Type $targetType): void
+    {
+        if (!$this->objectToObjectMetadataFactory instanceof WarmableObjectToObjectMetadataFactoryInterface) {
+            return;
+        }
+
+        $sourceClass = $sourceType->getClassName();
+
+        if (null === $sourceClass || !class_exists($sourceClass)) {
+            return;
+        }
+
+        $targetClass = $targetType->getClassName();
+
+        if (null === $targetClass || !class_exists($targetClass)) {
+            return;
+        }
+
+        try {
+            $objectToObjectMetadata = $this->objectToObjectMetadataFactory
+                ->warmingCreateObjectToObjectMetadata($sourceClass, $targetClass);
+        } catch (\Throwable) {
+            return;
         }
     }
 

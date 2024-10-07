@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\TransformerRegistry\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\Cache\WarmableCacheInterface;
+use Rekalogika\Mapper\Cache\WarmableTransformerRegistryInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
@@ -24,7 +25,9 @@ use Symfony\Component\PropertyInfo\Type;
 /**
  * @internal
  */
-final class CachingTransformerRegistry implements TransformerRegistryInterface
+final class CachingTransformerRegistry implements
+    TransformerRegistryInterface,
+    WarmableTransformerRegistryInterface
 {
     /**
      * @var array<string,SearchResult>
@@ -96,14 +99,15 @@ final class CachingTransformerRegistry implements TransformerRegistryInterface
         array $sourceTypes,
         array $targetTypes,
     ): ?SearchResult {
+        $result = $this->decorated
+            ->findBySourceAndTargetTypes($sourceTypes, $targetTypes);
+
         if (!$this->cacheItemPool instanceof WarmableCacheInterface) {
-            return null;
+            return $result;
         }
 
         $cacheKey = $this->getCacheKey($sourceTypes, $targetTypes);
-
         $cacheItem = $this->cacheItemPool->getWarmedUpItem($cacheKey);
-        $result = $this->decorated->findBySourceAndTargetTypes($sourceTypes, $targetTypes);
         $cacheItem->set($result);
         $this->cacheItemPool->saveWarmedUp($cacheItem);
 

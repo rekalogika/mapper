@@ -13,13 +13,16 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
+use Rekalogika\Mapper\Cache\WarmableObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 
 /**
  * @internal
  */
-final readonly class TraceableObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
+final readonly class TraceableObjectToObjectMetadataFactory implements
+    ObjectToObjectMetadataFactoryInterface,
+    WarmableObjectToObjectMetadataFactoryInterface
 {
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $decorated,
@@ -36,5 +39,17 @@ final readonly class TraceableObjectToObjectMetadataFactory implements ObjectToO
         $this->dataCollector->collectObjectToObjectMetadata($metadata);
 
         return $metadata;
+    }
+
+    public function warmingCreateObjectToObjectMetadata(
+        string $sourceClass,
+        string $targetClass,
+    ): ObjectToObjectMetadata {
+        if ($this->decorated instanceof WarmableObjectToObjectMetadataFactoryInterface) {
+            return $this->decorated
+                ->warmingCreateObjectToObjectMetadata($sourceClass, $targetClass);
+        }
+
+        return $this->createObjectToObjectMetadata($sourceClass, $targetClass);
     }
 }

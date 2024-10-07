@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
+use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
@@ -30,7 +31,8 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 final class TraceableTransformer extends AbstractTransformerDecorator implements
     TransformerInterface,
-    MainTransformerAwareInterface
+    MainTransformerAwareInterface,
+    WarmableTransformerInterface
 {
     use MainTransformerAwareTrait;
 
@@ -127,6 +129,15 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
 
             throw $e;
         }
+    }
+
+    public function warmTransform(Type $sourceType, Type $targetType): void
+    {
+        if (!$this->decorated instanceof WarmableTransformerInterface) {
+            return;
+        }
+
+        $this->decorated->warmTransform($sourceType, $targetType);
     }
 
     #[\Override]
