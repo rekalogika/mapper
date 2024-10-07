@@ -124,7 +124,7 @@ final class MapperCollector implements Collector
      */
     private function processIterableMapperInterfaceMapIterable(
         MethodCall $node,
-        Scope $scope
+        Scope $scope,
     ): array {
         // get first argument
         $firstArg = $node->args[0];

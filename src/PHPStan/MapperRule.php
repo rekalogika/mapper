@@ -109,7 +109,8 @@ final class MapperRule implements Rule
             $occurrences = $record['occurrences'];
 
             if ($source === false || $target === false) {
-                $failed[] = $record;
+                $key = sprintf('%s-%s', $source, $target);
+                $failed[$key] = $record;
                 continue;
             }
 
@@ -163,6 +164,8 @@ final class MapperRule implements Rule
 
             $i++;
         }
+
+        ksort($failed);
 
         if ($failed !== []) {
             // this will be indented once on output
