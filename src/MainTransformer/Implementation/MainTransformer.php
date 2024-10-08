@@ -292,25 +292,33 @@ final class MainTransformer implements
                 $targetType = $searchResultEntry->getTargetType();
                 $targetTypeForTransformer = $targetType instanceof MixedType ? null : $targetType;
 
+                $transformerServiceId = $searchResultEntry->getTransformerServiceId();
+
                 // get and prepare transformer
                 $transformer = $this->processTransformer(
-                    $this->transformerRegistry->get(
-                        $searchResultEntry->getTransformerServiceId(),
-                    ),
+                    $this->transformerRegistry->get($transformerServiceId),
                 );
 
                 if (
                     $transformer instanceof WarmableTransformerInterface
+                    && $transformer->isWarmable()
                     && $sourceTypeForTransformer !== null
                     && $targetTypeForTransformer !== null
                 ) {
-                    if ($mappingCache->containsMapping($sourceTypeForTransformer, $targetTypeForTransformer)) {
+                    if (
+                        $mappingCache->containsMapping(
+                            source: $sourceTypeForTransformer,
+                            target: $targetTypeForTransformer,
+                            transformerServiceId: $transformerServiceId,
+                        )
+                    ) {
                         continue;
                     }
 
                     $mappingCache->saveMapping(
                         source: $sourceTypeForTransformer,
                         target: $targetTypeForTransformer,
+                        transformerServiceId: $transformerServiceId,
                     );
 
                     $transformer->warmTransform(

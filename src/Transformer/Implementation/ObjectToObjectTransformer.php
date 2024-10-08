@@ -750,6 +750,11 @@ final class ObjectToObjectTransformer implements
         }
     }
 
+    public function isWarmable(): bool
+    {
+        return true;
+    }
+
     #[\Override]
     public function getSupportedTransformation(): iterable
     {

@@ -23,4 +23,6 @@ interface WarmableTransformerInterface
         Type $targetType,
         Context $context,
     ): void;
+
+    public function isWarmable(): bool;
 }

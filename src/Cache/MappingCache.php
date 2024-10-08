@@ -18,23 +18,27 @@ use Symfony\Component\PropertyInfo\Type;
 class MappingCache
 {
     /**
-     * @var array<string,array<string,true>>
+     * @var array<string,true>
      */
     private array $mapping = [];
 
-    public function saveMapping(Type $source, Type $target): void
-    {
-        $sourceHash = hash('xxh128', serialize($source));
-        $targetHash = hash('xxh128', serialize($target));
+    public function saveMapping(
+        Type $source,
+        Type $target,
+        string $transformerServiceId,
+    ): void {
+        $hash = hash('xxh128', serialize([$source, $target, $transformerServiceId]));
 
-        $this->mapping[$sourceHash][$targetHash] = true;
+        $this->mapping[$hash] = true;
     }
 
-    public function containsMapping(Type $source, Type $target): bool
-    {
-        $sourceHash = hash('xxh128', serialize($source));
-        $targetHash = hash('xxh128', serialize($target));
+    public function containsMapping(
+        Type $source,
+        Type $target,
+        string $transformerServiceId,
+    ): bool {
+        $hash = hash('xxh128', serialize([$source, $target, $transformerServiceId]));
 
-        return isset($this->mapping[$sourceHash][$targetHash]);
+        return isset($this->mapping[$hash]);
     }
 }
