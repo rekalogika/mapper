@@ -33,14 +33,23 @@ class TestKernel extends Kernel
     use MicroKernelTrait {
         registerContainerConfiguration as private baseRegisterContainerConfiguration;
     }
+
+    private string $env;
+
     /**
      * @param array<string,mixed> $config
      */
     public function __construct(
-        private string $env = 'test',
-        bool $debug = true,
+        ?string $env = null,
+        ?bool $debug = null,
         private readonly array $config = [],
     ) {
+        $env ??= $_SERVER['APP_ENV'] ?? 'test';
+        $debug ??= (bool) ($_SERVER['APP_DEBUG'] ?? true);
+
+        /** @var string $env */
+        $this->env = $env;
+
         parent::__construct($env, $debug);
     }
 
