@@ -185,6 +185,7 @@ COMMENT;
                 $source = $record['source'];
                 $target = $record['target'];
                 $occurrences = $record['occurrences'];
+                ksort($occurrences);
 
                 $comments[] = new Comment('');
 
