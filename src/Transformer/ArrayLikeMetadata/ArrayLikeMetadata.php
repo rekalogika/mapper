@@ -24,6 +24,8 @@ final readonly class ArrayLikeMetadata
     /**
      * @param ?class-string $sourceClass
      * @param ?class-string $targetClass
+     * @param array<array-key,Type> $sourceMemberKeyTypes
+     * @param array<array-key,Type> $sourceMemberValueTypes
      * @param array<array-key,Type> $targetMemberKeyTypes
      * @param array<array-key,Type> $targetMemberValueTypes
      */
@@ -35,6 +37,8 @@ final readonly class ArrayLikeMetadata
         private bool $isTargetArray,
         private ?string $targetClass,
         private bool $targetCanBeLazy,
+        private array $sourceMemberKeyTypes,
+        private array $sourceMemberValueTypes,
         private array $targetMemberKeyTypes,
         private array $targetMemberValueTypes,
         private bool $sourceMemberKeyCanBeInt,
@@ -80,6 +84,22 @@ final readonly class ArrayLikeMetadata
         }
 
         return $this->targetClass;
+    }
+
+    /**
+     * @return array<array-key,Type>
+     */
+    public function getSourceMemberKeyTypes(): array
+    {
+        return $this->sourceMemberKeyTypes;
+    }
+
+    /**
+     * @return array<array-key,Type>
+     */
+    public function getSourceMemberValueTypes(): array
+    {
+        return $this->sourceMemberValueTypes;
     }
 
     /**

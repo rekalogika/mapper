@@ -69,6 +69,12 @@ final readonly class TypeCheck
         return $type?->getBuiltinType() === Type::BUILTIN_TYPE_BOOL;
     }
 
+    public static function isIntOrString(null|Type|MixedType $type): bool
+    {
+        return self::isInt($type)
+            || self::isString($type);
+    }
+
     public static function isArray(null|Type|MixedType $type): bool
     {
         if ($type instanceof MixedType) {

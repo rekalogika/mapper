@@ -17,6 +17,7 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
 use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\PropertyInfo\Type;
 
 trait ArrayLikeTransformerTrait
 {
