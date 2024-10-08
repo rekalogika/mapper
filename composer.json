@@ -99,6 +99,9 @@
             "includes": [
                 "phpstan-extension.neon"
             ]
+        },
+        "branch-alias": {
+            "dev-master": "1.10-dev"
         }
     }
 }
