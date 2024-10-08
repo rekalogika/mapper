@@ -34,6 +34,7 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
 use Rekalogika\Mapper\CacheWarmer\MappingCollection;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * @implements Rule<CollectedDataNode>
@@ -267,6 +268,7 @@ COMMENT;
         $prettyPrinter = new Standard();
         $code = $prettyPrinter->prettyPrintFile($nodes);
 
-        file_put_contents($configPath, $code);
+        $filesystem = new Filesystem();
+        $filesystem->dumpFile($configPath, $code);
     }
 }
