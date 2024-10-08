@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Cache;
+namespace Rekalogika\Mapper\CacheWarmer;
 
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
@@ -23,7 +23,7 @@ interface WarmableTransformerRegistryInterface
      * @param array<array-key,Type|MixedType> $sourceTypes
      * @param array<array-key,Type|MixedType> $targetTypes
      */
-    public function warmFindBySourceAndTargetTypes(
+    public function warmingFindBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,
     ): SearchResult;

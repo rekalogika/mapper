@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
-use Rekalogika\Mapper\Cache\WarmableCacheInterface;
-use Rekalogika\Mapper\Cache\WarmableObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Exception\RuntimeException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;

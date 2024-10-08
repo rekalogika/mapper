@@ -33,7 +33,7 @@ use PhpParser\PrettyPrinter\Standard;
 use PHPStan\Analyser\Scope;
 use PHPStan\Node\CollectedDataNode;
 use PHPStan\Rules\Rule;
-use Rekalogika\Mapper\Cache\MappingCollection;
+use Rekalogika\Mapper\CacheWarmer\MappingCollection;
 
 /**
  * @implements Rule<CollectedDataNode>

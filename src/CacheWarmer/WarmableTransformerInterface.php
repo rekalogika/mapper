@@ -11,15 +11,18 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Cache;
+namespace Rekalogika\Mapper\CacheWarmer;
 
-use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
+use Rekalogika\Mapper\Context\Context;
 use Symfony\Component\PropertyInfo\Type;
 
-interface WarmableArrayLikeMetadataFactoryInterface
+interface WarmableTransformerInterface
 {
-    public function warmingCreateArrayLikeMetadata(
+    public function warmingTransform(
         Type $sourceType,
         Type $targetType,
-    ): ArrayLikeMetadata;
+        Context $context,
+    ): void;
+
+    public function isWarmable(): bool;
 }

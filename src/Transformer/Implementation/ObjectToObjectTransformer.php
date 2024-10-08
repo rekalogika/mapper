@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Psr\Container\ContainerInterface;
-use Rekalogika\Mapper\Cache\WarmableMainTransformerInterface;
-use Rekalogika\Mapper\Cache\WarmableObjectToObjectMetadataFactoryInterface;
-use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableMainTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
@@ -704,7 +704,7 @@ final class ObjectToObjectTransformer implements
         }
     }
 
-    public function warmTransform(
+    public function warmingTransform(
         Type $sourceType,
         Type $targetType,
         Context $context,
@@ -746,7 +746,7 @@ final class ObjectToObjectTransformer implements
                 continue;
             }
 
-            $mainTransformer->warmTransform($sourceTypes, $targetTypes, $context);
+            $mainTransformer->warmingTransform($sourceTypes, $targetTypes, $context);
         }
     }
 

@@ -11,18 +11,20 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Cache;
+namespace Rekalogika\Mapper\CacheWarmer;
 
 use Rekalogika\Mapper\Context\Context;
 use Symfony\Component\PropertyInfo\Type;
 
-interface WarmableTransformerInterface
+interface WarmableMainTransformerInterface
 {
-    public function warmTransform(
-        Type $sourceType,
-        Type $targetType,
+    /**
+     * @param array<array-key,Type> $sourceTypes
+     * @param array<array-key,Type> $targetTypes
+     */
+    public function warmingTransform(
+        array $sourceTypes,
+        array $targetTypes,
         Context $context,
     ): void;
-
-    public function isWarmable(): bool;
 }

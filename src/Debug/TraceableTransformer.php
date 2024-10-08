@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
-use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
@@ -131,7 +131,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         }
     }
 
-    public function warmTransform(
+    public function warmingTransform(
         Type $sourceType,
         Type $targetType,
         Context $context,
@@ -140,7 +140,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
             return;
         }
 
-        $this->decorated->warmTransform($sourceType, $targetType, $context);
+        $this->decorated->warmingTransform($sourceType, $targetType, $context);
     }
 
     public function isWarmable(): bool

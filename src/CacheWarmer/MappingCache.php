@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Cache;
+namespace Rekalogika\Mapper\CacheWarmer;
 
 use Symfony\Component\PropertyInfo\Type;
 

@@ -11,11 +11,11 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Cache\Implementation;
+namespace Rekalogika\Mapper\CacheWarmer\Implementation;
 
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
-use Rekalogika\Mapper\Cache\WarmableCacheInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
 use Rekalogika\Mapper\Exception\BadMethodCallException;
 use Symfony\Component\Cache\Adapter\PhpFilesAdapter;
 

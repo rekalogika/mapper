@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\UuidInterface;
-use Rekalogika\Mapper\Cache\Implementation\WarmableCacheDecorator;
-use Rekalogika\Mapper\Cache\MapperCacheWarmer;
+use Rekalogika\Mapper\CacheWarmer\Implementation\WarmableCacheDecorator;
+use Rekalogika\Mapper\CacheWarmer\MapperCacheWarmer;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
 use Rekalogika\Mapper\Command\TryPropertyCommand;

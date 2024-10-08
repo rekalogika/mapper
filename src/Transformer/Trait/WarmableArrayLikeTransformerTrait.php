@@ -13,14 +13,14 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Trait;
 
-use Rekalogika\Mapper\Cache\WarmableArrayLikeMetadataFactoryInterface;
-use Rekalogika\Mapper\Cache\WarmableMainTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableArrayLikeMetadataFactoryInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableMainTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Symfony\Component\PropertyInfo\Type;
 
 trait WarmableArrayLikeTransformerTrait
 {
-    public function warmTransform(
+    public function warmingTransform(
         Type $sourceType,
         Type $targetType,
         Context $context,
@@ -54,7 +54,7 @@ trait WarmableArrayLikeTransformerTrait
         $targetMemberKeyTypes = $metadata->getTargetMemberKeyTypes();
 
         foreach ($sourceMemberKeyTypes as $sourceMemberKeyType) {
-            $mainTransformer->warmTransform(
+            $mainTransformer->warmingTransform(
                 [$sourceMemberKeyType],
                 $targetMemberKeyTypes,
                 $context,
@@ -67,7 +67,7 @@ trait WarmableArrayLikeTransformerTrait
         $targetMemberValueTypes = $metadata->getTargetMemberValueTypes();
 
         foreach ($sourceMemberValueTypes as $sourceMemberValueType) {
-            $mainTransformer->warmTransform(
+            $mainTransformer->warmingTransform(
                 [$sourceMemberValueType],
                 $targetMemberValueTypes,
                 $context,

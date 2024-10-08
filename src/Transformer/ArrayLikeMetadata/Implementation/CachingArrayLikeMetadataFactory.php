@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
-use Rekalogika\Mapper\Cache\WarmableArrayLikeMetadataFactoryInterface;
-use Rekalogika\Mapper\Cache\WarmableCacheInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableArrayLikeMetadataFactoryInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
 use Symfony\Component\PropertyInfo\Type;

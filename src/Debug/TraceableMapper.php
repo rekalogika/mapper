@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
-use Rekalogika\Mapper\Cache\WarmableMapperInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableMapperInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Implementation\Mapper;
 use Rekalogika\Mapper\IterableMapperInterface;
@@ -63,8 +63,8 @@ final class TraceableMapper implements MapperInterface, IterableMapperInterface,
         return $result;
     }
 
-    public function warmMap(string $sourceClass, string $targetClass): void
+    public function warmingMap(string $sourceClass, string $targetClass): void
     {
-        $this->decorated->warmMap($sourceClass, $targetClass);
+        $this->decorated->warmingMap($sourceClass, $targetClass);
     }
 }

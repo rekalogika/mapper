@@ -11,18 +11,16 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Cache;
+namespace Rekalogika\Mapper\CacheWarmer;
 
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
-
-interface WarmableObjectToObjectMetadataFactoryInterface
+interface WarmableMapperInterface
 {
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
-    public function warmingCreateObjectToObjectMetadata(
+    public function warmingMap(
         string $sourceClass,
         string $targetClass,
-    ): ObjectToObjectMetadata;
+    ): void;
 }

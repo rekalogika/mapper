@@ -18,7 +18,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ReadableCollection;
 use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\AllowTargetDelete;
-use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;

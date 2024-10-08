@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer\Implementation;
 
-use Rekalogika\Mapper\Cache\MappingCache;
-use Rekalogika\Mapper\Cache\WarmableMainTransformerInterface;
-use Rekalogika\Mapper\Cache\WarmableTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\MappingCache;
+use Rekalogika\Mapper\CacheWarmer\WarmableMainTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
@@ -264,7 +264,7 @@ final class MainTransformer implements
      * @param array<array-key,Type> $sourceTypes
      * @param array<array-key,Type> $targetTypes
      */
-    public function warmTransform(
+    public function warmingTransform(
         array $sourceTypes,
         array $targetTypes,
         Context $context,
@@ -280,7 +280,7 @@ final class MainTransformer implements
 
         foreach ($sourceTypes as $sourceType) {
             $searchResult = $this->transformerRegistry
-                ->warmFindBySourceAndTargetTypes([$sourceType], $targetTypes);
+                ->warmingFindBySourceAndTargetTypes([$sourceType], $targetTypes);
 
             foreach ($searchResult as $searchResultEntry) {
                 // TransformerInterface doesn't accept MixedType, so we need to
@@ -321,7 +321,7 @@ final class MainTransformer implements
                         transformerServiceId: $transformerServiceId,
                     );
 
-                    $transformer->warmTransform(
+                    $transformer->warmingTransform(
                         sourceType: $sourceTypeForTransformer,
                         targetType: $targetTypeForTransformer,
                         context: $context,

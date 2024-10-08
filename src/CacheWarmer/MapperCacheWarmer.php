@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Cache;
+namespace Rekalogika\Mapper\CacheWarmer;
 
 use Rekalogika\Mapper\MapperInterface;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
@@ -74,7 +74,7 @@ class MapperCacheWarmer implements CacheWarmerInterface
         }
 
         foreach ($this->getObjectMapping() as [$source, $target]) {
-            $mapper->warmMap($source, $target);
+            $mapper->warmingMap($source, $target);
         }
 
         return [];

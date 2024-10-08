@@ -10,7 +10,7 @@
 // required for normal operation of Mapper. Mapper should be able to work
 // normally without pre-warmed metadata.
 
-use Rekalogika\Mapper\Cache\MappingCollection;
+use Rekalogika\Mapper\CacheWarmer\MappingCollection;
 
 return function (MappingCollection $mappingCollection) : void {
     $mappingCollection->addObjectMapping(

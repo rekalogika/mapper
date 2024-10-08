@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\TransformerRegistry\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
-use Rekalogika\Mapper\Cache\WarmableCacheInterface;
-use Rekalogika\Mapper\Cache\WarmableTransformerRegistryInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerRegistryInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
@@ -95,7 +95,7 @@ final class CachingTransformerRegistry implements
      * @param array<array-key,Type|MixedType> $sourceTypes
      * @param array<array-key,Type|MixedType> $targetTypes
      */
-    public function warmFindBySourceAndTargetTypes(
+    public function warmingFindBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,
     ): SearchResult {
