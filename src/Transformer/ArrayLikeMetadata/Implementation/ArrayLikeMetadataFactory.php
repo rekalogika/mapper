@@ -33,7 +33,15 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
         Type $sourceType,
         Type $targetType,
     ): ArrayLikeMetadata {
+        $sourceMemberKeyTypes = $sourceType->getCollectionKeyTypes();
         $targetMemberKeyTypes = $targetType->getCollectionKeyTypes();
+
+        if ($sourceMemberKeyTypes === []) {
+            $sourceMemberKeyTypes = [
+                TypeFactory::int(),
+                TypeFactory::string(),
+            ];
+        }
 
         if ($targetMemberKeyTypes === []) {
             $targetMemberKeyTypes = [
@@ -42,6 +50,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             ];
         }
 
+        $sourceMemberValueTypes = $sourceType->getCollectionValueTypes();
         $targetMemberValueTypes = $targetType->getCollectionValueTypes();
 
         $isSourceArray = TypeCheck::isArray($sourceType);
@@ -108,6 +117,8 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             isTargetArray: $isTargetArray,
             targetClass: $targetClass,
             targetCanBeLazy: $targetCanBeLazy,
+            sourceMemberKeyTypes: $sourceMemberKeyTypes,
+            sourceMemberValueTypes: $sourceMemberValueTypes,
             targetMemberKeyTypes: $targetMemberKeyTypes,
             targetMemberValueTypes: $targetMemberValueTypes,
             sourceMemberKeyCanBeInt: $sourceMemberKeyTypeCanBeInt,

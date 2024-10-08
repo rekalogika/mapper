@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Implementation;
 
+use Rekalogika\Mapper\CacheWarmer\WarmableMainTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableMapperInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\IterableMapperInterface;
@@ -23,7 +25,7 @@ use Rekalogika\Mapper\Util\TypeFactory;
 /**
  * @internal
  */
-final readonly class Mapper implements MapperInterface, IterableMapperInterface
+final readonly class Mapper implements MapperInterface, IterableMapperInterface, WarmableMapperInterface
 {
     public function __construct(
         private MainTransformerInterface $transformer,
@@ -114,5 +116,25 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface
 
             yield $result;
         }
+    }
+
+    #[\Override]
+    public function warmingMap(string $sourceClass, string $targetClass): void
+    {
+        $transformer = $this->transformer;
+
+        if (!$transformer instanceof WarmableMainTransformerInterface) {
+            return;
+        }
+
+        $sourceType = TypeFactory::objectOfClass($sourceClass);
+        $targetType = TypeFactory::objectOfClass($targetClass);
+        $context = Context::create();
+
+        $transformer->warmingTransform(
+            sourceTypes: [$sourceType],
+            targetTypes: [$targetType],
+            context: $context,
+        );
     }
 }

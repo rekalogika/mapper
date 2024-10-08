@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer\Implementation;
 
+use Rekalogika\Mapper\CacheWarmer\MappingCache;
+use Rekalogika\Mapper\CacheWarmer\WarmableMainTransformerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
@@ -29,6 +32,7 @@ use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
+use Rekalogika\Mapper\TransformerRegistry\Implementation\CachingTransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
@@ -39,7 +43,10 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal
  */
-final class MainTransformer implements MainTransformerInterface, ResetInterface
+final class MainTransformer implements
+    MainTransformerInterface,
+    ResetInterface,
+    WarmableMainTransformerInterface
 {
     public static int $manualGcInterval = 500;
 
@@ -251,5 +258,76 @@ final class MainTransformer implements MainTransformerInterface, ResetInterface
         }
 
         throw new CannotFindTransformerException($sourceTypes, $targetTypes, context: $context);
+    }
+
+    /**
+     * @param array<array-key,Type> $sourceTypes
+     * @param array<array-key,Type> $targetTypes
+     */
+    public function warmingTransform(
+        array $sourceTypes,
+        array $targetTypes,
+        Context $context,
+    ): void {
+        if (!$this->transformerRegistry instanceof CachingTransformerRegistry) {
+            return;
+        }
+
+        if (($mappingCache = $context(MappingCache::class)) === null) {
+            $mappingCache = new MappingCache();
+            $context = $context->with($mappingCache);
+        }
+
+        foreach ($sourceTypes as $sourceType) {
+            $searchResult = $this->transformerRegistry
+                ->warmingFindBySourceAndTargetTypes([$sourceType], $targetTypes);
+
+            foreach ($searchResult as $searchResultEntry) {
+                // TransformerInterface doesn't accept MixedType, so we need to
+                // convert it to null
+
+                $sourceType = $searchResultEntry->getSourceType();
+                $sourceTypeForTransformer = $sourceType instanceof MixedType ? null : $sourceType;
+
+                $targetType = $searchResultEntry->getTargetType();
+                $targetTypeForTransformer = $targetType instanceof MixedType ? null : $targetType;
+
+                $transformerServiceId = $searchResultEntry->getTransformerServiceId();
+
+                // get and prepare transformer
+                $transformer = $this->processTransformer(
+                    $this->transformerRegistry->get($transformerServiceId),
+                );
+
+                if (
+                    $transformer instanceof WarmableTransformerInterface
+                    && $transformer->isWarmable()
+                    && $sourceTypeForTransformer !== null
+                    && $targetTypeForTransformer !== null
+                ) {
+                    if (
+                        $mappingCache->containsMapping(
+                            source: $sourceTypeForTransformer,
+                            target: $targetTypeForTransformer,
+                            transformerServiceId: $transformerServiceId,
+                        )
+                    ) {
+                        continue;
+                    }
+
+                    $mappingCache->saveMapping(
+                        source: $sourceTypeForTransformer,
+                        target: $targetTypeForTransformer,
+                        transformerServiceId: $transformerServiceId,
+                    );
+
+                    $transformer->warmingTransform(
+                        sourceType: $sourceTypeForTransformer,
+                        targetType: $targetTypeForTransformer,
+                        context: $context,
+                    );
+                }
+            }
+        }
     }
 }

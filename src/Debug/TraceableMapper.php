@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
+use Rekalogika\Mapper\CacheWarmer\WarmableMapperInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Implementation\Mapper;
 use Rekalogika\Mapper\IterableMapperInterface;
@@ -22,7 +23,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 /**
  * @internal
  */
-final class TraceableMapper implements MapperInterface, IterableMapperInterface
+final class TraceableMapper implements MapperInterface, IterableMapperInterface, WarmableMapperInterface
 {
     public function __construct(
         private Mapper $decorated,
@@ -60,5 +61,10 @@ final class TraceableMapper implements MapperInterface, IterableMapperInterface
         $this->stopwatch->stop('mapIterable()');
 
         return $result;
+    }
+
+    public function warmingMap(string $sourceClass, string $targetClass): void
+    {
+        $this->decorated->warmingMap($sourceClass, $targetClass);
     }
 }

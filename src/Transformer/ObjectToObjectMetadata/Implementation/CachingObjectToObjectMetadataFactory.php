@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Exception\RuntimeException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
@@ -22,7 +24,9 @@ use Rekalogika\Mapper\Util\ClassUtil;
 /**
  * @internal
  */
-final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetadataFactoryInterface
+final class CachingObjectToObjectMetadataFactory implements
+    ObjectToObjectMetadataFactoryInterface,
+    WarmableObjectToObjectMetadataFactoryInterface
 {
     /**
      * @var array<string,ObjectToObjectMetadata>
@@ -126,5 +130,24 @@ final class CachingObjectToObjectMetadataFactory implements ObjectToObjectMetada
 
         return $sourceFileModifiedTime > $sourceModifiedTime
             || $targetFileModifiedTime > $targetModifiedTime;
+    }
+
+    public function warmingCreateObjectToObjectMetadata(
+        string $sourceClass,
+        string $targetClass,
+    ): ObjectToObjectMetadata {
+        $result = $this->decorated->
+            createObjectToObjectMetadata($sourceClass, $targetClass);
+
+        if (!$this->cacheItemPool instanceof WarmableCacheInterface) {
+            return $result;
+        }
+
+        $cacheKey = hash('xxh128', $sourceClass . $targetClass);
+        $cacheItem = $this->cacheItemPool->getWarmedUpItem($cacheKey);
+        $cacheItem->set($result);
+        $this->cacheItemPool->saveWarmedUp($cacheItem);
+
+        return $result;
     }
 }

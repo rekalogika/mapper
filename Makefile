@@ -3,6 +3,9 @@ include .env
 
 export APP_ENV
 
+PHP := $(shell echo $(PHP))
+COMPOSER := $(shell echo $(COMPOSER))
+
 .PHONY: test
 test: dump phpstan psalm phpunit
 

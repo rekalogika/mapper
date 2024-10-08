@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.10.0
+
+* perf: warmable cache
+
 ## 1.9.4
 
 * deps: fix `symfony/stopwatch` dependency

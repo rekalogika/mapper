@@ -24,6 +24,10 @@ class DataCollectorTest extends FrameworkTestCase
 {
     public function testDataCollector(): void
     {
+        if (static::getContainer()->getParameter('kernel.debug') === false) {
+            $this->markTestSkipped('This test requires the kernel to be in debug mode');
+        }
+
         $object = ContainsObject::create();
         $result = $this->mapper->map($object, ContainsArray::class);
         $this->initialize($result);

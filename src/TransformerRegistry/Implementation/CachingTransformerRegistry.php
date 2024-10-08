@@ -14,14 +14,20 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\TransformerRegistry\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerRegistryInterface;
+use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
+use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal
  */
-final class CachingTransformerRegistry implements TransformerRegistryInterface
+final class CachingTransformerRegistry implements
+    TransformerRegistryInterface,
+    WarmableTransformerRegistryInterface
 {
     /**
      * @var array<string,SearchResult>
@@ -44,12 +50,21 @@ final class CachingTransformerRegistry implements TransformerRegistryInterface
         return $this->transformers[$id] ?? ($this->transformers[$id] = $this->decorated->get($id));
     }
 
+    /**
+     * @param array<array-key,Type|MixedType> $sourceTypes
+     * @param array<array-key,Type|MixedType> $targetTypes
+     */
+    private function getCacheKey(array $sourceTypes, array $targetTypes): string
+    {
+        return hash('xxh128', serialize([$sourceTypes, $targetTypes]));
+    }
+
     #[\Override]
     public function findBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,
     ): SearchResult {
-        $cacheKey = hash('xxh128', serialize([$sourceTypes, $targetTypes]));
+        $cacheKey = $this->getCacheKey($sourceTypes, $targetTypes);
 
         if (isset($this->findBySourceAndTargetTypesCache[$cacheKey])) {
             return $this->findBySourceAndTargetTypesCache[$cacheKey];
@@ -74,5 +89,28 @@ final class CachingTransformerRegistry implements TransformerRegistryInterface
         $this->cacheItemPool->save($cacheItem);
 
         return $this->findBySourceAndTargetTypesCache[$cacheKey] = $result;
+    }
+
+    /**
+     * @param array<array-key,Type|MixedType> $sourceTypes
+     * @param array<array-key,Type|MixedType> $targetTypes
+     */
+    public function warmingFindBySourceAndTargetTypes(
+        array $sourceTypes,
+        array $targetTypes,
+    ): SearchResult {
+        $result = $this->decorated
+            ->findBySourceAndTargetTypes($sourceTypes, $targetTypes);
+
+        if (!$this->cacheItemPool instanceof WarmableCacheInterface) {
+            return $result;
+        }
+
+        $cacheKey = $this->getCacheKey($sourceTypes, $targetTypes);
+        $cacheItem = $this->cacheItemPool->getWarmedUpItem($cacheKey);
+        $cacheItem->set($result);
+        $this->cacheItemPool->saveWarmedUp($cacheItem);
+
+        return $result;
     }
 }

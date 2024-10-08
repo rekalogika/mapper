@@ -5,6 +5,8 @@ parameters:
         - config
         - tests/src
         - tests/config
+    excludePaths:
+        - tests/config/rekalogika-mapper
     checkBenevolentUnionTypes: true
     checkExplicitMixedMissingReturn: true
     checkFunctionNameCase: true
@@ -22,6 +24,8 @@ parameters:
             reportUnmatched: false
     banned_code:
         non_ignorable: false
+    rekalogika-mapper:
+        mapperDumpFile: tests/config/rekalogika-mapper/generated-mappings.php
 includes:
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
@@ -31,3 +35,5 @@ includes:
     - vendor/dave-liddament/phpstan-php-language-extensions/extension.neon
     # - vendor/tomasvotruba/unused-public/config/extension.neon
     - phar://phpstan.phar/conf/bleedingEdge.neon
+    - phpstan-extension.neon
+

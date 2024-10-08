@@ -18,6 +18,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ReadableCollection;
 use Rekalogika\Mapper\Attribute\AllowDelete;
 use Rekalogika\Mapper\Attribute\AllowTargetDelete;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\CollectionInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
@@ -33,16 +34,21 @@ use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\LazyArray;
 use Rekalogika\Mapper\Transformer\Trait\ArrayLikeTransformerTrait;
+use Rekalogika\Mapper\Transformer\Trait\WarmableArrayLikeTransformerTrait;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;
 
-final class TraversableToArrayAccessTransformer implements TransformerInterface, MainTransformerAwareInterface
+final class TraversableToArrayAccessTransformer implements
+    TransformerInterface,
+    MainTransformerAwareInterface,
+    WarmableTransformerInterface
 {
     use MainTransformerAwareTrait;
     use ArrayLikeTransformerTrait;
+    use WarmableArrayLikeTransformerTrait;
 
     public function __construct(
         private ArrayLikeMetadataFactoryInterface $arrayLikeMetadataFactory,
