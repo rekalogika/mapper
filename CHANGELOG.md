@@ -3,6 +3,7 @@
 ## 1.10.0
 
 * perf: warmable cache
+* fix(`CacheWarmer`): use `symfony/filesystem` to dump file
 
 ## 1.9.4
 
