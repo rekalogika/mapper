@@ -21,13 +21,17 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class PHPUnitProfilerBundle extends Bundle
 {
     public static string $testClass = 'unknown';
+
     public static string $testMethod = 'unknown';
+
     public static string $testId = 'unknown';
+
     public static ?string $stopwatchToken = null;
 
     public static ?Throwable $lastError = null;
 
-    public function boot()
+    #[\Override]
+    public function boot(): void
     {
         $stopwatch = $this->container?->get('debug.stopwatch');
         \assert($stopwatch instanceof Stopwatch);
@@ -36,7 +40,8 @@ class PHPUnitProfilerBundle extends Bundle
         $stopwatch->openSection();
     }
 
-    public function shutdown()
+    #[\Override]
+    public function shutdown(): void
     {
         $argv = $_SERVER['argv'] ?? null;
         \assert(\is_array($argv));
@@ -65,10 +70,10 @@ class PHPUnitProfilerBundle extends Bundle
         $profile = $profiler->collect(
             request: $request,
             response: $request->getResponse(),
-            exception: self::$lastError ? new PHPUnitException(
+            exception: self::$lastError !== null ? new PHPUnitException(
                 // @phpstan-ignore argument.type
                 argv0: $argv0,
-                id: self::$testId,
+                testId: self::$testId,
                 phpunitThrowable: self::$lastError,
             ) : null,
         );

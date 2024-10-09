@@ -18,7 +18,9 @@ use Rekalogika\Mapper\Attribute\Map;
 class SomeObjectWithUnpromotedConstructorDto
 {
     public ?string $targetPropertyA = null;
+
     public ?string $targetPropertyB = null;
+
     public ?string $targetPropertyC = null;
 
     public function __construct(
