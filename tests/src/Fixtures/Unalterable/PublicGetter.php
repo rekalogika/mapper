@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Unalterable;
 class PublicGetter
 {
     public function __construct(
-        private string $name,
+        private readonly string $name,
     ) {}
 
     public function getName(): string

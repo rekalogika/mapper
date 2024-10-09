@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Tests\Fixtures\WitherMethod;
 
 class ParentObject
 {
-    private ObjectWithProperty $object;
+    private readonly ObjectWithProperty $object;
 
     public function __construct()
     {

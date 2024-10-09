@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Attribute\Unalterable;
 #[Unalterable(false)]
 class ParentObjectWithObjectWithSetterReturningForeignObject
 {
-    private ObjectWithSetterReturningForeignObject $object;
+    private readonly ObjectWithSetterReturningForeignObject $object;
 
     public function __construct()
     {

@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Attribute\Unalterable;
 #[Unalterable(false)]
 class ParentObjectWithObjectWithVoidSetter
 {
-    private ObjectWithVoidSetter $object;
+    private readonly ObjectWithVoidSetter $object;
 
     public function __construct()
     {

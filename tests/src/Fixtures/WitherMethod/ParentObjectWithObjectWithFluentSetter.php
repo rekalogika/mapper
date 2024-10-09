@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Attribute\Unalterable;
 #[Unalterable(false)]
 class ParentObjectWithObjectWithFluentSetter
 {
-    private ObjectWithFluentSetter $object;
+    private readonly ObjectWithFluentSetter $object;
 
     public function __construct()
     {
