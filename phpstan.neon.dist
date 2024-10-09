@@ -13,10 +13,6 @@ parameters:
     checkInternalClassCaseSensitivity: true
     reportMaybesInPropertyPhpDocTypes: true
     treatPhpDocTypesAsCertain: false
-    # unused_public:
-    #     methods: true
-    #     properties: true
-    #     constants: true
     ignoreErrors:
         - '#ContainerBuilder::registerAttributeForAutoconfiguration#'
         -
@@ -33,7 +29,6 @@ includes:
     - vendor/bnf/phpstan-psr-container/extension.neon
     - vendor/ekino/phpstan-banned-code/extension.neon
     - vendor/dave-liddament/phpstan-php-language-extensions/extension.neon
-    # - vendor/tomasvotruba/unused-public/config/extension.neon
     - phar://phpstan.phar/conf/bleedingEdge.neon
     - phpstan-extension.neon
 

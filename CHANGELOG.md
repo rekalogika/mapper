@@ -5,6 +5,7 @@
 * perf: warmable cache
 * fix(`CacheWarmer`): use `symfony/filesystem` to dump file
 * fix(`PHPStan`): fix mapping metadata generation determinism
+* deps: remove phpstan unused public
 
 ## 1.9.4
 
