@@ -22,7 +22,7 @@ class ObjectWithCollectionWithGetterNoSetterDto
     /**
      * @var Collection<int,ObjectWithScalarPropertiesDto>
      */
-    private Collection $property;
+    private readonly Collection $property;
 
     public function __construct()
     {

@@ -29,6 +29,7 @@ final class CachingDynamicPropertiesDeterminer implements DynamicPropertiesDeter
         private readonly DynamicPropertiesDeterminerInterface $decorated,
     ) {}
 
+    #[\Override]
     public function allowsDynamicProperties(string $class): bool
     {
         return $this->cache[$class]

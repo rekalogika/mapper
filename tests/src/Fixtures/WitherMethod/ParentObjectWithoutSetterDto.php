@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Attribute\Unalterable;
 #[Unalterable(false)]
 class ParentObjectWithoutSetterDto
 {
-    private ObjectWithImmutableSetter $object;
+    private readonly ObjectWithImmutableSetter $object;
 
     public function __construct()
     {

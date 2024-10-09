@@ -27,6 +27,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
         private PropertyListExtractorInterface $propertyListExtractor,
     ) {}
 
+    #[\Override]
     public function getPropertiesToMap(
         string $sourceClass,
         string $targetClass,

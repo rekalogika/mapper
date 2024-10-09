@@ -704,6 +704,7 @@ final class ObjectToObjectTransformer implements
         }
     }
 
+    #[\Override]
     public function warmingTransform(
         Type $sourceType,
         Type $targetType,
@@ -750,6 +751,7 @@ final class ObjectToObjectTransformer implements
         }
     }
 
+    #[\Override]
     public function isWarmable(): bool
     {
         return true;

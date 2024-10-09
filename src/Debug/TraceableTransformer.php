@@ -131,6 +131,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         }
     }
 
+    #[\Override]
     public function warmingTransform(
         Type $sourceType,
         Type $targetType,
@@ -143,6 +144,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         $this->decorated->warmingTransform($sourceType, $targetType, $context);
     }
 
+    #[\Override]
     public function isWarmable(): bool
     {
         return $this->decorated instanceof WarmableTransformerInterface

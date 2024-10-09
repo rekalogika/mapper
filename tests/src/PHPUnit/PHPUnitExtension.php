@@ -20,6 +20,7 @@ use PHPUnit\TextUI\Configuration\Configuration;
 
 class PHPUnitExtension implements Extension
 {
+    #[\Override]
     public function bootstrap(
         Configuration $configuration,
         Facade $facade,

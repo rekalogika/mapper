@@ -29,11 +29,13 @@ final readonly class AttributesExtractor implements AttributesExtractorInterface
         private PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor,
     ) {}
 
+    #[\Override]
     public function getClassAttributes(string $class): Attributes
     {
         return new Attributes(ClassUtil::getClassAttributes($class, null));
     }
 
+    #[\Override]
     public function getPropertyAttributes(string $class, string $property): Attributes
     {
         $readInfo = $this->propertyAccessInfoExtractor

@@ -26,6 +26,7 @@ return RectorConfig::configure()
         __DIR__ . '/tests/config',
         __DIR__ . '/tests/src',
     ])
+    ->withSkipPath(__DIR__ . '/tests/config/rekalogika-mapper/generated-mappings.php')
     ->withImportNames(importShortClasses: false)
     ->withPreparedSets(
         deadCode: true,
@@ -80,5 +81,6 @@ return RectorConfig::configure()
 
         ClassPropertyAssignToConstructorPromotionRector::class => [
             __DIR__ . '/tests/src/Fixtures/MapPropertyPathDto/BookWithMapInUnpromotedConstructorDto.php',
+            __DIR__ . '/tests/src/Fixtures/MapAttribute/SomeObjectWithUnpromotedConstructorDto.php',
         ],
     ]);

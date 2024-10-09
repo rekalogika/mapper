@@ -23,7 +23,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 /**
  * @internal
  */
-final class TraceableMapper implements MapperInterface, IterableMapperInterface, WarmableMapperInterface
+final readonly class TraceableMapper implements MapperInterface, IterableMapperInterface, WarmableMapperInterface
 {
     public function __construct(
         private Mapper $decorated,
@@ -35,6 +35,7 @@ final class TraceableMapper implements MapperInterface, IterableMapperInterface,
      * @param class-string<T>|T $target
      * @return T
      */
+    #[\Override]
     public function map(
         object $source,
         object|string $target,
@@ -49,6 +50,7 @@ final class TraceableMapper implements MapperInterface, IterableMapperInterface,
         return $result;
     }
 
+    #[\Override]
     public function mapIterable(
         iterable $source,
         string $target,
@@ -63,6 +65,7 @@ final class TraceableMapper implements MapperInterface, IterableMapperInterface,
         return $result;
     }
 
+    #[\Override]
     public function warmingMap(string $sourceClass, string $targetClass): void
     {
         $this->decorated->warmingMap($sourceClass, $targetClass);

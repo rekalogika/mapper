@@ -29,7 +29,9 @@ use Symfony\Component\PropertyInfo\Type;
 final class UnalterableDeterminer implements UnalterableDeterminerInterface
 {
     private const STATUS_PENDING = 1;
+
     private const STATUS_YES = 2;
+
     private const STATUS_NO = 3;
 
     /**
@@ -48,6 +50,7 @@ final class UnalterableDeterminer implements UnalterableDeterminerInterface
     /**
      * @param class-string $class
      */
+    #[\Override]
     public function isClassUnalterable(string $class): bool
     {
         $status = $this->cache[$class] ?? null;
@@ -182,6 +185,7 @@ final class UnalterableDeterminer implements UnalterableDeterminerInterface
     /**
      * @param list<Type> $types
      */
+    #[\Override]
     public function isTypesUnalterable(array $types): bool
     {
         // not unalterable value object if any of the property type is not a

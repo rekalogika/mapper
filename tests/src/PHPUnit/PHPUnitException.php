@@ -17,21 +17,18 @@ use PHPUnit\Event\Code\Throwable;
 
 class PHPUnitException extends \Exception
 {
-    private string $testId;
-    private string $retryCommand;
+    private readonly string $retryCommand;
 
     public function __construct(
         string $argv0,
-        string $id,
-        private Throwable $phpunitThrowable,
+        private readonly string $testId,
+        private readonly Throwable $phpunitThrowable,
     ) {
-        $this->testId = $id;
-
         // escapeshellarg(\escapeshellcmd()) is probably need because of phpunit
         // peculiarities
-        $this->retryCommand = \sprintf('%s --filter=%s', $argv0, escapeshellarg(escapeshellcmd($id)));
+        $this->retryCommand = \sprintf('%s --filter=%s', $argv0, escapeshellarg(escapeshellcmd($this->testId)));
 
-        parent::__construct(\sprintf('An error occurred during test "%s": %s', $id, $phpunitThrowable->message()));
+        parent::__construct(\sprintf('An error occurred during test "%s": %s', $this->testId, $phpunitThrowable->message()));
     }
 
     public function getPHPUnitThrowable(): Throwable

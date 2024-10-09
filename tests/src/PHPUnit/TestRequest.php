@@ -20,24 +20,23 @@ class TestRequest extends Request
 {
     /**
      * @param array<int,string> $argv
-     * @param string $testClass
-     * @param string $testMethod
-     * @param boolean $hasError
      */
     public function __construct(
-        private array $argv,
-        private string $testClass,
-        private string $testMethod,
-        private bool $hasError = false,
+        private readonly array $argv,
+        private readonly string $testClass,
+        private readonly string $testMethod,
+        private readonly bool $hasError = false,
     ) {
         parent::__construct();
     }
 
+    #[\Override]
     public function getUri(): string
     {
         return implode(' ', array_map('escapeshellarg', $this->argv));
     }
 
+    #[\Override]
     public function getMethod(): string
     {
         return 'PHPUNIT';
@@ -48,6 +47,7 @@ class TestRequest extends Request
         return new TestResponse($this->hasError);
     }
 
+    #[\Override]
     public function getClientIp(): string
     {
         return \sprintf('%s::%s', $this->testClass, $this->testMethod);

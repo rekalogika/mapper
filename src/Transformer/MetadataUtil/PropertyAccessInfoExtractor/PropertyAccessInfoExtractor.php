@@ -29,6 +29,7 @@ final readonly class PropertyAccessInfoExtractor implements PropertyAccessInfoEx
         private PropertyWriteInfoExtractorInterface $propertyWriteInfoExtractor,
     ) {}
 
+    #[\Override]
     public function getReadInfo(
         string $class,
         string $property,
@@ -37,6 +38,7 @@ final readonly class PropertyAccessInfoExtractor implements PropertyAccessInfoEx
             ->getReadInfo($class, $property);
     }
 
+    #[\Override]
     public function getWriteInfo(
         string $class,
         string $property,
@@ -50,6 +52,7 @@ final readonly class PropertyAccessInfoExtractor implements PropertyAccessInfoEx
         );
     }
 
+    #[\Override]
     public function getConstructorInfo(
         string $class,
         string $property,

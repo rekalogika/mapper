@@ -18,13 +18,14 @@ use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
-class MapperCacheWarmer implements CacheWarmerInterface
+final readonly class MapperCacheWarmer implements CacheWarmerInterface
 {
     public function __construct(
         private string $configDir,
         private MapperInterface $mapper,
     ) {}
 
+    #[\Override]
     public function isOptional(): bool
     {
         return true;
@@ -65,6 +66,7 @@ class MapperCacheWarmer implements CacheWarmerInterface
         return $mappingCollection->getClassMappings();
     }
 
+    #[\Override]
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $mapper = $this->mapper;

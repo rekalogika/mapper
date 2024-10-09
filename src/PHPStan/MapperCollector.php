@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\PHPStan;
 use PhpParser\Node;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Identifier;
 use PHPStan\Analyser\Scope;
 use PHPStan\Collectors\Collector;
 use PHPStan\Type\ObjectType;
@@ -23,23 +24,24 @@ use Rekalogika\Mapper\IterableMapperInterface;
 use Rekalogika\Mapper\MapperInterface;
 
 /**
- * @todo collect from mapiterable
- * @implements Collector<Node\Expr\MethodCall,list<array{class-string|false,class-string|false,int}>>
+ * @implements Collector<MethodCall, list<array{(class-string | false), (class-string | false), int}>>
  */
 final class MapperCollector implements Collector
 {
+    #[\Override]
     public function getNodeType(): string
     {
         return MethodCall::class;
     }
 
+    #[\Override]
     public function processNode(Node $node, Scope $scope)
     {
         // $fileName = $scope->getFile();
         $line = $node->getLine();
 
         // ensure method name is identifier
-        if (!$node->name instanceof Node\Identifier) {
+        if (!$node->name instanceof Identifier) {
             return null;
         }
 

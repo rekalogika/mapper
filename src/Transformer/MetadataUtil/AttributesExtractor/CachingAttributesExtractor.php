@@ -32,15 +32,17 @@ final class CachingAttributesExtractor implements AttributesExtractorInterface
     private array $propertyAttributesCache = [];
 
     public function __construct(
-        private AttributesExtractorInterface $decorated,
+        private readonly AttributesExtractorInterface $decorated,
     ) {}
 
+    #[\Override]
     public function getClassAttributes(string $class): Attributes
     {
         return $this->classAttributesCache[$class]
             ??= $this->decorated->getClassAttributes($class);
     }
 
+    #[\Override]
     public function getPropertyAttributes(string $class, string $property): Attributes
     {
         return $this->propertyAttributesCache[$class][$property]

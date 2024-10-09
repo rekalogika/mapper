@@ -25,7 +25,7 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
     private ?\Closure $autoloader = null;
 
     public function __construct(
-        private string $proxyDirectory,
+        private readonly string $proxyDirectory,
     ) {
         // ensure directory exists
         if (!is_dir($this->proxyDirectory)) {

@@ -74,6 +74,7 @@ final class CachingArrayLikeMetadataFactory implements
         return $this->cache[$cacheKey] = $arrayLikeMetadata;
     }
 
+    #[\Override]
     public function warmingCreateArrayLikeMetadata(
         Type $sourceType,
         Type $targetType,
@@ -88,6 +89,7 @@ final class CachingArrayLikeMetadataFactory implements
         $cacheKey = hash('xxh128', serialize([$sourceType, $targetType]));
         $cacheItem = $this->cacheItemPool->getWarmedUpItem($cacheKey);
         $cacheItem->set($result);
+
         $this->cacheItemPool->saveWarmedUp($cacheItem);
 
         return $result;

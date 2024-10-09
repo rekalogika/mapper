@@ -264,6 +264,7 @@ final class MainTransformer implements
      * @param array<array-key,Type> $sourceTypes
      * @param array<array-key,Type> $targetTypes
      */
+    #[\Override]
     public function warmingTransform(
         array $sourceTypes,
         array $targetTypes,
