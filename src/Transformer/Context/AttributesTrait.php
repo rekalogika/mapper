@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Context;
 
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
+use Rekalogika\Mapper\Util\ClassUtil;
 
 trait AttributesTrait
 {
@@ -38,10 +39,12 @@ trait AttributesTrait
 
         foreach ($attributes as $attribute) {
             $objects[] = $attribute;
-            $class = $attribute::class;
-            $classToObjects[$class][] = $attribute;
-        }
+            $classes = ClassUtil::getAllClassesFromObject($attribute);
 
+            foreach ($classes as $class) {
+                $classToObjects[$class][] = $attribute;
+            }
+        }
         $this->objects = $objects;
         $this->classToObjects = $classToObjects;
     }
