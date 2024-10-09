@@ -97,6 +97,7 @@ final class ObjectMapperTransformer implements
         );
     }
 
+    #[\Override]
     public function warmingTransform(
         Type $sourceType,
         Type $targetType,
@@ -118,6 +119,7 @@ final class ObjectMapperTransformer implements
         }
     }
 
+    #[\Override]
     public function isWarmable(): bool
     {
         return true;

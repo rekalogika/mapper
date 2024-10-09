@@ -73,6 +73,7 @@ final class CachingObjectMapperResolver implements
         return $this->objectMapperCache[$sourceClass][$targetClass] = $objectMapper;
     }
 
+    #[\Override]
     public function warmingGetObjectMapper(
         string $sourceClass,
         string $targetClass,
