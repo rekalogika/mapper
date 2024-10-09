@@ -8,6 +8,7 @@
 * deps: remove phpstan unused public
 * feat: attributes inheritance is now preserved
 * chore: rector run
+* perf: object mapper resolver cache prewarming
 
 ## 1.9.4
 

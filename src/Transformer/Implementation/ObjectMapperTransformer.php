@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Psr\Container\ContainerInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableObjectMapperResolverInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperResolverInterface;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperTableFactoryInterface;
@@ -29,7 +31,8 @@ use Symfony\Component\PropertyInfo\Type;
 
 final class ObjectMapperTransformer implements
     TransformerInterface,
-    MainTransformerAwareInterface
+    MainTransformerAwareInterface,
+    WarmableTransformerInterface
 {
     use MainTransformerAwareTrait;
 
@@ -92,6 +95,32 @@ final class ObjectMapperTransformer implements
             targetType: $targetType,
             context: $context,
         );
+    }
+
+    public function warmingTransform(
+        Type $sourceType,
+        Type $targetType,
+        Context $context,
+    ): void {
+        $sourceClass = $sourceType->getClassName();
+        $targetClass = $targetType->getClassName();
+
+        if (
+            ($sourceClass === null || !class_exists($sourceClass))
+            || ($targetClass === null || !class_exists($targetClass))
+        ) {
+            return;
+        }
+
+        if ($this->objectMapperResolver instanceof WarmableObjectMapperResolverInterface) {
+            $this->objectMapperResolver
+                ->warmingGetObjectMapper($sourceClass, $targetClass);
+        }
+    }
+
+    public function isWarmable(): bool
+    {
+        return true;
     }
 
     #[\Override]

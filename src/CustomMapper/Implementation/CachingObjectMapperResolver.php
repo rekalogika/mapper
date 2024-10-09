@@ -14,13 +14,17 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\CustomMapper\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableObjectMapperResolverInterface;
 use Rekalogika\Mapper\CustomMapper\ObjectMapperResolverInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 
 /**
  * @internal
  */
-final class CachingObjectMapperResolver implements ObjectMapperResolverInterface
+final class CachingObjectMapperResolver implements
+    ObjectMapperResolverInterface,
+    WarmableObjectMapperResolverInterface
 {
     /**
      * @var array<class-string,array<class-string,ServiceMethodSpecification>>
@@ -67,5 +71,25 @@ final class CachingObjectMapperResolver implements ObjectMapperResolverInterface
         $this->cacheItemPool->save($cacheItem);
 
         return $this->objectMapperCache[$sourceClass][$targetClass] = $objectMapper;
+    }
+
+    public function warmingGetObjectMapper(
+        string $sourceClass,
+        string $targetClass,
+    ): ServiceMethodSpecification {
+        $result = $this->objectMapperResolver
+            ->getObjectMapper($sourceClass, $targetClass);
+
+        if (!$this->cacheItemPool instanceof WarmableCacheInterface) {
+            return $result;
+        }
+
+        $cacheKey = hash('xxh128', $sourceClass . $targetClass);
+        $cacheItem = $this->cacheItemPool->getWarmedUpItem($cacheKey);
+        $cacheItem->set($result);
+
+        $this->cacheItemPool->saveWarmedUp($cacheItem);
+
+        return $result;
     }
 }
