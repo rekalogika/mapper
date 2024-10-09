@@ -27,7 +27,6 @@ interface AttributesExtractorInterface
 
     /**
      * @param class-string $class
-     * @param string $property
      */
     public function getPropertyAttributes(string $class, string $property): Attributes;
 }

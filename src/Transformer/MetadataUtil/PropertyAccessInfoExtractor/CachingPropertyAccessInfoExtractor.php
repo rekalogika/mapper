@@ -38,12 +38,13 @@ final class CachingPropertyAccessInfoExtractor implements PropertyAccessInfoExtr
     private array $constructorInfoCache = [];
 
     public function __construct(
-        private PropertyAccessInfoExtractorInterface $decorated,
+        private readonly PropertyAccessInfoExtractorInterface $decorated,
     ) {}
 
     /**
      * @param class-string $class
      */
+    #[\Override]
     public function getReadInfo(
         string $class,
         string $property,
@@ -65,6 +66,7 @@ final class CachingPropertyAccessInfoExtractor implements PropertyAccessInfoExtr
     /**
      * @param class-string $class
      */
+    #[\Override]
     public function getWriteInfo(
         string $class,
         string $property,
@@ -88,6 +90,7 @@ final class CachingPropertyAccessInfoExtractor implements PropertyAccessInfoExtr
     /**
      * @param class-string $class
      */
+    #[\Override]
     public function getConstructorInfo(
         string $class,
         string $property,

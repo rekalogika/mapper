@@ -21,6 +21,7 @@ use Rekalogika\Mapper\Util\ClassUtil;
  */
 final readonly class DynamicPropertiesDeterminer implements DynamicPropertiesDeterminerInterface
 {
+    #[\Override]
     public function allowsDynamicProperties(string $class): bool
     {
         return ClassUtil::allowsDynamicProperties($class);

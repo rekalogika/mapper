@@ -95,6 +95,7 @@ final class CachingTransformerRegistry implements
      * @param array<array-key,Type|MixedType> $sourceTypes
      * @param array<array-key,Type|MixedType> $targetTypes
      */
+    #[\Override]
     public function warmingFindBySourceAndTargetTypes(
         array $sourceTypes,
         array $targetTypes,
@@ -109,6 +110,7 @@ final class CachingTransformerRegistry implements
         $cacheKey = $this->getCacheKey($sourceTypes, $targetTypes);
         $cacheItem = $this->cacheItemPool->getWarmedUpItem($cacheKey);
         $cacheItem->set($result);
+
         $this->cacheItemPool->saveWarmedUp($cacheItem);
 
         return $result;

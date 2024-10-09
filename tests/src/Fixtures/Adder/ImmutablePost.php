@@ -17,7 +17,6 @@ readonly class ImmutablePost
 {
     /**
      * @param array<int,Comment> $comments
-     * @param string $content
      */
     public function __construct(
         private array $comments = [],

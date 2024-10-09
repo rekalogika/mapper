@@ -19,6 +19,7 @@ use PHPUnit\Event\Test\PreparationStartedSubscriber;
 
 class MapperPreparationStartedSubscriber implements PreparationStartedSubscriber
 {
+    #[\Override]
     public function notify(PreparationStarted $event): void
     {
         $test = $event->test();

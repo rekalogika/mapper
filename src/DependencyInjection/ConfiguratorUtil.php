@@ -141,14 +141,7 @@ final class ConfiguratorUtil
         }
 
         $name = $type->getName();
-
-        foreach (self::getExtraArgumentClasses() as $extraArgumentClass) {
-            if ($name === $extraArgumentClass) {
-                return false;
-            }
-        }
-
-        return true;
+        return !\in_array($name, self::getExtraArgumentClasses(), true);
     }
 
     public static function getReturnTypeClass(

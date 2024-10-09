@@ -39,15 +39,17 @@ use Symfony\Component\Filesystem\Filesystem;
 /**
  * @implements Rule<CollectedDataNode>
  */
-final class MapperRule implements Rule
+final readonly class MapperRule implements Rule
 {
     public function __construct(private ?string $mapperDumpFile = null) {}
 
+    #[\Override]
     public function getNodeType(): string
     {
         return CollectedDataNode::class;
     }
 
+    #[\Override]
     public function processNode(Node $node, Scope $scope): array
     {
         if ($this->mapperDumpFile === null) {

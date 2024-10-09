@@ -132,6 +132,7 @@ final class CachingObjectToObjectMetadataFactory implements
             || $targetFileModifiedTime > $targetModifiedTime;
     }
 
+    #[\Override]
     public function warmingCreateObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,
@@ -146,6 +147,7 @@ final class CachingObjectToObjectMetadataFactory implements
         $cacheKey = hash('xxh128', $sourceClass . $targetClass);
         $cacheItem = $this->cacheItemPool->getWarmedUpItem($cacheKey);
         $cacheItem->set($result);
+
         $this->cacheItemPool->saveWarmedUp($cacheItem);
 
         return $result;

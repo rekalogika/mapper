@@ -7,6 +7,7 @@
 * fix(`PHPStan`): fix mapping metadata generation determinism
 * deps: remove phpstan unused public
 * feat: attributes inheritance is now preserved
+* chore: rector run
 
 ## 1.9.4
 

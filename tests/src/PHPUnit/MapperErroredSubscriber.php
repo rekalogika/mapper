@@ -18,6 +18,7 @@ use PHPUnit\Event\Test\ErroredSubscriber;
 
 class MapperErroredSubscriber implements ErroredSubscriber
 {
+    #[\Override]
     public function notify(Errored $event): void
     {
         $exception = $event->throwable();

@@ -36,6 +36,7 @@ final readonly class WarmableCacheDecorator implements WarmableCacheInterface
         );
     }
 
+    #[\Override]
     public function getItem(string $key): CacheItemInterface
     {
         $item = $this->readonlyCache->getItem($key);
@@ -47,6 +48,7 @@ final readonly class WarmableCacheDecorator implements WarmableCacheInterface
         return $this->writableCache->getItem($key);
     }
 
+    #[\Override]
     public function getWarmedUpItem(string $key): CacheItemInterface
     {
         return $this->readonlyCache->getItem($key);
@@ -56,47 +58,56 @@ final readonly class WarmableCacheDecorator implements WarmableCacheInterface
      * @param array<array-key,string> $keys
      * @return iterable<mixed>
      */
+    #[\Override]
     public function getItems(array $keys = []): iterable
     {
         throw new BadMethodCallException('Not implemented');
     }
 
+    #[\Override]
     public function hasItem(string $key): bool
     {
         return $this->readonlyCache->hasItem($key)
             || $this->writableCache->hasItem($key);
     }
 
+    #[\Override]
     public function clear(): bool
     {
         return $this->writableCache->clear();
     }
 
+    #[\Override]
     public function deleteItem(string $key): bool
     {
         return $this->writableCache->deleteItem($key);
     }
 
+    #[\Override]
     public function deleteItems(array $keys): bool
     {
         return $this->writableCache->deleteItems($keys);
     }
 
+    #[\Override]
     public function save(CacheItemInterface $item): bool
     {
         return $this->writableCache->save($item);
     }
 
+    #[\Override]
     public function saveWarmedUp(CacheItemInterface $item): bool
     {
         return $this->readonlyCache->save($item);
     }
 
+    #[\Override]
     public function saveDeferred(CacheItemInterface $item): bool
     {
         return $this->writableCache->saveDeferred($item);
     }
 
+    #[\Override]
     public function commit(): bool
     {
         return $this->writableCache->commit();

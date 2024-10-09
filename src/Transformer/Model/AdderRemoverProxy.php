@@ -22,16 +22,16 @@ use Rekalogika\Mapper\Exception\LogicException;
  * @implements \IteratorAggregate<TKey,TValue>
  * @internal
  */
-final class AdderRemoverProxy implements
+final readonly class AdderRemoverProxy implements
     \ArrayAccess,
     \IteratorAggregate,
     \Countable
 {
     public function __construct(
-        private readonly object $hostObject,
-        private readonly ?string $getterMethodName,
-        private readonly ?string $adderMethodName,
-        private readonly ?string $removerMethodName,
+        private object $hostObject,
+        private ?string $getterMethodName,
+        private ?string $adderMethodName,
+        private ?string $removerMethodName,
     ) {}
 
     /**

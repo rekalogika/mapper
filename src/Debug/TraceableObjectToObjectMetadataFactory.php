@@ -41,6 +41,7 @@ final readonly class TraceableObjectToObjectMetadataFactory implements
         return $metadata;
     }
 
+    #[\Override]
     public function warmingCreateObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,

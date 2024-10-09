@@ -45,6 +45,7 @@ trait AttributesTrait
                 $classToObjects[$class][] = $attribute;
             }
         }
+
         $this->objects = $objects;
         $this->classToObjects = $classToObjects;
     }

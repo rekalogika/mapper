@@ -40,12 +40,19 @@ use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
 final class MetadataUtilLocator
 {
     private ?DynamicPropertiesDeterminerInterface $dynamicPropertiesDeterminer = null;
+
     private ?PropertyAccessInfoExtractorInterface $propertyAccessInfoExtractor = null;
+
     private ?AttributesExtractorInterface $attributesExtractor = null;
+
     private ?PropertyMetadataFactoryInterface $propertyMetadataFactory = null;
+
     private ?ClassMetadataFactoryInterface $classMetadataFactory = null;
+
     private ?UnalterableDeterminerInterface $unalterableDeterminer = null;
+
     private ?PropertyMappingResolverInterface $propertyMappingResolver = null;
+
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
 
     public function __construct(

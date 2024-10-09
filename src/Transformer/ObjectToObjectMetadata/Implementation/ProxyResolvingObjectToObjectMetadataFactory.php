@@ -40,6 +40,7 @@ final readonly class ProxyResolvingObjectToObjectMetadataFactory implements
         );
     }
 
+    #[\Override]
     public function warmingCreateObjectToObjectMetadata(
         string $sourceClass,
         string $targetClass,

@@ -181,7 +181,7 @@ final class TraversableToArrayAccessTransformer implements
         }
 
         if ($target instanceof AdderRemoverProxy) {
-            foreach ($transformed as $key => $value) {
+            foreach ($transformed as $value) {
                 $target = $target->add($value);
 
                 if (\is_array($values)) {
@@ -212,7 +212,7 @@ final class TraversableToArrayAccessTransformer implements
             $isList = \is_array($target) && array_is_list($target);
 
             if ($target instanceof AdderRemoverProxy) {
-                foreach ($target as $key => $value) {
+                foreach ($target as $value) {
                     if (!\in_array($value, $values, true)) {
                         $target = $target->remove($value);
                     }
