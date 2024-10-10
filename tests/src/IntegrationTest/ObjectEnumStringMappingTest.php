@@ -16,20 +16,39 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithEnumProperty;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithNumericStringableProperty;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithStringableProperty;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithStringProperty;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeEnum;
-use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithStringablePropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithFloatPropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithIntegerPropertyDto;
+use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithStringPropertyDto;
 
 class ObjectEnumStringMappingTest extends FrameworkTestCase
 {
     public function testStringableToString(): void
     {
         $object = new ObjectWithStringableProperty();
-        $result = $this->mapper->map($object, ObjectWithStringablePropertyDto::class);
+        $result = $this->mapper->map($object, ObjectWithStringPropertyDto::class);
 
-        $this->assertEquals('foo', $result->stringable);
+        $this->assertEquals('foo', $result->property);
+    }
+
+    public function testStringableToInteger(): void
+    {
+        $object = new ObjectWithNumericStringableProperty();
+        $result = $this->mapper->map($object, ObjectWithIntegerPropertyDto::class);
+
+        $this->assertEquals(123456, $result->property);
+    }
+
+    public function testStringableToFloat(): void
+    {
+        $object = new ObjectWithNumericStringableProperty();
+        $result = $this->mapper->map($object, ObjectWithFloatPropertyDto::class);
+
+        $this->assertEquals(123456.789, $result->property);
     }
 
     public function testEnumToString(): void

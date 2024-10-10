@@ -21,6 +21,9 @@ use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @todo rename class to StringToEnumTransformer
+ */
 final readonly class StringToBackedEnumTransformer implements TransformerInterface
 {
     #[\Override]

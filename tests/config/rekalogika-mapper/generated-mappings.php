@@ -358,21 +358,33 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on line 38
+        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on line 57
         source: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithEnumProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithStringProperty::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on lines 47, 58, 67
+        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on line 49
+        source: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithNumericStringableProperty::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithFloatPropertyDto::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on line 41
+        source: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithNumericStringableProperty::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithIntegerPropertyDto::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on lines 66, 77, 86
         source: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithStringProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithEnumProperty::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on line 30
+        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on line 33
         source: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithStringableProperty::class,
-        target: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithStringablePropertyDto::class
+        target: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto\ObjectWithStringPropertyDto::class
     );
     
     $mappingCollection->addObjectMapping(

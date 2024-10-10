@@ -11,14 +11,9 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable;
+namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto;
 
-class ObjectWithStringableProperty
+class ObjectWithStringPropertyDto
 {
-    public ObjectImplementingStringable $property;
-
-    public function __construct()
-    {
-        $this->property = new ObjectImplementingStringable();
-    }
+    public ?string $property = null;
 }

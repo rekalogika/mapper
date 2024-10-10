@@ -13,12 +13,12 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable;
 
-class ObjectWithStringableProperty
+class ObjectWithNumericStringableProperty
 {
-    public ObjectImplementingStringable $property;
+    public ObjectImplementingNumericStringable $property;
 
     public function __construct()
     {
-        $this->property = new ObjectImplementingStringable();
+        $this->property = new ObjectImplementingNumericStringable();
     }
 }
