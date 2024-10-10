@@ -40,7 +40,7 @@ final class ObjectCache
         $this->preCache = new \WeakMap();
     }
 
-    private function isBlacklisted(mixed $source): bool
+    private function isExcluded(mixed $source): bool
     {
         return $source instanceof \DateTimeInterface
             || $source instanceof \UnitEnum;
@@ -58,7 +58,7 @@ final class ObjectCache
             return;
         }
 
-        if ($this->isBlacklisted($source)) {
+        if ($this->isExcluded($source)) {
             return;
         }
 
@@ -79,7 +79,7 @@ final class ObjectCache
             return;
         }
 
-        if ($this->isBlacklisted($source)) {
+        if ($this->isExcluded($source)) {
             return;
         }
 
@@ -96,7 +96,7 @@ final class ObjectCache
             return false;
         }
 
-        if ($this->isBlacklisted($source)) {
+        if ($this->isExcluded($source)) {
             return false;
         }
 
@@ -119,7 +119,7 @@ final class ObjectCache
             throw new CircularReferenceException();
         }
 
-        if ($this->isBlacklisted($source)) {
+        if ($this->isExcluded($source)) {
             throw new CachedTargetObjectNotFoundException();
         }
 
@@ -138,7 +138,7 @@ final class ObjectCache
             return;
         }
 
-        if ($this->isBlacklisted($source)) {
+        if ($this->isExcluded($source)) {
             return;
         }
 
