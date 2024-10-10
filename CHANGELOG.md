@@ -9,6 +9,7 @@
 * feat: attributes inheritance is now preserved
 * chore: rector run
 * perf: object mapper resolver cache prewarming
+* fix: terms
 
 ## 1.9.4
 
