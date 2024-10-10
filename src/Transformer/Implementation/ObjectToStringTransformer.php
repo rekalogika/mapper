@@ -17,9 +17,13 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
+use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
+/**
+ * @todo rename class to ObjectToScalarTransformer
+ */
 final readonly class ObjectToStringTransformer implements TransformerInterface
 {
     #[\Override]
@@ -31,7 +35,17 @@ final readonly class ObjectToStringTransformer implements TransformerInterface
         Context $context,
     ): mixed {
         if ($source instanceof \Stringable) {
-            return (string) $source;
+            if (TypeCheck::isString($targetType)) {
+                return (string) $source;
+            } elseif (TypeCheck::isInt($targetType)) {
+                return (int) (string) $source;
+            } elseif (TypeCheck::isFloat($targetType)) {
+                return (float) (string) $source;
+            } elseif (TypeCheck::isBool($targetType)) {
+                return (bool) (string)  $source;
+            } else {
+                return (string) $source;
+            }
         } elseif ($source instanceof \BackedEnum) {
             return $source->value;
         } elseif ($source instanceof \UnitEnum) {
@@ -47,6 +61,21 @@ final readonly class ObjectToStringTransformer implements TransformerInterface
         yield new TypeMapping(
             TypeFactory::objectOfClass(\Stringable::class),
             TypeFactory::string(),
+        );
+
+        yield new TypeMapping(
+            TypeFactory::objectOfClass(\Stringable::class),
+            TypeFactory::int(),
+        );
+
+        yield new TypeMapping(
+            TypeFactory::objectOfClass(\Stringable::class),
+            TypeFactory::float(),
+        );
+
+        yield new TypeMapping(
+            TypeFactory::objectOfClass(\Stringable::class),
+            TypeFactory::bool(),
         );
 
         yield new TypeMapping(

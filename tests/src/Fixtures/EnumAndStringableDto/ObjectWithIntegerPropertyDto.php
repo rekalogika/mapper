@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\EnumAndStringableDto;
 
-class ObjectWithStringablePropertyDto
+class ObjectWithIntegerPropertyDto
 {
-    public ?string $stringable = null;
+    public ?int $property = null;
 }

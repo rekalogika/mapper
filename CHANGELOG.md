@@ -10,6 +10,7 @@
 * chore: rector run
 * perf: object mapper resolver cache prewarming
 * fix: terms
+* feat: transformation from `Stringable` to int, float, and bool by casting
 
 ## 1.9.4
 
