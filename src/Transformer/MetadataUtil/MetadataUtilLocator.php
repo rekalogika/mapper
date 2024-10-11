@@ -25,6 +25,8 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\Cachi
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractor\PropertyAccessInfoExtractor;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver\PropertyMappingResolver;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory\PropertyMetadataFactory;
+use Rekalogika\Mapper\Transformer\MetadataUtil\TargetClassResolver\CachingTargetClassResolver;
+use Rekalogika\Mapper\Transformer\MetadataUtil\TargetClassResolver\TargetClassResolver;
 use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminer\UnalterableDeterminer;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
@@ -54,6 +56,8 @@ final class MetadataUtilLocator
     private ?PropertyMappingResolverInterface $propertyMappingResolver = null;
 
     private ?ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory = null;
+
+    private ?TargetClassResolverInterface $targetClassResolver = null;
 
     public function __construct(
         private readonly PropertyListExtractorInterface $propertyListExtractor,
@@ -133,6 +137,13 @@ final class MetadataUtilLocator
             );
     }
 
+    private function getTargetClassResolver(): TargetClassResolverInterface
+    {
+        return $this->targetClassResolver ??= new CachingTargetClassResolver(
+            new TargetClassResolver(),
+        );
+    }
+
     public function getObjectToObjectMetadataFactory(): ObjectToObjectMetadataFactoryInterface
     {
         return $this->objectToObjectMetadataFactory
@@ -142,6 +153,7 @@ final class MetadataUtilLocator
                 propertyMetadataFactory: $this->getPropertyMetadataFactory(),
                 classMetadataFactory: $this->getClassMetadataFactory(),
                 propertyMappingResolver: $this->getPropertyMappingResolver(),
+                targetClassResolver: $this->getTargetClassResolver(),
             );
     }
 }
