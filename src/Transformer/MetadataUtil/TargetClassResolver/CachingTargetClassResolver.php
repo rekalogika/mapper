@@ -23,16 +23,32 @@ final class CachingTargetClassResolver implements TargetClassResolverInterface
     /**
      * @var array<class-string,array<class-string,class-string>>
      */
-    private array $cache = [];
+    private array $resolveTargetClassCache = [];
+
+    /**
+     * @var array<class-string,array<class-string,list<class-string>>>
+     */
+    private array $getAllConcreteTargetClassesCache = [];
 
     public function __construct(
         private readonly TargetClassResolverInterface $decorated,
     ) {}
 
     #[\Override]
-    public function resolveTargetClass(string $sourceClass, string $targetClass): string
-    {
-        return $this->cache[$sourceClass][$targetClass]
+    public function resolveTargetClass(
+        string $sourceClass,
+        string $targetClass,
+    ): string {
+        return $this->resolveTargetClassCache[$sourceClass][$targetClass]
             ??= $this->decorated->resolveTargetClass($sourceClass, $targetClass);
+    }
+
+    #[\Override]
+    public function getAllConcreteTargetClasses(
+        string $sourceClass,
+        string $targetClass,
+    ): array {
+        return $this->getAllConcreteTargetClassesCache[$sourceClass][$targetClass]
+            ??= $this->decorated->getAllConcreteTargetClasses($sourceClass, $targetClass);
     }
 }

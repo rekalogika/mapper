@@ -4,6 +4,7 @@
 
 * refactor: spin off `resolveTargetClass()` to separate class
 * perf: proxy warming
+* feat: process proxies of all classes in the inheritance chain
 
 ## 1.10.0
 
