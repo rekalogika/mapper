@@ -484,49 +484,55 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapAttributeTest.php on lines 90, 110
+        // tests/src/IntegrationTest/MapAttributeTest.php on lines 92, 112
         source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\OtherObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapAttributeTest.php on line 50
+        // tests/src/IntegrationTest/MapAttributeTest.php on line 52
         source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectExtendingSomeObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapAttributeTest.php on line 70
+        // tests/src/IntegrationTest/MapAttributeTest.php on line 72
         source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectOverridingSomeObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapAttributeTest.php on line 30
+        // tests/src/IntegrationTest/MapAttributeTest.php on line 32
         source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapAttributeTest.php on line 130
+        // tests/src/IntegrationTest/MapAttributeTest.php on line 141
+        source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectWithInvalidTargetDto::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/MapAttributeTest.php on line 132
         source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectWithUnpromotedConstructorDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapAttributeTest.php on line 120
+        // tests/src/IntegrationTest/MapAttributeTest.php on line 122
         source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectExtendingOtherObject::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapAttributeTest.php on line 100
+        // tests/src/IntegrationTest/MapAttributeTest.php on line 102
         source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\OtherObject::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapAttributeTest.php on lines 40, 60, 80
+        // tests/src/IntegrationTest/MapAttributeTest.php on lines 42, 62, 82
         source: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject::class
     );

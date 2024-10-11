@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolver;
 
 use Rekalogika\Mapper\Attribute\Map;
+use Rekalogika\Mapper\Transformer\Exception\PairedPropertyNotFoundException;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolverInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
@@ -43,6 +44,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
                 class: $targetClass,
                 property: $targetProperty,
                 pairedClass: $sourceClass,
+                pairedClassProperties: $sourceProperties,
             );
 
             $targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
@@ -53,6 +55,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
                 class: $sourceClass,
                 property: $sourceProperty,
                 pairedClass: $targetClass,
+                pairedClassProperties: $targetProperties,
             );
 
             $targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
@@ -64,6 +67,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
                     class: $targetClass,
                     property: $targetProperty,
                     pairedClass: $sourceClass,
+                    pairedClassProperties: $sourceProperties,
                 );
 
                 $targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
@@ -82,11 +86,13 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
     /**
      * @param class-string $class
      * @param class-string $pairedClass
+     * @param list<string> $pairedClassProperties
      */
     private function determinePairedProperty(
         string $class,
         string $property,
         string $pairedClass,
+        array $pairedClassProperties,
     ): string {
         $attributes = ClassUtil::getPropertyAttributes(
             class: $class,
@@ -104,7 +110,21 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
         ));
 
         if (\count($attributesWithClass) >= 1) {
-            return $attributesWithClass[0]->property;
+            $pairedProperty = $attributesWithClass[0]->property;
+
+            if (
+                !$this->isPropertyPath($pairedProperty)
+                && !\in_array($pairedProperty, $pairedClassProperties, true)
+            ) {
+                throw new PairedPropertyNotFoundException(
+                    class: $class,
+                    property: $property,
+                    pairedClass: $pairedClass,
+                    pairedProperty: $pairedProperty,
+                );
+            }
+
+            return $pairedProperty;
         }
 
         // process attributes without pairedClass
@@ -125,7 +145,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
 
     /**
      * @param class-string $class
-     * @return array<int,string>
+     * @return list<string>
      */
     private function listProperties(
         string $class,
@@ -133,5 +153,10 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
         $properties = $this->propertyListExtractor->getProperties($class) ?? [];
 
         return array_values($properties);
+    }
+
+    private function isPropertyPath(string $property): bool
+    {
+        return str_contains($property, '.') || str_contains($property, '[');
     }
 }
