@@ -3,6 +3,7 @@
 ## 1.10.1
 
 * refactor: spin off `resolveTargetClass()` to separate class
+* perf: proxy warming
 
 ## 1.10.0
 

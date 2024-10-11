@@ -13,19 +13,25 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Proxy\Implementation;
 
+use Rekalogika\Mapper\CacheWarmer\WarmableProxyRegistryInterface;
+use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
 use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
 
 /**
  * @internal
  */
-final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInterface
+final class ProxyRegistry implements
+    ProxyRegistryInterface,
+    ProxyAutoloaderInterface,
+    WarmableProxyRegistryInterface
 {
     /** @var ?\Closure(string): void */
     private ?\Closure $autoloader = null;
 
     public function __construct(
         private readonly string $proxyDirectory,
+        private readonly ?string $preWarmedProxyDirectory = null,
     ) {
         // ensure directory exists
         if (!is_dir($this->proxyDirectory)) {
@@ -33,12 +39,35 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         }
     }
 
+    public function warmingRegisterProxy(string $class, string $sourceCode): void
+    {
+        $preWarmedProxyDirectory = $this->preWarmedProxyDirectory;
+
+        if (null === $preWarmedProxyDirectory) {
+            throw new LogicException('Pre-warmed proxy directory is not set.');
+        }
+
+        if (!is_dir($preWarmedProxyDirectory)) {
+            mkdir($preWarmedProxyDirectory, 0755, true);
+        }
+
+        $this->doRegisterProxy($class, $sourceCode, $preWarmedProxyDirectory);
+    }
+
     #[\Override]
     public function registerProxy(string $class, string $sourceCode): void
     {
+        $this->doRegisterProxy($class, $sourceCode, $this->proxyDirectory);
+    }
+
+    private function doRegisterProxy(
+        string $class,
+        string $sourceCode,
+        string $directory,
+    ): void {
         $proxyFile = \sprintf(
             '%s/%s',
-            $this->proxyDirectory,
+            $directory,
             self::getProxyFileName($class),
         );
 
@@ -58,12 +87,29 @@ final class ProxyRegistry implements ProxyRegistryInterface, ProxyAutoloaderInte
         }
 
         $proxyDirectory = $this->proxyDirectory;
+        $preWarmedProxyDirectory = $this->preWarmedProxyDirectory;
 
-        $this->autoloader = static function (string $class) use ($proxyDirectory): void {
+        $this->autoloader = static function (string $class) use ($proxyDirectory, $preWarmedProxyDirectory): void {
+            $proxyFileName = self::getProxyFileName($class);
+
+            if ($preWarmedProxyDirectory !== null) {
+                $preWarmedProxyFile = \sprintf(
+                    '%s/%s',
+                    $preWarmedProxyDirectory,
+                    $proxyFileName,
+                );
+
+                if (file_exists($preWarmedProxyFile)) {
+                    require $preWarmedProxyFile;
+
+                    return;
+                }
+            }
+
             $proxyFile = \sprintf(
                 '%s/%s',
                 $proxyDirectory,
-                self::getProxyFileName($class),
+                $proxyFileName,
             );
 
             if (file_exists($proxyFile)) {

@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableProxyFactoryInterface;
 use Rekalogika\Mapper\Exception\RuntimeException;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
@@ -36,6 +37,7 @@ final class CachingObjectToObjectMetadataFactory implements
     public function __construct(
         private readonly ObjectToObjectMetadataFactoryInterface $decorated,
         private readonly CacheItemPoolInterface $cacheItemPool,
+        private readonly WarmableProxyFactoryInterface $proxyFactory,
         private readonly bool $debug,
     ) {}
 
@@ -137,13 +139,16 @@ final class CachingObjectToObjectMetadataFactory implements
         string $sourceClass,
         string $targetClass,
     ): ObjectToObjectMetadata {
-        $result = $this->decorated->
-            createObjectToObjectMetadata($sourceClass, $targetClass);
+        $result = $this->decorated->createObjectToObjectMetadata($sourceClass, $targetClass);
 
         if (!$this->cacheItemPool instanceof WarmableCacheInterface) {
             return $result;
         }
 
+        // warm proxy
+        $this->proxyFactory->warmingCreateProxy($result->getTargetClass());
+
+        // warm cache
         $cacheKey = hash('xxh128', $sourceClass . $targetClass);
         $cacheItem = $this->cacheItemPool->getWarmedUpItem($cacheKey);
         $cacheItem->set($result);

@@ -340,6 +340,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('.inner'),
             service($createCache($services, 'object_to_object_metadata_factory')),
+            service('rekalogika.mapper.proxy.factory'),
             param('kernel.debug'),
         ]);
 
@@ -473,6 +474,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.proxy.registry', ProxyRegistry::class)
         ->args([
             '$proxyDirectory' => '%kernel.cache_dir%/rekalogika-mapper/proxy',
+            '$preWarmedProxyDirectory' => '%kernel.build_dir%/rekalogika-mapper/pre-warmed-proxy',
         ]);
 
     $services
