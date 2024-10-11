@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation;
 
 use Rekalogika\Mapper\Attribute\Eager;
-use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
@@ -23,10 +22,10 @@ use Rekalogika\Mapper\Transformer\Context\SourcePropertyAttributes;
 use Rekalogika\Mapper\Transformer\Context\TargetClassAttributes;
 use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
-use Rekalogika\Mapper\Transformer\Exception\SourceClassNotInInheritanceMapException;
 use Rekalogika\Mapper\Transformer\MetadataUtil\ClassMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMappingResolverInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\MetadataUtil\TargetClassResolverInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
@@ -44,62 +43,8 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         private PropertyMetadataFactoryInterface $propertyMetadataFactory,
         private ClassMetadataFactoryInterface $classMetadataFactory,
         private PropertyMappingResolverInterface $propertyMappingResolver,
+        private TargetClassResolverInterface $targetClassResolver,
     ) {}
-
-    /**
-     * @param class-string $sourceClass
-     * @param class-string $targetClass
-     * @return class-string
-     */
-    private function resolveTargetClass(
-        string $sourceClass,
-        string $targetClass,
-    ): string {
-        $sourceReflection = new \ReflectionClass($sourceClass);
-        $targetReflection = new \ReflectionClass($targetClass);
-
-        $targetAttributes = $targetReflection->getAttributes(InheritanceMap::class);
-
-        if ($targetAttributes !== []) {
-            // if the target has an InheritanceMap, we try to resolve the target
-            // class using the InheritanceMap
-
-            $inheritanceMap = $targetAttributes[0]->newInstance();
-
-            $resolvedTargetClass = $inheritanceMap->getTargetClassFromSourceClass($sourceClass);
-
-            if ($resolvedTargetClass === null) {
-                throw new SourceClassNotInInheritanceMapException($sourceClass, $targetClass);
-            }
-
-            return $resolvedTargetClass;
-        } elseif ($targetReflection->isAbstract() || $targetReflection->isInterface()) {
-            // if target doesn't have an inheritance map, but is also abstract
-            // or an interface, we try to find the InheritanceMap from the
-            // source
-
-            $sourceClasses = ClassUtil::getAllClassesFromObject($sourceClass);
-
-            foreach ($sourceClasses as $currentSourceClass) {
-                $sourceReflection = new \ReflectionClass($currentSourceClass);
-                $sourceAttributes = $sourceReflection->getAttributes(InheritanceMap::class);
-
-                if ($sourceAttributes !== []) {
-                    $inheritanceMap = $sourceAttributes[0]->newInstance();
-
-                    $resolvedTargetClass = $inheritanceMap->getSourceClassFromTargetClass($sourceClass);
-
-                    if ($resolvedTargetClass === null) {
-                        throw new SourceClassNotInInheritanceMapException($currentSourceClass, $targetClass);
-                    }
-
-                    return $resolvedTargetClass;
-                }
-            }
-        }
-
-        return $targetClass;
-    }
 
     #[\Override]
     public function createObjectToObjectMetadata(
@@ -107,7 +52,9 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
         string $targetClass,
     ): ObjectToObjectMetadata {
         $providedTargetClass = $targetClass;
-        $targetClass = $this->resolveTargetClass($sourceClass, $providedTargetClass);
+
+        $targetClass = $this->targetClassResolver
+            ->resolveTargetClass($sourceClass, $providedTargetClass);
 
         $sourceClassMetadata = $this->classMetadataFactory->createClassMetadata($sourceClass);
         $targetClassMetadata = $this->classMetadataFactory->createClassMetadata($targetClass);

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.10.1
+
+* refactor: spin off `resolveTargetClass()` to separate class
+
 ## 1.10.0
 
 * perf: warmable cache
