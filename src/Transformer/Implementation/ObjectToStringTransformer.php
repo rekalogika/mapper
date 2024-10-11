@@ -42,7 +42,7 @@ final readonly class ObjectToStringTransformer implements TransformerInterface
             } elseif (TypeCheck::isFloat($targetType)) {
                 return (float) (string) $source;
             } elseif (TypeCheck::isBool($targetType)) {
-                return (bool) (string)  $source;
+                return (bool) (string) $source;
             } else {
                 return (string) $source;
             }

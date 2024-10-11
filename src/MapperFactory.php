@@ -869,7 +869,9 @@ class MapperFactory
     protected function getProxyRegistry(): ProxyRegistryInterface
     {
         if (null === $this->proxyRegistry) {
-            $this->proxyRegistry = new ProxyRegistry('/tmp/rekalogika-mapper');
+            $this->proxyRegistry = new ProxyRegistry(
+                proxyDirectory: '/tmp/rekalogika-mapper',
+            );
         }
 
         return $this->proxyRegistry;

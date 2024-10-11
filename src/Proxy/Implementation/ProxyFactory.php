@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Proxy\Implementation;
 
+use Rekalogika\Mapper\CacheWarmer\WarmableProxyFactoryInterface;
+use Rekalogika\Mapper\CacheWarmer\WarmableProxyRegistryInterface;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
@@ -23,12 +25,35 @@ use Rekalogika\Mapper\Util\ClassUtil;
 /**
  * @internal
  */
-final readonly class ProxyFactory implements ProxyFactoryInterface
+final readonly class ProxyFactory implements
+    ProxyFactoryInterface,
+    WarmableProxyFactoryInterface
 {
     public function __construct(
         private ProxyRegistryInterface $proxyRegistry,
         private ProxyGeneratorInterface $proxyGenerator,
     ) {}
+
+    /**
+     * @param class-string $class
+     */
+    public function warmingCreateProxy(string $class): void
+    {
+        $targetProxyClass = ProxyNamer::generateProxyClassName($class);
+
+        $sourceCode = $this->proxyGenerator
+            ->generateProxyCode($class, $targetProxyClass);
+
+        $proxyRegistry = $this->proxyRegistry;
+
+        if (!$proxyRegistry instanceof  WarmableProxyRegistryInterface) {
+            throw new LogicException(
+                'The proxy registry must implement WarmingProxyRegistryInterface.',
+            );
+        }
+
+        $proxyRegistry->warmingRegisterProxy($targetProxyClass, $sourceCode);
+    }
 
     /**
      * @template T of object
