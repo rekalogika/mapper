@@ -20,7 +20,9 @@ use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectOverridingSomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\OtherObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectWithInvalidTargetDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectWithUnpromotedConstructorDto;
+use Rekalogika\Mapper\Transformer\Exception\PairedPropertyNotFoundException;
 
 class MapAttributeTest extends FrameworkTestCase
 {
@@ -130,5 +132,13 @@ class MapAttributeTest extends FrameworkTestCase
         $target = $this->mapper->map($source, SomeObjectWithUnpromotedConstructorDto::class);
 
         $this->assertEquals('sourcePropertyA', $target->targetPropertyA);
+    }
+
+    public function testMapAttributeWithInvalidProperty(): void
+    {
+        $this->expectException(PairedPropertyNotFoundException::class);
+        $source = SomeObject::preinitialized();
+        $target = $this->mapper->map($source, SomeObjectWithInvalidTargetDto::class);
+
     }
 }
