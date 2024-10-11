@@ -33,4 +33,14 @@ interface TargetClassResolverInterface
         string $sourceClass,
         string $targetClass,
     ): string;
+
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     * @return list<class-string>
+     */
+    public function getAllConcreteTargetClasses(
+        string $sourceClass,
+        string $targetClass,
+    ): array;
 }

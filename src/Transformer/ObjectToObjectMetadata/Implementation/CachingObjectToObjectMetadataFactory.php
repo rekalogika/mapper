@@ -18,6 +18,7 @@ use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableProxyFactoryInterface;
 use Rekalogika\Mapper\Exception\RuntimeException;
+use Rekalogika\Mapper\Transformer\MetadataUtil\TargetClassResolver\TargetClassResolver;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
@@ -139,14 +140,15 @@ final class CachingObjectToObjectMetadataFactory implements
         string $sourceClass,
         string $targetClass,
     ): ObjectToObjectMetadata {
-        $result = $this->decorated->createObjectToObjectMetadata($sourceClass, $targetClass);
-
         if (!$this->cacheItemPool instanceof WarmableCacheInterface) {
-            return $result;
+            return $this->decorated
+                ->createObjectToObjectMetadata($sourceClass, $targetClass);
         }
 
-        // warm proxy
-        $this->proxyFactory->warmingCreateProxy($result->getTargetClass());
+        $this->warmProxy($sourceClass, $targetClass);
+
+        $result = $this->decorated
+            ->createObjectToObjectMetadata($sourceClass, $targetClass);
 
         // warm cache
         $cacheKey = hash('xxh128', $sourceClass . $targetClass);
@@ -156,5 +158,25 @@ final class CachingObjectToObjectMetadataFactory implements
         $this->cacheItemPool->saveWarmedUp($cacheItem);
 
         return $result;
+    }
+
+    /**
+     * @param class-string $sourceClass
+     * @param class-string $targetClass
+     */
+    private function warmProxy(string $sourceClass, string $targetClass): void
+    {
+        $targetClassResolver = new TargetClassResolver();
+
+        $allConcreteTargetClasses = $targetClassResolver
+            ->getAllConcreteTargetClasses($sourceClass, $targetClass);
+
+        foreach ($allConcreteTargetClasses as $concreteTargetClass) {
+            $this->proxyFactory->warmingCreateProxy($concreteTargetClass);
+        }
+
+        $this->proxyFactory->warmingCreateProxy($targetClass);
+
+        clearstatcache();
     }
 }

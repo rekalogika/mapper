@@ -25,8 +25,12 @@ psalm:
 clean:
 	rm -rf tests/var
 
+.PHONY: warmup
+warmup:
+	$(PHP) tests/bin/console cache:warmup --env=test
+
 .PHONY: phpunit
-phpunit: clean
+phpunit: clean warmup
 	$(eval c ?=)
 	$(PHP) vendor/bin/phpunit $(c)
 

@@ -23,6 +23,7 @@ use Rekalogika\Mapper\Util\ClassUtil;
  */
 final readonly class TargetClassResolver implements TargetClassResolverInterface
 {
+    #[\Override]
     public function resolveTargetClass(
         string $sourceClass,
         string $targetClass,
@@ -71,5 +72,33 @@ final readonly class TargetClassResolver implements TargetClassResolverInterface
         }
 
         return $targetClass;
+    }
+
+    #[\Override]
+    public function getAllConcreteTargetClasses(
+        string $sourceClass,
+        string $targetClass,
+    ): array {
+        $sourceReflection = new \ReflectionClass($sourceClass);
+        $targetReflection = new \ReflectionClass($targetClass);
+
+        $targetAttributes = $targetReflection->getAttributes(InheritanceMap::class);
+
+        if ($targetAttributes !== []) {
+            return array_values(array_unique($targetAttributes[0]->newInstance()->getMap()));
+        } elseif ($targetReflection->isAbstract() || $targetReflection->isInterface()) {
+            $sourceClasses = ClassUtil::getAllClassesFromObject($sourceClass);
+
+            foreach ($sourceClasses as $currentSourceClass) {
+                $sourceReflection = new \ReflectionClass($currentSourceClass);
+                $sourceAttributes = $sourceReflection->getAttributes(InheritanceMap::class);
+
+                if ($sourceAttributes !== []) {
+                    return array_keys($sourceAttributes[0]->newInstance()->getMap());
+                }
+            }
+        }
+
+        return [$targetClass];
     }
 }
