@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Context;
 
 /**
- * @immutable
  * @implements \IteratorAggregate<int,object>
  */
 final class Context implements \IteratorAggregate
