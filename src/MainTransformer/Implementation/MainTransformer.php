@@ -24,10 +24,10 @@ use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValu
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\MainTransformer\Model\DebugContext;
 use Rekalogika\Mapper\MainTransformer\Model\Path;
-use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException as ObjectCacheCircularReferenceException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
+use Rekalogika\Mapper\ObjectCache\Sentinel\CachedTargetObjectNotFoundSentinel;
 use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MixedType;
@@ -188,11 +188,8 @@ final class MainTransformer implements
 
             if ($targetTypeForTransformer !== null) {
                 try {
-                    return $objectCache
+                    $result = $objectCache
                         ->getTarget($source, $targetTypeForTransformer);
-                } catch (CachedTargetObjectNotFoundException) {
-                    $objectCache
-                        ->preCache($source, $targetTypeForTransformer);
                 } catch (ObjectCacheCircularReferenceException $e) {
                     throw new CircularReferenceException(
                         source: $source,
@@ -201,6 +198,13 @@ final class MainTransformer implements
                         previous: $e,
                     );
                 }
+
+                if (!$result instanceof CachedTargetObjectNotFoundSentinel) {
+                    return $result;
+                }
+
+                $objectCache
+                    ->preCache($source, $targetTypeForTransformer);
             }
 
             // get and prepare transformer

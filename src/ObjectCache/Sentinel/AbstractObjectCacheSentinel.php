@@ -11,11 +11,6 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\ObjectCache\Exception;
+namespace Rekalogika\Mapper\ObjectCache\Sentinel;
 
-use Rekalogika\Mapper\Exception\RuntimeException;
-
-class CachedTargetObjectNotFoundException extends RuntimeException
-{
-    public function __construct() {}
-}
+abstract class AbstractObjectCacheSentinel {}
