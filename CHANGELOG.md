@@ -7,6 +7,7 @@
 * feat: process proxies of all classes in the inheritance chain
 * feat: throws exception if the paired property does not exist in the other
   class if the `Map` attribute has `class` set
+* perf: `Context` optimization
 
 ## 1.10.0
 

@@ -13,19 +13,16 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Context;
 
-use Rekalogika\Mapper\Exception\LogicException;
-
 /**
- * @immutable
  * @implements \IteratorAggregate<int,object>
  */
-final readonly class Context implements \IteratorAggregate
+final class Context implements \IteratorAggregate
 {
     /**
      * @param array<class-string,object> $context
      */
     private function __construct(
-        readonly private array $context = [],
+        private array $context = [],
     ) {}
 
     #[\Override]
@@ -58,28 +55,27 @@ final readonly class Context implements \IteratorAggregate
 
     public function with(object ...$value): self
     {
-        $context = $this->context;
+        $clone = clone $this;
 
         foreach ($value as $object) {
             $class = $object::class;
-            $context[$class] = $object;
+            $clone->context[$class] = $object;
         }
 
-        return self::createFrom($context);
+        return $clone;
     }
 
     public function without(object|string $value): self
     {
         $class = \is_string($value) ? $value : $value::class;
 
-        if (!isset($this->context[$class])) {
-            throw new LogicException(\sprintf('Object "%s" not in context.', $class));
+        $clone = clone $this;
+
+        if (isset($clone->context[$class])) {
+            unset($clone->context[$class]);
         }
 
-        $context = $this->context;
-        unset($context[$class]);
-
-        return self::createFrom($context);
+        return $clone;
     }
 
     /**
