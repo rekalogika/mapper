@@ -18,6 +18,7 @@ use Rekalogika\Mapper\CacheWarmer\WarmableMainTransformerInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Context\ExtraTargetValues;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -42,6 +43,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
+use Rekalogika\Mapper\Util\ClassUtil;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -376,6 +378,16 @@ final class ObjectToObjectTransformer implements
                 continue;
             } catch (UnsupportedPropertyMappingException) {
                 continue;
+            }
+        }
+
+        if (($extraTargetValues = $context(ExtraTargetValues::class)) !== null) {
+            $targetValues = $extraTargetValues
+                ->getArgumentsForClass(ClassUtil::getAllClassesFromObject($objectToObjectMetadata->getTargetClass()));
+
+            /** @var mixed $value */
+            foreach ($targetValues as $property => $value) {
+                $constructorArguments->addArgument($property, $value);
             }
         }
 

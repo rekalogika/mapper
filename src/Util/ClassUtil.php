@@ -172,7 +172,7 @@ final readonly class ClassUtil
 
     /**
      * @param object|class-string $objectOrClass
-     * @return array<int,class-string>
+     * @return list<class-string>
      */
     public static function getAllClassesFromObject(
         object|string $objectOrClass,
