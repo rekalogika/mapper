@@ -81,8 +81,8 @@ final class TransformerRegistry implements TransformerRegistryInterface
     }
 
     private function findBySourceAndTargetType(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
+        MixedType|Type $sourceType,
+        MixedType|Type $targetType,
     ): SearchResult {
         $mapping = $this->getMappingBySourceAndTargetType(
             $sourceType,
@@ -118,7 +118,11 @@ final class TransformerRegistry implements TransformerRegistryInterface
             }
         }
 
-        return new SearchResult($searchResultEntries);
+        return new SearchResult(
+            sourceTypes: [$sourceType],
+            targetTypes: [$targetType],
+            entries: $searchResultEntries,
+        );
     }
 
     #[\Override]
@@ -126,6 +130,9 @@ final class TransformerRegistry implements TransformerRegistryInterface
         array $sourceTypes,
         array $targetTypes,
     ): SearchResult {
+        $sourceTypes = $this->typeResolver->getSimpleTypes($sourceTypes);
+        $targetTypes = $this->typeResolver->getSimpleTypes($targetTypes);
+
         /** @var array<int,SearchResultEntry> */
         $searchResultEntries = [];
 
@@ -141,6 +148,10 @@ final class TransformerRegistry implements TransformerRegistryInterface
 
         usort($searchResultEntries, fn(SearchResultEntry $a, SearchResultEntry $b): int => $a->getMappingOrder() <=> $b->getMappingOrder());
 
-        return new SearchResult($searchResultEntries);
+        return new SearchResult(
+            sourceTypes: array_values($sourceTypes),
+            targetTypes: array_values($targetTypes),
+            entries: $searchResultEntries,
+        );
     }
 }

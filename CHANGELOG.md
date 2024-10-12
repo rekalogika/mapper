@@ -9,6 +9,7 @@
   class if the `Map` attribute has `class` set
 * perf: `Context` optimization
 * perf: `ObjectToObjectTransformer` optimization
+* perf: move `TypeResolver` outside of the hot path
 
 ## 1.10.0
 
