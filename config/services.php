@@ -500,7 +500,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->set('rekalogika.mapper.main_transformer', MainTransformer::class)
         ->args([
             '$objectCacheFactory' => service('rekalogika.mapper.object_cache_factory'),
-            '$typeResolver' => service('rekalogika.mapper.type_resolver'),
             '$transformerRegistry' => service('rekalogika.mapper.transformer_registry'),
             '$debug' => param('kernel.debug'),
         ])

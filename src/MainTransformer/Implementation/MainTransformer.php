@@ -34,7 +34,6 @@ use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\CachingTransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
-use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyInfo\Type;
@@ -55,7 +54,6 @@ final class MainTransformer implements
     public function __construct(
         private readonly ObjectCacheFactoryInterface $objectCacheFactory,
         private readonly TransformerRegistryInterface $transformerRegistry,
-        private readonly TypeResolverInterface $typeResolver,
         private readonly bool $debug = false,
     ) {}
 
@@ -145,22 +143,6 @@ final class MainTransformer implements
             $isSourceTypeGuessed = true;
         }
 
-        // gets simple target types from the provided target type
-
-        $targetTypes = $this->typeResolver->getSimpleTypes($targetTypes);
-
-        // if debug, inject debug context
-
-        if ($this->debug) {
-            $context = $context->with(
-                new DebugContext(
-                    sourceType: $sourceTypes[0],
-                    targetTypes: $targetTypes,
-                    sourceTypeGuessed: $isSourceTypeGuessed,
-                ),
-            );
-        }
-
         // search for the matching transformers according to the source and
         // target types
 
@@ -169,6 +151,18 @@ final class MainTransformer implements
                 $sourceTypes,
                 $targetTypes,
             );
+
+        // if debug, inject debug context
+
+        if ($this->debug) {
+            $context = $context->with(
+                new DebugContext(
+                    sourceType: $sourceTypes[0],
+                    targetTypes: $searchResult->getTargetTypes(),
+                    sourceTypeGuessed: $isSourceTypeGuessed,
+                ),
+            );
+        }
 
         // loop over the result and transform the source to the target
 
@@ -257,7 +251,7 @@ final class MainTransformer implements
             return $result;
         }
 
-        throw new CannotFindTransformerException($sourceTypes, $targetTypes, context: $context);
+        throw new CannotFindTransformerException($sourceTypes, array_values($targetTypes), context: $context);
     }
 
     /**

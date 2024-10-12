@@ -13,17 +13,23 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TransformerRegistry;
 
+use Rekalogika\Mapper\Transformer\MixedType;
+use Symfony\Component\PropertyInfo\Type;
+
 /**
  * @internal
  * @implements \IteratorAggregate<int,SearchResultEntry>
- * @implements \ArrayAccess<int,SearchResultEntry>
  */
-final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
+final class SearchResult implements \IteratorAggregate, \Countable
 {
     /**
+     * @param list<MixedType|Type> $sourceTypes
+     * @param list<MixedType|Type> $targetTypes
      * @param array<int,SearchResultEntry> $entries
      */
     public function __construct(
+        private array $sourceTypes,
+        private array $targetTypes,
         private array $entries,
     ) {}
 
@@ -34,36 +40,24 @@ final class SearchResult implements \IteratorAggregate, \Countable, \ArrayAccess
     }
 
     #[\Override]
-    public function offsetExists(mixed $offset): bool
-    {
-        return isset($this->entries[$offset]);
-    }
-
-    #[\Override]
-    public function offsetGet(mixed $offset): SearchResultEntry
-    {
-        return $this->entries[$offset];
-    }
-
-    #[\Override]
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        if ($offset === null) {
-            $this->entries[] = $value;
-        } else {
-            $this->entries[$offset] = $value;
-        }
-    }
-
-    #[\Override]
-    public function offsetUnset(mixed $offset): void
-    {
-        unset($this->entries[$offset]);
-    }
-
-    #[\Override]
     public function getIterator(): \Traversable
     {
         yield from $this->entries;
+    }
+
+    /**
+     * @return list<MixedType|Type>
+     */
+    public function getSourceTypes(): array
+    {
+        return $this->sourceTypes;
+    }
+
+    /**
+     * @return list<MixedType|Type>
+     */
+    public function getTargetTypes(): array
+    {
+        return $this->targetTypes;
     }
 }

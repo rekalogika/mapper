@@ -59,12 +59,14 @@ class MappingTest extends FrameworkTestCase
 
         $this->assertNotEmpty($searchResult);
 
-        $selected = $searchResult[0] ?? null;
+        $searchResultArray = iterator_to_array($searchResult);
+
+        $selected = $searchResultArray[0] ?? null;
 
         $this->assertNotNull($selected);
 
         if (str_contains($selected->getTransformerServiceId(), PresetTransformer::class)) {
-            $selected = $searchResult[1] ?? null;
+            $selected = $searchResultArray[1] ?? null;
         }
 
         $this->assertNotNull($selected);

@@ -701,9 +701,8 @@ class MapperFactory
     {
         if (null === $this->mainTransformer) {
             $this->mainTransformer = new MainTransformer(
-                $this->getObjectCacheFactory(),
-                $this->getTransformerRegistry(),
-                $this->getTypeResolver(),
+                objectCacheFactory: $this->getObjectCacheFactory(),
+                transformerRegistry: $this->getTransformerRegistry(),
             );
         }
 
