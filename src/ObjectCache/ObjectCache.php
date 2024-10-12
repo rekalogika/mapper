@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\ObjectCache;
 
 use Rekalogika\Mapper\Exception\LogicException;
-use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException;
+use Rekalogika\Mapper\ObjectCache\Sentinel\CachedTargetObjectNotFoundSentinel;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\PropertyInfo\Type;
 
@@ -108,7 +108,7 @@ final class ObjectCache
     public function getTarget(mixed $source, Type $targetType): mixed
     {
         if (!\is_object($source)) {
-            throw new CachedTargetObjectNotFoundException();
+            return new CachedTargetObjectNotFoundSentinel();
         }
 
         $targetTypeString = $this->typeResolver->getTypeString($targetType);
@@ -120,12 +120,12 @@ final class ObjectCache
         }
 
         if ($this->isExcluded($source)) {
-            throw new CachedTargetObjectNotFoundException();
+            return new CachedTargetObjectNotFoundSentinel();
         }
 
         /** @var object */
         return $this->cache[$source][$targetTypeString]
-            ?? throw new CachedTargetObjectNotFoundException();
+            ?? new CachedTargetObjectNotFoundSentinel();
     }
 
     public function saveTarget(

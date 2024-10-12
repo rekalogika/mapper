@@ -15,8 +15,8 @@ namespace Rekalogika\Mapper\Tests\UnitTest\Model;
 
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\ObjectCache\Exception\CachedTargetObjectNotFoundException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
+use Rekalogika\Mapper\ObjectCache\Sentinel\CachedTargetObjectNotFoundSentinel;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Rekalogika\Mapper\Util\TypeFactory;
 
@@ -37,7 +37,8 @@ class ObjectCacheTest extends TestCase
         $this->assertTrue($objectCache->containsTarget($source, TypeFactory::int()));
         $this->assertSame($target, $objectCache->getTarget($source, TypeFactory::int()));
 
-        $this->expectException(CachedTargetObjectNotFoundException::class);
-        $objectCache->getTarget($source, TypeFactory::float());
+        $result = $objectCache->getTarget($source, TypeFactory::float());
+
+        $this->assertInstanceOf(CachedTargetObjectNotFoundSentinel::class, $result);
     }
 }

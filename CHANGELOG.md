@@ -10,6 +10,7 @@
 * perf: `Context` optimization
 * perf: `ObjectToObjectTransformer` optimization
 * perf: move `TypeResolver` outside of the hot path
+* perf(`ObjectCache`): use sentinel value instead of exception
 
 ## 1.10.0
 
