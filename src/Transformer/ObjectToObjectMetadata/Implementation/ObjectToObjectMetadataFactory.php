@@ -162,6 +162,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             sourceClass: $sourceClass,
             targetClass: $targetClass,
             providedTargetClass: $providedTargetClass,
+            allTargetClasses: ClassUtil::getAllClassesFromObject($targetClass),
             sourceAllowsDynamicProperties: $sourceClassMetadata->hasReadableDynamicProperties(),
             targetAllowsDynamicProperties: $targetClassMetadata->hasWritableDynamicProperties(),
             sourceProperties: $effectivePropertiesToMap,

@@ -52,6 +52,7 @@ final readonly class ObjectToObjectMetadata
      * @param class-string $sourceClass
      * @param class-string $targetClass Effective target class after resolving inheritance map
      * @param class-string $providedTargetClass
+     * @param list<class-string> $allTargetClasses
      * @param list<PropertyMapping> $allPropertyMappings
      * @param array<string,true> $targetProxySkippedProperties
      * @param list<string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
@@ -60,6 +61,7 @@ final readonly class ObjectToObjectMetadata
         private string $sourceClass,
         private string $targetClass,
         private string $providedTargetClass,
+        private array $allTargetClasses,
         private bool $sourceAllowsDynamicProperties,
         private bool $targetAllowsDynamicProperties,
         private array $sourceProperties,
@@ -121,6 +123,7 @@ final readonly class ObjectToObjectMetadata
             sourceClass: $this->sourceClass,
             targetClass: $this->targetClass,
             providedTargetClass: $this->providedTargetClass,
+            allTargetClasses: $this->allTargetClasses,
             sourceAllowsDynamicProperties: $this->sourceAllowsDynamicProperties,
             targetAllowsDynamicProperties: $this->targetAllowsDynamicProperties,
             sourceProperties: $this->sourceProperties,
@@ -146,6 +149,7 @@ final readonly class ObjectToObjectMetadata
             sourceClass: $this->sourceClass,
             targetClass: $this->targetClass,
             providedTargetClass: $this->providedTargetClass,
+            allTargetClasses: $this->allTargetClasses,
             sourceAllowsDynamicProperties: $this->sourceAllowsDynamicProperties,
             targetAllowsDynamicProperties: $this->targetAllowsDynamicProperties,
             sourceProperties: $this->sourceProperties,
@@ -186,6 +190,14 @@ final readonly class ObjectToObjectMetadata
     public function getProvidedTargetClass(): string
     {
         return $this->providedTargetClass;
+    }
+
+    /**
+     * @return list<class-string>
+     */
+    public function getAllTargetClasses(): array
+    {
+        return $this->allTargetClasses;
     }
 
     public function isInstantiable(): bool

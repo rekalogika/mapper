@@ -43,7 +43,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
-use Rekalogika\Mapper\Util\ClassUtil;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -383,7 +382,7 @@ final class ObjectToObjectTransformer implements
 
         if (($extraTargetValues = $context(ExtraTargetValues::class)) !== null) {
             $targetValues = $extraTargetValues
-                ->getArgumentsForClass(ClassUtil::getAllClassesFromObject($objectToObjectMetadata->getTargetClass()));
+                ->getArgumentsForClass($objectToObjectMetadata->getAllTargetClasses());
 
             /** @var mixed $value */
             foreach ($targetValues as $property => $value) {
