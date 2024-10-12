@@ -42,7 +42,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Transformer\Util\ReaderWriter;
-use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -85,28 +84,27 @@ final class ObjectToObjectTransformer implements
             throw new InvalidArgumentException(\sprintf('The source must be an object, "%s" given.', get_debug_type($source)), context: $context);
         }
 
-        $sourceType = TypeGuesser::guessTypeFromVariable($source);
-        $sourceClass = $sourceType->getClassName();
-
-        if (null === $sourceClass || !class_exists($sourceClass)) {
-            throw new InvalidArgumentException("Cannot get the class name for the source type.", context: $context);
-        }
+        $sourceClass = $source::class;
 
         // verify target
 
-        $targetClass = $targetType->getClassName();
+        if (\is_object($target)) {
+            $targetClass = $target::class;
+        } else {
+            $targetClass = $targetType->getClassName();
 
-        if (null === $targetClass) {
-            throw new InvalidArgumentException("Cannot get the class name for the target type.", context: $context);
-        }
+            if (null === $targetClass) {
+                throw new InvalidArgumentException("Cannot get the class name for the target type.", context: $context);
+            }
 
-        if (!class_exists($targetClass) && !interface_exists($targetClass)) {
-            throw new NotAClassException($targetClass, context: $context);
+            if (!class_exists($targetClass) && !interface_exists($targetClass)) {
+                throw new NotAClassException($targetClass, context: $context);
+            }
         }
 
         // if sourceType and targetType are the same, just return the source
 
-        if (null === $target && TypeCheck::isSomewhatIdentical($sourceType, $targetType) && !$source instanceof \stdClass) {
+        if (null === $target && $targetClass === $sourceClass && !$source instanceof \stdClass) {
             return $source;
         }
 

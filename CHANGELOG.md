@@ -8,6 +8,7 @@
 * feat: throws exception if the paired property does not exist in the other
   class if the `Map` attribute has `class` set
 * perf: `Context` optimization
+* perf: `ObjectToObjectTransformer` optimization
 
 ## 1.10.0
 
