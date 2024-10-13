@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.10.1
+## 1.11.0
 
 * refactor: spin off `resolveTargetClass()` to separate class
 * perf: proxy warming
