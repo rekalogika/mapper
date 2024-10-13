@@ -477,6 +477,7 @@ final class ObjectToObjectTransformer implements
                 propertyMapping: $propertyMapping,
                 value: $value,
                 context: $context,
+                silentOnError: true,
             );
         }
 
@@ -515,7 +516,10 @@ final class ObjectToObjectTransformer implements
 
         // write
 
-        if ($isChanged) {
+        if (
+            $isChanged
+            || $propertyMapping->getTargetSetterWriteMode() === WriteMode::DynamicProperty
+        ) {
             if ($targetPropertyValue instanceof AdderRemoverProxy) {
                 $target = $targetPropertyValue->getHostObject();
             }
@@ -525,6 +529,7 @@ final class ObjectToObjectTransformer implements
                 propertyMapping: $propertyMapping,
                 value: $targetPropertyValue,
                 context: $context,
+                silentOnError: false,
             );
         }
 
@@ -691,8 +696,7 @@ final class ObjectToObjectTransformer implements
 
         return [
             $targetPropertyValue,
-            $targetPropertyValue !== $originalTargetPropertyValue
-                || $propertyMapping->getTargetSetterWriteMode() === WriteMode::DynamicProperty,
+            $targetPropertyValue !== $originalTargetPropertyValue,
         ];
     }
 
