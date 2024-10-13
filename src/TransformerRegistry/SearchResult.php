@@ -20,7 +20,7 @@ use Symfony\Component\PropertyInfo\Type;
  * @internal
  * @implements \IteratorAggregate<int,SearchResultEntry>
  */
-final class SearchResult implements \IteratorAggregate, \Countable
+final readonly class SearchResult implements \IteratorAggregate, \Countable
 {
     /**
      * @param list<MixedType|Type> $sourceTypes

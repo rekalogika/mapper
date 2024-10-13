@@ -39,6 +39,7 @@ final class ProxyRegistry implements
         }
     }
 
+    #[\Override]
     public function warmingRegisterProxy(string $class, string $sourceCode): void
     {
         $preWarmedProxyDirectory = $this->preWarmedProxyDirectory;

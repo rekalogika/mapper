@@ -16,5 +16,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues;
 final class SomeObjectWithPropertyDto
 {
     public ?string $property = null;
+
     public ?\DateTimeInterface $date = null;
 }

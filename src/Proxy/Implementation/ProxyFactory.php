@@ -37,6 +37,7 @@ final readonly class ProxyFactory implements
     /**
      * @param class-string $class
      */
+    #[\Override]
     public function warmingCreateProxy(string $class): void
     {
         $targetProxyClass = ProxyNamer::generateProxyClassName($class);
