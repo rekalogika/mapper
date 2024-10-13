@@ -27,6 +27,7 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
+use Rekalogika\Mapper\Transformer\Exception\ExtraTargetPropertyNotFoundException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
@@ -205,9 +206,23 @@ final class ObjectToObjectTransformer implements
         ObjectToObjectMetadata $objectToObjectMetadata,
         Context $context,
     ): array {
-        return $context(ExtraTargetValues::class)
+        $extraTargetValues = $context(ExtraTargetValues::class)
             ?->getArgumentsForClass($objectToObjectMetadata->getAllTargetClasses())
             ?? [];
+
+        $allPropertyMappings = $objectToObjectMetadata->getPropertyMappings();
+
+        foreach (array_keys($extraTargetValues) as $property) {
+            if (!isset($allPropertyMappings[$property])) {
+                throw new ExtraTargetPropertyNotFoundException(
+                    class: $objectToObjectMetadata->getTargetClass(),
+                    property: $property,
+                    context: $context,
+                );
+            }
+        }
+
+        return $extraTargetValues;
     }
 
     /**
