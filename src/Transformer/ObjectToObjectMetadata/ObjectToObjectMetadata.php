@@ -24,27 +24,27 @@ use Rekalogika\Mapper\Transformer\Context\TargetClassAttributes;
 final readonly class ObjectToObjectMetadata
 {
     /**
-     * @var list<PropertyMapping>
+     * @var array<string,PropertyMapping>
      */
     private array $allPropertyMappings;
 
     /**
-     * @var list<PropertyMapping>
+     * @var array<string,PropertyMapping>
      */
     private array $propertyMappings;
 
     /**
-     * @var list<PropertyMapping>
+     * @var array<string,PropertyMapping>
      */
     private array $constructorPropertyMappings;
 
     /**
-     * @var list<PropertyMapping>
+     * @var array<string,PropertyMapping>
      */
     private array $lazyPropertyMappings;
 
     /**
-     * @var list<PropertyMapping>
+     * @var array<string,PropertyMapping>
      */
     private array $eagerPropertyMappings;
 
@@ -82,10 +82,13 @@ final readonly class ObjectToObjectMetadata
         $lazyPropertyMappings = [];
         $eagerPropertyMappings = [];
         $propertyPropertyMappings = [];
+        $processedAllPropertyMappings = [];
 
         foreach ($allPropertyMappings as $propertyMapping) {
+            $processedAllPropertyMappings[$propertyMapping->getTargetProperty()] = $propertyMapping;
+
             if ($propertyMapping->getTargetConstructorWriteMode() === WriteMode::Constructor) {
-                $constructorPropertyMappings[] = $propertyMapping;
+                $constructorPropertyMappings[$propertyMapping->getTargetProperty()] = $propertyMapping;
             }
 
             if (
@@ -96,12 +99,12 @@ final readonly class ObjectToObjectMetadata
                 continue;
             }
 
-            $propertyPropertyMappings[] = $propertyMapping;
+            $propertyPropertyMappings[$propertyMapping->getTargetProperty()] = $propertyMapping;
 
             if ($propertyMapping->isSourceLazy()) {
-                $lazyPropertyMappings[] = $propertyMapping;
+                $lazyPropertyMappings[$propertyMapping->getTargetProperty()] = $propertyMapping;
             } else {
-                $eagerPropertyMappings[] = $propertyMapping;
+                $eagerPropertyMappings[$propertyMapping->getTargetProperty()] = $propertyMapping;
             }
         }
 
@@ -109,7 +112,7 @@ final readonly class ObjectToObjectMetadata
         $this->lazyPropertyMappings = $lazyPropertyMappings;
         $this->eagerPropertyMappings = $eagerPropertyMappings;
         $this->propertyMappings = $propertyPropertyMappings;
-        $this->allPropertyMappings = $allPropertyMappings;
+        $this->allPropertyMappings = $processedAllPropertyMappings;
     }
 
     /**
@@ -127,7 +130,7 @@ final readonly class ObjectToObjectMetadata
             sourceAllowsDynamicProperties: $this->sourceAllowsDynamicProperties,
             targetAllowsDynamicProperties: $this->targetAllowsDynamicProperties,
             sourceProperties: $this->sourceProperties,
-            allPropertyMappings: $this->allPropertyMappings,
+            allPropertyMappings: array_values($this->allPropertyMappings),
             instantiable: $this->instantiable,
             cloneable: $this->cloneable,
             targetUnalterable: $this->targetUnalterable,
@@ -153,7 +156,7 @@ final readonly class ObjectToObjectMetadata
             sourceAllowsDynamicProperties: $this->sourceAllowsDynamicProperties,
             targetAllowsDynamicProperties: $this->targetAllowsDynamicProperties,
             sourceProperties: $this->sourceProperties,
-            allPropertyMappings: $this->allPropertyMappings,
+            allPropertyMappings: array_values($this->allPropertyMappings),
             instantiable: $this->instantiable,
             cloneable: $this->cloneable,
             targetUnalterable: $this->targetUnalterable,
@@ -216,7 +219,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return list<PropertyMapping>
+     * @return array<string,PropertyMapping>
      */
     public function getPropertyMappings(): array
     {
@@ -224,7 +227,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return list<PropertyMapping>
+     * @return array<string,PropertyMapping>
      */
     public function getLazyPropertyMappings(): array
     {
@@ -232,7 +235,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return list<PropertyMapping>
+     * @return array<string,PropertyMapping>
      */
     public function getEagerPropertyMappings(): array
     {
@@ -240,7 +243,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return list<PropertyMapping>
+     * @return array<string,PropertyMapping>
      */
     public function getConstructorPropertyMappings(): array
     {
@@ -248,7 +251,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return list<PropertyMapping>
+     * @return array<string,PropertyMapping>
      */
     public function getAllPropertyMappings(): array
     {

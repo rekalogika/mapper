@@ -13,10 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues;
 
-final readonly class SomeObjectWithConstructorDto
+final class SomeObjectWithPropertyDto
 {
-    public function __construct(
-        public ?\DateTimeInterface $date,
-        public ?string $property,
-    ) {}
+    public ?string $property = null;
+    public ?\DateTimeInterface $date = null;
 }

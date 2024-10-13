@@ -18,10 +18,11 @@ use Rekalogika\Mapper\Context\ExtraTargetValues;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues\SomeObjectWithConstructorDto;
+use Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues\SomeObjectWithPropertyDto;
 
 class ExtraTargetValuesTest extends FrameworkTestCase
 {
-    public function testExtraArgumentsOnTargetConstructor(): void
+    public function testExtraTargetValuesOnConstructor(): void
     {
         $target = $this->mapper->map(
             source: new SomeObject(),
@@ -29,6 +30,25 @@ class ExtraTargetValuesTest extends FrameworkTestCase
             context: Context::create(
                 new ExtraTargetValues([
                     SomeObjectWithConstructorDto::class => [
+                        'date' => new \DateTimeImmutable('2021-01-01'),
+                    ],
+                ]),
+            ),
+        );
+
+        $this->assertSame('someProperty', $target->property);
+        $this->assertInstanceOf(\DateTimeImmutable::class, $target->date);
+        $this->assertSame('2021-01-01', $target->date->format('Y-m-d'));
+    }
+
+    public function testExtraTargetValuesOnProperty(): void
+    {
+        $target = $this->mapper->map(
+            source: new SomeObject(),
+            target: SomeObjectWithPropertyDto::class,
+            context: Context::create(
+                new ExtraTargetValues([
+                    SomeObjectWithPropertyDto::class => [
                         'date' => new \DateTimeImmutable('2021-01-01'),
                     ],
                 ]),
