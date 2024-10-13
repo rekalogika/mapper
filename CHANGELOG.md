@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.10.1
+## 1.11.0
 
 * refactor: spin off `resolveTargetClass()` to separate class
 * perf: proxy warming
@@ -11,6 +11,7 @@
 * perf: `ObjectToObjectTransformer` optimization
 * perf: move `TypeResolver` outside of the hot path
 * perf(`ObjectCache`): use sentinel value instead of exception
+* feat: extra target values
 
 ## 1.10.0
 

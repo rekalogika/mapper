@@ -388,6 +388,18 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ExtraTargetValuesTest.php on lines 28, 68
+        source: \Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues\SomeObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues\SomeObjectWithConstructorDto::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ExtraTargetValuesTest.php on line 47
+        source: \Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues\SomeObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ExtraTargetValues\SomeObjectWithPropertyDto::class
+    );
+    
+    $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/InheritanceReversedTest.php on line 29
         source: \Rekalogika\Mapper\Tests\Fixtures\InheritanceDto\ConcreteClassADto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Inheritance\AbstractClass::class

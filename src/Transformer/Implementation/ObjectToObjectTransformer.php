@@ -18,6 +18,7 @@ use Rekalogika\Mapper\CacheWarmer\WarmableMainTransformerInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Context\ExtraTargetValues;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -26,6 +27,7 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodRunner;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
+use Rekalogika\Mapper\Transformer\Exception\ExtraTargetPropertyNotFoundException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
 use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
@@ -123,6 +125,13 @@ final class ObjectToObjectTransformer implements
             $target = null;
         }
 
+        // get extra target values
+
+        $extraTargetValues = $this->getExtraTargetValues(
+            objectToObjectMetadata: $objectToObjectMetadata,
+            context: $context,
+        );
+
         // initialize target if target is null
 
         if (null === $target) {
@@ -133,12 +142,14 @@ final class ObjectToObjectTransformer implements
                 $target = $this->instantiateTargetProxy(
                     source: $source,
                     objectToObjectMetadata: $objectToObjectMetadata,
+                    extraTargetValues: $extraTargetValues,
                     context: $context,
                 );
             } else {
                 $target = $this->instantiateRealTarget(
                     source: $source,
                     objectToObjectMetadata: $objectToObjectMetadata,
+                    extraTargetValues: $extraTargetValues,
                     context: $context,
                 );
             }
@@ -180,6 +191,7 @@ final class ObjectToObjectTransformer implements
                 source: $source,
                 target: $target,
                 propertyMappings: $objectToObjectMetadata->getPropertyMappings(),
+                extraTargetValues: $extraTargetValues,
                 context: $context,
             );
         }
@@ -187,9 +199,39 @@ final class ObjectToObjectTransformer implements
         return $target;
     }
 
+    /**
+     * @return array<string,mixed>
+     */
+    private function getExtraTargetValues(
+        ObjectToObjectMetadata $objectToObjectMetadata,
+        Context $context,
+    ): array {
+        $extraTargetValues = $context(ExtraTargetValues::class)
+            ?->getArgumentsForClass($objectToObjectMetadata->getAllTargetClasses())
+            ?? [];
+
+        $allPropertyMappings = $objectToObjectMetadata->getPropertyMappings();
+
+        foreach (array_keys($extraTargetValues) as $property) {
+            if (!isset($allPropertyMappings[$property])) {
+                throw new ExtraTargetPropertyNotFoundException(
+                    class: $objectToObjectMetadata->getTargetClass(),
+                    property: $property,
+                    context: $context,
+                );
+            }
+        }
+
+        return $extraTargetValues;
+    }
+
+    /**
+     * @param array<string,mixed> $extraTargetValues
+     */
     private function instantiateRealTarget(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
+        array $extraTargetValues,
         Context $context,
     ): object {
         $targetClass = $objectToObjectMetadata->getTargetClass();
@@ -203,6 +245,7 @@ final class ObjectToObjectTransformer implements
         $constructorArguments = $this->generateConstructorArguments(
             source: $source,
             objectToObjectMetadata: $objectToObjectMetadata,
+            extraTargetValues: $extraTargetValues,
             context: $context,
         );
 
@@ -223,9 +266,13 @@ final class ObjectToObjectTransformer implements
         }
     }
 
+    /**
+     * @param array<string,mixed> $extraTargetValues
+     */
     private function instantiateTargetProxy(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
+        array $extraTargetValues,
         Context $context,
     ): object {
         $targetClass = $objectToObjectMetadata->getTargetClass();
@@ -243,6 +290,7 @@ final class ObjectToObjectTransformer implements
             $source,
             $objectToObjectMetadata,
             $context,
+            $extraTargetValues,
         ): void {
             // if the constructor is lazy, run it here
 
@@ -251,6 +299,7 @@ final class ObjectToObjectTransformer implements
                     source: $source,
                     target: $target,
                     objectToObjectMetadata: $objectToObjectMetadata,
+                    extraTargetValues: $extraTargetValues,
                     context: $context,
                 );
             }
@@ -261,6 +310,7 @@ final class ObjectToObjectTransformer implements
                 source: $source,
                 target: $target,
                 propertyMappings: $objectToObjectMetadata->getLazyPropertyMappings(),
+                extraTargetValues: $extraTargetValues,
                 context: $context,
             );
         };
@@ -280,6 +330,7 @@ final class ObjectToObjectTransformer implements
                 source: $source,
                 target: $target,
                 objectToObjectMetadata: $objectToObjectMetadata,
+                extraTargetValues: $extraTargetValues,
                 context: $context,
             );
         }
@@ -290,16 +341,21 @@ final class ObjectToObjectTransformer implements
             source: $source,
             target: $target,
             propertyMappings: $objectToObjectMetadata->getEagerPropertyMappings(),
+            extraTargetValues: $extraTargetValues,
             context: $context,
         );
 
         return $target;
     }
 
+    /**
+     * @param array<string,mixed> $extraTargetValues
+     */
     private function runConstructorManually(
         object $source,
         object $target,
         ObjectToObjectMetadata $objectToObjectMetadata,
+        array $extraTargetValues,
         Context $context,
     ): object {
         if (!method_exists($target, '__construct')) {
@@ -309,6 +365,7 @@ final class ObjectToObjectTransformer implements
         $constructorArguments = $this->generateConstructorArguments(
             source: $source,
             objectToObjectMetadata: $objectToObjectMetadata,
+            extraTargetValues: $extraTargetValues,
             context: $context,
         );
 
@@ -334,16 +391,22 @@ final class ObjectToObjectTransformer implements
         return $target;
     }
 
+    /**
+     * @param array<string,mixed> $extraTargetValues
+     */
     private function generateConstructorArguments(
         object $source,
         ObjectToObjectMetadata $objectToObjectMetadata,
+        array $extraTargetValues,
         Context $context,
     ): ConstructorArguments {
-        $propertyMappings = $objectToObjectMetadata->getConstructorPropertyMappings();
+        $constructorPropertyMappings = $objectToObjectMetadata->getConstructorPropertyMappings();
 
         $constructorArguments = new ConstructorArguments();
 
-        foreach ($propertyMappings as $propertyMapping) {
+        // add arguments from property mappings
+
+        foreach ($constructorPropertyMappings as $propertyMapping) {
             try {
                 /** @var mixed $targetPropertyValue */
                 [$targetPropertyValue,] = $this->transformValue(
@@ -379,16 +442,30 @@ final class ObjectToObjectTransformer implements
             }
         }
 
+        // add arguments from extra target values
+
+        /** @var mixed $value */
+        foreach ($extraTargetValues as $property => $value) {
+            // skip if there is no constructor property mapping for this
+            if (!isset($constructorPropertyMappings[$property])) {
+                continue;
+            }
+
+            $constructorArguments->addArgument($property, $value);
+        }
+
         return $constructorArguments;
     }
 
     /**
-     * @param array<int,PropertyMapping> $propertyMappings
+     * @param array<string,PropertyMapping> $propertyMappings
+     * @param array<string,mixed> $extraTargetValues
      */
     private function readSourceAndWriteTarget(
         object $source,
         object $target,
         array $propertyMappings,
+        array $extraTargetValues,
         Context $context,
     ): object {
         foreach ($propertyMappings as $propertyMapping) {
@@ -397,6 +474,25 @@ final class ObjectToObjectTransformer implements
                 target: $target,
                 propertyMapping: $propertyMapping,
                 context: $context,
+            );
+        }
+
+        // process extra target values
+
+        /** @var mixed $value */
+        foreach ($extraTargetValues as $property => $value) {
+            if (!isset($propertyMappings[$property])) {
+                continue;
+            }
+
+            $propertyMapping = $propertyMappings[$property];
+
+            $target = $this->readerWriter->writeTargetProperty(
+                target: $target,
+                propertyMapping: $propertyMapping,
+                value: $value,
+                context: $context,
+                silentOnError: true,
             );
         }
 
@@ -435,7 +531,10 @@ final class ObjectToObjectTransformer implements
 
         // write
 
-        if ($isChanged) {
+        if (
+            $isChanged
+            || $propertyMapping->getTargetSetterWriteMode() === WriteMode::DynamicProperty
+        ) {
             if ($targetPropertyValue instanceof AdderRemoverProxy) {
                 $target = $targetPropertyValue->getHostObject();
             }
@@ -445,6 +544,7 @@ final class ObjectToObjectTransformer implements
                 propertyMapping: $propertyMapping,
                 value: $targetPropertyValue,
                 context: $context,
+                silentOnError: false,
             );
         }
 
@@ -611,8 +711,7 @@ final class ObjectToObjectTransformer implements
 
         return [
             $targetPropertyValue,
-            $targetPropertyValue !== $originalTargetPropertyValue
-                || $propertyMapping->getTargetSetterWriteMode() === WriteMode::DynamicProperty,
+            $targetPropertyValue !== $originalTargetPropertyValue,
         ];
     }
 

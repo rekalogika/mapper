@@ -200,14 +200,20 @@ final readonly class ReaderWriter
         PropertyMapping $propertyMapping,
         mixed $value,
         Context $context,
+        bool $silentOnError,
     ): object {
         $accessorName = $propertyMapping->getTargetSetterWriteName();
         $writeMode = $propertyMapping->getTargetSetterWriteMode();
         $visibility = $propertyMapping->getTargetSetterWriteVisibility();
 
         if (
-            $visibility !== Visibility::Public || $writeMode === WriteMode::None
+            $visibility !== Visibility::Public
+            || $writeMode === WriteMode::None
         ) {
+            if ($silentOnError) {
+                return $target;
+            }
+
             throw new NewInstanceReturnedButCannotBeSetOnTargetException(
                 $target,
                 $propertyMapping->getTargetProperty(),
