@@ -12,6 +12,7 @@
 * perf: move `TypeResolver` outside of the hot path
 * perf(`ObjectCache`): use sentinel value instead of exception
 * feat: extra target values
+* chore: rector run
 
 ## 1.10.0
 
