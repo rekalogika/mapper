@@ -67,6 +67,11 @@ use Rekalogika\Mapper\Transformer\Implementation\TraversableToTraversableTransfo
 use Rekalogika\Mapper\Transformer\MetadataUtil\MetadataUtilLocator;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
+use Rekalogika\Mapper\TransformerProcessor\ObjectProcessor\DefaultObjectProcessorFactory;
+use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorFactoryInterface;
+use Rekalogika\Mapper\TransformerProcessor\PropertyProcessor\CachingPropertyProcessorFactory;
+use Rekalogika\Mapper\TransformerProcessor\PropertyProcessor\DefaultPropertyProcessorFactory;
+use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\TransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\Implementation\CachingTypeResolver;
@@ -196,6 +201,10 @@ class MapperFactory
     private ?ProxyAutoloaderInterface $proxyAutoLoader = null;
 
     private ?ProxyFactoryInterface $proxyFactory = null;
+
+    private ?ObjectProcessorFactoryInterface $objectProcessorFactory = null;
+
+    private ?PropertyProcessorFactoryInterface $propertyProcessorFactory = null;
 
     private ?MappingCommand $mappingCommand = null;
 
@@ -403,17 +412,10 @@ class MapperFactory
 
     protected function getObjectToObjectTransformer(): TransformerInterface
     {
-        if (null === $this->objectToObjectTransformer) {
-            $this->objectToObjectTransformer = new ObjectToObjectTransformer(
-                objectToObjectMetadataFactory: $this->getObjectToObjectMetadataFactory(),
-                propertyMapperLocator: $this->getPropertyMapperLocator(),
-                subMapperFactory: $this->getSubMapperFactory(),
-                proxyFactory: $this->getProxyFactory(),
-                propertyAccessor: $this->getPropertyAccessor(),
-            );
-        }
-
-        return $this->objectToObjectTransformer;
+        return $this->objectToObjectTransformer ??= new ObjectToObjectTransformer(
+            $this->getObjectToObjectMetadataFactory(),
+            $this->getObjectProcessorFactory(),
+        );
     }
 
     protected function getObjectToStringTransformer(): TransformerInterface
@@ -897,6 +899,32 @@ class MapperFactory
         }
 
         return $this->proxyFactory;
+    }
+
+    //
+    // transformer processor
+    //
+
+    protected function getObjectProcessorFactory(): ObjectProcessorFactoryInterface
+    {
+        return $this->objectProcessorFactory ??= new DefaultObjectProcessorFactory(
+            propertyMapperLocator: $this->getPropertyMapperLocator(),
+            subMapperFactory: $this->getSubMapperFactory(),
+            proxyFactory: $this->getProxyFactory(),
+            propertyAccessor: $this->getPropertyAccessor(),
+            propertyProcessorFactory: $this->getPropertyProcessorFactory(),
+        );
+    }
+
+    protected function getPropertyProcessorFactory(): PropertyProcessorFactoryInterface
+    {
+        return $this->propertyProcessorFactory ??= new CachingPropertyProcessorFactory(
+            new DefaultPropertyProcessorFactory(
+                propertyAccessor: $this->getPropertyAccessor(),
+                subMapperFactory: $this->getSubMapperFactory(),
+                propertyMapperLocator: $this->getPropertyMapperLocator(),
+            ),
+        );
     }
 
     //

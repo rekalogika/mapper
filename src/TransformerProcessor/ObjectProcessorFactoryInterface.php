@@ -13,12 +13,13 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TransformerProcessor;
 
+use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 
 /**
  * @internal
  */
-interface ObjectProcessorFactoryInterface
+interface ObjectProcessorFactoryInterface extends MainTransformerAwareInterface
 {
     public function getObjectProcessor(
         ObjectToObjectMetadata $metadata,

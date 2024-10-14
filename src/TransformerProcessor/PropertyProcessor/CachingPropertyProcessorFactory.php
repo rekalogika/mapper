@@ -13,37 +13,34 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TransformerProcessor\PropertyProcessor;
 
-use Psr\Container\ContainerInterface;
-use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
 use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * @internal
  */
-final class DefaultPropertyProcessorFactory implements
-    PropertyProcessorFactoryInterface
+final class CachingPropertyProcessorFactory implements PropertyProcessorFactoryInterface
 {
     use MainTransformerAwareTrait;
 
+    /**
+     * @var array<string,PropertyProcessorInterface> $cache
+     */
+    private array $cache = [];
+
     public function __construct(
-        private readonly PropertyAccessorInterface $propertyAccessor,
-        private readonly SubMapperFactoryInterface $subMapperFactory,
-        private readonly ContainerInterface $propertyMapperLocator,
+        private readonly PropertyProcessorFactoryInterface $decorated,
     ) {}
 
     public function getPropertyProcessor(
         PropertyMapping $metadata,
     ): PropertyProcessorInterface {
-        return new PropertyProcessor(
-            metadata: $metadata,
-            propertyAccessor: $this->propertyAccessor,
-            mainTransformer: $this->getMainTransformer(),
-            subMapperFactory: $this->subMapperFactory,
-            propertyMapperLocator: $this->propertyMapperLocator,
-        );
+        $id = $metadata->getId();
+
+        return $this->cache[$id] ??= $this->decorated
+            ->withMainTransformer($this->getMainTransformer())
+            ->getPropertyProcessor($metadata);
     }
 }

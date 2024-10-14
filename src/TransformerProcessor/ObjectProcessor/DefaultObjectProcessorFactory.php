@@ -14,49 +14,42 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\TransformerProcessor\ObjectProcessor;
 
 use Psr\Container\ContainerInterface;
-use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
+use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorFactoryInterface;
 use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorInterface;
-use Rekalogika\Mapper\TransformerProcessor\PropertyProcessor\DefaultPropertyProcessorFactory;
 use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
  * @internal
  */
-final readonly class DefaultObjectProcessorFactory implements ObjectProcessorFactoryInterface
+final class DefaultObjectProcessorFactory implements ObjectProcessorFactoryInterface
 {
-    private PropertyProcessorFactoryInterface $propertyProcessorFactory;
+    use MainTransformerAwareTrait;
 
     public function __construct(
-        private MainTransformerInterface $mainTransformer,
-        private ContainerInterface $propertyMapperLocator,
-        private SubMapperFactoryInterface $subMapperFactory,
-        private ProxyFactoryInterface $proxyFactory,
-        private PropertyAccessorInterface $propertyAccessor,
-    ) {
-        $this->propertyProcessorFactory = new DefaultPropertyProcessorFactory(
-            propertyAccessor: $this->propertyAccessor,
-            mainTransformer: $this->mainTransformer,
-            subMapperFactory: $this->subMapperFactory,
-            propertyMapperLocator: $this->propertyMapperLocator,
-        );
-    }
+        private readonly ContainerInterface $propertyMapperLocator,
+        private readonly SubMapperFactoryInterface $subMapperFactory,
+        private readonly ProxyFactoryInterface $proxyFactory,
+        private readonly PropertyAccessorInterface $propertyAccessor,
+        private readonly PropertyProcessorFactoryInterface $propertyProcessorFactory,
+    ) {}
 
     public function getObjectProcessor(
         ObjectToObjectMetadata $metadata,
     ): ObjectProcessorInterface {
         return new ObjectProcessor(
             metadata: $metadata,
-            mainTransformer: $this->mainTransformer,
+            mainTransformer: $this->getMainTransformer(),
             propertyMapperLocator: $this->propertyMapperLocator,
             subMapperFactory: $this->subMapperFactory,
             proxyFactory: $this->proxyFactory,
             propertyAccessor: $this->propertyAccessor,
-            propertyProcessorFactory: $this->propertyProcessorFactory,
+            propertyProcessorFactory: $this->propertyProcessorFactory
+                ->withMainTransformer($this->getMainTransformer()),
         );
     }
 }

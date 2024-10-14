@@ -365,7 +365,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
             try {
                 /** @var mixed $targetPropertyValue */
                 [$targetPropertyValue,] = $this->propertyProcessorFactory
-                    ->getPropertyMapper($propertyMapping)
+                    ->getPropertyProcessor($propertyMapping)
                     ->transformValue(
                         source: $source,
                         target: null,
@@ -430,7 +430,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
     ): object {
         foreach ($propertyMappings as $propertyMapping) {
             $target = $this->propertyProcessorFactory
-                ->getPropertyMapper($propertyMapping)
+                ->getPropertyProcessor($propertyMapping)
                 ->readSourcePropertyAndWriteTargetProperty(
                     source: $source,
                     target: $target,
@@ -449,7 +449,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
             $propertyMapping = $propertyMappings[$property];
 
             $target = $this->propertyProcessorFactory
-                ->getPropertyMapper($propertyMapping)
+                ->getPropertyProcessor($propertyMapping)
                 ->writeTargetProperty(
                     target: $target,
                     value: $value,
