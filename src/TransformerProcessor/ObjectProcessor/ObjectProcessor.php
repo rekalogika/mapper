@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\Transformer\Util;
+namespace Rekalogika\Mapper\TransformerProcessor\ObjectProcessor;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
@@ -29,18 +29,16 @@ use Rekalogika\Mapper\Transformer\Exception\UnsupportedPropertyMappingException;
 use Rekalogika\Mapper\Transformer\Model\ConstructorArguments;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorInterface;
+use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Type;
 
 /**
  * @internal
- * @template TSource of object
- * @template TTarget of object
  */
-final readonly class ObjectMapper
+final readonly class ObjectProcessor implements ObjectProcessorInterface
 {
-    private PropertyMapperFactory $propertyMapperFactory;
-
     public function __construct(
         private ObjectToObjectMetadata $metadata,
         private MainTransformerInterface $mainTransformer,
@@ -48,14 +46,8 @@ final readonly class ObjectMapper
         private SubMapperFactoryInterface $subMapperFactory,
         private ProxyFactoryInterface $proxyFactory,
         private PropertyAccessorInterface $propertyAccessor,
-    ) {
-        $this->propertyMapperFactory = new PropertyMapperFactory(
-            propertyAccessor: $this->propertyAccessor,
-            mainTransformer: $this->mainTransformer,
-            subMapperFactory: $this->subMapperFactory,
-            propertyMapperLocator: $this->propertyMapperLocator,
-        );
-    }
+        private PropertyProcessorFactoryInterface $propertyProcessorFactory,
+    ) {}
 
     public function transform(
         object $source,
@@ -372,7 +364,7 @@ final readonly class ObjectMapper
         foreach ($constructorPropertyMappings as $propertyMapping) {
             try {
                 /** @var mixed $targetPropertyValue */
-                [$targetPropertyValue,] = $this->propertyMapperFactory
+                [$targetPropertyValue,] = $this->propertyProcessorFactory
                     ->getPropertyMapper($propertyMapping)
                     ->transformValue(
                         source: $source,
@@ -437,7 +429,7 @@ final readonly class ObjectMapper
         Context $context,
     ): object {
         foreach ($propertyMappings as $propertyMapping) {
-            $target = $this->propertyMapperFactory
+            $target = $this->propertyProcessorFactory
                 ->getPropertyMapper($propertyMapping)
                 ->readSourcePropertyAndWriteTargetProperty(
                     source: $source,
@@ -456,7 +448,7 @@ final readonly class ObjectMapper
 
             $propertyMapping = $propertyMappings[$property];
 
-            $target = $this->propertyMapperFactory
+            $target = $this->propertyProcessorFactory
                 ->getPropertyMapper($propertyMapping)
                 ->writeTargetProperty(
                     target: $target,

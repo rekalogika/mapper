@@ -27,7 +27,8 @@ use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
-use Rekalogika\Mapper\Transformer\Util\ObjectMapper;
+use Rekalogika\Mapper\TransformerProcessor\ObjectProcessor\DefaultObjectProcessorFactory;
+use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorFactoryInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Type;
@@ -39,6 +40,8 @@ final class ObjectToObjectTransformer implements
 {
     use MainTransformerAwareTrait;
 
+    private ?ObjectProcessorFactoryInterface $objectProcessorFactory = null;
+
     public function __construct(
         private ObjectToObjectMetadataFactoryInterface $objectToObjectMetadataFactory,
         private ContainerInterface $propertyMapperLocator,
@@ -46,6 +49,17 @@ final class ObjectToObjectTransformer implements
         private ProxyFactoryInterface $proxyFactory,
         private PropertyAccessorInterface $propertyAccessor,
     ) {}
+
+    private function getObjectProcessorFactory(): ObjectProcessorFactoryInterface
+    {
+        return $this->objectProcessorFactory ??= new DefaultObjectProcessorFactory(
+            mainTransformer: $this->getMainTransformer(),
+            propertyMapperLocator: $this->propertyMapperLocator,
+            subMapperFactory: $this->subMapperFactory,
+            proxyFactory: $this->proxyFactory,
+            propertyAccessor: $this->propertyAccessor,
+        );
+    }
 
     #[\Override]
     public function transform(
@@ -94,27 +108,22 @@ final class ObjectToObjectTransformer implements
         $objectToObjectMetadata = $this->objectToObjectMetadataFactory
             ->createObjectToObjectMetadata($sourceClass, $targetClass);
 
-        // instantiate worker
+        // type checking
 
         if ($target !== null && !\is_object($target)) {
             throw new InvalidArgumentException(\sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
         }
 
-        $worker = new ObjectMapper(
-            metadata: $objectToObjectMetadata,
-            mainTransformer: $this->getMainTransformer(),
-            propertyMapperLocator: $this->propertyMapperLocator,
-            subMapperFactory: $this->subMapperFactory,
-            proxyFactory: $this->proxyFactory,
-            propertyAccessor: $this->propertyAccessor,
-        );
+        // transform
 
-        return $worker->transform(
-            source: $source,
-            target: $target,
-            targetType: $targetType,
-            context: $context,
-        );
+        return $this->getObjectProcessorFactory()
+            ->getObjectProcessor($objectToObjectMetadata)
+            ->transform(
+                source: $source,
+                target: $target,
+                targetType: $targetType,
+                context: $context,
+            );
     }
 
     #[\Override]
