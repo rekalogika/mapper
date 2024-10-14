@@ -3,6 +3,8 @@
 ## 1.11.1
 
 * refactor: refactor `ObjectToObjectTransformer` for future optimization
+* fix: remove unalterable check in `ObjectProcessor` to allow transformers to
+  handle the current target value in all cases
 
 ## 1.11.0
 
