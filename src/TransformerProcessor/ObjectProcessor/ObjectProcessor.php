@@ -58,10 +58,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
         // disregard target if target is read only or target value reading is
         // disabled
 
-        if (
-            $this->metadata->isTargetUnalterable()
-            || $context(MapperOptions::class)?->readTargetValue !== true
-        ) {
+        if ($context(MapperOptions::class)?->readTargetValue !== true) {
             $target = null;
         }
 
