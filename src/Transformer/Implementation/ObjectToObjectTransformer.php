@@ -27,7 +27,7 @@ use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
-use Rekalogika\Mapper\Transformer\Util\ObjectToObjectTransformerWorker;
+use Rekalogika\Mapper\Transformer\Util\ObjectMapper;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Type;
@@ -100,7 +100,7 @@ final class ObjectToObjectTransformer implements
             throw new InvalidArgumentException(\sprintf('The target must be an object, "%s" given.', get_debug_type($target)), context: $context);
         }
 
-        $worker = new ObjectToObjectTransformerWorker(
+        $worker = new ObjectMapper(
             metadata: $objectToObjectMetadata,
             mainTransformer: $this->getMainTransformer(),
             propertyMapperLocator: $this->propertyMapperLocator,

@@ -41,6 +41,7 @@ final readonly class PropertyMapping
      * @param 'int'|'float'|'string'|'bool'|'null'|null $targetScalarType
      */
     public function __construct(
+        private string $id,
         private ?string $sourceProperty,
         private string $targetProperty,
         array $sourceTypes,
@@ -73,6 +74,11 @@ final readonly class PropertyMapping
     ) {
         $this->sourceTypes = array_values($sourceTypes);
         $this->targetTypes = array_values($targetTypes);
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     public function getCompatibleSourceType(Type $type): ?Type
@@ -115,6 +121,11 @@ final readonly class PropertyMapping
     public function getPropertyMapper(): ?ServiceMethodSpecification
     {
         return $this->propertyMapper;
+    }
+
+    public function hasPropertyMapper(): bool
+    {
+        return $this->propertyMapper !== null;
     }
 
     /**
