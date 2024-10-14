@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\TransformerProcessor\PropertyProcessor;
 
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMappingMetadata;
 use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
 use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorInterface;
 
@@ -43,7 +43,7 @@ final class CachingPropertyProcessorFactory implements PropertyProcessorFactoryI
     }
 
     public function getPropertyProcessor(
-        PropertyMapping $metadata,
+        PropertyMappingMetadata $metadata,
     ): PropertyProcessorInterface {
         $id = $metadata->getId();
 

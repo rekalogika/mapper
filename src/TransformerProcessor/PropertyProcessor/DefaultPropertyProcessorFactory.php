@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\TransformerProcessor\PropertyProcessor;
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMappingMetadata;
 use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
 use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -36,7 +36,7 @@ final class DefaultPropertyProcessorFactory implements
     ) {}
 
     public function getPropertyProcessor(
-        PropertyMapping $metadata,
+        PropertyMappingMetadata $metadata,
     ): PropertyProcessorInterface {
         return new PropertyProcessor(
             metadata: $metadata,

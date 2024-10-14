@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\TransformerProcessor;
 
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMappingMetadata;
 
 /**
  * @internal
@@ -22,6 +22,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
 interface PropertyProcessorFactoryInterface extends MainTransformerAwareInterface
 {
     public function getPropertyProcessor(
-        PropertyMapping $metadata,
+        PropertyMappingMetadata $metadata,
     ): PropertyProcessorInterface;
 }

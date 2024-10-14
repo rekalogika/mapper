@@ -28,7 +28,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\TargetClassResolverInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMappingMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Util\ClassUtil;
 
@@ -126,7 +126,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // instantiate property mapping
 
-            $propertyMapping = new PropertyMapping(
+            $propertyMapping = new PropertyMappingMetadata(
                 id: $id,
                 sourceProperty: $sourcePropertyMetadata->getReadMode() !== ReadMode::None ? $sourceProperty : null,
                 targetProperty: $targetProperty,
@@ -217,7 +217,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
     /**
      * @param class-string $targetClass
      * @param list<string> $eagerProperties
-     * @param array<string,PropertyMapping> $constructorPropertyMappings
+     * @param array<string,PropertyMappingMetadata> $constructorPropertyMappings
      * @return array{array<string,true>,bool}
      */
     private function getProxyParameters(

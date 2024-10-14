@@ -28,7 +28,7 @@ use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException
 use Rekalogika\Mapper\Transformer\Exception\UnsupportedPropertyMappingException;
 use Rekalogika\Mapper\Transformer\Model\ConstructorArguments;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMappingMetadata;
 use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorInterface;
 use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -134,7 +134,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
     //
 
     /**
-     * @return array<string,PropertyMapping>
+     * @return array<string,PropertyMappingMetadata>
      */
     private function getPropertyMappings(): array
     {
@@ -142,7 +142,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
     }
 
     /**
-     * @return array<string,PropertyMapping>
+     * @return array<string,PropertyMappingMetadata>
      */
     private function getLazyPropertyMappings(): array
     {
@@ -150,7 +150,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
     }
 
     /**
-     * @return array<string,PropertyMapping>
+     * @return array<string,PropertyMappingMetadata>
      */
     private function getEagerPropertyMappings(): array
     {
@@ -418,7 +418,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
     //
 
     /**
-     * @param array<string,PropertyMapping> $propertyMappings
+     * @param array<string,PropertyMappingMetadata> $propertyMappings
      * @param array<string,mixed> $extraTargetValues
      */
     private function readSourceAndWriteTarget(
