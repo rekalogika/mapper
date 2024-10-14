@@ -20,7 +20,7 @@ use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
 use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
-use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMapping;
+use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMappingMetadata;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
@@ -42,7 +42,7 @@ final readonly class ReaderWriter
      */
     public function readSourceProperty(
         object $source,
-        PropertyMapping $propertyMapping,
+        PropertyMappingMetadata $propertyMapping,
         Context $context,
     ): mixed {
         $property = $propertyMapping->getSourceProperty();
@@ -125,7 +125,7 @@ final readonly class ReaderWriter
      */
     public function readTargetProperty(
         object $target,
-        PropertyMapping $propertyMapping,
+        PropertyMappingMetadata $propertyMapping,
         Context $context,
     ): mixed {
         if (
@@ -197,7 +197,7 @@ final readonly class ReaderWriter
      */
     public function writeTargetProperty(
         object $target,
-        PropertyMapping $propertyMapping,
+        PropertyMappingMetadata $propertyMapping,
         mixed $value,
         Context $context,
         bool $silentOnError,

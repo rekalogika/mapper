@@ -24,27 +24,27 @@ use Rekalogika\Mapper\Transformer\Context\TargetClassAttributes;
 final readonly class ObjectToObjectMetadata
 {
     /**
-     * @var array<string,PropertyMapping>
+     * @var array<string,PropertyMappingMetadata>
      */
     private array $allPropertyMappings;
 
     /**
-     * @var array<string,PropertyMapping>
+     * @var array<string,PropertyMappingMetadata>
      */
     private array $propertyMappings;
 
     /**
-     * @var array<string,PropertyMapping>
+     * @var array<string,PropertyMappingMetadata>
      */
     private array $constructorPropertyMappings;
 
     /**
-     * @var array<string,PropertyMapping>
+     * @var array<string,PropertyMappingMetadata>
      */
     private array $lazyPropertyMappings;
 
     /**
-     * @var array<string,PropertyMapping>
+     * @var array<string,PropertyMappingMetadata>
      */
     private array $eagerPropertyMappings;
 
@@ -53,11 +53,12 @@ final readonly class ObjectToObjectMetadata
      * @param class-string $targetClass Effective target class after resolving inheritance map
      * @param class-string $providedTargetClass
      * @param list<class-string> $allTargetClasses
-     * @param list<PropertyMapping> $allPropertyMappings
+     * @param list<PropertyMappingMetadata> $allPropertyMappings
      * @param array<string,true> $targetProxySkippedProperties
      * @param list<string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
      */
     public function __construct(
+        private string $id,
         private string $sourceClass,
         private string $targetClass,
         private string $providedTargetClass,
@@ -123,6 +124,7 @@ final readonly class ObjectToObjectMetadata
         bool $constructorIsEager,
     ): self {
         return new self(
+            id: $this->id,
             sourceClass: $this->sourceClass,
             targetClass: $this->targetClass,
             providedTargetClass: $this->providedTargetClass,
@@ -149,6 +151,7 @@ final readonly class ObjectToObjectMetadata
         string $reason,
     ): self {
         return new self(
+            id: $this->id,
             sourceClass: $this->sourceClass,
             targetClass: $this->targetClass,
             providedTargetClass: $this->providedTargetClass,
@@ -169,6 +172,11 @@ final readonly class ObjectToObjectMetadata
             targetProxySkippedProperties: [],
             cannotUseProxyReason: $reason,
         );
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**
@@ -219,7 +227,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<string,PropertyMapping>
+     * @return array<string,PropertyMappingMetadata>
      */
     public function getPropertyMappings(): array
     {
@@ -227,7 +235,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<string,PropertyMapping>
+     * @return array<string,PropertyMappingMetadata>
      */
     public function getLazyPropertyMappings(): array
     {
@@ -235,7 +243,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<string,PropertyMapping>
+     * @return array<string,PropertyMappingMetadata>
      */
     public function getEagerPropertyMappings(): array
     {
@@ -243,7 +251,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<string,PropertyMapping>
+     * @return array<string,PropertyMappingMetadata>
      */
     public function getConstructorPropertyMappings(): array
     {
@@ -251,7 +259,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<string,PropertyMapping>
+     * @return array<string,PropertyMappingMetadata>
      */
     public function getAllPropertyMappings(): array
     {

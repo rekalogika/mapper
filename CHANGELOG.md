@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.11.1
+
+* refactor: refactor `ObjectToObjectTransformer` for future optimization
+
 ## 1.11.0
 
 * refactor: spin off `resolveTargetClass()` to separate class
