@@ -58,6 +58,7 @@ final readonly class ObjectToObjectMetadata
      * @param list<string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
      */
     public function __construct(
+        private string $id,
         private string $sourceClass,
         private string $targetClass,
         private string $providedTargetClass,
@@ -123,6 +124,7 @@ final readonly class ObjectToObjectMetadata
         bool $constructorIsEager,
     ): self {
         return new self(
+            id: $this->id,
             sourceClass: $this->sourceClass,
             targetClass: $this->targetClass,
             providedTargetClass: $this->providedTargetClass,
@@ -149,6 +151,7 @@ final readonly class ObjectToObjectMetadata
         string $reason,
     ): self {
         return new self(
+            id: $this->id,
             sourceClass: $this->sourceClass,
             targetClass: $this->targetClass,
             providedTargetClass: $this->providedTargetClass,
@@ -169,6 +172,11 @@ final readonly class ObjectToObjectMetadata
             targetProxySkippedProperties: [],
             cannotUseProxyReason: $reason,
         );
+    }
+
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**

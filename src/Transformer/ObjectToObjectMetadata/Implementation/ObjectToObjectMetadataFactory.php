@@ -122,12 +122,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
 
             // generate id
 
-            $id = hash('sha256', $sourceClass . $sourceProperty . $targetClass . $targetProperty);
+            $propertyMappingMetadataId = hash('sha256', $sourceClass . $sourceProperty . $targetClass . $targetProperty);
 
             // instantiate property mapping
 
             $propertyMapping = new PropertyMappingMetadata(
-                id: $id,
+                id: $propertyMappingMetadataId,
                 sourceProperty: $sourcePropertyMetadata->getReadMode() !== ReadMode::None ? $sourceProperty : null,
                 targetProperty: $targetProperty,
                 sourceTypes: $sourcePropertyMetadata->getTypes(),
@@ -163,7 +163,10 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $effectivePropertiesToMap[] = $targetProperty;
         }
 
+        $metadataId = hash('sha256', $sourceClass . $targetClass);
+
         $objectToObjectMetadata = new ObjectToObjectMetadata(
+            id: $metadataId,
             sourceClass: $sourceClass,
             targetClass: $targetClass,
             providedTargetClass: $providedTargetClass,
