@@ -30,17 +30,24 @@ final class CachingPropertyProcessorFactory implements PropertyProcessorFactoryI
      */
     private array $cache = [];
 
+    private ?PropertyProcessorFactoryInterface $decoratedWithMainTransformer = null;
+
     public function __construct(
         private readonly PropertyProcessorFactoryInterface $decorated,
     ) {}
+
+    private function getDecorated(): PropertyProcessorFactoryInterface
+    {
+        return $this->decoratedWithMainTransformer ??= $this->decorated
+            ->withMainTransformer($this->getMainTransformer());
+    }
 
     public function getPropertyProcessor(
         PropertyMapping $metadata,
     ): PropertyProcessorInterface {
         $id = $metadata->getId();
 
-        return $this->cache[$id] ??= $this->decorated
-            ->withMainTransformer($this->getMainTransformer())
+        return $this->cache[$id] ??= $this->getDecorated()
             ->getPropertyProcessor($metadata);
     }
 }
