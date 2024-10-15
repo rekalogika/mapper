@@ -36,6 +36,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionWithGetter
 use Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithNotNullArrayAccessPropertyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
+use Rekalogika\Mapper\Transformer\Exception\NewInstanceReturnedButCannotBeSetOnTargetException;
 use Rekalogika\Mapper\Transformer\Model\HashTable;
 use Rekalogika\Mapper\Transformer\Model\LazyArray;
 
@@ -423,14 +424,11 @@ class TraversableToArrayAccessMappingTest extends FrameworkTestCase
 
     public function testMappingToArrayWithGetterButNoSetter(): void
     {
-        // the property should be skipped, cannot mutate object's
-        // array without a setter
+        $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
 
         $source = new ObjectWithTraversableProperties();
         $target = new ObjectWithArrayWithGetterNoSetterDto();
 
-        $this->assertCount(0, $target->getProperty());
         $result = $this->mapper->map($source, $target);
-        $this->assertCount(0, $result->getProperty());
     }
 }

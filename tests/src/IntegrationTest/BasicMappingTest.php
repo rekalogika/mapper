@@ -24,6 +24,7 @@ use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithDogDto;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithImmutableDogWithoutSetter;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithoutAge;
 use Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithoutAgeDto;
+use Rekalogika\Mapper\Transformer\Exception\NewInstanceReturnedButCannotBeSetOnTargetException;
 
 class BasicMappingTest extends FrameworkTestCase
 {
@@ -81,6 +82,9 @@ class BasicMappingTest extends FrameworkTestCase
 
     public function testSkippingImmutableEntityWithNoSetterOnTarget(): void
     {
+        // old behavior no longer supported, this throws an exception now
+        $this->expectException(NewInstanceReturnedButCannotBeSetOnTargetException::class);
+
         // source
         $personDto = new PersonWithDogDto();
         $dogDto = new DogDto();

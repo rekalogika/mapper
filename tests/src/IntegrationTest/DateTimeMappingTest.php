@@ -371,14 +371,15 @@ class DateTimeMappingTest extends FrameworkTestCase
                 null,
             ];
 
-        yield
-            self::getDescription(ObjectWithDateTimeInterface::class, ObjectWithDateTimeImmutableGetterOnly::class) . ' 2' =>
-            [
-                ObjectWithString::class,
-                ObjectWithDateTimeImmutableGetterOnly::class,
-                '2024-01-01 13:00:00 UTC',
-                null,
-            ];
+        // this no longer tolerated. this will throw an exception now
+        // yield
+        //     self::getDescription(ObjectWithDateTimeInterface::class, ObjectWithDateTimeImmutableGetterOnly::class) . ' 2' =>
+        //     [
+        //         ObjectWithString::class,
+        //         ObjectWithDateTimeImmutableGetterOnly::class,
+        //         '2024-01-01 13:00:00 UTC',
+        //         null,
+        //     ];
     }
 
     private static function getShortClass(string $class): string
