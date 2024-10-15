@@ -394,7 +394,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
 
                     $constructorArguments->addVariadicArgument(
                         $propertyMapping->getTargetProperty(),
-                        $targetPropertyValue
+                        $targetPropertyValue,
                     );
                 } else {
                     $constructorArguments->addArgument(

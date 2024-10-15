@@ -92,7 +92,7 @@ final class ConstructorArguments
         $argumentNames = [];
 
         foreach (array_keys($this->contructorArguments) as $name) {
-            if (is_string($name)) {
+            if (\is_string($name)) {
                 $argumentNames[] = $name;
             }
         }

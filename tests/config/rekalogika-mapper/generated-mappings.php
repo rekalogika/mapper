@@ -292,6 +292,24 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 31
+        source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndGetters::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 59
+        source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndPublicProperties::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 45
+        source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithIdOnlyOnConstructor::class
+    );
+    
+    $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/DateTimeMappingTest.php on line 195
         source: \Rekalogika\Mapper\Tests\Fixtures\DateTime\DateTimeTestObjectInterface::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\DateTime\DateTimeTestObjectInterface::class

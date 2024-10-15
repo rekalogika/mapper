@@ -18,9 +18,6 @@ use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructo
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndPublicProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithIdOnlyOnConstructor;
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject;
-use Rekalogika\Mapper\Tests\Fixtures\InternalClass\ObjectWithInternalClass;
-use Rekalogika\Mapper\Tests\Fixtures\InternalClass\ObjectWithInternalClassDto;
-use Rekalogika\Mapper\Transformer\Exception\InternalClassUnsupportedException;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class ConstructorAndPropertyTest extends FrameworkTestCase

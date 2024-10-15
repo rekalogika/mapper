@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty;
 
-readonly class ObjectWithConstructorArgumentsAndPublicProperties
+class ObjectWithConstructorArgumentsAndPublicProperties
 {
     public function __construct(
         public string $id,
