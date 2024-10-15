@@ -292,6 +292,30 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 77
+        source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorAndSetter::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 32
+        source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndGetters::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 64
+        source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndPublicProperties::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 48
+        source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithIdOnlyOnConstructor::class
+    );
+    
+    $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/DateTimeMappingTest.php on line 195
         source: \Rekalogika\Mapper\Tests\Fixtures\DateTime\DateTimeTestObjectInterface::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\DateTime\DateTimeTestObjectInterface::class

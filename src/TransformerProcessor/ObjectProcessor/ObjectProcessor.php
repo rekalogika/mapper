@@ -78,14 +78,17 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                     extraTargetValues: $extraTargetValues,
                     context: $context,
                 );
+
+                $constructorArgumentNames = [];
             } else {
-                $target = $this->instantiateRealTarget(
+                [$target, $constructorArgumentNames] = $this->instantiateRealTarget(
                     source: $source,
                     extraTargetValues: $extraTargetValues,
                     context: $context,
                 );
             }
         } else {
+            $constructorArgumentNames = [];
             $canUseTargetProxy = false;
         }
 
@@ -111,6 +114,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                     source: $source,
                     target: $target,
                     context: $context,
+                    exclude: $constructorArgumentNames,
                 );
             }
 
@@ -119,6 +123,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                 target: $target,
                 propertyMappings: $this->getPropertyMappings(),
                 extraTargetValues: $extraTargetValues,
+                exclude: $constructorArgumentNames,
                 context: $context,
             );
         }
@@ -188,12 +193,13 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
 
     /**
      * @param array<string,mixed> $extraTargetValues
+     * @return array{object,list<string>} the object & the list of constructor arguments
      */
     private function instantiateRealTarget(
         object $source,
         array $extraTargetValues,
         Context $context,
-    ): object {
+    ): array {
         $targetClass = $this->metadata->getTargetClass();
 
         // check if class is valid & instantiable
@@ -211,8 +217,10 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
         try {
             $reflectionClass = new \ReflectionClass($targetClass);
 
-            return $reflectionClass
+            $target = $reflectionClass
                 ->newInstanceArgs($constructorArguments->getArguments());
+
+            return [$target, $constructorArguments->getArgumentNames()];
         } catch (\TypeError | \ReflectionException $e) {
             throw new InstantiationFailureException(
                 source: $source,
@@ -244,15 +252,18 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
         // create proxy initializer. this initializer will be executed when the
         // proxy is first accessed
 
+        $constructorArgumentNames = [];
+
         $initializer = function (object $target) use (
             $source,
             $context,
             $extraTargetValues,
+            &$constructorArgumentNames,
         ): void {
             // if the constructor is lazy, run it here
 
             if (!$this->metadata->constructorIsEager()) {
-                $target = $this->runConstructorManually(
+                $constructorArgumentNames = $this->runConstructorManually(
                     source: $source,
                     target: $target,
                     extraTargetValues: $extraTargetValues,
@@ -267,6 +278,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                 target: $target,
                 propertyMappings: $this->getLazyPropertyMappings(),
                 extraTargetValues: $extraTargetValues,
+                exclude: $constructorArgumentNames,
                 context: $context,
             );
         };
@@ -282,7 +294,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
         // if the constructor is eager, run it here
 
         if ($this->metadata->constructorIsEager()) {
-            $target = $this->runConstructorManually(
+            $constructorArgumentNames = $this->runConstructorManually(
                 source: $source,
                 target: $target,
                 extraTargetValues: $extraTargetValues,
@@ -297,6 +309,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
             target: $target,
             propertyMappings: $this->getEagerPropertyMappings(),
             extraTargetValues: $extraTargetValues,
+            exclude: $constructorArgumentNames,
             context: $context,
         );
 
@@ -305,15 +318,16 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
 
     /**
      * @param array<string,mixed> $extraTargetValues
+     * @return list<string> the list of the constructor arguments
      */
     private function runConstructorManually(
         object $source,
         object $target,
         array $extraTargetValues,
         Context $context,
-    ): object {
+    ): array {
         if (!method_exists($target, '__construct')) {
-            return $target;
+            return [];
         }
 
         $constructorArguments = $this->generateConstructorArguments(
@@ -341,7 +355,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
             );
         }
 
-        return $target;
+        return $constructorArguments->getArgumentNames();
     }
 
     /**
@@ -378,7 +392,10 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                         $targetPropertyValue = [$targetPropertyValue];
                     }
 
-                    $constructorArguments->addVariadicArgument($targetPropertyValue);
+                    $constructorArguments->addVariadicArgument(
+                        $propertyMapping->getTargetProperty(),
+                        $targetPropertyValue,
+                    );
                 } else {
                     $constructorArguments->addArgument(
                         $propertyMapping->getTargetProperty(),
@@ -417,15 +434,23 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
     /**
      * @param array<string,PropertyMappingMetadata> $propertyMappings
      * @param array<string,mixed> $extraTargetValues
+     * @param list<string> $exclude
      */
     private function readSourceAndWriteTarget(
         object $source,
         object $target,
         array $propertyMappings,
         array $extraTargetValues,
+        array $exclude,
         Context $context,
     ): object {
         foreach ($propertyMappings as $propertyMapping) {
+            $argumentName = $propertyMapping->getTargetProperty();
+
+            if (\in_array($argumentName, $exclude, true)) {
+                continue;
+            }
+
             $target = $this->propertyProcessorFactory
                 ->getPropertyProcessor($propertyMapping)
                 ->readSourcePropertyAndWriteTargetProperty(
@@ -440,6 +465,10 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
         /** @var mixed $value */
         foreach ($extraTargetValues as $property => $value) {
             if (!isset($propertyMappings[$property])) {
+                continue;
+            }
+
+            if (\in_array($property, $exclude, true)) {
                 continue;
             }
 
@@ -458,48 +487,58 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
         return $target;
     }
 
+    /**
+     * @param list<string> $exclude
+     */
     private function mapDynamicProperties(
         object $source,
         object $target,
+        array $exclude,
         Context $context,
     ): void {
         $sourceProperties = $this->metadata->getSourceProperties();
 
         /** @var mixed $sourcePropertyValue */
         foreach (get_object_vars($source) as $sourceProperty => $sourcePropertyValue) {
-            if (!\in_array($sourceProperty, $sourceProperties, true)) {
-                try {
-                    if (isset($target->{$sourceProperty})) {
-                        /** @psalm-suppress MixedAssignment */
-                        $currentTargetPropertyValue = $target->{$sourceProperty};
-                    } else {
-                        $currentTargetPropertyValue = null;
-                    }
+            if (\in_array($sourceProperty, $sourceProperties, true)) {
+                continue;
+            }
 
+            if (\in_array($sourceProperty, $exclude, true)) {
+                continue;
+            }
 
-                    if (
-                        $currentTargetPropertyValue === null
-                        || \is_scalar($currentTargetPropertyValue)
-                    ) {
-                        /** @psalm-suppress MixedAssignment */
-                        $targetPropertyValue = $sourcePropertyValue;
-                    } else {
-                        /** @var mixed */
-                        $targetPropertyValue = $this->mainTransformer->transform(
-                            source: $sourcePropertyValue,
-                            target: $currentTargetPropertyValue,
-                            sourceType: null,
-                            targetTypes: [],
-                            context: $context,
-                            path: $sourceProperty,
-                        );
-                    }
-                } catch (\Throwable) {
-                    $targetPropertyValue = null;
+            try {
+                if (isset($target->{$sourceProperty})) {
+                    /** @psalm-suppress MixedAssignment */
+                    $currentTargetPropertyValue = $target->{$sourceProperty};
+                } else {
+                    $currentTargetPropertyValue = null;
                 }
 
-                $target->{$sourceProperty} = $targetPropertyValue;
+
+                if (
+                    $currentTargetPropertyValue === null
+                    || \is_scalar($currentTargetPropertyValue)
+                ) {
+                    /** @psalm-suppress MixedAssignment */
+                    $targetPropertyValue = $sourcePropertyValue;
+                } else {
+                    /** @var mixed */
+                    $targetPropertyValue = $this->mainTransformer->transform(
+                        source: $sourcePropertyValue,
+                        target: $currentTargetPropertyValue,
+                        sourceType: null,
+                        targetTypes: [],
+                        context: $context,
+                        path: $sourceProperty,
+                    );
+                }
+            } catch (\Throwable) {
+                $targetPropertyValue = null;
             }
+
+            $target->{$sourceProperty} = $targetPropertyValue;
         }
     }
 }
