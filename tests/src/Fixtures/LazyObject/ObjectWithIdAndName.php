@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\LazyObject;
 
-class ObjectWithIdAndNameMustBeCalled
+class ObjectWithIdAndName
 {
     private bool $idCalled = false;
 
@@ -41,5 +41,15 @@ class ObjectWithIdAndNameMustBeCalled
     public function isIdAndNameCalled(): bool
     {
         return $this->idCalled && $this->nameCalled;
+    }
+
+    public function isIdCalled(): bool
+    {
+        return $this->idCalled;
+    }
+
+    public function isNameCalled(): bool
+    {
+        return $this->nameCalled;
     }
 }
