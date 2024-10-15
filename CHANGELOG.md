@@ -8,6 +8,7 @@
 * test: test lazy constructor
 * fix: double mapping if a property is in the constructor and also has a setter
 * fix: remove heuristics of value object detection to reduce confusion
+* fix: ensure fix for [#232](https://github.com/rekalogika/mapper/issues/232)
 
 ## 1.11.0
 
