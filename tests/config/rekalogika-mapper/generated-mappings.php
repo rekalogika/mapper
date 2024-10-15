@@ -472,6 +472,18 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/Issue232Test.php on line 27
+        source: \Rekalogika\Mapper\Tests\Fixtures\Issue232\BigDecimalSource::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\Issue232\BigDecimalTarget::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/Issue232Test.php on line 35
+        source: \Rekalogika\Mapper\Tests\Fixtures\Issue232\CurrencySource::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\Issue232\CurrencyTarget::class
+    );
+    
+    $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/LazyObjectTest.php on lines 99, 109
         source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ChildObjectWithIdDto::class
