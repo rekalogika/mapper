@@ -19,10 +19,11 @@ use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ChildObjectWithIdDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameInConstructorDto;
-use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameMustBeCalled;
+use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndName;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdEagerDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdFinalDto;
+use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdInConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdReadOnlyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
@@ -114,7 +115,7 @@ class LazyObjectTest extends FrameworkTestCase
      */
     public function testEagerAndLazyPropertyInConstruct(): void
     {
-        $source = new ObjectWithIdAndNameMustBeCalled();
+        $source = new ObjectWithIdAndName();
         $target = $this->mapper->map($source, ObjectWithIdAndNameInConstructorDto::class);
         $this->assertInstanceOf(LazyObjectInterface::class, $target);
 
@@ -123,6 +124,25 @@ class LazyObjectTest extends FrameworkTestCase
 
         $this->assertEquals('other', $target->other);
         $this->assertTrue($target->isLazyObjectInitialized());
+    }
+
+    /**
+     * If the constructor has only lazy properties, the constructor is lazy.
+     */
+    public function testLazyPropertyOnlyInConstruct(): void
+    {
+        $source = new ObjectWithIdAndName();
+        $target = $this->mapper->map($source, ObjectWithIdInConstructorDto::class);
+        $this->assertInstanceOf(LazyObjectInterface::class, $target);
+
+        $this->assertTrue($source->isIdCalled());
+        $this->assertFalse($source->isNameCalled());
+        $this->assertFalse($target->isLazyObjectInitialized());
+
+        $name = $target->name;
+        $this->assertTrue($target->isLazyObjectInitialized());
+        $this->assertTrue($source->isNameCalled());
+        $this->assertEquals('name', $name);
     }
 
     public function testEnablingLazyObject(): void

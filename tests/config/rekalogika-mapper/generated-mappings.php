@@ -448,39 +448,45 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/LazyObjectTest.php on lines 98, 108
+        // tests/src/IntegrationTest/LazyObjectTest.php on lines 99, 109
         source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ChildObjectWithIdDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/LazyObjectTest.php on lines 36, 45
+        // tests/src/IntegrationTest/LazyObjectTest.php on lines 37, 46
         source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/LazyObjectTest.php on line 64
+        // tests/src/IntegrationTest/LazyObjectTest.php on line 65
         source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdEagerDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/LazyObjectTest.php on line 55
+        // tests/src/IntegrationTest/LazyObjectTest.php on line 56
         source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdFinalDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/LazyObjectTest.php on line 80
+        // tests/src/IntegrationTest/LazyObjectTest.php on line 81
         source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithId::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdReadOnlyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/LazyObjectTest.php on line 118
-        source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameMustBeCalled::class,
+        // tests/src/IntegrationTest/LazyObjectTest.php on line 119
+        source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndName::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndNameInConstructorDto::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/LazyObjectTest.php on line 135
+        source: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdAndName::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdInConstructorDto::class
     );
     
     $mappingCollection->addObjectMapping(
@@ -886,7 +892,7 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/LazyObjectTest.php on lines 134, 144
+        // tests/src/IntegrationTest/LazyObjectTest.php on lines 154, 164
         // tests/src/IntegrationTest/ScalarToScalar/ScalarPropertiesMappingTestCase.php on line 31
         source: \Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto::class
