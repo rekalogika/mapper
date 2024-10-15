@@ -7,6 +7,7 @@
   handle the current target value in all cases
 * test: test lazy constructor
 * fix: double mapping if a property is in the constructor and also has a setter
+* fix: remove heuristics of value object detection to reduce confusion
 
 ## 1.11.0
 

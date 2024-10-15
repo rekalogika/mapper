@@ -251,7 +251,9 @@ class DynamicPropertyTest extends FrameworkTestCase
     {
         $source = new \stdClass();
         $source->public = 'public';
-        $source->private = 'private';
+        // in the new behavior, this will fail, because there is no setter on
+        // the target side
+        // $source->private = 'private';
         $source->constructor = 'constructor';
         $source->dynamic = 'dynamic';
 

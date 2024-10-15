@@ -92,14 +92,6 @@ final readonly class ObjectToObjectMetadata
                 $constructorPropertyMappings[$propertyMapping->getTargetProperty()] = $propertyMapping;
             }
 
-            if (
-                !$propertyMapping->isTargetReplaceable()
-                && !$propertyMapping->hostCanMutateTarget()
-                && $propertyMapping->isTargetUnalterable()
-            ) {
-                continue;
-            }
-
             $propertyPropertyMappings[$propertyMapping->getTargetProperty()] = $propertyMapping;
 
             if ($propertyMapping->isSourceLazy()) {
