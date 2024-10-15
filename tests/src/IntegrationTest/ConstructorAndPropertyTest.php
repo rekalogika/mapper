@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
+use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorAndSetter;
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndGetters;
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndPublicProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithIdOnlyOnConstructor;
@@ -29,8 +30,10 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
     {
         $source = new SourceObject();
         $result = $this->mapper->map($source, ObjectWithConstructorArgumentsAndGetters::class);
+
         $this->assertInstanceOf(LazyObjectInterface::class, $result);
         $this->assertFalse($result->isLazyObjectInitialized());
+
         $this->assertSame('id', $result->getId());
         $this->assertSame('name', $result->getName());
         $this->assertSame('description', $result->getDescription());
@@ -43,8 +46,10 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
     {
         $source = new SourceObject();
         $result = $this->mapper->map($source, ObjectWithIdOnlyOnConstructor::class);
+
         $this->assertInstanceOf(LazyObjectInterface::class, $result);
         $this->assertFalse($result->isLazyObjectInitialized());
+
         $this->assertSame('id', $result->getId());
         $this->assertSame('name', $result->getName());
         $this->assertSame('description', $result->getDescription());
@@ -57,10 +62,25 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
     {
         $source = new SourceObject();
         $result = $this->mapper->map($source, ObjectWithConstructorArgumentsAndPublicProperties::class);
+
         $this->assertInstanceOf(LazyObjectInterface::class, $result);
         $this->assertFalse($result->isLazyObjectInitialized());
+
         $this->assertSame('id', $result->id);
         $this->assertSame('name', $result->name);
         $this->assertSame('description', $result->description);
+    }
+
+    public function testToConstructorAndSetter(): void
+    {
+        $source = new SourceObject();
+        $result = $this->mapper->map($source, ObjectWithConstructorAndSetter::class);
+
+        $this->assertInstanceOf(LazyObjectInterface::class, $result);
+        $this->assertFalse($result->isLazyObjectInitialized());
+
+        $this->assertSame('id', $result->getId());
+        $this->assertSame('name', $result->getName());
+        $this->assertSame('description', $result->getDescription());
     }
 }
