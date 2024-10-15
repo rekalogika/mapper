@@ -25,7 +25,7 @@ final class ConstructorArguments
      */
     private array $contructorArguments = [];
 
-    private bool $variadicAdded = false;
+    private ?string $variadicName = null;
 
     /**
      * @var array<int,string>
@@ -34,7 +34,7 @@ final class ConstructorArguments
 
     public function addArgument(string $name, mixed $value): void
     {
-        if ($this->variadicAdded) {
+        if ($this->variadicName !== null) {
             throw new LogicException('Cannot add argument after variadic argument');
         }
 
@@ -44,14 +44,18 @@ final class ConstructorArguments
     /**
      * @param iterable<mixed> $value
      */
-    public function addVariadicArgument(iterable $value): void
+    public function addVariadicArgument(string $name, iterable $value): void
     {
+        if ($this->variadicName !== null) {
+            throw new LogicException('Cannot add variadic argument after variadic argument');
+        }
+
+        $this->variadicName = $name;
+
         /** @var mixed $item */
         foreach ($value as $item) {
             $this->contructorArguments[] = $item;
         }
-
-        $this->variadicAdded = true;
     }
 
     public function addUnsetSourceProperty(string $name): void
@@ -78,5 +82,25 @@ final class ConstructorArguments
     public function hasArguments(): bool
     {
         return $this->contructorArguments !== [];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getArgumentNames(): array
+    {
+        $argumentNames = [];
+
+        foreach (array_keys($this->contructorArguments) as $name) {
+            if (is_string($name)) {
+                $argumentNames[] = $name;
+            }
+        }
+
+        if ($this->variadicName !== null) {
+            $argumentNames[] = $this->variadicName;
+        }
+
+        return $argumentNames;
     }
 }

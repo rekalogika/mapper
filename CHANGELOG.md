@@ -6,6 +6,7 @@
 * fix: remove unalterable check in `ObjectProcessor` to allow transformers to
   handle the current target value in all cases
 * test: test lazy constructor
+* fix: double mapping if a property is in the constructor and also has a setter
 
 ## 1.11.0
 
