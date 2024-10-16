@@ -23,7 +23,7 @@ final readonly class Map
      * @param class-string|null $class
      */
     public function __construct(
-        public string $property,
+        public ?string $property = null,
         public ?string $class = null,
     ) {}
 }

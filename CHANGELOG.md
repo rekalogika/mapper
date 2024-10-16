@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 1.11.1
+## 1.13.0
+
+* feat: `Map(property: null)` ignores the mapping
+
+## 1.12.0
 
 * refactor: refactor `ObjectToObjectTransformer` for future optimization
 * fix: remove unalterable check in `ObjectProcessor` to allow transformers to
