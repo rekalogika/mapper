@@ -21,7 +21,7 @@ interface PropertyMappingResolverInterface
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
-     * @return list<array{string,string}>
+     * @return list<array{?string,string}>
      */
     public function getPropertiesToMap(
         string $sourceClass,

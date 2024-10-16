@@ -20,7 +20,10 @@ use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\ObjectOverridingSomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\OtherObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectSkippingMapping;
+use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectSkippingMappingDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectWithInvalidTargetDto;
+use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectWithSamePropertyNameDto;
 use Rekalogika\Mapper\Tests\Fixtures\MapAttribute\SomeObjectWithUnpromotedConstructorDto;
 use Rekalogika\Mapper\Transformer\Exception\PairedPropertyNotFoundException;
 
@@ -140,5 +143,35 @@ class MapAttributeTest extends FrameworkTestCase
         $source = SomeObject::preinitialized();
         $target = $this->mapper->map($source, SomeObjectWithInvalidTargetDto::class);
 
+    }
+
+    public function testToSameProperty(): void
+    {
+        $source = SomeObject::preinitialized();
+        $target = $this->mapper->map($source, SomeObjectWithSamePropertyNameDto::class);
+
+        $this->assertEquals('sourcePropertyA', $target->sourcePropertyA);
+        $this->assertEquals('sourcePropertyB', $target->sourcePropertyB);
+        $this->assertEquals('sourcePropertyC', $target->sourcePropertyC);
+    }
+
+    public function testToSamePropertyButUnmapped(): void
+    {
+        $source = SomeObject::preinitialized();
+        $target = $this->mapper->map($source, SomeObjectSkippingMappingDto::class);
+
+        $this->assertNull($target->sourcePropertyA);
+        $this->assertNull($target->sourcePropertyB);
+        $this->assertNull($target->sourcePropertyC);
+    }
+
+    public function testIgnoringFromSourceSide(): void
+    {
+        $source = SomeObjectSkippingMapping::preinitialized();
+        $target = $this->mapper->map($source, SomeObjectWithSamePropertyNameDto::class);
+
+        $this->assertNull($target->sourcePropertyA);
+        $this->assertNull($target->sourcePropertyB);
+        $this->assertNull($target->sourcePropertyC);
     }
 }

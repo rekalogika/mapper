@@ -97,6 +97,12 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $serviceMethodSpecification = $this->propertyMapperResolver
                 ->getPropertyMapper($sourceClass, $targetClass, $targetProperty);
 
+            // if source property is null, then skip
+
+            if ($sourceProperty === null) {
+                continue;
+            }
+
             // generate source & target property metadata
 
             $sourcePropertyMetadata = $this->propertyMetadataFactory

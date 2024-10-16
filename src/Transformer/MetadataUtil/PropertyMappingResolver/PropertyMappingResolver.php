@@ -38,6 +38,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
         $targetProperties = $this->listProperties($targetClass);
 
         $targetPropertyToSourceProperty = [];
+        $skippedTargetProperties = [];
 
         foreach ($targetProperties as $targetProperty) {
             $sourceProperty = $this->determinePairedProperty(
@@ -46,6 +47,11 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
                 pairedClass: $sourceClass,
                 pairedClassProperties: $sourceProperties,
             );
+
+            if ($sourceProperty === null) {
+                $skippedTargetProperties[$targetProperty] = true;
+                continue;
+            }
 
             $targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
         }
@@ -57,6 +63,18 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
                 pairedClass: $targetClass,
                 pairedClassProperties: $targetProperties,
             );
+
+            if (isset($skippedTargetProperties[$targetProperty])) {
+                continue;
+            }
+
+            if ($targetProperty === null) {
+                if (isset($targetPropertyToSourceProperty[$sourceProperty])) {
+                    unset($targetPropertyToSourceProperty[$sourceProperty]);
+                }
+
+                continue;
+            }
 
             $targetPropertyToSourceProperty[$targetProperty] = $sourceProperty;
         }
@@ -93,7 +111,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
         string $property,
         string $pairedClass,
         array $pairedClassProperties,
-    ): string {
+    ): ?string {
         $attributes = ClassUtil::getPropertyAttributes(
             class: $class,
             property: $property,
@@ -111,6 +129,10 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
 
         if (\count($attributesWithClass) >= 1) {
             $pairedProperty = $attributesWithClass[0]->property;
+
+            if ($pairedProperty === null) {
+                return null;
+            }
 
             if (
                 !$this->isPropertyPath($pairedProperty)
@@ -135,7 +157,25 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
         );
 
         if (\count($attributesWithoutClass) >= 1) {
-            return $attributesWithoutClass[0]->property;
+            $pairedProperty = $attributesWithoutClass[0]->property;
+
+            if ($pairedProperty === null) {
+                return null;
+            }
+
+            if (
+                !$this->isPropertyPath($pairedProperty)
+                && !\in_array($pairedProperty, $pairedClassProperties, true)
+            ) {
+                throw new PairedPropertyNotFoundException(
+                    class: $class,
+                    property: $property,
+                    pairedClass: $pairedClass,
+                    pairedProperty: $pairedProperty,
+                );
+            }
+
+            return $pairedProperty;
         }
 
         // if not found
