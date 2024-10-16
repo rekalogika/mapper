@@ -69,7 +69,7 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
             }
 
             if ($targetProperty === null) {
-                if (isset($targetPropertyToSourceProperty[$sourceProperty])) {
+                if (($targetPropertyToSourceProperty[$sourceProperty] ?? null) === $sourceProperty) {
                     unset($targetPropertyToSourceProperty[$sourceProperty]);
                 }
 

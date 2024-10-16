@@ -3,6 +3,8 @@
 ## 1.13.0
 
 * feat: `Map(property: null)` ignores the mapping
+* fix: only remove source property mapping if it maps to the same name on the
+  target side
 
 ## 1.12.0
 
