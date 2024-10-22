@@ -50,6 +50,12 @@ class MoneyObjectMapper
     }
 
     #[AsObjectMapper]
+    public function mapMoneyDtoInterfaceToMoney(MoneyDtoInterface $moneyDto): Money
+    {
+        return Money::of($moneyDto->getAmount(), $moneyDto->getCurrency());
+    }
+
+    #[AsObjectMapper]
     public function mapMoneyToMoneyDtoForProxy(
         Money $money,
         SubMapperInterface $subMapper,
