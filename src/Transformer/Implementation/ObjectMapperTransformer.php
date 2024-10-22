@@ -63,9 +63,12 @@ final class ObjectMapperTransformer implements
 
         if (
             !\is_string($targetClass)
-            || !class_exists($targetClass)
+            || (
+                !class_exists($targetClass)
+                && !interface_exists($targetClass)
+            )
         ) {
-            throw new InvalidArgumentException(\sprintf('Target class "%s" is not a valid class.', (string) $targetClass), context: $context);
+            throw new InvalidArgumentException(\sprintf('Target "%s" is not a valid class or interface.', (string) $targetClass), context: $context);
         }
 
         // get source class

@@ -21,6 +21,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetInvalidTypeHint;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetModification;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetReplacement;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoInterface;
 
 class MoneyObjectMapper
 {
@@ -37,6 +38,15 @@ class MoneyObjectMapper
     public function mapMoneyDtoToMoney(MoneyDto $moneyDto): Money
     {
         return Money::of($moneyDto->getAmount(), $moneyDto->getCurrency());
+    }
+
+    #[AsObjectMapper]
+    public function mapMoneyToMoneyDtoInterface(Money $money): MoneyDtoInterface
+    {
+        return new MoneyDto(
+            $money->getAmount()->__toString(),
+            $money->getCurrency()->getCurrencyCode(),
+        );
     }
 
     #[AsObjectMapper]

@@ -24,6 +24,7 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetInvalidTypeHint;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetModification;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetReplacement;
+use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoInterface;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto;
 use Rekalogika\Mapper\Tests\Services\ObjectMapper\MoneyObjectMapper;
@@ -59,6 +60,17 @@ class ObjectMapperTest extends FrameworkTestCase
         $this->assertInstanceOf(Money::class, $result);
         $this->assertSame('100.00', $result->getAmount()->__toString());
         $this->assertSame('USD', $result->getCurrency()->getCurrencyCode());
+    }
+
+    public function testMoneyToMoneyDtoInterface(): void
+    {
+        $money = Money::of('100.00', 'USD');
+        $result = $this->mapper->map($money, MoneyDtoInterface::class);
+
+        $this->assertInstanceOf(MoneyDtoInterface::class, $result);
+        $this->assertInstanceOf(MoneyDto::class, $result);
+        $this->assertSame('100.00', $result->getAmount());
+        $this->assertSame('USD', $result->getCurrency());
     }
 
     public function testMoneyToMoneyDtoProxy(): void
