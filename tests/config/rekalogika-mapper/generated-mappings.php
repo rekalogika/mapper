@@ -26,33 +26,39 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 47
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 49
         source: \Brick\Money\Money::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 67
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 90
         source: \Brick\Money\Money::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForProxy::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 109
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 132
         source: \Brick\Money\Money::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetInvalidTypeHint::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 82
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 105
         source: \Brick\Money\Money::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetModification::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 95
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 118
         source: \Brick\Money\Money::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoForTargetReplacement::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 69
+        source: \Brick\Money\Money::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoInterface::class
     );
     
     $mappingCollection->addObjectMapping(
@@ -694,31 +700,37 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 155
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 178
         source: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Baz::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Foo::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 145
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 168
         source: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Foo::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Baz::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 57
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 59
         source: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDto::class,
         target: \Brick\Money\Money::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 139
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 80
+        source: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\MoneyDtoToo::class,
+        target: \Brick\Money\Money::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 162
         source: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\FinalPersonDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectMapperTest.php on line 115
+        // tests/src/IntegrationTest/ObjectMapperTest.php on line 138
         source: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto::class
     );

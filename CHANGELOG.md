@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.13.1
+
+* fix: allow interfaces as the target type of object mapper
+
 ## 1.13.0
 
 * feat: `Map(property: null)` ignores the mapping

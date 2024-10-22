@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
 
-final readonly class MoneyDto implements MoneyDtoInterface
+final readonly class MoneyDtoToo implements MoneyDtoInterface
 {
     public function __construct(
         private string $amount,

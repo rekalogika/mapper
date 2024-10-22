@@ -13,20 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\ObjectMapper;
 
-final readonly class MoneyDto implements MoneyDtoInterface
+interface MoneyDtoInterface
 {
-    public function __construct(
-        private string $amount,
-        private string $currency,
-    ) {}
+    public function getAmount(): string;
 
-    public function getAmount(): string
-    {
-        return $this->amount;
-    }
-
-    public function getCurrency(): string
-    {
-        return $this->currency;
-    }
+    public function getCurrency(): string;
 }
