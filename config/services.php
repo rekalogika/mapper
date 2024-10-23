@@ -65,7 +65,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\MetadataUtilLocator;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\CachingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyResolvingObjectToObjectMetadataFactory;
-use Rekalogika\Mapper\TransformerProcessor\ObjectProcessor\DefaultObjectProcessorFactory;
+use Rekalogika\Mapper\Transformer\Processor\ObjectProcessor\DefaultObjectProcessorFactory;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\CachingTransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\TransformerRegistry;
 use Rekalogika\Mapper\TypeResolver\Implementation\CachingTypeResolver;

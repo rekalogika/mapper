@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\TransformerProcessor\ObjectProcessor;
+namespace Rekalogika\Mapper\Transformer\Processor\ObjectProcessor;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
@@ -38,7 +38,7 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\PropertyMappingMetadata
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
-use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorInterface;
+use Rekalogika\Mapper\Transformer\Processor\ObjectProcessorInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;

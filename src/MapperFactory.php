@@ -66,9 +66,9 @@ use Rekalogika\Mapper\Transformer\Implementation\TraversableToArrayAccessTransfo
 use Rekalogika\Mapper\Transformer\Implementation\TraversableToTraversableTransformer;
 use Rekalogika\Mapper\Transformer\MetadataUtil\MetadataUtilLocator;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\Processor\ObjectProcessor\DefaultObjectProcessorFactory;
+use Rekalogika\Mapper\Transformer\Processor\ObjectProcessorFactoryInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
-use Rekalogika\Mapper\TransformerProcessor\ObjectProcessor\DefaultObjectProcessorFactory;
-use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorFactoryInterface;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\TransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\Implementation\CachingTypeResolver;

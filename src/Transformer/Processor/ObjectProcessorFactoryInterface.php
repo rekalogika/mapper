@@ -11,7 +11,7 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\TransformerProcessor;
+namespace Rekalogika\Mapper\Transformer\Processor;
 
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
