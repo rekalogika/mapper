@@ -31,7 +31,7 @@ class TestLogger implements LoggerInterface, ResetInterface
         private readonly LoggerInterface $logger,
     ) {}
 
-    public function reset()
+    public function reset(): void
     {
         $this->messages = [];
     }
