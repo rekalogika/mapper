@@ -11,16 +11,15 @@ declare(strict_types=1);
  * that was distributed with this source code.
  */
 
-namespace Rekalogika\Mapper\TransformerProcessor\ObjectProcessor;
+namespace Rekalogika\Mapper\Transformer\Processor\ObjectProcessor;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadata;
-use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorFactoryInterface;
-use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorInterface;
-use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
+use Rekalogika\Mapper\Transformer\Processor\ObjectProcessorFactoryInterface;
+use Rekalogika\Mapper\Transformer\Processor\ObjectProcessorInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 /**
@@ -35,7 +34,6 @@ final class DefaultObjectProcessorFactory implements ObjectProcessorFactoryInter
         private readonly SubMapperFactoryInterface $subMapperFactory,
         private readonly ProxyFactoryInterface $proxyFactory,
         private readonly PropertyAccessorInterface $propertyAccessor,
-        private readonly PropertyProcessorFactoryInterface $propertyProcessorFactory,
     ) {}
 
     public function getObjectProcessor(
@@ -48,8 +46,6 @@ final class DefaultObjectProcessorFactory implements ObjectProcessorFactoryInter
             subMapperFactory: $this->subMapperFactory,
             proxyFactory: $this->proxyFactory,
             propertyAccessor: $this->propertyAccessor,
-            propertyProcessorFactory: $this->propertyProcessorFactory
-                ->withMainTransformer($this->getMainTransformer()),
         );
     }
 }

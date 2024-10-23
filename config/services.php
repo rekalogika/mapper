@@ -65,9 +65,7 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\MetadataUtilLocator;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\CachingObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ObjectToObjectMetadataFactory;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Implementation\ProxyResolvingObjectToObjectMetadataFactory;
-use Rekalogika\Mapper\TransformerProcessor\ObjectProcessor\DefaultObjectProcessorFactory;
-use Rekalogika\Mapper\TransformerProcessor\PropertyProcessor\CachingPropertyProcessorFactory;
-use Rekalogika\Mapper\TransformerProcessor\PropertyProcessor\DefaultPropertyProcessorFactory;
+use Rekalogika\Mapper\Transformer\Processor\ObjectProcessor\DefaultObjectProcessorFactory;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\CachingTransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\TransformerRegistry;
 use Rekalogika\Mapper\TypeResolver\Implementation\CachingTypeResolver;
@@ -391,30 +389,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$subMapperFactory' => service('rekalogika.mapper.sub_mapper.factory'),
             '$proxyFactory' => service('rekalogika.mapper.proxy.factory'),
             '$propertyAccessor' => service(PropertyAccessorInterface::class),
-            '$propertyProcessorFactory' => service('rekalogika.mapper.transformer_processor.property_processor_factory'),
-        ]);
-
-    # transformer processor, property processor factory
-
-    $services
-        ->set(
-            'rekalogika.mapper.transformer_processor.property_processor_factory',
-            DefaultPropertyProcessorFactory::class,
-        )
-        ->args([
-            '$propertyAccessor' => service(PropertyAccessorInterface::class),
-            '$subMapperFactory' => service('rekalogika.mapper.sub_mapper.factory'),
-            '$propertyMapperLocator' => tagged_locator('rekalogika.mapper.property_mapper'),
-        ]);
-
-    $services
-        ->set(
-            'rekalogika.mapper.transformer_processor.property_processor_factory.caching',
-            CachingPropertyProcessorFactory::class,
-        )
-        ->decorate('rekalogika.mapper.transformer_processor.property_processor_factory')
-        ->args([
-            service('.inner'),
         ]);
 
     # sub mapper

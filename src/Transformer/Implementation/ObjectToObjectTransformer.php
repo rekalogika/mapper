@@ -22,9 +22,9 @@ use Rekalogika\Mapper\Transformer\Exception\NotAClassException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataFactoryInterface;
+use Rekalogika\Mapper\Transformer\Processor\ObjectProcessorFactoryInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
-use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorFactoryInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyInfo\Type;
 
