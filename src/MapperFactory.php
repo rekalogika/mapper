@@ -69,9 +69,6 @@ use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ObjectToObjectMetadataF
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerProcessor\ObjectProcessor\DefaultObjectProcessorFactory;
 use Rekalogika\Mapper\TransformerProcessor\ObjectProcessorFactoryInterface;
-use Rekalogika\Mapper\TransformerProcessor\PropertyProcessor\CachingPropertyProcessorFactory;
-use Rekalogika\Mapper\TransformerProcessor\PropertyProcessor\DefaultPropertyProcessorFactory;
-use Rekalogika\Mapper\TransformerProcessor\PropertyProcessorFactoryInterface;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\TransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\Implementation\CachingTypeResolver;
@@ -203,8 +200,6 @@ class MapperFactory
     private ?ProxyFactoryInterface $proxyFactory = null;
 
     private ?ObjectProcessorFactoryInterface $objectProcessorFactory = null;
-
-    private ?PropertyProcessorFactoryInterface $propertyProcessorFactory = null;
 
     private ?MappingCommand $mappingCommand = null;
 
@@ -912,18 +907,6 @@ class MapperFactory
             subMapperFactory: $this->getSubMapperFactory(),
             proxyFactory: $this->getProxyFactory(),
             propertyAccessor: $this->getPropertyAccessor(),
-            propertyProcessorFactory: $this->getPropertyProcessorFactory(),
-        );
-    }
-
-    protected function getPropertyProcessorFactory(): PropertyProcessorFactoryInterface
-    {
-        return $this->propertyProcessorFactory ??= new CachingPropertyProcessorFactory(
-            new DefaultPropertyProcessorFactory(
-                propertyAccessor: $this->getPropertyAccessor(),
-                subMapperFactory: $this->getSubMapperFactory(),
-                propertyMapperLocator: $this->getPropertyMapperLocator(),
-            ),
         );
     }
 

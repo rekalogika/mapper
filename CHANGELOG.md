@@ -3,6 +3,7 @@
 ## 1.13.2
 
 * feat: `Map` now accepts false, for the more expressive `#[Map(false)]`
+* refactor: remove property processor for easier future optimization
 
 ## 1.13.1
 
