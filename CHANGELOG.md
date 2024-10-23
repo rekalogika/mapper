@@ -4,6 +4,7 @@
 
 * feat: `Map` now accepts false, for the more expressive `#[Map(false)]`
 * refactor: remove property processor for easier future optimization
+* fix: turn `NewInstanceReturnedButCannotBeSetOnTargetException` into a warning
 
 ## 1.13.1
 

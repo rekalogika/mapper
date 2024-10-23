@@ -15,6 +15,8 @@ namespace Rekalogika\Mapper;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Ramsey\Uuid\UuidInterface;
 use Rekalogika\Mapper\Command\MappingCommand;
 use Rekalogika\Mapper\Command\TryCommand;
@@ -209,6 +211,8 @@ class MapperFactory
 
     private ?Application $application = null;
 
+    private LoggerInterface $logger;
+
     /**
      * @param array<string,TransformerInterface> $additionalTransformers
      */
@@ -219,7 +223,10 @@ class MapperFactory
         private readonly ?NormalizerInterface $normalizer = null,
         private readonly ?DenormalizerInterface $denormalizer = null,
         private readonly CacheItemPoolInterface $propertyInfoExtractorCache = new ArrayAdapter(),
-    ) {}
+        ?LoggerInterface $logger = null,
+    ) {
+        $this->logger = $logger ?? new NullLogger();
+    }
 
     /**
      * @param class-string $sourceClass
@@ -907,6 +914,7 @@ class MapperFactory
             subMapperFactory: $this->getSubMapperFactory(),
             proxyFactory: $this->getProxyFactory(),
             propertyAccessor: $this->getPropertyAccessor(),
+            logger: $this->logger,
         );
     }
 

@@ -16,11 +16,13 @@ namespace Rekalogika\Mapper\Tests\Common;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\Persistence\ManagerRegistry;
+use Psr\Log\LoggerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Debug\MapperDataCollector;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\IterableMapperInterface;
 use Rekalogika\Mapper\MapperInterface;
+use Rekalogika\Mapper\Tests\Services\TestLogger;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
@@ -64,6 +66,13 @@ abstract class FrameworkTestCase extends KernelTestCase
         $this->assertNotNull($result);
 
         return $result;
+    }
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->getLogger()->reset();
     }
 
     protected function getMapperContext(): Context
@@ -122,5 +131,19 @@ abstract class FrameworkTestCase extends KernelTestCase
         $this->assertInstanceOf(MapperDataCollector::class, $result);
 
         return $result;
+    }
+
+    public function assertLogContains(string $message): void
+    {
+        $logger = $this->getLogger();
+        $this->assertTrue($logger->isInMessage($message), 'Log message not found: ' . $message);
+    }
+
+    private function getLogger(): TestLogger
+    {
+        $logger = static::getContainer()->get(LoggerInterface::class);
+        $this->assertInstanceOf(TestLogger::class, $logger);
+
+        return $logger;
     }
 }

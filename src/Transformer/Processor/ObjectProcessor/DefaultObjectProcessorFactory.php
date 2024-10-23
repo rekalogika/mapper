@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Processor\ObjectProcessor;
 
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
@@ -34,6 +35,7 @@ final class DefaultObjectProcessorFactory implements ObjectProcessorFactoryInter
         private readonly SubMapperFactoryInterface $subMapperFactory,
         private readonly ProxyFactoryInterface $proxyFactory,
         private readonly PropertyAccessorInterface $propertyAccessor,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function getObjectProcessor(
@@ -46,6 +48,7 @@ final class DefaultObjectProcessorFactory implements ObjectProcessorFactoryInter
             subMapperFactory: $this->subMapperFactory,
             proxyFactory: $this->proxyFactory,
             propertyAccessor: $this->propertyAccessor,
+            logger: $this->logger,
         );
     }
 }

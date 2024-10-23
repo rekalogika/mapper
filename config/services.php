@@ -389,6 +389,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             '$subMapperFactory' => service('rekalogika.mapper.sub_mapper.factory'),
             '$proxyFactory' => service('rekalogika.mapper.proxy.factory'),
             '$propertyAccessor' => service(PropertyAccessorInterface::class),
+            '$logger' => service(LoggerInterface::class),
         ]);
 
     # sub mapper

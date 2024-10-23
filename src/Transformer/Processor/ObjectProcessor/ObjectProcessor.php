@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Processor\ObjectProcessor;
 
 use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\ExtraTargetValues;
 use Rekalogika\Mapper\Context\MapperOptions;
@@ -26,7 +27,6 @@ use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\ExtraTargetPropertyNotFoundException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
-use Rekalogika\Mapper\Transformer\Exception\NewInstanceReturnedButCannotBeSetOnTargetException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToReadException;
 use Rekalogika\Mapper\Transformer\Exception\UnableToWriteException;
 use Rekalogika\Mapper\Transformer\Exception\UninitializedSourcePropertyException;
@@ -56,6 +56,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
         private SubMapperFactoryInterface $subMapperFactory,
         private ProxyFactoryInterface $proxyFactory,
         private PropertyAccessorInterface $propertyAccessor,
+        private LoggerInterface $logger,
     ) {}
 
     public function transform(
@@ -989,15 +990,17 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
             $visibility !== Visibility::Public
             || $writeMode === WriteMode::None
         ) {
-            if ($silentOnError) {
-                return $target;
+            if (!$silentOnError) {
+                $this->logger->warning(
+                    'Transformation of property "{property}" on target class "{class}" results in a different object instance from the original instance, but the new instance cannot be set on the target object. To fix the problem, you may 1. make the property public, 2. add a setter method for the property, or 3. add "#[Map(false)]" attribute on the property to skip the mapping.',
+                    [
+                        'property' => $metadata->getTargetProperty(),
+                        'class' => get_debug_type($target),
+                    ],
+                );
             }
 
-            throw new NewInstanceReturnedButCannotBeSetOnTargetException(
-                target: $target,
-                propertyName: $metadata->getTargetProperty(),
-                context: $context,
-            );
+            return $target;
         }
 
         if ($accessorName === null) {
