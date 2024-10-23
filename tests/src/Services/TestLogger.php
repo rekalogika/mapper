@@ -16,14 +16,36 @@ namespace Rekalogika\Mapper\Tests\Services;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Symfony\Component\DependencyInjection\Attribute\AutowireDecorated;
+use Symfony\Contracts\Service\ResetInterface;
 
 #[AsDecorator(LoggerInterface::class)]
-class TestLogger implements LoggerInterface
+class TestLogger implements LoggerInterface, ResetInterface
 {
+    /**
+     * @var list<string>
+     */
+    private array $messages = [];
+
     public function __construct(
         #[AutowireDecorated()]
         private readonly LoggerInterface $logger,
     ) {}
+
+    public function reset()
+    {
+        $this->messages = [];
+    }
+
+    public function isInMessage(string $string): bool
+    {
+        foreach ($this->messages as $message) {
+            if (str_contains($message, $string)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private function isSuppressed(string|\Stringable $message): bool
     {
@@ -35,6 +57,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->emergency($message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 
@@ -43,6 +66,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->alert($message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 
@@ -51,6 +75,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->critical($message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 
@@ -59,6 +84,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->error($message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 
@@ -67,6 +93,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->warning($message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 
@@ -75,6 +102,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->notice($message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 
@@ -83,6 +111,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->info($message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 
@@ -91,6 +120,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->debug($message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 
@@ -99,6 +129,7 @@ class TestLogger implements LoggerInterface
     {
         if (!$this->isSuppressed($message)) {
             $this->logger->log($level, $message, $context);
+            $this->messages[] = (string) $message;
         }
     }
 }
