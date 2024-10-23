@@ -68,6 +68,13 @@ abstract class FrameworkTestCase extends KernelTestCase
         return $result;
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->getLogger()->reset();
+    }
+
     protected function getMapperContext(): Context
     {
         return Context::create();
@@ -128,8 +135,15 @@ abstract class FrameworkTestCase extends KernelTestCase
 
     public function assertLogContains(string $message): void
     {
+        $logger = $this->getLogger();
+        $this->assertTrue($logger->isInMessage($message), 'Log message not found: ' . $message);
+    }
+
+    private function getLogger(): TestLogger
+    {
         $logger = static::getContainer()->get(LoggerInterface::class);
         $this->assertInstanceOf(TestLogger::class, $logger);
-        $this->assertTrue($logger->isInMessage($message), 'Log message not found: ' . $message);
+
+        return $logger;
     }
 }
