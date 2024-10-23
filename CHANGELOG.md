@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.13.2
+
+* feat: `Map` now accepts false, for the more expressive `#[Map(false)]`
+
 ## 1.13.1
 
 * fix: allow interfaces as the target type of object mapper
