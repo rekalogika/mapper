@@ -19,11 +19,19 @@ namespace Rekalogika\Mapper\Attribute;
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD | \Attribute::TARGET_PARAMETER | \Attribute::IS_REPEATABLE)]
 final readonly class Map
 {
+    public ?string $property;
+
     /**
      * @param class-string|null $class
      */
     public function __construct(
-        public ?string $property = null,
+        null|string|false $property = null,
         public ?string $class = null,
-    ) {}
+    ) {
+        if ($property === false) {
+            $this->property = null;
+        } else {
+            $this->property = $property;
+        }
+    }
 }
