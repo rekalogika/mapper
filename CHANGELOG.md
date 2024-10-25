@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.13.3
+
+* fix: rethrow our exceptions in `writeTargetProperty`, fix confusing error
+  message
+
 ## 1.13.2
 
 * feat: `Map` now accepts false, for the more expressive `#[Map(false)]`

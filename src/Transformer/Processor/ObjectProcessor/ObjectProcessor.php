@@ -18,6 +18,7 @@ use Psr\Log\LoggerInterface;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\ExtraTargetValues;
 use Rekalogika\Mapper\Context\MapperOptions;
+use Rekalogika\Mapper\Exception\ExceptionInterface;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -1054,6 +1055,8 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
             }
         } catch (\BadMethodCallException) {
             return $target;
+        } catch (ExceptionInterface $e) {
+            throw $e;
         } catch (\Throwable $e) {
             throw new UnableToWriteException(
                 target: $target,
