@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\MainTransformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
@@ -29,6 +30,10 @@ class TransformerReturnsUnexpectedValueException extends UnexpectedValueExceptio
         TransformerInterface $transformer,
         Context $context,
     ) {
+        if ($transformer instanceof TraceableTransformer) {
+            $transformer = $transformer->getDecorated();
+        }
+
         $message = \sprintf(
             'Trying to map source type "%s" to target type "%s", but the assigned transformer "%s" returns an unexpected type "%s".',
             get_debug_type($source),
