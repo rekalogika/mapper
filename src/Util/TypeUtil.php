@@ -21,6 +21,7 @@ use Rekalogika\Mapper\MainTransformer\Exception\TransformerReturnsUnexpectedValu
 use Rekalogika\Mapper\Tests\IntegrationTest\MapPropertyPathTest;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtil2Test;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtilTest;
+use Rekalogika\Mapper\Transformer\Exception\NullSourceButMandatoryTargetException;
 use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Symfony\Component\PropertyInfo\Type;
@@ -257,6 +258,7 @@ final readonly class TypeUtil
         TypeUtilTest::class,
         TraceData::class,
         MapPropertyPathTest::class,
+        NullSourceButMandatoryTargetException::class,
     )]
     public static function getTypeString(Type|MixedType $type): string
     {

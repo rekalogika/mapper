@@ -694,6 +694,18 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/NullSourceTest.php on line 36
+        source: \Rekalogika\Mapper\Tests\Fixtures\NullSource\Source::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\NullSource\TargetString::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/NullSourceTest.php on line 27
+        source: \Rekalogika\Mapper\Tests\Fixtures\NullSource\Source::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\NullSource\TargetUuid::class
+    );
+    
+    $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/ObjectKeysTest.php on line 27
         source: \Rekalogika\Mapper\Tests\Fixtures\ObjectKeys\RelationshipMap::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ObjectKeysDto\RelationshipMapDto::class

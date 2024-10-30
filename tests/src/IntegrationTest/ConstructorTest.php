@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
-use Rekalogika\Mapper\MainTransformer\Exception\CannotFindTransformerException;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndExtraMandatoryArgumentDto;
 use Rekalogika\Mapper\Tests\Fixtures\Constructor\ObjectWithConstructorAndPropertiesDto;
@@ -25,6 +24,7 @@ use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarPropertiesAndAdditionalNullProperty;
 use Rekalogika\Mapper\Transformer\Exception\ClassNotInstantiableException;
 use Rekalogika\Mapper\Transformer\Exception\InstantiationFailureException;
+use Rekalogika\Mapper\Transformer\Exception\NullSourceButMandatoryTargetException;
 
 class ConstructorTest extends FrameworkTestCase
 {
@@ -91,7 +91,7 @@ class ConstructorTest extends FrameworkTestCase
 
     public function testFromEmptyStdClassToMandatoryArgumentsThatCannotBeCastFromNull(): void
     {
-        $this->expectException(CannotFindTransformerException::class);
+        $this->expectException(NullSourceButMandatoryTargetException::class);
         $source = new \stdClass();
         $this->mapper->map($source, ObjectWithMandatoryConstructorThatCannotBeCastFromNullDto::class);
     }

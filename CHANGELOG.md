@@ -4,6 +4,7 @@
 
 * fix: rethrow our exceptions in `writeTargetProperty`, fix confusing error
   message
+* fix: error when mapping null to existing target
 
 ## 1.13.2
 
