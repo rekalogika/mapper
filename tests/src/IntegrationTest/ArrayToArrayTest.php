@@ -14,20 +14,34 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
-use Rekalogika\Mapper\Tests\Fixtures\Array\ObjectWithArray;
+use Rekalogika\Mapper\Tests\Fixtures\Array\ObjectWithList;
+use Rekalogika\Mapper\Tests\Fixtures\Array\ObjectWithListWithAllowDelete;
 
 class ArrayToArrayTest extends FrameworkTestCase
 {
-    public function testItMapsArrayToArray(): void
+    public function testListToListWithAllowDelete(): void
     {
-        $foo = new ObjectWithArray();
-        $foo->array = ['foo', 'bar'];
+        $target = new ObjectWithListWithAllowDelete();
+        $target->array = ['foo', 'bar'];
 
-        $bar = new ObjectWithArray();
-        $bar->array = ['baz'];
+        $source = new ObjectWithListWithAllowDelete();
+        $source->array = ['baz'];
 
-        $this->mapper->map($bar, $foo);
+        $this->mapper->map($source, $target);
 
-        $this->assertEquals($bar->array, $foo->array);
+        $this->assertEquals(['baz'], $target->array);
+    }
+
+    public function testListToListWithoutAllowDelete(): void
+    {
+        $target = new ObjectWithList();
+        $target->array = ['foo', 'bar'];
+
+        $source = new ObjectWithList();
+        $source->array = ['baz'];
+
+        $this->mapper->map($source, $target);
+
+        $this->assertEquals(['foo', 'bar', 'baz'], $target->array);
     }
 }

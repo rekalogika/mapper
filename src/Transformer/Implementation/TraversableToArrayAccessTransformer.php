@@ -191,7 +191,13 @@ final class TraversableToArrayAccessTransformer implements
         } else {
             foreach ($transformed as $key => $value) {
                 if ($key === null) {
-                    $target[] = $value;
+                    if (is_array($target)) {
+                        if (!in_array($value, $target, true)) {
+                            $target[] = $value;
+                        }
+                    } else {
+                        $target[] = $value;
+                    }
                 } else {
                     $target[$key] = $value;
                 }

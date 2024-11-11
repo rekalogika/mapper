@@ -261,6 +261,18 @@ return function (MappingCollection $mappingCollection) : void {
     );
     
     $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ArrayToArrayTest.php on line 43
+        source: \Rekalogika\Mapper\Tests\Fixtures\Array\ObjectWithList::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\Array\ObjectWithList::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/ArrayToArrayTest.php on line 30
+        source: \Rekalogika\Mapper\Tests\Fixtures\Array\ObjectWithListWithAllowDelete::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\Array\ObjectWithListWithAllowDelete::class
+    );
+    
+    $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/AttributeTest.php on line 42
         source: \Rekalogika\Mapper\Tests\Fixtures\Attribute\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Attribute\SomeObjectWithInvalidPropertyAttribute::class

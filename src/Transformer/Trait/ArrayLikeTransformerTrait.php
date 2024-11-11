@@ -119,6 +119,14 @@ trait ArrayLikeTransformerTrait
             // if the key is an integer
 
             if (
+                $metadata->sourceMemberKeyCanBeIntOnly() || $metadata->targetMemberKeyCanBeIntOnly()
+            ) {
+                // if either the source or target is a list, we don't use the
+                // source key as the target key
+
+                $targetMemberKey = null;
+                $path = \sprintf('[%d]', $counter ?? -1);
+            } elseif (
                 $metadata->targetMemberKeyCanBeInt()
                 || $metadata->targetMemberKeyCanBeString()
             ) {
