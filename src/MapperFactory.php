@@ -179,9 +179,13 @@ class MapperFactory
 
     private ?TransformerRegistryInterface $transformerRegistry = null;
 
+    private ?ContainerInterface $propertyMapperLocator = null;
+
     private ?PropertyMapperResolverInterface $propertyMapperResolver = null;
 
     private ?ObjectMapperTableFactoryInterface $objectMapperTableFactory = null;
+
+    private ?ContainerInterface $objectMapperLocator = null;
 
     private ?ObjectMapperResolverInterface $objectMapperResolver = null;
 
@@ -443,7 +447,7 @@ class MapperFactory
         if (null === $this->objectMapperTransformer) {
             $this->objectMapperTransformer = new ObjectMapperTransformer(
                 $this->getSubMapperFactory(),
-                $this->getTransformersLocator(),
+                $this->getObjectMapperLocator(),
                 $this->getObjectMapperTableFactory(),
                 $this->getObjectMapperResolver(),
             );
@@ -800,6 +804,23 @@ class MapperFactory
         return $this->objectMapperTableFactory;
     }
 
+    protected function getObjectMapperLocator(): ContainerInterface
+    {
+        if ($this->objectMapperLocator !== null) {
+            return $this->objectMapperLocator;
+        }
+
+        $services = [];
+
+        foreach ($this->objectMappers as $objectMapper) {
+            $service = $objectMapper['service'];
+            $class = $service::class;
+            $services[$class] = $service;
+        }
+
+        return $this->objectMapperLocator = new ServiceLocator($services);
+    }
+
     protected function getObjectMapperResolver(): ObjectMapperResolverInterface
     {
         if (null === $this->objectMapperResolver) {
@@ -813,6 +834,10 @@ class MapperFactory
 
     protected function getPropertyMapperLocator(): ContainerInterface
     {
+        if ($this->propertyMapperLocator !== null) {
+            return $this->propertyMapperLocator;
+        }
+
         $services = [];
 
         foreach ($this->propertyMappers as $propertyMapper) {
@@ -821,7 +846,7 @@ class MapperFactory
             $services[$class] = $service;
         }
 
-        return new ServiceLocator($services);
+        return $this->propertyMapperLocator = new ServiceLocator($services);
     }
 
     protected function getPropertyReadInfoExtractor(): PropertyReadInfoExtractorInterface

@@ -281,6 +281,7 @@ return function (MappingCollection $mappingCollection) : void {
     $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/BasicMappingTest.php on line 33
         // tests/src/IntegrationTest/IterableMapperTest.php on line 24
+        // tests/src/UnitTest/MapperFactoryTest.php on line 29
         source: \Rekalogika\Mapper\Tests\Fixtures\Basic\Person::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Basic\PersonDto::class
     );
