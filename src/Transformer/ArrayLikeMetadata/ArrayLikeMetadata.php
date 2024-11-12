@@ -43,11 +43,9 @@ final readonly class ArrayLikeMetadata
         private array $targetMemberValueTypes,
         private bool $sourceMemberKeyCanBeInt,
         private bool $sourceMemberKeyCanBeString,
-        private bool $sourceMemberKeyCanBeIntOnly,
         private bool $sourceMemberKeyCanBeOtherThanIntOrString,
         private bool $targetMemberKeyCanBeInt,
         private bool $targetMemberKeyCanBeString,
-        private bool $targetMemberKeyCanBeIntOnly,
         private bool $targetMemberKeyCanBeOtherThanIntOrString,
         private bool $targetMemberValueIsUntyped,
     ) {}
@@ -128,11 +126,6 @@ final readonly class ArrayLikeMetadata
         return $this->targetMemberKeyCanBeString;
     }
 
-    public function targetMemberKeyCanBeIntOnly(): bool
-    {
-        return $this->targetMemberKeyCanBeIntOnly;
-    }
-
     public function targetMemberKeyCanBeOtherThanIntOrString(): bool
     {
         return $this->targetMemberKeyCanBeOtherThanIntOrString;
@@ -161,11 +154,6 @@ final readonly class ArrayLikeMetadata
     public function sourceMemberKeyCanBeString(): bool
     {
         return $this->sourceMemberKeyCanBeString;
-    }
-
-    public function sourceMemberKeyCanBeIntOnly(): bool
-    {
-        return $this->sourceMemberKeyCanBeIntOnly;
     }
 
     public function sourceMemberKeyCanBeOtherThanIntOrString(): bool

@@ -184,19 +184,25 @@ final class TraversableToArrayAccessTransformer implements
             foreach ($transformed as $value) {
                 $target = $target->add($value);
 
-                if (\is_array($values)) {
+                if (\is_array($values)) { // allows delete
                     $values[] = $value;
                 }
             }
         } else {
             foreach ($transformed as $key => $value) {
                 if ($key === null) {
-                    $target[] = $value;
+                    if (\is_array($target)) {
+                        if (!\in_array($value, $target, true)) {
+                            $target[] = $value;
+                        }
+                    } else {
+                        $target[] = $value;
+                    }
                 } else {
                     $target[$key] = $value;
                 }
 
-                if (\is_array($values)) {
+                if (\is_array($values)) { // allows delete
                     $values[] = $value;
                 }
             }

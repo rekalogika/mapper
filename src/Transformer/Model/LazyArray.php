@@ -84,6 +84,7 @@ final class LazyArray implements CollectionInterface, Collection
         [$key, $value] = $this->transformMember(
             sourceMemberKey: $offset,
             sourceMemberValue: $this->source[$offset],
+            targetIsList: false,
             metadata: $this->metadata,
             context: $this->context,
         );
@@ -140,6 +141,7 @@ final class LazyArray implements CollectionInterface, Collection
             [$key, $value] = $this->transformMember(
                 sourceMemberKey: $sourceMemberKey,
                 sourceMemberValue: $sourceMemberValue,
+                targetIsList: false,
                 metadata: $this->metadata,
                 context: $this->context,
             );

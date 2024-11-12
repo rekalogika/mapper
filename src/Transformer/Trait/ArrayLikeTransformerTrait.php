@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Transformer\Trait;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
+use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
 use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\Type;
@@ -38,6 +39,14 @@ trait ArrayLikeTransformerTrait
             $source = new SplObjectStorageWrapper($source);
         }
 
+        $targetIsList =
+            (
+                \is_array($target)
+                && $target !== []
+                && array_is_list($target)
+            )
+            || $target instanceof AdderRemoverProxy;
+
         $i = 0;
 
         /**
@@ -53,6 +62,7 @@ trait ArrayLikeTransformerTrait
                 counter: $i,
                 sourceMemberKey: $sourceMemberKey,
                 sourceMemberValue: $sourceMemberValue,
+                targetIsList: $targetIsList,
                 target: $target,
                 metadata: $metadata,
                 context: $context,
@@ -71,6 +81,7 @@ trait ArrayLikeTransformerTrait
     private function transformMember(
         mixed $sourceMemberKey,
         mixed $sourceMemberValue,
+        bool $targetIsList,
         ArrayLikeMetadata $metadata,
         Context $context,
         null|\ArrayAccess|array $target = null,
@@ -82,19 +93,19 @@ trait ArrayLikeTransformerTrait
         if (\is_string($sourceMemberKey)) {
             // if the key is a string
 
-            if ($metadata->targetMemberKeyCanBeIntOnly()) {
+            if ($metadata->targetMemberKeyCanBeString()) {
+                // if target has string key type, we use the source key as
+                // the target key
+
+                $targetMemberKey = $sourceMemberKey;
+                $path = \sprintf('[%s]', $sourceMemberKey);
+            } elseif ($targetIsList || $metadata->targetMemberKeyCanBeInt()) {
                 // if target has int key type but the source has string key
                 // type, we discard the source key & use null key (i.e.
                 // $target[] = $value)
 
                 $targetMemberKey = null;
                 $path = \sprintf('[%d]', $counter ?? -1);
-            } elseif ($metadata->targetMemberKeyCanBeString()) {
-                // if target has string key type, we use the source key as
-                // the target key and let PHP cast it to string
-
-                $targetMemberKey = $sourceMemberKey;
-                $path = \sprintf('[%s]', $sourceMemberKey);
             } else {
                 // otherwise, the target must be non-int & non-string, so we
                 // delegate the transformation to the main transformer
@@ -119,14 +130,24 @@ trait ArrayLikeTransformerTrait
             // if the key is an integer
 
             if (
-                $metadata->targetMemberKeyCanBeInt()
-                || $metadata->targetMemberKeyCanBeString()
+                $targetIsList
             ) {
-                // if the target has int or string key type, we use the
-                // source key as the target key, and let PHP cast it if
-                // needed
+                // if the target is a list, we don't use the source key as the
+                // target key
+
+                $targetMemberKey = null;
+                $path = \sprintf('[%d]', $counter ?? -1);
+            } elseif ($metadata->targetMemberKeyCanBeInt()) {
+                // if the target has int key type, we use the source key as the
+                // target key
 
                 $targetMemberKey = $sourceMemberKey;
+                $path = \sprintf('[%s]', $sourceMemberKey);
+            } elseif ($metadata->targetMemberKeyCanBeString()) {
+                // if the target has string key type, we cast source key to
+                // string
+
+                $targetMemberKey = (string) $sourceMemberKey;
                 $path = \sprintf('[%s]', $sourceMemberKey);
             } else {
                 // otherwise, the target must be non-int & non-string, so we
@@ -188,7 +209,7 @@ trait ArrayLikeTransformerTrait
         // Get the existing member value from the target
 
         try {
-            if ($metadata->targetMemberKeyCanBeIntOnly()) {
+            if ($targetIsList) {
                 $targetMemberValue = null;
             } elseif ($target !== null && $targetMemberKey !== null) {
                 /**

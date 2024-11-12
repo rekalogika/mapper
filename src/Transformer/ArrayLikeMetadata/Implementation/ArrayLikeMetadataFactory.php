@@ -70,7 +70,7 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
         $sourceMemberKeyTypeCanBeString = false;
         $sourceMemberKeyTypeCanBeOtherThanIntOrString = false;
 
-        foreach ($sourceType->getCollectionKeyTypes() as $sourceMemberKeyType) {
+        foreach ($sourceMemberKeyTypes as $sourceMemberKeyType) {
             if (TypeCheck::isInt($sourceMemberKeyType)) {
                 $sourceMemberKeyTypeCanBeInt = true;
             } elseif (TypeCheck::isString($sourceMemberKeyType)) {
@@ -123,11 +123,9 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             targetMemberValueTypes: $targetMemberValueTypes,
             sourceMemberKeyCanBeInt: $sourceMemberKeyTypeCanBeInt,
             sourceMemberKeyCanBeString: $sourceMemberKeyTypeCanBeString,
-            sourceMemberKeyCanBeIntOnly: $sourceMemberKeyTypeCanBeInt && !$sourceMemberKeyTypeCanBeString,
             sourceMemberKeyCanBeOtherThanIntOrString: $sourceMemberKeyTypeCanBeOtherThanIntOrString,
             targetMemberKeyCanBeInt: $targetMemberKeyTypeCanBeInt,
             targetMemberKeyCanBeString: $targetMemberKeyTypeCanBeString,
-            targetMemberKeyCanBeIntOnly: $targetMemberKeyTypeCanBeInt && !$targetMemberKeyTypeCanBeString,
             targetMemberKeyCanBeOtherThanIntOrString: $targetMemberKeyTypeCanBeOtherThanIntOrString,
             targetMemberValueIsUntyped: $targetMemberValueIsUntyped,
         );

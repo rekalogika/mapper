@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.13.4
+
+* fix: fix list handling
+
 ## 1.13.3
 
 * fix: rethrow our exceptions in `writeTargetProperty`, fix confusing error
