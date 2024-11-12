@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.13.5
+
+* fix: infinite loop in `MapperFactory`
+
 ## 1.13.4
 
 * fix: fix list handling
