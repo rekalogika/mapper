@@ -123,11 +123,9 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             targetMemberValueTypes: $targetMemberValueTypes,
             sourceMemberKeyCanBeInt: $sourceMemberKeyTypeCanBeInt,
             sourceMemberKeyCanBeString: $sourceMemberKeyTypeCanBeString,
-            sourceMemberKeyCanBeIntOnly: $sourceMemberKeyTypeCanBeInt && !$sourceMemberKeyTypeCanBeString,
             sourceMemberKeyCanBeOtherThanIntOrString: $sourceMemberKeyTypeCanBeOtherThanIntOrString,
             targetMemberKeyCanBeInt: $targetMemberKeyTypeCanBeInt,
             targetMemberKeyCanBeString: $targetMemberKeyTypeCanBeString,
-            targetMemberKeyCanBeIntOnly: $targetMemberKeyTypeCanBeInt && !$targetMemberKeyTypeCanBeString,
             targetMemberKeyCanBeOtherThanIntOrString: $targetMemberKeyTypeCanBeOtherThanIntOrString,
             targetMemberValueIsUntyped: $targetMemberValueIsUntyped,
         );

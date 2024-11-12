@@ -17,7 +17,7 @@ use Rekalogika\Mapper\Attribute\AllowDelete;
 
 class ObjectWithListWithAllowDelete
 {
-    /** @var list<string> */
+    /** @var array<mixed,mixed> */
     #[AllowDelete]
     public array $array = [];
 }

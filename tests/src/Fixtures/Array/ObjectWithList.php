@@ -15,6 +15,6 @@ namespace Rekalogika\Mapper\Tests\Fixtures\Array;
 
 class ObjectWithList
 {
-    /** @var list<string> */
+    /** @var array<mixed,mixed> */
     public array $array = [];
 }

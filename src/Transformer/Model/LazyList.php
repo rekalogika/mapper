@@ -102,6 +102,7 @@ final class LazyList implements ListInterface
             [, $value] = $this->transformMember(
                 sourceMemberKey: $sourceMemberKey,
                 sourceMemberValue: $sourceMemberValue,
+                targetIsList: true,
                 metadata: $this->metadata,
                 context: $this->context,
             );
