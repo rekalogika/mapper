@@ -22,6 +22,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class CurrencyTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -36,6 +37,7 @@ final readonly class CurrencyTransformer implements TransformerInterface
         return Currency::of($source);
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(

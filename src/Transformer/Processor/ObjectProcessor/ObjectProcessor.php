@@ -60,6 +60,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
         private LoggerInterface $logger,
     ) {}
 
+    #[\Override]
     public function transform(
         object $source,
         ?object $target,

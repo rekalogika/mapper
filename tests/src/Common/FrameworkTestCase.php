@@ -68,6 +68,7 @@ abstract class FrameworkTestCase extends KernelTestCase
         return $result;
     }
 
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

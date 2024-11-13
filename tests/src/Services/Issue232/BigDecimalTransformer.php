@@ -22,6 +22,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 final readonly class BigDecimalTransformer implements TransformerInterface
 {
+    #[\Override]
     public function transform(
         mixed $source,
         mixed $target,
@@ -40,6 +41,7 @@ final readonly class BigDecimalTransformer implements TransformerInterface
         return BigDecimal::of($source)->toBigDecimal();
     }
 
+    #[\Override]
     public function getSupportedTransformation(): iterable
     {
         yield new TypeMapping(

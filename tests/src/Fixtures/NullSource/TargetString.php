@@ -17,7 +17,7 @@ use Symfony\Component\Uid\Uuid;
 
 class TargetString
 {
-    private string $property;
+    private readonly string $property;
 
     public function __construct()
     {
