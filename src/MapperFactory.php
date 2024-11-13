@@ -215,8 +215,6 @@ class MapperFactory
 
     private ?Application $application = null;
 
-    private LoggerInterface $logger;
-
     /**
      * @param array<string,TransformerInterface> $additionalTransformers
      */
@@ -227,10 +225,8 @@ class MapperFactory
         private readonly ?NormalizerInterface $normalizer = null,
         private readonly ?DenormalizerInterface $denormalizer = null,
         private readonly CacheItemPoolInterface $propertyInfoExtractorCache = new ArrayAdapter(),
-        ?LoggerInterface $logger = null,
-    ) {
-        $this->logger = $logger ?? new NullLogger();
-    }
+        private readonly LoggerInterface $logger = new NullLogger()
+    ) {}
 
     /**
      * @param class-string $sourceClass

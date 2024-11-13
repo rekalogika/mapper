@@ -16,9 +16,9 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty;
 class ObjectWithConstructorAndSetter
 {
     public function __construct(
-        private string $id,
-        private string $name,
-        private string $description,
+        private readonly string $id,
+        private readonly string $name,
+        private readonly string $description,
     ) {}
 
     public function setId(string $id): void

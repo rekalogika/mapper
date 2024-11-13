@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.13.6
+
+* chore: rector run
+
 ## 1.13.5
 
 * fix: infinite loop in `MapperFactory`

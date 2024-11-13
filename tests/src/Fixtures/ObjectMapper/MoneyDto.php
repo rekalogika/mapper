@@ -20,11 +20,13 @@ final readonly class MoneyDto implements MoneyDtoInterface
         private string $currency,
     ) {}
 
+    #[\Override]
     public function getAmount(): string
     {
         return $this->amount;
     }
 
+    #[\Override]
     public function getCurrency(): string
     {
         return $this->currency;

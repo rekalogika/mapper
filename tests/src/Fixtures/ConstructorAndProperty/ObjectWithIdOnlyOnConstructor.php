@@ -16,10 +16,11 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty;
 class ObjectWithIdOnlyOnConstructor
 {
     public function __construct(
-        private string $id,
+        private readonly string $id,
     ) {}
 
     private string $name = '';
+
     private string $description = '';
 
     public function getId(): string

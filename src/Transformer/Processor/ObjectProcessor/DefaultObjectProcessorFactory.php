@@ -38,6 +38,7 @@ final class DefaultObjectProcessorFactory implements ObjectProcessorFactoryInter
         private readonly LoggerInterface $logger,
     ) {}
 
+    #[\Override]
     public function getObjectProcessor(
         ObjectToObjectMetadata $metadata,
     ): ObjectProcessorInterface {

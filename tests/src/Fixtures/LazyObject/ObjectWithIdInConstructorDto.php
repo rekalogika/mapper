@@ -20,5 +20,6 @@ class ObjectWithIdInConstructorDto
     ) {}
 
     public ?string $name = null;
+
     public ?string $other = null;
 }

@@ -16,6 +16,8 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty;
 class SourceObject
 {
     public string $id = 'id';
+
     public string $name = 'name';
+
     public string $description = 'description';
 }
