@@ -59,7 +59,9 @@ final class WarmableObjectMapperTableFactory implements
 
             return $this->objectMapperTableCache = $result;
         } catch (\Throwable) {
-            @unlink($this->getCacheFilePath());
+            if (file_exists($this->getCacheFilePath())) {
+                @unlink($this->getCacheFilePath());
+            }
 
             return $this->objectMapperTableCache = $this->warmUpAndGetResult();
         }

@@ -66,7 +66,9 @@ final class WarmableMappingFactory implements MappingFactoryInterface
                 throw new UnexpectedValueException();
             }
         } catch (\Throwable) {
-            @unlink($this->getCacheFilePath());
+            if (file_exists($this->getCacheFilePath())) {
+                @unlink($this->getCacheFilePath());
+            }
 
             return $this->mapping = $this->warmUpAndGetMapping();
         }
