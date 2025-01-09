@@ -3,6 +3,7 @@
 ## 1.13.6
 
 * chore: rector run
+* fix: check file existence before unlinking, suppresses warning
 
 ## 1.13.5
 
