@@ -1,9 +1,11 @@
 # CHANGELOG
 
-## 1.13.6
+## 1.14.0
 
 * chore: rector run
 * fix: check file existence before unlinking, suppresses warning
+* feat: `RefuseToMapException`, thrown by property mapper if it needs to leave
+  the target property unmapped
 
 ## 1.13.5
 

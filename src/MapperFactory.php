@@ -225,7 +225,7 @@ class MapperFactory
         private readonly ?NormalizerInterface $normalizer = null,
         private readonly ?DenormalizerInterface $denormalizer = null,
         private readonly CacheItemPoolInterface $propertyInfoExtractorCache = new ArrayAdapter(),
-        private readonly LoggerInterface $logger = new NullLogger()
+        private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
 
     /**

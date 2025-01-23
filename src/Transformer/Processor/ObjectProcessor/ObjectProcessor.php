@@ -19,6 +19,7 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\ExtraTargetValues;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Exception\ExceptionInterface;
+use Rekalogika\Mapper\Exception\RefuseToMapException;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\ObjectCache\ObjectCache;
@@ -418,7 +419,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                 $constructorArguments->addUnsetSourceProperty($sourceProperty);
 
                 continue;
-            } catch (UnsupportedPropertyMappingException) {
+            } catch (UnsupportedPropertyMappingException | RefuseToMapException) {
                 continue;
             }
         }
@@ -581,7 +582,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                 mandatory: false,
                 context: $context,
             );
-        } catch (UninitializedSourcePropertyException | UnsupportedPropertyMappingException) {
+        } catch (UninitializedSourcePropertyException | UnsupportedPropertyMappingException | RefuseToMapException) {
             return $target;
         }
 
