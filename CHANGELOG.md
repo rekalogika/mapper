@@ -6,6 +6,7 @@
 * fix: check file existence before unlinking, suppresses warning
 * feat: `RefuseToMapException`, thrown by property mapper if it needs to leave
   the target property unmapped
+* build: update phpstan, psalm, rector
 
 ## 1.13.5
 
