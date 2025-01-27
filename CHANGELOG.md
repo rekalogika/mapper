@@ -7,6 +7,8 @@
 * feat: `RefuseToMapException`, thrown by property mapper if it needs to leave
   the target property unmapped
 * build: update phpstan, psalm, rector
+* feat: `ignoreUninitialized` argument in `AsPropertyMapper` to ignore
+  uninitialized properties
 
 ## 1.13.5
 

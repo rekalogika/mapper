@@ -41,6 +41,7 @@ final class PropertyMapperResolver implements PropertyMapperResolverInterface
         string $serviceId,
         string $method,
         bool $hasExistingTarget,
+        bool $ignoreUninitialized,
         array $extraArguments = [],
     ): void {
         $this->propertyMappers[$targetClass][$property][$sourceClass]
@@ -48,6 +49,7 @@ final class PropertyMapperResolver implements PropertyMapperResolverInterface
                 serviceId: $serviceId,
                 method: $method,
                 hasExistingTarget: $hasExistingTarget,
+                ignoreUninitialized: $ignoreUninitialized,
                 extraArguments: $extraArguments,
             );
     }

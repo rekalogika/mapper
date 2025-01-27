@@ -31,6 +31,7 @@ final readonly class ServiceMethodSpecification
         private string $serviceId,
         private string $method,
         private bool $hasExistingTarget,
+        private bool $ignoreUninitialized,
         private array $extraArguments,
     ) {}
 
@@ -55,5 +56,10 @@ final readonly class ServiceMethodSpecification
     public function hasExistingTarget(): bool
     {
         return $this->hasExistingTarget;
+    }
+
+    public function ignoreUninitialized(): bool
+    {
+        return $this->ignoreUninitialized;
     }
 }

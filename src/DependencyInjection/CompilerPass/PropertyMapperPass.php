@@ -40,7 +40,7 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
                 throw new InvalidArgumentException(\sprintf('Class "%s" does not exist', $serviceClass));
             }
 
-            /** @var array{sourceClass:class-string,targetClass:class-string,property:string,serviceId:string,method:string,hasExistingTarget:bool,extraArguments:array<string,int>} $tag */
+            /** @var array{sourceClass:class-string,targetClass:class-string,property:string,serviceId:string,method:string,hasExistingTarget:bool,ignoreUninitialized:bool,extraArguments:array<string,int>} $tag */
             foreach ($tags as $tag) {
                 $method = $tag['method'] ?? throw new InvalidArgumentException('Method is required');
 
@@ -55,6 +55,7 @@ final readonly class PropertyMapperPass implements CompilerPassInterface
                         '$serviceId' => $serviceId,
                         '$method' => $method,
                         '$hasExistingTarget' => $hasExistingTargetParameter,
+                        '$ignoreUninitialized' => $tag['ignoreUninitialized'],
                         '$extraArguments' => ServiceMethodExtraArgumentUtil::getExtraArguments($serviceClass, $method, $hasExistingTargetParameter),
                     ],
                 );

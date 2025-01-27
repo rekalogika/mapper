@@ -55,6 +55,7 @@ final class ObjectMapperTable implements \IteratorAggregate
                 serviceId: $serviceId,
                 method: $method,
                 hasExistingTarget: $hasExistingTarget,
+                ignoreUninitialized: false,
                 extraArguments: $extraArguments,
             );
     }

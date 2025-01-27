@@ -47,6 +47,7 @@ abstract class IntegrationTestCase extends TestCase
                 service: $propertyMapper['service'],
                 method: $propertyMapper['method'],
                 hasExistingTarget: $propertyMapper['hasExistingTarget'],
+                ignoreUninitialized: $propertyMapper['ignoreUninitialized'],
             );
         }
 
@@ -65,7 +66,7 @@ abstract class IntegrationTestCase extends TestCase
     }
 
     /**
-     * @return iterable<array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,hasExistingTarget:bool}>
+     * @return iterable<array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,hasExistingTarget:bool,ignoreUninitialized:bool}>
      */
     protected function getPropertyMappers(): iterable
     {

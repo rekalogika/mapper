@@ -86,6 +86,7 @@ class PropertyMappingTest extends FrameworkTestCase
                 serviceId: PropertyMapperWithoutClassAttribute::class,
                 method: 'mapPropertyA',
                 hasExistingTarget: false,
+                ignoreUninitialized: false,
                 extraArguments: [],
             ),
         ];
@@ -98,6 +99,7 @@ class PropertyMappingTest extends FrameworkTestCase
                 serviceId: PropertyMapperWithClassAttribute::class,
                 method: 'mapPropertyB',
                 hasExistingTarget: false,
+                ignoreUninitialized: false,
                 extraArguments: [],
             ),
         ];
@@ -117,6 +119,7 @@ class PropertyMappingTest extends FrameworkTestCase
                 serviceId: PropertyMapperWithConstructorWithoutClassAttribute::class,
                 method: 'mapPropertyA',
                 hasExistingTarget: false,
+                ignoreUninitialized: false,
                 extraArguments: [],
             ),
         ];
@@ -129,6 +132,7 @@ class PropertyMappingTest extends FrameworkTestCase
                 serviceId: PropertyMapperWithConstructorWithClassAttribute::class,
                 method: 'mapPropertyB',
                 hasExistingTarget: false,
+                ignoreUninitialized: false,
                 extraArguments: [],
             ),
         ];
@@ -141,6 +145,7 @@ class PropertyMappingTest extends FrameworkTestCase
                 serviceId: PropertyMapperWithClassAttributeWithoutExplicitProperty::class,
                 method: 'mapPropertyD',
                 hasExistingTarget: false,
+                ignoreUninitialized: false,
                 extraArguments: [],
             ),
         ];
@@ -153,6 +158,7 @@ class PropertyMappingTest extends FrameworkTestCase
                 serviceId: PropertyMapperWithExtraArguments::class,
                 method: 'mapPropertyE',
                 hasExistingTarget: false,
+                ignoreUninitialized: false,
                 extraArguments: [
                     ServiceMethodSpecification::ARGUMENT_CONTEXT,
                     ServiceMethodSpecification::ARGUMENT_MAIN_TRANSFORMER,
@@ -309,5 +315,6 @@ class PropertyMappingTest extends FrameworkTestCase
         $result = $this->mapper->map($source, $target);
 
         $this->assertFalse(isset($result->propertyA));
+        $this->assertFalse(isset($result->propertyB));
     }
 }

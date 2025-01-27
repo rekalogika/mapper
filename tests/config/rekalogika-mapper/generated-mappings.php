@@ -785,67 +785,67 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 246
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 252
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Bar::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Baz::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 201
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 207
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 184
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 190
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 243
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 249
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Foo::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\Baz::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 218
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 224
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ChildOfSomeObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 273
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 279
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithChild1::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 286
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 292
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\ObjectWithChild2::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 167
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 173
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 235
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 241
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 299
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 305
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithDateTimeImmutableDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/PropertyMappingTest.php on line 309
+        // tests/src/IntegrationTest/PropertyMappingTest.php on line 315
         source: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithUninitializedVariable::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithUninitializedVariableDto::class
     );

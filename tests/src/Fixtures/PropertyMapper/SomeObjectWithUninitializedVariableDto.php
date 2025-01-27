@@ -17,4 +17,5 @@ namespace Rekalogika\Mapper\Tests\Fixtures\PropertyMapper;
 class SomeObjectWithUninitializedVariableDto
 {
     public string $propertyA;
+    public string $propertyB;
 }
