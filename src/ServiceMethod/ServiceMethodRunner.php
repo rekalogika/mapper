@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\ServiceMethod;
 
 use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Context\Context;
+use Rekalogika\Mapper\Exception\RefuseToMapException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Symfony\Component\PropertyInfo\Type;
@@ -99,8 +100,19 @@ final readonly class ServiceMethodRunner
             ),
         ];
 
-        /** @psalm-suppress MixedMethodCall */
-        return $service->{$method}(...$arguments);
+        try {
+            /** @psalm-suppress MixedMethodCall */
+            return $service->{$method}(...$arguments);
+        } catch (\Error $e) {
+            if (
+                $serviceMethodSpecification->ignoreUninitialized()
+                && str_contains($e->getMessage(), 'must not be accessed before initialization')
+            ) {
+                throw new RefuseToMapException();
+            }
+
+            throw $e;
+        }
     }
 
     /**

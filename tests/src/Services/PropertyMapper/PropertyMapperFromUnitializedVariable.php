@@ -36,4 +36,10 @@ class PropertyMapperFromUnitializedVariable
             throw $e;
         }
     }
+
+    #[AsPropertyMapper('propertyB', ignoreUninitialized: true)]
+    public function mapPropertyB(SomeObjectWithUninitializedVariable $object): string
+    {
+        return $object->propertyA;
+    }
 }

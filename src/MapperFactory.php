@@ -108,7 +108,7 @@ use Symfony\Component\Uid\Factory\UuidFactory;
 class MapperFactory
 {
     /**
-     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,hasExistingTarget:bool,extraArguments:array<int,ServiceMethodSpecification::ARGUMENT_*>}>
+     * @var array<int,array{sourceClass:class-string,targetClass:class-string,property:string,service:object,method:string,hasExistingTarget:bool,ignoreUninitialized:bool,extraArguments:array<int,ServiceMethodSpecification::ARGUMENT_*>}>
      */
     private array $propertyMappers = [];
 
@@ -240,6 +240,7 @@ class MapperFactory
         object $service,
         string $method,
         bool $hasExistingTarget,
+        bool $ignoreUninitialized,
         array $extraArguments = [],
     ): void {
         $this->propertyMappers[] = [
@@ -249,6 +250,7 @@ class MapperFactory
             'service' => $service,
             'method' => $method,
             'hasExistingTarget' => $hasExistingTarget,
+            'ignoreUninitialized' => $ignoreUninitialized,
             'extraArguments' => $extraArguments,
         ];
     }
@@ -766,13 +768,14 @@ class MapperFactory
             $this->propertyMapperResolver = new PropertyMapperResolver();
             foreach ($this->propertyMappers as $propertyMapper) {
                 $this->propertyMapperResolver->addPropertyMapper(
-                    $propertyMapper['sourceClass'],
-                    $propertyMapper['targetClass'],
-                    $propertyMapper['property'],
-                    $propertyMapper['service']::class,
-                    $propertyMapper['method'],
-                    $propertyMapper['hasExistingTarget'],
-                    $propertyMapper['extraArguments'],
+                    sourceClass: $propertyMapper['sourceClass'],
+                    targetClass: $propertyMapper['targetClass'],
+                    property: $propertyMapper['property'],
+                    serviceId: $propertyMapper['service']::class,
+                    method: $propertyMapper['method'],
+                    hasExistingTarget: $propertyMapper['hasExistingTarget'],
+                    ignoreUninitialized: $propertyMapper['ignoreUninitialized'],
+                    extraArguments: $propertyMapper['extraArguments'],
                 );
             }
         }

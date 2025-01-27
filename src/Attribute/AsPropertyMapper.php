@@ -22,5 +22,6 @@ final readonly class AsPropertyMapper
     public function __construct(
         public ?string $property = null,
         public ?string $targetClass = null,
+        public bool $ignoreUninitialized = false,
     ) {}
 }

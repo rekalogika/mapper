@@ -108,6 +108,8 @@ final class RekalogikaMapperExtension extends Extension
             $tagAttributes['targetClass'] = $attribute->targetClass;
         }
 
+        $tagAttributes['ignoreUninitialized'] = $attribute->ignoreUninitialized;
+
         // Use the class of the first argument of the method as the source class
 
         $parameters = $reflection->getParameters();
