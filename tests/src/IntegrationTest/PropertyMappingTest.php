@@ -29,6 +29,8 @@ use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObject;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithDateTimeImmutableDto;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithUninitializedVariable;
+use Rekalogika\Mapper\Tests\Fixtures\PropertyMapper\SomeObjectWithUninitializedVariableDto;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithClassAttribute;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithClassAttributeWithoutExplicitProperty;
 use Rekalogika\Mapper\Tests\Services\PropertyMapper\PropertyMapperWithConstructorWithClassAttribute;
@@ -298,6 +300,14 @@ class PropertyMappingTest extends FrameworkTestCase
 
         $this->assertInstanceOf(SomeObjectWithDateTimeImmutableDto::class, $result);
         $this->assertNotSame($originalTargetValue, $result->getProperty());
+    }
 
+    public function testFromUninitializedVariable(): void
+    {
+        $source = new SomeObjectWithUninitializedVariable();
+        $target = new SomeObjectWithUninitializedVariableDto();
+        $result = $this->mapper->map($source, $target);
+
+        $this->assertFalse(isset($result->propertyA));
     }
 }
