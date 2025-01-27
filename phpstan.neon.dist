@@ -18,6 +18,9 @@ parameters:
         -
             message: '#Property .* is never assigned .+ so it can be removed from the property type.#'
             reportUnmatched: false
+        -
+            identifier: catch.neverThrown
+            reportUnmatched: false
     banned_code:
         non_ignorable: false
     rekalogika-mapper:
