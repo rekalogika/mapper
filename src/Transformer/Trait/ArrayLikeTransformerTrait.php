@@ -24,7 +24,7 @@ trait ArrayLikeTransformerTrait
 {
     /**
      * @param iterable<mixed,mixed> $source
-     * @param \ArrayAccess<mixed,mixed>|array<array-key,mixed>|null $target
+     * @param array<array-key,mixed>|\ArrayAccess<mixed,mixed>|null $target
      * @return \Traversable<mixed,mixed>
      */
     private function transformTraversableSource(
@@ -34,7 +34,6 @@ trait ArrayLikeTransformerTrait
         Context $context,
     ): \Traversable {
         // if the source is SplObjectStorage, we wrap it to fix the iterator
-
         if ($source instanceof \SplObjectStorage) {
             $source = new SplObjectStorageWrapper($source);
         }
@@ -75,7 +74,7 @@ trait ArrayLikeTransformerTrait
     }
 
     /**
-     * @param null|\ArrayAccess<mixed,mixed>|array<mixed,mixed> $target
+     * @param null|\ArrayAccess<mixed,mixed>|array<array-key,mixed> $target
      * @return array{0:mixed,1:mixed}
      */
     private function transformMember(

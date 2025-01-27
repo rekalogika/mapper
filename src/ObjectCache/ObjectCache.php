@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\ObjectCache;
 
 use Rekalogika\Mapper\Exception\LogicException;
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException;
 use Rekalogika\Mapper\ObjectCache\Sentinel\CachedTargetObjectNotFoundSentinel;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
@@ -70,7 +71,13 @@ final class ObjectCache
             $this->preCache[$source] = $arrayObject;
         }
 
-        $this->preCache->offsetGet($source)->offsetSet($targetTypeString, true);
+        $precached = $this->preCache->offsetGet($source);
+
+        if ($precached === null) {
+            throw new UnexpectedValueException('Precached object is null');
+        }
+
+        $precached->offsetSet($targetTypeString, true);
     }
 
     public function undoPreCache(mixed $source, Type $targetType): void
@@ -161,7 +168,13 @@ final class ObjectCache
             $this->cache[$source] = $arrayObject;
         }
 
-        $this->cache->offsetGet($source)->offsetSet($targetTypeString, $target);
+        $cached = $this->cache->offsetGet($source);
+
+        if ($cached === null) {
+            throw new UnexpectedValueException('Cached object is null');
+        }
+
+        $cached->offsetSet($targetTypeString, $target);
 
         // remove precache
 

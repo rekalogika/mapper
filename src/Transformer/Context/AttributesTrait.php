@@ -74,7 +74,7 @@ trait AttributesTrait
         }
 
         if (!$result instanceof $class) {
-            throw new UnexpectedValueException(\sprintf('Expected an instance of %s, but got %s.', $class, $result::class));
+            throw new UnexpectedValueException(\sprintf('Expected an instance of %s, but got %s.', $class, get_debug_type($result)));
         }
 
         return $result;

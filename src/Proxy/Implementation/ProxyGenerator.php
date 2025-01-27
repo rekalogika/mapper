@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Proxy\Implementation;
 
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
 use Symfony\Component\VarExporter\Exception\LogicException;
@@ -46,7 +47,16 @@ final readonly class ProxyGenerator implements ProxyGeneratorInterface
 
         // get proxy class name & namespace
         $shortName = preg_replace('/.*\\\\/', '', $proxyClass);
+
+        if ($shortName === null) {
+            throw new UnexpectedValueException('Short name cannot be null');
+        }
+
         $namespace = preg_replace('/\\\\[^\\\\]*$/', '', $proxyClass);
+
+        if ($namespace === null) {
+            throw new UnexpectedValueException('Namespace cannot be null');
+        }
 
         return
             $this->getClassHeader() .

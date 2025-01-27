@@ -38,7 +38,7 @@ final class MapperCollector implements Collector
     public function processNode(Node $node, Scope $scope)
     {
         // $fileName = $scope->getFile();
-        $line = $node->getLine();
+        $line = $node->getStartLine();
 
         // ensure method name is identifier
         if (!$node->name instanceof Identifier) {
