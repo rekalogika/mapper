@@ -28,7 +28,6 @@ class PropertyMapperFromUnitializedVariable
     {
         try {
             return $object->propertyA;
-            // @phpstan-ignore catch.neverThrown
         } catch (\Error $e) {
             if (str_contains($e->getMessage(), 'must not be accessed before initialization')) {
                 throw new RefuseToMapException();
