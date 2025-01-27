@@ -99,11 +99,6 @@
                 <file name="tests/src/IntegrationTest/ObjectToObjectMetadataFactoryTest.php" />
             </errorLevel>
         </UndefinedClass>
-        <MissingParamType>
-            <errorLevel type="suppress">
-                <file name="tests/src/Fixtures/MixedType/ObjectWithUntypedPropertyDto.php" />
-            </errorLevel>
-        </MissingParamType>
         <MissingPropertyType>
             <errorLevel type="suppress">
                 <file name="tests/src/Fixtures/MixedType/ObjectWithUntypedPropertyDto.php" />
