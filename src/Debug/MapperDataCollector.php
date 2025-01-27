@@ -46,7 +46,10 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
 
     public function collectTraceData(TraceData $traceData): void
     {
-        /** @psalm-suppress MixedArrayAssignment */
+        /**
+         * @psalm-suppress MixedArrayAssignment
+         * @phpstan-ignore offsetAccess.nonOffsetAccessible
+         */
         $this->data['mappings'][] = $traceData;
     }
 
@@ -54,7 +57,11 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
         ObjectToObjectMetadata $objectToObjectMetadata,
     ): void {
         $key = hash('xxh128', serialize($objectToObjectMetadata));
-        /** @psalm-suppress MixedArrayAssignment */
+
+        /**
+         * @psalm-suppress MixedArrayAssignment
+         * @phpstan-ignore offsetAccess.nonOffsetAccessible
+         */
         $this->data['object_to_object_metadata'][$key] = $objectToObjectMetadata;
     }
 
@@ -82,7 +89,10 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
      */
     public function getObjectToObjectMetadatas(): array
     {
-        /** @psalm-suppress MixedArgument */
+        /**
+         * @psalm-suppress MixedArgument
+         * @phpstan-ignore return.type, argument.type
+         */
         return array_values($this->data['object_to_object_metadata'] ?? []);
     }
 

@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Mapping\Implementation;
 
 use Psr\Log\LoggerInterface;
 use Rekalogika\Mapper\Exception\InvalidClassException;
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
@@ -121,6 +122,10 @@ final class MappingFactory implements MappingFactoryInterface
 
                 // if the error happens here, we continue to the next mapping
                 continue;
+            }
+
+            if ($typeMapping === null) {
+                throw new UnexpectedValueException('Type mapping cannot be null.');
             }
 
             $sourceTypes = $this->getSimpleTypes($typeMapping->getSourceType());

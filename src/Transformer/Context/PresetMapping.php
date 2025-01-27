@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\Context;
 
+use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Transformer\Exception\PresetMappingNotFound;
 
 /**
@@ -62,7 +63,13 @@ final readonly class PresetMapping
             }
 
             foreach ($classToTargetMapping as $class => $target) {
-                $this->mappings->offsetGet($source)->offsetSet($class, $target);
+                $mapping = $this->mappings->offsetGet($source);
+
+                if ($mapping === null) {
+                    throw new UnexpectedValueException('Mapping is null');
+                }
+
+                $mapping->offsetSet($class, $target);
             }
         }
     }

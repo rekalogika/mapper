@@ -12,7 +12,7 @@
 
 use Rekalogika\Mapper\CacheWarmer\MappingCollection;
 
-return function (MappingCollection $mappingCollection) : void {
+return function (MappingCollection $mappingCollection): void {
     $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/MethodMapperTest.php on line 33
         source: \Brick\Money\Money::class,
