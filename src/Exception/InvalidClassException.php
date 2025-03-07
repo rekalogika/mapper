@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Exception;
 
-class InvalidClassException extends InvalidArgumentException
+final class InvalidClassException extends InvalidArgumentException
 {
     public function __construct(
         private readonly string $class,

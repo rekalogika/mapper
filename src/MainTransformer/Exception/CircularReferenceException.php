@@ -19,7 +19,7 @@ use Rekalogika\Mapper\Exception\RuntimeException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class CircularReferenceException extends RuntimeException implements ExceptionInterface
+final class CircularReferenceException extends RuntimeException implements ExceptionInterface
 {
     public function __construct(
         mixed $source,

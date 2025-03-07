@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
 
-class InternalClassUnsupportedException extends NotMappableValueException
+final class InternalClassUnsupportedException extends NotMappableValueException
 {
     /**
      * @param class-string $class

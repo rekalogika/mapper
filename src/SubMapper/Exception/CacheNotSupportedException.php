@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\SubMapper\Exception;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\RuntimeException;
 
-class CacheNotSupportedException extends RuntimeException
+final class CacheNotSupportedException extends RuntimeException
 {
     public function __construct(Context $context)
     {

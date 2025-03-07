@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class InvalidClassException extends UnexpectedValueException
+final class InvalidClassException extends UnexpectedValueException
 {
     public function __construct(
         Type $type,

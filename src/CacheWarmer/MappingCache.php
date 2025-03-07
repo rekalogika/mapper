@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\CacheWarmer;
 
 use Symfony\Component\PropertyInfo\Type;
 
-class MappingCache
+final class MappingCache
 {
     /**
      * @var array<string,true>

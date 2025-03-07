@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\CacheWarmer;
 
-class MappingCollection
+final class MappingCollection
 {
     /**
      * @var list<array{class-string,class-string}>

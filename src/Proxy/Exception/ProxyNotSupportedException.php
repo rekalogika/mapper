@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Proxy\Exception;
 
 use Rekalogika\Mapper\Exception\RuntimeException;
 
-class ProxyNotSupportedException extends RuntimeException
+final class ProxyNotSupportedException extends RuntimeException
 {
     private readonly string $reason;
 

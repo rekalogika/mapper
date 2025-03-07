@@ -13,4 +13,4 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Exception;
 
-class BadMethodCallException extends \BadMethodCallException implements ExceptionInterface {}
+final class BadMethodCallException extends \BadMethodCallException implements ExceptionInterface {}

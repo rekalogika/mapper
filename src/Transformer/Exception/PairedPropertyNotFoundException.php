@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\ExceptionInterface;
 /**
  * @internal
  */
-class PairedPropertyNotFoundException extends \LogicException implements ExceptionInterface
+final class PairedPropertyNotFoundException extends \LogicException implements ExceptionInterface
 {
     /**
      * @param class-string $class

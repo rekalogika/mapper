@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
 
-class InstantiationFailureException extends NotMappableValueException
+final class InstantiationFailureException extends NotMappableValueException
 {
     /**
      * @param array<int|string,mixed> $constructorArguments

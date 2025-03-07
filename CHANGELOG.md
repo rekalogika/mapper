@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.14.1
+
+* fix: static analysis
+
 ## 1.14.0
 
 * chore: rector run

@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\ExceptionInterface;
 /**
  * @internal
  */
-class PropertyPathAwarePropertyInfoExtractorException extends \LogicException implements ExceptionInterface
+final class PropertyPathAwarePropertyInfoExtractorException extends \LogicException implements ExceptionInterface
 {
     /**
      * @param class-string $class

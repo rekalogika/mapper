@@ -18,4 +18,4 @@ use Rekalogika\Mapper\Exception\RuntimeException;
 /**
  * @internal
  */
-class UnsupportedPropertyMappingException extends RuntimeException {}
+final class UnsupportedPropertyMappingException extends RuntimeException {}

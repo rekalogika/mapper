@@ -19,7 +19,7 @@ use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class CannotFindTransformerException extends UnexpectedValueException
+final class CannotFindTransformerException extends UnexpectedValueException
 {
     /**
      * @param array<int,Type|MixedType> $sourceTypes
