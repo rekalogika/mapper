@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 use Rekalogika\Mapper\Attribute\InheritanceMap;
 use Rekalogika\Mapper\Context\Context;
 
-class SourceClassNotInInheritanceMapException extends NotMappableValueException
+final class SourceClassNotInInheritanceMapException extends NotMappableValueException
 {
     /**
      * @param class-string $sourceClass

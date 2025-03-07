@@ -21,7 +21,7 @@ use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class TransformerReturnsUnexpectedValueException extends UnexpectedValueException
+final class TransformerReturnsUnexpectedValueException extends UnexpectedValueException
 {
     public function __construct(
         mixed $source,

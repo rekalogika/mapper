@@ -16,7 +16,4 @@ namespace Rekalogika\Mapper\ObjectCache\Exception;
 use Rekalogika\Mapper\Exception\ExceptionInterface;
 use Rekalogika\Mapper\Exception\RuntimeException;
 
-class CircularReferenceException extends RuntimeException implements ExceptionInterface
-{
-    public function __construct() {}
-}
+final class CircularReferenceException extends RuntimeException implements ExceptionInterface {}

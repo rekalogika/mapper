@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class NonSimpleTypeException extends UnexpectedValueException
+final class NonSimpleTypeException extends UnexpectedValueException
 {
     public function __construct(Type $type, ?Context $context = null)
     {

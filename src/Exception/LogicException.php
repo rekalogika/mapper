@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Exception;
 
+/**
+ * @api
+ */
 class LogicException extends \LogicException implements ExceptionInterface
 {
     use ContextAwareExceptionTrait;

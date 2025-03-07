@@ -15,4 +15,4 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Exception\RuntimeException;
 
-class PresetMappingNotFound extends RuntimeException {}
+final class PresetMappingNotFound extends RuntimeException {}

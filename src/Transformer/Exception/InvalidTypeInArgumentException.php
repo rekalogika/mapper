@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class InvalidTypeInArgumentException extends InvalidArgumentException
+final class InvalidTypeInArgumentException extends InvalidArgumentException
 {
     public function __construct(
         string $printfMessage,

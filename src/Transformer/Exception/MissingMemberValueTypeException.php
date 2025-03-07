@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class MissingMemberValueTypeException extends MissingMemberTypeException
+final class MissingMemberValueTypeException extends MissingMemberTypeException
 {
     public function __construct(
         ?Type $sourceType,

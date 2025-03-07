@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\RuntimeException;
 /**
  * @internal
  */
-class UninitializedSourcePropertyException extends RuntimeException
+final class UninitializedSourcePropertyException extends RuntimeException
 {
     public function __construct(private readonly string $propertyName) {}
 

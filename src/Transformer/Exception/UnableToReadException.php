@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
 
-class UnableToReadException extends NotMappableValueException
+final class UnableToReadException extends NotMappableValueException
 {
     public function __construct(
         mixed $source,

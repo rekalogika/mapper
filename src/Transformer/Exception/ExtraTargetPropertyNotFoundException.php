@@ -19,7 +19,7 @@ use Rekalogika\Mapper\Exception\LogicException;
 /**
  * @internal
  */
-class ExtraTargetPropertyNotFoundException extends LogicException
+final class ExtraTargetPropertyNotFoundException extends LogicException
 {
     /**
      * @param class-string $class

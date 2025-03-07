@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
 
-class ClassNotInstantiableException extends NotMappableValueException
+final class ClassNotInstantiableException extends NotMappableValueException
 {
     /**
      * @param class-string $class

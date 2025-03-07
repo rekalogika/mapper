@@ -119,5 +119,10 @@
                 <file name="src/Serializer/NormalizerContext.php" />
             </errorLevel>
         </DeprecatedClass>
+        <ClassMustBeFinal>
+            <errorLevel type="suppress">
+                <directory name="tests/src" />
+            </errorLevel>
+        </ClassMustBeFinal>
     </issueHandlers>
 </psalm>

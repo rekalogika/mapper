@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
 
-class UnableToWriteException extends NotMappableValueException
+final class UnableToWriteException extends NotMappableValueException
 {
     public function __construct(
         mixed $target,

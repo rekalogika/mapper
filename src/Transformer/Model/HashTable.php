@@ -42,9 +42,9 @@ final class HashTable implements
         if (\is_string($variable)) {
             return 'string:' . $variable;
         } elseif (\is_int($variable)) {
-            return 'int:' . $variable;
+            return 'int:' . (string) $variable;
         } elseif (\is_float($variable)) {
-            return 'float:' . $variable;
+            return 'float:' . (string) $variable;
         } elseif (\is_bool($variable)) {
             return 'bool:' . ($variable ? 'true' : 'false');
         } elseif (\is_object($variable)) {

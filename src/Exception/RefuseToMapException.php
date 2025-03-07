@@ -13,4 +13,4 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Exception;
 
-class RefuseToMapException extends \RuntimeException implements ExceptionInterface {}
+final class RefuseToMapException extends \RuntimeException implements ExceptionInterface {}

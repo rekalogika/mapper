@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
 
-class NotAClassException extends NotMappableValueException
+final class NotAClassException extends NotMappableValueException
 {
     public function __construct(
         string $class,

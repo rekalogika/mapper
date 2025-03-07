@@ -19,7 +19,7 @@ use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeUtil;
 use Symfony\Component\PropertyInfo\Type;
 
-class NullSourceButMandatoryTargetException extends RuntimeException
+final class NullSourceButMandatoryTargetException extends RuntimeException
 {
     public function __construct(
         ?Type $targetType,
