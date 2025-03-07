@@ -3,6 +3,7 @@
 ## 1.14.1
 
 * fix: static analysis
+* test: add test for self-referencing object
 
 ## 1.14.0
 
