@@ -863,15 +863,21 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/RecursionTest.php on line 64
+        // tests/src/IntegrationTest/RecursionTest.php on line 66
         source: \Rekalogika\Mapper\Tests\Fixtures\Recursive\ObjectWithRefToItself::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ObjectWithRefToItselfDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/RecursionTest.php on line 34
+        // tests/src/IntegrationTest/RecursionTest.php on line 36
         source: \Rekalogika\Mapper\Tests\Fixtures\Recursive\ParentObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ParentObjectDto::class
+    );
+    
+    $mappingCollection->addObjectMapping(
+        // tests/src/IntegrationTest/RecursionTest.php on line 90
+        source: \Rekalogika\Mapper\Tests\Fixtures\Recursive\SelfReferencing::class,
+        target: \Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\SelfReferencingDto::class
     );
     
     $mappingCollection->addObjectMapping(

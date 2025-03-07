@@ -17,9 +17,11 @@ use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Recursive\ChildObject;
 use Rekalogika\Mapper\Tests\Fixtures\Recursive\ObjectWithRefToItself;
 use Rekalogika\Mapper\Tests\Fixtures\Recursive\ParentObject;
+use Rekalogika\Mapper\Tests\Fixtures\Recursive\SelfReferencing;
 use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ChildObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ObjectWithRefToItselfDto;
 use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ParentObjectDto;
+use Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\SelfReferencingDto;
 
 class RecursionTest extends FrameworkTestCase
 {
@@ -79,5 +81,16 @@ class RecursionTest extends FrameworkTestCase
         $this->assertSame('4', $result->ref->ref->ref->string);
         // @phpstan-ignore-next-line
         $this->assertSame('5', $result->ref->ref->ref->ref->string);
+    }
+
+    public function testSelfReferencing(): void
+    {
+        $object = new SelfReferencing();
+
+        $result = $this->mapper->map($object, SelfReferencingDto::class);
+
+        $this->assertInstanceOf(SelfReferencingDto::class, $result);
+        $this->assertInstanceOf(SelfReferencingDto::class, $result->child);
+        $this->assertSame($result, $result->child);
     }
 }
