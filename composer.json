@@ -48,7 +48,7 @@
         "dave-liddament/phpstan-php-language-extensions": "^0.9.2",
         "doctrine/doctrine-bundle": "^2.10",
         "doctrine/orm": "^2.14 || ^3.0",
-        "doctrine/persistence": "^3.1",
+        "doctrine/persistence": "^4.0",
         "ekino/phpstan-banned-code": "^3.0",
         "phpstan/phpstan": "^2.0",
         "phpstan/phpstan-deprecation-rules": "^2.0",
