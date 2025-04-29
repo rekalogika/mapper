@@ -36,10 +36,12 @@ use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
+use Rekalogika\Mapper\Proxy\Implementation\ProxyMetadataFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyRegistry;
 use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
+use Rekalogika\Mapper\Proxy\ProxyMetadataFactoryInterface;
 use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
 use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
@@ -105,6 +107,9 @@ use Symfony\Component\Serializer\Normalizer\UidNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Uid\Factory\UuidFactory;
 
+/**
+ * @api
+ */
 class MapperFactory
 {
     /**
@@ -207,6 +212,8 @@ class MapperFactory
     private ?ProxyAutoloaderInterface $proxyAutoLoader = null;
 
     private ?ProxyFactoryInterface $proxyFactory = null;
+
+    private ?ProxyMetadataFactoryInterface $proxyMetadataFactory = null;
 
     private ?ObjectProcessorFactoryInterface $objectProcessorFactory = null;
 
@@ -924,10 +931,20 @@ class MapperFactory
             $this->proxyFactory = new ProxyFactory(
                 $this->getProxyRegistry(),
                 $this->getProxyGenerator(),
+                $this->getProxyMetadataFactory(),
             );
         }
 
         return $this->proxyFactory;
+    }
+
+    protected function getProxyMetadataFactory(): ProxyMetadataFactoryInterface
+    {
+        if (null === $this->proxyMetadataFactory) {
+            $this->proxyMetadataFactory = new ProxyMetadataFactory();
+        }
+
+        return $this->proxyMetadataFactory;
     }
 
     //

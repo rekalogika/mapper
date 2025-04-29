@@ -32,10 +32,12 @@ use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\Implementation\WarmableMappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
+use Rekalogika\Mapper\Proxy\Implementation\CachingProxyMetadataFactory;
 use Rekalogika\Mapper\Proxy\Implementation\DoctrineProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\DynamicPropertiesProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
+use Rekalogika\Mapper\Proxy\Implementation\ProxyMetadataFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyRegistry;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
 use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
@@ -498,6 +500,20 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('rekalogika.mapper.proxy.registry'),
             service('rekalogika.mapper.proxy.generator'),
+            service('rekalogika.mapper.proxy.metadata_factory'),
+        ]);
+
+    # proxy metadata
+
+    $services
+        ->set('rekalogika.mapper.proxy.metadata_factory', ProxyMetadataFactory::class);
+
+    $services
+        ->set('rekalogika.mapper.proxy.metadata_factory.caching', CachingProxyMetadataFactory::class)
+        ->decorate('rekalogika.mapper.proxy.metadata_factory')
+        ->args([
+            service('.inner'),
+            service($createCache($services, 'proxy_metadata_factory')),
         ]);
 
     # other services

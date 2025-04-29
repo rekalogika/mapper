@@ -13,21 +13,15 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Proxy;
 
+use Rekalogika\Mapper\Proxy\Metadata\ClassMetadata;
+
 /**
  * @internal
  */
-interface ProxyFactoryInterface
+interface ProxyMetadataFactoryInterface
 {
     /**
-     * @template T of object
-     * @param class-string<T> $class
-     * @param callable(T):void $initializer
-     * @param list<string> $eagerProperties
-     * @return T
+     * @param class-string $class
      */
-    public function createProxy(
-        string $class,
-        $initializer,
-        array $eagerProperties = [],
-    ): object;
+    public function getMetadata(string $class): ClassMetadata;
 }

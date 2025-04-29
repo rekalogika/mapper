@@ -54,7 +54,7 @@ final readonly class ObjectToObjectMetadata
      * @param class-string $providedTargetClass
      * @param list<class-string> $allTargetClasses
      * @param list<PropertyMappingMetadata> $allPropertyMappings
-     * @param array<string,true> $targetProxySkippedProperties
+     * @param list<string> $targetProxySkippedProperties
      * @param list<string> $sourceProperties List of the source properties. Used by `ObjectToObjectTransformer` to determine if a property is a dynamic property. A property not listed here is considered dynamic.
      */
     public function __construct(
@@ -109,7 +109,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @param array<string,true> $targetProxySkippedProperties
+     * @param list<string> $targetProxySkippedProperties
      */
     public function withTargetProxy(
         array $targetProxySkippedProperties,
@@ -297,7 +297,7 @@ final readonly class ObjectToObjectMetadata
     }
 
     /**
-     * @return array<string,true>
+     * @return list<string>
      */
     public function getTargetProxySkippedProperties(): array
     {

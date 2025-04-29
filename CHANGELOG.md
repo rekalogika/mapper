@@ -3,6 +3,7 @@
 ## 1.15.1
 
 * fix: static analysis
+* refactor: refactor proxy, introduce proxy metadata
 
 ## 1.14.1
 
