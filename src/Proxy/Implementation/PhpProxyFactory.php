@@ -54,6 +54,7 @@ final readonly class PhpProxyFactory implements ProxyFactoryInterface
 
         /**
          * @psalm-suppress InvalidArgument
+         * @psalm-suppress UndefinedMethod
          * @var T
          */
         $proxy = $reflectionClass->newLazyGhost($initializer);
@@ -63,6 +64,8 @@ final readonly class PhpProxyFactory implements ProxyFactoryInterface
             $name = $property->getName();
 
             $scopeReflectionClass = new \ReflectionClass($scopeClass);
+
+            /** @psalm-suppress UndefinedMethod */
             $scopeReflectionClass
                 ->getProperty($name)
                 ->skipLazyInitialization($proxy);
