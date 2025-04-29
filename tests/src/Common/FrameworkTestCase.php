@@ -93,13 +93,6 @@ abstract class FrameworkTestCase extends KernelTestCase
         $this->assertInstanceOf($class, $transformer);
     }
 
-    protected function initialize(object $object): void
-    {
-        if ($object instanceof LazyObjectInterface) {
-            $object->initializeLazyObject();
-        }
-    }
-
     private ?EntityManagerInterface $entityManager = null;
 
     private function doctrineInit(): EntityManagerInterface
@@ -138,6 +131,54 @@ abstract class FrameworkTestCase extends KernelTestCase
     {
         $logger = $this->getLogger();
         $this->assertTrue($logger->isInMessage($message), 'Log message not found: ' . $message);
+    }
+
+    protected function initialize(object $object): void
+    {
+        if (\PHP_VERSION_ID >= 80400) {
+            $reflection = new \ReflectionClass($object);
+
+            /**
+             * @psalm-suppress UndefinedMethod
+             */
+            $reflection->initializeLazyObject($object);
+        } else {
+            if ($object instanceof LazyObjectInterface) {
+                $object->initializeLazyObject();
+            }
+        }
+    }
+
+    public function assertIsUninitializedProxy(mixed $object): void
+    {
+        $this->assertIsObject($object, 'Expected an object');
+
+        if (\PHP_VERSION_ID >= 80400) {
+            $reflection = new \ReflectionClass($object);
+            /** @psalm-suppress UndefinedMethod */
+            $this->assertTrue($reflection->isUninitializedLazyObject($object), 'Object is not an uninitialized proxy');
+        } else {
+            $this->assertInstanceOf(LazyObjectInterface::class, $object, 'Object is not a proxy');
+            $this->assertFalse($object->isLazyObjectInitialized(), 'Object is not an uninitialized proxy');
+        }
+    }
+
+    public function assertNotUninitializedProxy(mixed $object): void
+    {
+        $this->assertIsObject($object, 'Expected an object');
+
+        if (\PHP_VERSION_ID >= 80400) {
+            $reflection = new \ReflectionClass($object);
+            /** @psalm-suppress UndefinedMethod */
+            $this->assertFalse($reflection->isUninitializedLazyObject($object), 'Object is a proxy, but should not be');
+        } else {
+            if ($object instanceof LazyObjectInterface) {
+                $this->assertTrue($object->isLazyObjectInitialized(), 'Object is a proxy, but should not be');
+            } else {
+                // @phpstan-ignore method.alreadyNarrowedType
+                $this->assertNotInstanceOf(LazyObjectInterface::class, $object, 'Object is a proxy, but should not be');
+            }
+        }
     }
 
     private function getLogger(): TestLogger

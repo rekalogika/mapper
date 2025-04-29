@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Fixtures\Constructor;
 
+use Rekalogika\Mapper\Attribute\Eager;
+
+#[Eager]
 final readonly class ObjectWithMandatoryConstructorThatCannotBeCastFromNullDto
 {
     public function __construct(

@@ -21,7 +21,6 @@ use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectWithObjectWithSett
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectWithObjectWithVoidSetter as ParentObjectWithObjectWithVoidSetterDto;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectWithObjectWithWither;
 use Rekalogika\Mapper\Tests\Fixtures\WitherMethod\ParentObjectWithoutSetterDto;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class WitherMethodTest extends FrameworkTestCase
 {
@@ -99,7 +98,7 @@ class WitherMethodTest extends FrameworkTestCase
         $source = new ParentObject();
         $result = $this->mapper->map($source, ParentObjectWithObjectWithImmutableSetter::class);
 
-        $this->assertInstanceOf(LazyObjectInterface::class, $result);
+        $this->assertIsUninitializedProxy($result);
         $this->assertInstanceOf(ParentObjectWithObjectWithImmutableSetter::class, $result);
         $this->assertSame($source->getObject()->property, $result->getObject()->getProperty());
     }

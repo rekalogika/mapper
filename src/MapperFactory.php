@@ -34,10 +34,12 @@ use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
 use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
+use Rekalogika\Mapper\Proxy\Implementation\PhpProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyMetadataFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyRegistry;
+use Rekalogika\Mapper\Proxy\Implementation\VarExporterProxyFactory;
 use Rekalogika\Mapper\Proxy\ProxyAutoloaderInterface;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
@@ -212,6 +214,10 @@ class MapperFactory
     private ?ProxyAutoloaderInterface $proxyAutoLoader = null;
 
     private ?ProxyFactoryInterface $proxyFactory = null;
+
+    private ?VarExporterProxyFactory $varExporterProxyFactory = null;
+
+    private ?PhpProxyFactory $phpProxyFactory = null;
 
     private ?ProxyMetadataFactoryInterface $proxyMetadataFactory = null;
 
@@ -925,13 +931,36 @@ class MapperFactory
         return $this->proxyAutoLoader;
     }
 
+    protected function getVarExporterProxyFactory(): VarExporterProxyFactory
+    {
+        if (null === $this->varExporterProxyFactory) {
+            $this->varExporterProxyFactory = new VarExporterProxyFactory(
+                $this->getProxyRegistry(),
+                $this->getProxyGenerator(),
+                $this->getProxyMetadataFactory(),
+            );
+        }
+
+        return $this->varExporterProxyFactory;
+    }
+
+    protected function getPhpProxyFactory(): PhpProxyFactory
+    {
+        if (null === $this->phpProxyFactory) {
+            $this->phpProxyFactory = new PhpProxyFactory(
+                $this->getProxyMetadataFactory(),
+            );
+        }
+
+        return $this->phpProxyFactory;
+    }
+
     protected function getProxyFactory(): ProxyFactoryInterface
     {
         if (null === $this->proxyFactory) {
             $this->proxyFactory = new ProxyFactory(
-                $this->getProxyRegistry(),
-                $this->getProxyGenerator(),
-                $this->getProxyMetadataFactory(),
+                $this->getVarExporterProxyFactory(),
+                $this->getPhpProxyFactory(),
             );
         }
 

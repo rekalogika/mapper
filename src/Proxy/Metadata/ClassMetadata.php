@@ -31,6 +31,7 @@ final readonly class ClassMetadata
      */
     public function __construct(
         private string $class,
+        private bool $allowsDynamicProperties,
         array $properties,
     ) {
         $newProperties = [];
@@ -63,10 +64,13 @@ final readonly class ClassMetadata
     }
 
     /**
+     * Converts a list of property names to an array suitable as the input for
+     * LazyGhostTrait::createLazyGhost().
+     *
      * @param list<string> $eagerProperties
      * @return array<string,true>
      */
-    public function getSkippedProperties(array $eagerProperties): array
+    public function getVarExporterSkippedProperties(array $eagerProperties): array
     {
         $skippedProperties = [];
 
@@ -79,5 +83,26 @@ final readonly class ClassMetadata
         }
 
         return $skippedProperties;
+    }
+
+    /**
+     * @param list<string> $eagerProperties
+     * @return list<PropertyMetadata>
+     */
+    public function getPropertyMetadatas(array $eagerProperties): array
+    {
+        $properties = [];
+
+        foreach ($eagerProperties as $name) {
+            $properties2 = $this->properties[$name] ?? [];
+            $properties = array_merge($properties, $properties2);
+        }
+
+        return array_values(array_unique($properties, SORT_REGULAR));
+    }
+
+    public function allowsDynamicProperties(): bool
+    {
+        return $this->allowsDynamicProperties;
     }
 }

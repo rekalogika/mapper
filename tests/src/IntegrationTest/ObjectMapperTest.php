@@ -30,7 +30,6 @@ use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Person;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\PersonDto;
 use Rekalogika\Mapper\Tests\Services\ObjectMapper\MoneyObjectMapper;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class ObjectMapperTest extends FrameworkTestCase
 {
@@ -90,12 +89,10 @@ class ObjectMapperTest extends FrameworkTestCase
         $result = $this->mapper->map($money, MoneyDtoForProxy::class);
 
         $this->assertInstanceOf(MoneyDtoForProxy::class, $result);
-        $this->assertInstanceOf(LazyObjectInterface::class, $result);
-
-        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($result);
         $this->assertSame('100.00', $result->getAmount());
         $this->assertSame('USD', $result->getCurrency());
-        $this->assertTrue($result->isLazyObjectInitialized());
+        $this->assertNotUninitializedProxy($result);
     }
 
     public function testMoneyToMoneyDtoForTargetModification(): void
@@ -137,8 +134,7 @@ class ObjectMapperTest extends FrameworkTestCase
         $person = new Person('1', 'John Doe');
         $result = $this->mapper->map($person, PersonDto::class);
 
-        $this->assertInstanceOf(LazyObjectInterface::class, $result);
-        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($result);
         $this->assertTrue($person->isGetIdIsCalled());
         $this->assertFalse($person->isGetNameIsCalled());
 
@@ -146,15 +142,20 @@ class ObjectMapperTest extends FrameworkTestCase
 
         $this->assertTrue($person->isGetIdIsCalled());
         $this->assertFalse($person->isGetNameIsCalled());
-        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($result);
 
         $this->assertSame('John Doe', $result->name);
 
         $this->assertTrue($person->isGetIdIsCalled());
         $this->assertTrue($person->isGetNameIsCalled());
-        $this->assertTrue($result->isLazyObjectInitialized());
+        $this->assertNotUninitializedProxy($result);
     }
 
+    /**
+     * PHP lazy objects support final objects
+     *
+     * @requires PHP < 8.4
+     */
     public function testErrorFinalTarget(): void
     {
         $person = new Person('1', 'John Doe');
