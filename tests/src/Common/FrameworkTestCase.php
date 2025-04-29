@@ -151,6 +151,7 @@ abstract class FrameworkTestCase extends KernelTestCase
 
         if (\PHP_VERSION_ID >= 80400) {
             $reflection = new \ReflectionClass($object);
+            /** @psalm-suppress UndefinedMethod */
             $this->assertTrue($reflection->isUninitializedLazyObject($object), 'Object is not an uninitialized proxy');
         } else {
             $this->assertInstanceOf(LazyObjectInterface::class, $object, 'Object is not a proxy');
@@ -164,6 +165,7 @@ abstract class FrameworkTestCase extends KernelTestCase
 
         if (\PHP_VERSION_ID >= 80400) {
             $reflection = new \ReflectionClass($object);
+            /** @psalm-suppress UndefinedMethod */
             $this->assertFalse($reflection->isUninitializedLazyObject($object), 'Object is a proxy, but should not be');
         } else {
             if ($object instanceof LazyObjectInterface) {
