@@ -143,6 +143,7 @@ final readonly class ClassUtil
         /**
          * @var array<string,array{string,string,?string,\ReflectionProperty}>
          * @psalm-suppress InternalClass
+         * @phpstan-ignore staticMethod.internalClass
          */
         return Hydrator::getPropertyScopes($class);
     }

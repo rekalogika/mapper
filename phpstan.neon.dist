@@ -21,6 +21,13 @@ parameters:
         -
             identifier: catch.neverThrown
             reportUnmatched: false
+        -
+            identifier: classConstant.internalInterface
+            path: config/*
+        -
+            identifier: classConstant.internalClass
+            path: config/*
+
     banned_code:
         non_ignorable: false
     rekalogika-mapper:
