@@ -80,19 +80,20 @@ class DoctrineTest extends FrameworkTestCase
 
         // accessing identifier does not trigger a full load
         $bdto = $this->mapper->map($b, EntityWithSingleIdentifierDto::class);
-        $this->assertInstanceOf(LazyObjectInterface::class, $bdto);
+        $this->assertIsUninitializedProxy($bdto);
         $foo = $bdto->myIdentifier;
-        $this->assertFalse($bdto->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($bdto);
 
         // accessing identifier does not trigger a full load
         $adto = $bdto->parent;
-        $this->assertInstanceOf(LazyObjectInterface::class, $adto);
+        $this->assertNotNull($adto);
+        $this->assertIsUninitializedProxy($adto);
         $foo = $adto->myIdentifier;
-        $this->assertFalse($adto->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($adto);
 
         // accessing non identifier triggers a full load
         $foo = $adto->name;
-        $this->assertTrue($adto->isLazyObjectInitialized());
+        $this->assertNotUninitializedProxy($adto);
     }
 
     public function testCompositeId(): void
@@ -110,6 +111,7 @@ class DoctrineTest extends FrameworkTestCase
         $input->name = 'my-name';
 
         $entity = $this->mapper->map($input, SimpleEntity::class);
+        // $this->assertNotUninitializedProxy($entity);
         $this->assertNotInstanceOf(LazyObjectInterface::class, $entity);
     }
 

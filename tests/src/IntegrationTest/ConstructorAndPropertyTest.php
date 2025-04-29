@@ -19,7 +19,6 @@ use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructo
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndPublicProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithIdOnlyOnConstructor;
 use Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class ConstructorAndPropertyTest extends FrameworkTestCase
 {
@@ -31,8 +30,7 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
         $source = new SourceObject();
         $result = $this->mapper->map($source, ObjectWithConstructorArgumentsAndGetters::class);
 
-        $this->assertInstanceOf(LazyObjectInterface::class, $result);
-        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($result);
 
         $this->assertSame('id', $result->getId());
         $this->assertSame('name', $result->getName());
@@ -47,8 +45,7 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
         $source = new SourceObject();
         $result = $this->mapper->map($source, ObjectWithIdOnlyOnConstructor::class);
 
-        $this->assertInstanceOf(LazyObjectInterface::class, $result);
-        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($result);
 
         $this->assertSame('id', $result->getId());
         $this->assertSame('name', $result->getName());
@@ -63,8 +60,7 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
         $source = new SourceObject();
         $result = $this->mapper->map($source, ObjectWithConstructorArgumentsAndPublicProperties::class);
 
-        $this->assertInstanceOf(LazyObjectInterface::class, $result);
-        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($result);
 
         $this->assertSame('id', $result->id);
         $this->assertSame('name', $result->name);
@@ -76,8 +72,7 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
         $source = new SourceObject();
         $result = $this->mapper->map($source, ObjectWithConstructorAndSetter::class);
 
-        $this->assertInstanceOf(LazyObjectInterface::class, $result);
-        $this->assertFalse($result->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($result);
 
         $this->assertSame('id', $result->getId());
         $this->assertSame('name', $result->getName());

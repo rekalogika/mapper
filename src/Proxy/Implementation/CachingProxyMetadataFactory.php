@@ -15,7 +15,6 @@ namespace Rekalogika\Mapper\Proxy\Implementation;
 
 use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\Proxy\Metadata\ClassMetadata;
-use Rekalogika\Mapper\Proxy\Metadata\PropertyMetadata;
 use Rekalogika\Mapper\Proxy\ProxyMetadataFactoryInterface;
 
 /**
@@ -31,7 +30,8 @@ final class CachingProxyMetadataFactory implements ProxyMetadataFactoryInterface
     #[\Override]
     public function getMetadata(string $class): ClassMetadata
     {
-        $cacheItem = $this->cache->getItem($class);
+        $key = hash('xxh128', $class);
+        $cacheItem = $this->cache->getItem($key);
 
         if ($cacheItem->isHit()) {
             /** @psalm-suppress MixedAssignment */

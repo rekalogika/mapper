@@ -15,6 +15,11 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty;
 
 class ObjectWithConstructorArgumentsAndGetters
 {
+    // @todo test without initialization, add exception to constructor to make
+    //       sure that the constructor is not called
+    // @phpstan-ignore property.onlyWritten
+    private string $foo = 'bar';
+
     public function __construct(
         private readonly string $id,
         private readonly string $name,

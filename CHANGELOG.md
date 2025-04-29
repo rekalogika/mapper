@@ -1,9 +1,10 @@
 # CHANGELOG
 
-## 1.15.1
+## 1.16.0
 
 * fix: static analysis
 * refactor: refactor proxy, introduce proxy metadata
+* feat: PHP 8.4 lazy object
 
 ## 1.14.1
 

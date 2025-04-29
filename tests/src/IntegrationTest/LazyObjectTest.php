@@ -27,7 +27,6 @@ use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdInConstructorDto;
 use Rekalogika\Mapper\Tests\Fixtures\LazyObject\ObjectWithIdReadOnlyDto;
 use Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties;
 use Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class LazyObjectTest extends FrameworkTestCase
 {
@@ -47,6 +46,11 @@ class LazyObjectTest extends FrameworkTestCase
         $this->initialize($target);
     }
 
+    /**
+     * PHP lazy objects support final objects
+     *
+     * @requires PHP < 8.4
+     */
     public function testFinal(): void
     {
         // final class can't be lazy
@@ -117,13 +121,13 @@ class LazyObjectTest extends FrameworkTestCase
     {
         $source = new ObjectWithIdAndName();
         $target = $this->mapper->map($source, ObjectWithIdAndNameInConstructorDto::class);
-        $this->assertInstanceOf(LazyObjectInterface::class, $target);
+        $this->assertIsUninitializedProxy($target);
 
         $this->assertTrue($source->isIdAndNameCalled());
-        $this->assertFalse($target->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($target);
 
         $this->assertEquals('other', $target->other);
-        $this->assertTrue($target->isLazyObjectInitialized());
+        $this->assertNotUninitializedProxy($target);
     }
 
     /**
@@ -133,14 +137,14 @@ class LazyObjectTest extends FrameworkTestCase
     {
         $source = new ObjectWithIdAndName();
         $target = $this->mapper->map($source, ObjectWithIdInConstructorDto::class);
-        $this->assertInstanceOf(LazyObjectInterface::class, $target);
+        $this->assertIsUninitializedProxy($target);
 
         $this->assertTrue($source->isIdCalled());
         $this->assertFalse($source->isNameCalled());
-        $this->assertFalse($target->isLazyObjectInitialized());
+        $this->assertIsUninitializedProxy($target);
 
         $name = $target->name;
-        $this->assertTrue($target->isLazyObjectInitialized());
+        $this->assertNotUninitializedProxy($target);
         $this->assertTrue($source->isNameCalled());
         $this->assertEquals('name', $name);
     }
@@ -152,7 +156,7 @@ class LazyObjectTest extends FrameworkTestCase
 
         $source = new ObjectWithScalarProperties();
         $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class, $context);
-        $this->assertInstanceOf(LazyObjectInterface::class, $target);
+        $this->assertIsUninitializedProxy($target);
     }
 
     public function testDisablingLazyObject(): void
@@ -162,6 +166,6 @@ class LazyObjectTest extends FrameworkTestCase
 
         $source = new ObjectWithScalarProperties();
         $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class, $context);
-        $this->assertNotInstanceOf(LazyObjectInterface::class, $target);
+        $this->assertNotUninitializedProxy($target);
     }
 }

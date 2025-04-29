@@ -37,7 +37,7 @@ class ReadOnlyTest extends FrameworkTestCase
     {
         $source = new Source('foo');
         $target = $this->mapper->map($source, ReadOnlyObjectDto::class);
-        $this->assertInstanceOf(LazyObjectInterface::class, $target);
+        $this->assertIsUninitializedProxy($target);
         $this->assertSame('foo', $target->name);
     }
 

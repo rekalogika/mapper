@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Proxy\Implementation;
 use Rekalogika\Mapper\Proxy\Metadata\ClassMetadata;
 use Rekalogika\Mapper\Proxy\Metadata\PropertyMetadata;
 use Rekalogika\Mapper\Proxy\ProxyMetadataFactoryInterface;
+use Rekalogika\Mapper\Util\ClassUtil;
 
 /**
  * @internal
@@ -105,6 +106,7 @@ final class ProxyMetadataFactory implements ProxyMetadataFactoryInterface
 
         return new ClassMetadata(
             class: $class,
+            allowsDynamicProperties: ClassUtil::allowsDynamicProperties($class),
             properties: array_values($properties),
         );
     }

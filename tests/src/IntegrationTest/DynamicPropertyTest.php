@@ -222,7 +222,7 @@ class DynamicPropertyTest extends FrameworkTestCase
 
     // stdclass to stdclass
 
-    public function testStdClassToStdClass(): void
+    public function testStdClassToStdClassasdf(): void
     {
         $source = new ObjectExtendingStdClass();
         /** @psalm-suppress UndefinedPropertyAssignment */
