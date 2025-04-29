@@ -50,7 +50,7 @@
         "doctrine/orm": "^2.14 || ^3.0",
         "doctrine/persistence": "^4.0",
         "ekino/phpstan-banned-code": "^3.0",
-        "phpstan/phpstan": "^2.0",
+        "phpstan/phpstan": "^2.1.13 || ^2.2",
         "phpstan/phpstan-deprecation-rules": "^2.0",
         "phpstan/phpstan-phpunit": "^2.0",
         "phpunit/phpunit": "^10.5",

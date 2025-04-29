@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.15.1
+
+* fix: static analysis
+
 ## 1.14.1
 
 * fix: static analysis

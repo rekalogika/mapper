@@ -133,8 +133,10 @@ class MapperFactory
 
     private ?StringToBackedEnumTransformer $stringToBackedEnumTransformer = null;
 
+    // @phpstan-ignore property.deprecatedClass
     private ?ArrayToObjectTransformer $arrayToObjectTransformer = null;
 
+    // @phpstan-ignore property.deprecatedClass
     private ?ObjectToArrayTransformer $objectToArrayTransformer = null;
 
     private ?ArrayObjectTransformer $arrayObjectTransformer = null;
@@ -147,6 +149,7 @@ class MapperFactory
 
     private ?CopyTransformer $copyTransformer = null;
 
+    // @phpstan-ignore property.deprecatedClass
     private ?ClassMethodTransformer $classMethodTransformer = null;
 
     private ?SymfonyUidTransformer $symfonyUidTransformer = null;

@@ -61,6 +61,7 @@ jobs:
 
     - name: Run phpstan
       run: vendor/bin/phpstan analyse
+      if: matrix.dep == 'highest'
 
     - name: Run phpunit
       run: |
