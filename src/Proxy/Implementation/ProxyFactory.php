@@ -18,6 +18,7 @@ use Rekalogika\Mapper\CacheWarmer\WarmableProxyRegistryInterface;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
+use Rekalogika\Mapper\Proxy\ProxyMetadataFactoryInterface;
 use Rekalogika\Mapper\Proxy\ProxyNamer;
 use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
@@ -32,6 +33,7 @@ final readonly class ProxyFactory implements
     public function __construct(
         private ProxyRegistryInterface $proxyRegistry,
         private ProxyGeneratorInterface $proxyGenerator,
+        private ProxyMetadataFactoryInterface $proxyMetadataFactory,
     ) {}
 
     /**
@@ -65,6 +67,7 @@ final readonly class ProxyFactory implements
      * @template T of object
      * @param class-string<T> $class
      * @param callable(T):void $initializer
+     * @param list<string> $eagerProperties
      * @return T
      */
     #[\Override]
@@ -91,10 +94,10 @@ final readonly class ProxyFactory implements
             }
         }
 
-        if (array_is_list($eagerProperties)) {
-            $eagerProperties = array_filter($eagerProperties, fn($property): bool => \is_string($property));
-            $eagerProperties = ClassUtil::getSkippedProperties($class, $eagerProperties);
-        }
+        // $eagerProperties = ClassUtil::getSkippedProperties($class, $eagerProperties);
+        $skippedProperties = $this->proxyMetadataFactory
+            ->getMetadata($class)
+            ->getSkippedProperties($eagerProperties);
 
         /**
          * @psalm-suppress UndefinedMethod
@@ -102,6 +105,6 @@ final readonly class ProxyFactory implements
          * @psalm-suppress MixedMethodCall
          * @var T
          */
-        return $targetProxyClass::createLazyGhost($initializer, $eagerProperties);
+        return $targetProxyClass::createLazyGhost($initializer, $skippedProperties);
     }
 }

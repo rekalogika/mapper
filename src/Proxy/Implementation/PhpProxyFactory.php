@@ -13,37 +13,31 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Proxy\Implementation;
 
-use Rekalogika\Mapper\CacheWarmer\WarmableProxyFactoryInterface;
-use Rekalogika\Mapper\CacheWarmer\WarmableProxyRegistryInterface;
-use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
-use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
-use Rekalogika\Mapper\Proxy\ProxyNamer;
-use Rekalogika\Mapper\Proxy\ProxyRegistryInterface;
 use Rekalogika\Mapper\Util\ClassUtil;
 
-/**
- * @internal
- */
-final readonly class PhpProxyFactory implements ProxyFactoryInterface
-{
-    #[\Override]
-    public function createProxy(
-        string $class,
-        $initializer,
-        array $eagerProperties = [],
-    ): object {
-        if (array_is_list($eagerProperties)) {
-            $eagerProperties = array_filter($eagerProperties, fn($property): bool => \is_string($property));
-            $eagerProperties = ClassUtil::getSkippedProperties($class, $eagerProperties);
-        }
+// /**
+//  * @internal
+//  */
+// final readonly class PhpProxyFactory implements ProxyFactoryInterface
+// {
+//     #[\Override]
+//     public function createProxy(
+//         string $class,
+//         $initializer,
+//         array $eagerProperties = [],
+//     ): object {
+//         if (array_is_list($eagerProperties)) {
+//             $eagerProperties = array_filter($eagerProperties, fn($property): bool => \is_string($property));
+//             $eagerProperties = ClassUtil::getSkippedProperties($class, $eagerProperties);
+//         }
 
-        /**
-         * @psalm-suppress UndefinedMethod
-         * @psalm-suppress MixedReturnStatement
-         * @psalm-suppress MixedMethodCall
-         * @var T
-         */
-        return $targetProxyClass::createLazyGhost($initializer, $eagerProperties);
-    }
-}
+//         /**
+//          * @psalm-suppress UndefinedMethod
+//          * @psalm-suppress MixedReturnStatement
+//          * @psalm-suppress MixedMethodCall
+//          * @var T
+//          */
+//         return $targetProxyClass::createLazyGhost($initializer, $eagerProperties);
+//     }
+// }

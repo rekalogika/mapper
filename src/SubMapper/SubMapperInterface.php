@@ -51,7 +51,7 @@ interface SubMapperInterface
      * @template T of object
      * @param class-string<T> $class
      * @param callable(T):void $initializer
-     * @param array<int,string> $eagerProperties
+     * @param list<string> $eagerProperties
      * @return T
      */
     public function createProxy(

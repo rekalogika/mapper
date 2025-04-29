@@ -22,10 +22,7 @@ interface ProxyFactoryInterface
      * @template T of object
      * @param class-string<T> $class
      * @param callable(T):void $initializer
-     * @param list<string>|array<string,true> $eagerProperties If not a
-     * list, it will be passed as is as the `$skippedProperties` argument of
-     * `createLazyGhost()` method of the proxy. If a list, it will be converted
-     * to the aforementioned format first.
+     * @param list<string> $eagerProperties
      * @return T
      */
     public function createProxy(

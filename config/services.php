@@ -499,6 +499,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('rekalogika.mapper.proxy.registry'),
             service('rekalogika.mapper.proxy.generator'),
+            service('rekalogika.mapper.proxy.metadata_factory'),
         ]);
 
     # proxy metadata

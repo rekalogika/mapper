@@ -55,10 +55,29 @@ final readonly class ClassMetadata
      */
     public function getPropertiesByName(string $name): array
     {
-        return $this->properties[$name] ?? throw new LogicException(sprintf(
+        return $this->properties[$name] ?? throw new LogicException(\sprintf(
             'Property "%s" not found in class "%s"',
             $name,
-            $this->class
+            $this->class,
         ));
+    }
+
+    /**
+     * @param list<string> $eagerProperties
+     * @return array<string,true>
+     */
+    public function getSkippedProperties(array $eagerProperties): array
+    {
+        $skippedProperties = [];
+
+        foreach ($eagerProperties as $name) {
+            $properties = $this->properties[$name] ?? [];
+
+            foreach ($properties as $property) {
+                $skippedProperties[$property->getScopeNotation()] = true;
+            }
+        }
+
+        return $skippedProperties;
     }
 }

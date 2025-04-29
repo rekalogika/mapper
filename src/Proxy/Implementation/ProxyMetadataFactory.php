@@ -22,6 +22,7 @@ use Rekalogika\Mapper\Proxy\ProxyMetadataFactoryInterface;
  */
 final class ProxyMetadataFactory implements ProxyMetadataFactoryInterface
 {
+    #[\Override]
     public function getMetadata(string $class): ClassMetadata
     {
         $properties = [];

@@ -227,7 +227,7 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
      * @param class-string $targetClass
      * @param list<string> $eagerProperties
      * @param array<string,PropertyMappingMetadata> $constructorPropertyMappings
-     * @return array{array<string,true>,bool}
+     * @return array{list<string>,bool}
      */
     private function getProxyParameters(
         string $targetClass,
@@ -262,13 +262,6 @@ final readonly class ObjectToObjectMetadataFactory implements ObjectToObjectMeta
             $eagerProperties = array_unique($eagerProperties);
         }
 
-        // skipped properties is the argument used by createLazyGhost()
-
-        $skippedProperties = ClassUtil::getSkippedProperties(
-            $targetClass,
-            $eagerProperties,
-        );
-
-        return [$skippedProperties, $constructorIsEager];
+        return [array_values($eagerProperties), $constructorIsEager];
     }
 }
