@@ -137,7 +137,10 @@ abstract class FrameworkTestCase extends KernelTestCase
     {
         if (\PHP_VERSION_ID >= 80400) {
             $reflection = new \ReflectionClass($object);
-            /** @psalm-suppress UndefinedMethod */
+
+            /**
+             * @psalm-suppress UndefinedMethod
+             */
             $reflection->initializeLazyObject($object);
         } else {
             if ($object instanceof LazyObjectInterface) {
