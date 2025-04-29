@@ -32,6 +32,7 @@ use Rekalogika\Mapper\Mapping\Implementation\MappingFactory;
 use Rekalogika\Mapper\Mapping\Implementation\WarmableMappingFactory;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
+use Rekalogika\Mapper\Proxy\Implementation\CachingProxyMetadataFactory;
 use Rekalogika\Mapper\Proxy\Implementation\DoctrineProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\DynamicPropertiesProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyFactory;
@@ -506,6 +507,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $services
         ->set('rekalogika.mapper.proxy.metadata_factory', ProxyMetadataFactory::class);
+
+    $services
+        ->set('rekalogika.mapper.proxy.metadata_factory.caching', CachingProxyMetadataFactory::class)
+        ->decorate('rekalogika.mapper.proxy.metadata_factory')
+        ->args([
+            service('.inner'),
+            service($createCache($services, 'proxy_metadata_factory')),
+        ]);
 
     # other services
 
