@@ -36,6 +36,7 @@ use Rekalogika\Mapper\Proxy\Implementation\DoctrineProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\DynamicPropertiesProxyGenerator;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
+use Rekalogika\Mapper\Proxy\Implementation\ProxyMetadataFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyRegistry;
 use Rekalogika\Mapper\Proxy\ProxyGeneratorInterface;
 use Rekalogika\Mapper\SubMapper\Implementation\SubMapperFactory;
@@ -499,6 +500,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             service('rekalogika.mapper.proxy.registry'),
             service('rekalogika.mapper.proxy.generator'),
         ]);
+
+    # proxy metadata
+
+    $services
+        ->set('rekalogika.mapper.proxy.metadata_factory', ProxyMetadataFactory::class);
 
     # other services
 
