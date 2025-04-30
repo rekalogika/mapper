@@ -59,6 +59,7 @@ class BasicMappingTest extends FrameworkTestCase
         $personDto = new PersonWithDogDto();
         $dogDto = new DogDto();
         $dogDto->name = 'Hoop';
+
         $personDto->dog = $dogDto;
         $personDto->name = 'John';
 
@@ -85,6 +86,7 @@ class BasicMappingTest extends FrameworkTestCase
         $personDto = new PersonWithDogDto();
         $dogDto = new DogDto();
         $dogDto->name = 'Hoop';
+
         $personDto->dog = $dogDto;
         $personDto->name = 'John';
 

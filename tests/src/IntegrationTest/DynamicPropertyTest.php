@@ -179,6 +179,7 @@ class DynamicPropertyTest extends FrameworkTestCase
         $source = new ObjectExtendingStdClassWithExplicitScalarProperties();
         /** @psalm-suppress UndefinedPropertyAssignment */
         $source->e = 'extra';
+
         $target = $this->mapper->map($source, ObjectWithScalarPropertiesDto::class);
 
         $this->assertInstanceOf(ObjectWithScalarPropertiesDto::class, $target);

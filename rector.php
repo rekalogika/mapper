@@ -3,12 +3,14 @@
 declare(strict_types=1);
 
 use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
+use Rector\CodeQuality\Rector\If_\ShortenElseIfRector;
 use Rector\CodeQuality\Rector\If_\SimplifyIfElseToTernaryRector;
 use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\ClassMethod\MakeInheritedMethodVisibilitySameAsParentRector;
 use Rector\Config\RectorConfig;
 use Rector\DeadCode\Rector\Assign\RemoveUnusedVariableAssignRector;
 use Rector\DeadCode\Rector\ClassMethod\RemoveUnusedPrivateMethodParameterRector;
+use Rector\DeadCode\Rector\Concat\RemoveConcatAutocastRector;
 use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\DeadCode\Rector\Node\RemoveNonExistingVarAnnotationRector;
 use Rector\DeadCode\Rector\Property\RemoveUnusedPrivatePropertyRector;
@@ -62,9 +64,13 @@ return RectorConfig::configure()
         // makes code unreadable
         DisallowedShortTernaryRuleFixerRector::class,
 
+        // conflicts with static analysis
+        RemoveConcatAutocastRector::class,
+
         RemoveAlwaysTrueIfConditionRector::class => [
             __DIR__ . '/src/Proxy/Implementation/ProxyFactory.php',
             __DIR__ . '/src/Transformer/Context/AttributesTrait.php',
+            __DIR__ . '/src/Proxy/Implementation/VarExporterProxyFactory.php',
         ],
 
         RemoveUnusedPrivatePropertyRector::class => [
@@ -82,5 +88,10 @@ return RectorConfig::configure()
         ClassPropertyAssignToConstructorPromotionRector::class => [
             __DIR__ . '/tests/src/Fixtures/MapPropertyPathDto/BookWithMapInUnpromotedConstructorDto.php',
             __DIR__ . '/tests/src/Fixtures/MapAttribute/SomeObjectWithUnpromotedConstructorDto.php',
+        ],
+
+        // worse readability
+        ShortenElseIfRector::class => [
+            __DIR__ . '/tests/src/Common/FrameworkTestCase.php',
         ],
     ]);

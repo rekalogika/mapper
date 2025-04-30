@@ -48,18 +48,22 @@ class RecursionTest extends FrameworkTestCase
 
         $object2 = new ObjectWithRefToItself();
         $object2->string = '2';
+
         $object1->ref = $object2;
 
         $object3 = new ObjectWithRefToItself();
         $object3->string = '3';
+
         $object2->ref = $object3
         ;
         $object4 = new ObjectWithRefToItself();
         $object4->string = '4';
+
         $object3->ref = $object4;
 
         $object5 = new ObjectWithRefToItself();
         $object5->string = '5';
+
         $object4->ref = $object5;
         $object5->ref = $object1;
 

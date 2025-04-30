@@ -74,6 +74,7 @@ class ObjectEnumStringMappingTest extends FrameworkTestCase
         $this->expectException(\ValueError::class);
         $object = ObjectWithStringProperty::preinitialized();
         $object->backedEnum = 'invalid';
+
         $result = $this->mapper->map($object, ObjectWithEnumProperty::class);
         $this->assertEquals(SomeBackedEnum::Foo, $result->backedEnum);
     }
@@ -83,6 +84,7 @@ class ObjectEnumStringMappingTest extends FrameworkTestCase
         $this->expectException(InvalidArgumentException::class);
         $object = ObjectWithStringProperty::preinitialized();
         $object->unitEnum = 'invalid';
+
         $result = $this->mapper->map($object, ObjectWithEnumProperty::class);
         $this->assertEquals(SomeEnum::Foo, $result->unitEnum);
     }
