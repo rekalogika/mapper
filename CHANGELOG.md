@@ -7,6 +7,7 @@
 * feat: PHP 8.4 lazy object
 * refactor(proxy): remove deprecated classes, move dynamic properties checking to
   `DynamicPropertiesProxyFactory`
+* fix: Doctrine-less installation
 
 ## 1.14.1
 
