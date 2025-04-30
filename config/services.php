@@ -52,7 +52,6 @@ use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\ChainEa
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\DoctrineEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\Implementation\ArrayObjectTransformer;
-use Rekalogika\Mapper\Transformer\Implementation\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\CopyTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\NullToNullTransformer;

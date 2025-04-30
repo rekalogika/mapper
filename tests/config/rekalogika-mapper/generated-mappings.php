@@ -353,13 +353,13 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DoctrineTest.php on line 81
+        // tests/src/IntegrationTest/DoctrineTest.php on line 82
         source: \Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifier::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifierDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DoctrineTest.php on line 112
+        // tests/src/IntegrationTest/DoctrineTest.php on line 113
         source: \Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntityInputDto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity::class
     );
