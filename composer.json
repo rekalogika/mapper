@@ -70,7 +70,7 @@
         "symfony/var-dumper": "^6.4 || ^7.0",
         "symfony/web-profiler-bundle": "^6.4 || ^7.0",
         "symfony/yaml": "^6.4 || ^7.0",
-        "twig/twig": "^2.12|^3.0",
+        "twig/twig": "^3.11.2 || ^3.12",
         "vimeo/psalm": "^6.0"
     },
     "suggest": {

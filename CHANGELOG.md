@@ -9,6 +9,7 @@
   `DynamicPropertiesProxyFactory`
 * fix: Doctrine-less installation
 * chore: rectorize
+* deps: avoid vulnerable twig version
 
 ## 1.14.1
 
