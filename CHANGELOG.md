@@ -3,6 +3,7 @@
 ## 2.0.1
 
 * test: add test for persisting proxy
+* test: convert phpunit phpdoc to attributes
 
 ## 2.0.0
 

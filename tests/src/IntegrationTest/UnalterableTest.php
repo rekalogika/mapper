@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 use Brick\Money\Money;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ReadableCollection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Unalterable\PublicGetter;
 use Rekalogika\Mapper\Tests\Fixtures\Unalterable\PublicPropertyPublicGetter;
@@ -94,8 +95,8 @@ class UnalterableTest extends FrameworkTestCase
 
     /**
      * @param class-string $class
-     * @dataProvider provideUnalterable
      */
+    #[DataProvider('provideUnalterable')]
     public function testUnalterable(string $class, bool $isUnalterable): void
     {
         $eagerPropertiesResolver = $this->get(EagerPropertiesResolverInterface::class);

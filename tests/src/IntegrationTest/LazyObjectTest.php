@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Context\MapperOptions;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
@@ -48,9 +49,8 @@ class LazyObjectTest extends FrameworkTestCase
 
     /**
      * PHP lazy objects support final objects
-     *
-     * @requires PHP < 8.4
      */
+    #[RequiresPhp('< 8.4')]
     public function testFinal(): void
     {
         // final class can't be lazy
@@ -71,10 +71,8 @@ class LazyObjectTest extends FrameworkTestCase
 
     /**
      * In PHP 8.2, readonly class can't be lazy
-     *
-     * @requires PHP >= 8.2.0
-     * @requires PHP < 8.3.0
      */
+    #[RequiresPhp('8.2.*')]
     public function testReadOnly82(): void
     {
         // should not use proxy. if a proxy is not used, it should throw an
@@ -87,16 +85,13 @@ class LazyObjectTest extends FrameworkTestCase
 
     /**
      * In PHP 8.3, readonly class can be lazy
-     *
-     * @requires PHP >= 8.3.0
      */
     // public function testReadOnly83(): void
     // {
     //     $source = new ObjectWithId();
     //     $target = $this->mapper->map($source, ObjectWithIdReadOnlyDto::class);
     // }
-
-
+    #[RequiresPhp('>= 8.3.0')]
     public function testIdInParentClass(): void
     {
         $source = new ObjectWithId();

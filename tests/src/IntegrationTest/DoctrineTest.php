@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Doctrine\DBAL\Exception\NotNullConstraintViolationException;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithMultipleIdentifier;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifier;
@@ -117,9 +118,8 @@ class DoctrineTest extends FrameworkTestCase
     /**
      * So that if in the future Doctrine supports persisting proxies, we'd know
      * about it.
-     *
-     * @requires PHP >= 8.4
      */
+    #[RequiresPhp('>= 8.4')]
     public function testPersistingProxy(): void
     {
         $entityManager = $this->getEntityManager();

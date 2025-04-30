@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\UnitTest\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeUtil;
@@ -21,9 +22,9 @@ use Symfony\Component\PropertyInfo\Type;
 class TypeUtil2Test extends TestCase
 {
     /**
-     * @dataProvider getSimpleTypesProvider
      * @param array<int,string> $expected
      */
+    #[DataProvider('getSimpleTypesProvider')]
     public function testGetAllTypeStrings(
         Type $type,
         array $expected,

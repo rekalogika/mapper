@@ -15,6 +15,7 @@ namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectImplementingStringable;
 use Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\SomeBackedEnum;
@@ -36,11 +37,11 @@ class MappingTest extends FrameworkTestCase
 {
     /**
      * Testing mapping against default mapping table
-     * @dataProvider mappingTestProvider
      * @param array<int,Type|MixedType> $sources
      * @param array<int,Type|MixedType> $targets
      * @param class-string $transformerClass
      */
+    #[DataProvider('mappingTestProvider')]
     public function testMapping(
         array $sources,
         array $targets,

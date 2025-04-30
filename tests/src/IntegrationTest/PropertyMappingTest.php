@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\CustomMapper\PropertyMapperResolverInterface;
 use Rekalogika\Mapper\MainTransformer\Implementation\MainTransformer;
@@ -54,10 +55,10 @@ class PropertyMappingTest extends FrameworkTestCase
     }
 
     /**
-     * @dataProvider propertyMapperResolverDataProvider
      * @param class-string $sourceClass
      * @param class-string $targetClass
      */
+    #[DataProvider('propertyMapperResolverDataProvider')]
     public function testPropertyMapperResolver(
         string $sourceClass,
         string $targetClass,
