@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Proxy\Implementation;
 
-use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
 use Rekalogika\Mapper\Proxy\ProxyMetadataFactoryInterface;
 
@@ -40,14 +39,6 @@ final readonly class PhpProxyFactory implements ProxyFactoryInterface
         array $eagerProperties = [],
     ): object {
         $classMetadata = $this->proxyMetadataFactory->getMetadata($class);
-
-        if ($classMetadata->allowsDynamicProperties()) {
-            throw new ProxyNotSupportedException(
-                class: $class,
-                reason: 'Dynamic properties are not supported.',
-            );
-        }
-
         $properties = $classMetadata->getPropertyMetadatas($eagerProperties);
 
         $reflectionClass = new \ReflectionClass($class);

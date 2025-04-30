@@ -21,7 +21,6 @@ use Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntityInputDto;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\DoctrineEagerPropertiesResolver;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class DoctrineTest extends FrameworkTestCase
 {
@@ -111,8 +110,7 @@ class DoctrineTest extends FrameworkTestCase
         $input->name = 'my-name';
 
         $entity = $this->mapper->map($input, SimpleEntity::class);
-        // $this->assertNotUninitializedProxy($entity);
-        $this->assertNotInstanceOf(LazyObjectInterface::class, $entity);
+        $this->assertNotUninitializedProxy($entity);
     }
 
 }

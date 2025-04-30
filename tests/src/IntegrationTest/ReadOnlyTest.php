@@ -17,15 +17,18 @@ use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\FinalReadOnlyObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\ReadOnlyObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\Source;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 
 class ReadOnlyTest extends FrameworkTestCase
 {
+    /**
+     * PHP 8.4 supports final proxying
+     * @requires PHP < 8.4.0
+     */
     public function testToFinalReadOnly(): void
     {
         $source = new Source('foo');
         $target = $this->mapper->map($source, FinalReadOnlyObjectDto::class);
-        $this->assertNotInstanceOf(LazyObjectInterface::class, $target);
+        $this->assertNotUninitializedProxy($target);
         $this->assertSame('foo', $target->name);
     }
 

@@ -359,13 +359,13 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DoctrineTest.php on line 82
+        // tests/src/IntegrationTest/DoctrineTest.php on line 81
         source: \Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifier::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifierDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DoctrineTest.php on line 113
+        // tests/src/IntegrationTest/DoctrineTest.php on line 112
         source: \Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntityInputDto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity::class
     );
@@ -851,13 +851,13 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ReadOnlyTest.php on line 27
+        // tests/src/IntegrationTest/ReadOnlyTest.php on line 30
         source: \Rekalogika\Mapper\Tests\Fixtures\ReadOnly\Source::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ReadOnly\FinalReadOnlyObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ReadOnlyTest.php on line 39
+        // tests/src/IntegrationTest/ReadOnlyTest.php on line 42
         source: \Rekalogika\Mapper\Tests\Fixtures\ReadOnly\Source::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ReadOnly\ReadOnlyObjectDto::class
     );

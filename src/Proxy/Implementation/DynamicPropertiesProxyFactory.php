@@ -13,18 +13,18 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Proxy\Implementation;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Proxy\ProxyFactoryInterface;
+use Rekalogika\Mapper\Proxy\ProxyMetadataFactoryInterface;
 
 /**
  * @internal
  */
-final readonly class DoctrineProxyFactory implements ProxyFactoryInterface
+final readonly class DynamicPropertiesProxyFactory implements ProxyFactoryInterface
 {
     public function __construct(
         private ProxyFactoryInterface $decorated,
-        private ManagerRegistry $managerRegistry,
+        private ProxyMetadataFactoryInterface $proxyMetadataFactory,
     ) {}
 
     /**
@@ -40,10 +40,13 @@ final readonly class DoctrineProxyFactory implements ProxyFactoryInterface
         $initializer,
         array $eagerProperties = [],
     ): object {
-        $manager = $this->managerRegistry->getManagerForClass($class);
+        $classMetadata = $this->proxyMetadataFactory->getMetadata($class);
 
-        if ($manager !== null) {
-            throw new ProxyNotSupportedException($class, reason: 'Doctrine entities do not support proxying.');
+        if ($classMetadata->allowsDynamicProperties()) {
+            throw new ProxyNotSupportedException(
+                class: $class,
+                reason: 'Dynamic properties are not supported.',
+            );
         }
 
         return $this->decorated->createProxy(
