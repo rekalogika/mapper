@@ -128,6 +128,7 @@ class DoctrineTest extends FrameworkTestCase
             $entity->setName('my-name');
         };
 
+        /** @psalm-suppress UndefinedMethod */
         $entity = $reflectionClass->newLazyGhost($initializer);
 
         $this->assertInstanceOf(SimpleEntity::class, $entity);
