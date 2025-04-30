@@ -17,6 +17,10 @@ use PHPUnit\Runner\Extension\Extension;
 use PHPUnit\Runner\Extension\Facade;
 use PHPUnit\Runner\Extension\ParameterCollection;
 use PHPUnit\TextUI\Configuration\Configuration;
+use Symfony\Component\ErrorHandler\ErrorHandler;
+
+// workaround, @see https://github.com/symfony/symfony/issues/53812#issuecomment-1962311843
+ErrorHandler::register(null, false);
 
 class PHPUnitExtension implements Extension
 {
