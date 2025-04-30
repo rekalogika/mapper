@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Doctrine\Common\Collections\Collection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Rekalogika\Mapper\Exception\ExceptionInterface;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Book;
@@ -44,8 +45,8 @@ class MapPropertyPathTest extends FrameworkTestCase
      * @param class-string $class
      * @param list<Type>|class-string<ExceptionInterface> $expectedTypes
      * @param list<object> $expectedAttributes
-     * @dataProvider propertyPathMetadataFactoryDataProvider
      */
+    #[DataProvider('propertyPathMetadataFactoryDataProvider')]
     public function testPropertyPathMetadataFactory(
         string $class,
         string $path,

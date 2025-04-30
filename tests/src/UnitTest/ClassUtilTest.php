@@ -13,15 +13,14 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\UnitTest;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\SimpleEntity;
 use Rekalogika\Mapper\Util\ClassUtil;
 
 class ClassUtilTest extends TestCase
 {
-    /**
-     * @dataProvider provideProxyClassToRealClass
-     */
+    #[DataProvider('provideProxyClassToRealClass')]
     public function testProxyClassToRealClass(string $proxyClass, string $realClass): void
     {
         $this->assertSame(

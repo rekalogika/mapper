@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\UnitTest\Util;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Rekalogika\Mapper\Util\TypeFactory;
@@ -22,9 +23,7 @@ use Symfony\Component\PropertyInfo\Type;
 
 class TypeUtilTest extends TestCase
 {
-    /**
-     * @dataProvider typeGuessProvider
-     */
+    #[DataProvider('typeGuessProvider')]
     public function testTypeGuess(
         mixed $object,
         string $builtInType,
@@ -53,9 +52,7 @@ class TypeUtilTest extends TestCase
         yield [fopen('php://memory', 'r'), 'resource'];
     }
 
-    /**
-     * @dataProvider isSimpleTypeProvider
-     */
+    #[DataProvider('isSimpleTypeProvider')]
     public function testIsSimpleType(Type $type, bool $isSimple): void
     {
         $this->assertSame($isSimple, TypeUtil::isSimpleType($type));
@@ -145,9 +142,7 @@ class TypeUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getTypeStringProvider
-     */
+    #[DataProvider('getTypeStringProvider')]
     public function testGetTypeString(Type $type, string $expected): void
     {
         $this->assertSame($expected, TypeUtil::getTypeString($type));

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
 use Brick\Money\Money;
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ObjectMapper\Baz;
@@ -153,9 +154,8 @@ class ObjectMapperTest extends FrameworkTestCase
 
     /**
      * PHP lazy objects support final objects
-     *
-     * @requires PHP < 8.4
      */
+    #[RequiresPhp('< 8.4')]
     public function testErrorFinalTarget(): void
     {
         $person = new Person('1', 'John Doe');

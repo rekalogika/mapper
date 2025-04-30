@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use PHPUnit\Framework\Attributes\RequiresPhp;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\FinalReadOnlyObjectDto;
 use Rekalogika\Mapper\Tests\Fixtures\ReadOnly\ReadOnlyObjectDto;
@@ -22,8 +23,8 @@ class ReadOnlyTest extends FrameworkTestCase
 {
     /**
      * PHP 8.4 supports final proxying
-     * @requires PHP < 8.4.0
      */
+    #[RequiresPhp('< 8.4.0')]
     public function testToFinalReadOnly(): void
     {
         $source = new Source('foo');
@@ -34,8 +35,8 @@ class ReadOnlyTest extends FrameworkTestCase
 
     /**
      * In PHP 8.2, readonly class can't be lazy
-     * @requires PHP >= 8.3.0
      */
+    #[RequiresPhp('>= 8.3.0')]
     public function testToReadOnly(): void
     {
         $source = new Source('foo');

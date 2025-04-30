@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\DateTimeTestObjectInterface;
 use Rekalogika\Mapper\Tests\Fixtures\DateTime\ObjectWithDatePoint;
@@ -53,8 +54,8 @@ class DateTimeMappingTest extends FrameworkTestCase
     /**
      * @param class-string $sourceClass
      * @param class-string $targetClass
-     * @dataProvider dateTimeProvider
      */
+    #[DataProvider('dateTimeProvider')]
     public function testDateTime(string $sourceClass, string $targetClass): void
     {
         /** @psalm-suppress MixedMethodCall */
@@ -183,8 +184,8 @@ class DateTimeMappingTest extends FrameworkTestCase
     /**
      * @param class-string<DateTimeTestObjectInterface> $sourceClass
      * @param class-string<DateTimeTestObjectInterface> $targetClass
-     * @dataProvider dateTimeMappingProvider
      */
+    #[DataProvider('dateTimeMappingProvider')]
     public function testDateTimeMapping(
         string $sourceClass,
         string $targetClass,

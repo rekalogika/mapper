@@ -18,6 +18,7 @@ use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Strict\Rector\Ternary\DisallowedShortTernaryRuleFixerRector;
 use Rector\ValueObject\PhpVersion;
+use Rector\PHPUnit\Set\PHPUnitSetList;
 
 return RectorConfig::configure()
     ->withPhpVersion(PhpVersion::PHP_83)
@@ -42,6 +43,10 @@ return RectorConfig::configure()
         doctrineCodeQuality: true,
     )
     ->withPhpSets(php82: true)
+    ->withSets([
+        PHPUnitSetList::PHPUNIT_110,
+        PHPUnitSetList::ANNOTATIONS_TO_ATTRIBUTES,
+    ])
     ->withRules([
         AddOverrideAttributeToOverriddenMethodsRector::class,
     ])
@@ -75,6 +80,9 @@ return RectorConfig::configure()
 
         RemoveUnusedPrivatePropertyRector::class => [
             __DIR__ . '/tests/src/Fixtures/AccessMethods/ObjectWithVariousAccessMethods.php',
+            __DIR__ . '/tests/src/Fixtures/ConstructorAndProperty/ObjectWithConstructorAndSetter.php',
+            __DIR__ . '/tests/src/Fixtures/ConstructorAndProperty/ObjectWithConstructorArgumentsAndGetters.php',
+            __DIR__ . '/tests/src/Fixtures/ConstructorAndProperty/ObjectWithConstructorArgumentsAndPublicProperties.php',
         ],
 
         RemoveUnusedPrivateMethodParameterRector::class => [

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\AnotherObjectExtendingStdClass;
 use Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass;
@@ -28,8 +29,8 @@ class DynamicPropertyTest extends FrameworkTestCase
 {
     /**
      * @param class-string $class
-     * @dataProvider provideDynamicPropertiesDetermination
      */
+    #[DataProvider('provideDynamicPropertiesDetermination')]
     public function testDynamicPropertiesDetermination(
         string $class,
         bool $expected,
