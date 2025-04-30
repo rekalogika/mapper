@@ -4,6 +4,7 @@
 
 * test: add test for persisting proxy
 * test: convert phpunit phpdoc to attributes
+* test: clarification in ConstructorAndPropertyTest
 
 ## 2.0.0
 

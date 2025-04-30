@@ -35,6 +35,12 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
         $this->assertSame('id', $result->getId());
         $this->assertSame('name', $result->getName());
         $this->assertSame('description', $result->getDescription());
+
+        $this->assertIsUninitializedProxy($result);
+
+        $foo = $result->foo;
+
+        $this->assertNotUninitializedProxy($result);
     }
 
     /**
@@ -50,6 +56,8 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
         $this->assertSame('id', $result->getId());
         $this->assertSame('name', $result->getName());
         $this->assertSame('description', $result->getDescription());
+
+        $this->assertNotUninitializedProxy($result);
     }
 
     /**
@@ -65,6 +73,12 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
         $this->assertSame('id', $result->id);
         $this->assertSame('name', $result->name);
         $this->assertSame('description', $result->description);
+
+        $this->assertIsUninitializedProxy($result);
+
+        $foo = $result->foo;
+
+        $this->assertNotUninitializedProxy($result);
     }
 
     public function testToConstructorAndSetter(): void
@@ -77,5 +91,11 @@ class ConstructorAndPropertyTest extends FrameworkTestCase
         $this->assertSame('id', $result->getId());
         $this->assertSame('name', $result->getName());
         $this->assertSame('description', $result->getDescription());
+
+        $this->assertIsUninitializedProxy($result);
+
+        $foo = $result->foo;
+
+        $this->assertNotUninitializedProxy($result);
     }
 }
