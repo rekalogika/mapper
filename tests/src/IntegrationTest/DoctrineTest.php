@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\IntegrationTest;
 
+use Doctrine\DBAL\Exception\NotNullConstraintViolationException;
 use Rekalogika\Mapper\Tests\Common\FrameworkTestCase;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithMultipleIdentifier;
 use Rekalogika\Mapper\Tests\Fixtures\Doctrine\EntityWithSingleIdentifier;
@@ -104,7 +105,7 @@ class DoctrineTest extends FrameworkTestCase
         $this->assertEquals(['id1', 'id2'], $eagerProperties);
     }
 
-    public function testInputDtoToEntityMapping(): void
+    public function testDoctrineEntityAsTarget(): void
     {
         $input = new SimpleEntityInputDto();
         $input->name = 'my-name';
@@ -113,4 +114,29 @@ class DoctrineTest extends FrameworkTestCase
         $this->assertNotUninitializedProxy($entity);
     }
 
+    /**
+     * So that if in the future Doctrine supports persisting proxies, we'd know
+     * about it.
+     *
+     * @requires PHP >= 8.4
+     */
+    public function testPersistingProxy(): void
+    {
+        $entityManager = $this->getEntityManager();
+
+        $reflectionClass = new \ReflectionClass(SimpleEntity::class);
+
+        $initializer = function (SimpleEntity $entity): void {
+            $entity->setName('my-name');
+        };
+
+        /** @psalm-suppress UndefinedMethod */
+        $entity = $reflectionClass->newLazyGhost($initializer);
+
+        $this->assertInstanceOf(SimpleEntity::class, $entity);
+        $entityManager->persist($entity);
+
+        $this->expectException(NotNullConstraintViolationException::class);
+        $entityManager->flush();
+    }
 }

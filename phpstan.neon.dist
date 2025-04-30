@@ -28,16 +28,16 @@ parameters:
             identifier: classConstant.internalClass
             path: config/*
         -
-            message: '#Call to an undefined method ReflectionClass<T of object>::newLazyGhost#'
+            message: '#Call to an undefined method ReflectionClass<.*>::newLazyGhost#'
             reportUnmatched: false
         -
             message: '#Call to an undefined method ReflectionProperty::skipLazyInitialization#'
             reportUnmatched: false
         -
-            message: '#Call to an undefined method ReflectionClass<object>::initializeLazyObject#'
+            message: '#Call to an undefined method ReflectionClass<.*>::initializeLazyObject#'
             reportUnmatched: false
         -
-            message: '#Call to an undefined method ReflectionClass<object>::isUninitializedLazyObject#'
+            message: '#Call to an undefined method ReflectionClass<.*>::isUninitializedLazyObject#'
             reportUnmatched: false
 
     banned_code:
