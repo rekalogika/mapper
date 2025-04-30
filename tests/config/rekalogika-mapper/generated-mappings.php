@@ -851,13 +851,13 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ReadOnlyTest.php on line 27
+        // tests/src/IntegrationTest/ReadOnlyTest.php on line 30
         source: \Rekalogika\Mapper\Tests\Fixtures\ReadOnly\Source::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ReadOnly\FinalReadOnlyObjectDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ReadOnlyTest.php on line 39
+        // tests/src/IntegrationTest/ReadOnlyTest.php on line 42
         source: \Rekalogika\Mapper\Tests\Fixtures\ReadOnly\Source::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ReadOnly\ReadOnlyObjectDto::class
     );
