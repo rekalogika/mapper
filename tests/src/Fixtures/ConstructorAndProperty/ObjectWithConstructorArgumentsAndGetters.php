@@ -15,10 +15,17 @@ namespace Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty;
 
 class ObjectWithConstructorArgumentsAndGetters
 {
-    // @todo test without initialization, add exception to constructor to make
-    //       sure that the constructor is not called
-    // @phpstan-ignore property.onlyWritten
-    private string $foo = 'bar';
+    /**
+     * Different proxy behavior:
+     *
+     * * var-exporter: if all properties are eager, then the object will be
+     *   uninitialized forever
+     * * php: if all properties are eager, then the object becomes non-lazy
+     *
+     * This dummy variable is here to make sure the proxy behaves the same
+     * way on different PHP versions
+     */
+    public string $foo = 'bar';
 
     public function __construct(
         private readonly string $id,
