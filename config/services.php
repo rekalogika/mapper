@@ -34,8 +34,7 @@ use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Implementation\ObjectCacheFactory;
 use Rekalogika\Mapper\Proxy\Implementation\CachingProxyMetadataFactory;
 use Rekalogika\Mapper\Proxy\Implementation\DoctrineProxyFactory;
-use Rekalogika\Mapper\Proxy\Implementation\DoctrineProxyGenerator;
-use Rekalogika\Mapper\Proxy\Implementation\DynamicPropertiesProxyGenerator;
+use Rekalogika\Mapper\Proxy\Implementation\DynamicPropertiesProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\PhpProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyFactory;
 use Rekalogika\Mapper\Proxy\Implementation\ProxyGenerator;
@@ -464,27 +463,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     # proxy generator
 
+    // @todo remove alias
     $services
         ->alias(ProxyGeneratorInterface::class, 'rekalogika.mapper.proxy.generator');
 
     $services
         ->set('rekalogika.mapper.proxy.generator', ProxyGenerator::class);
-
-    $services
-        // @phpstan-ignore classConstant.deprecatedClass
-        ->set('rekalogika.mapper.proxy.generator.doctrine', DoctrineProxyGenerator::class)
-        ->decorate('rekalogika.mapper.proxy.generator')
-        ->args([
-            service('.inner'),
-            service('doctrine'),
-        ]);
-
-    $services
-        ->set('rekalogika.mapper.proxy.generator.dynamic_properties', DynamicPropertiesProxyGenerator::class)
-        ->decorate('rekalogika.mapper.proxy.generator')
-        ->args([
-            service('.inner'),
-        ]);
 
     # proxy registry
 
@@ -533,6 +517,14 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->args([
             service('.inner'),
             service('doctrine'),
+        ]);
+
+    $services
+        ->set('rekalogika.mapper.proxy.factory.dynamic_properties', DynamicPropertiesProxyFactory::class)
+        ->decorate('rekalogika.mapper.proxy.factory')
+        ->args([
+            service('.inner'),
+            service('rekalogika.mapper.proxy.metadata_factory'),
         ]);
 
     # warmable proxy factory

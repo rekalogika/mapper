@@ -15,6 +15,9 @@ namespace Rekalogika\Mapper\Proxy;
 
 use Rekalogika\Mapper\Proxy\Exception\ProxyNotSupportedException;
 
+/**
+ * @internal Implement ProxyFactoryInterface instead
+ */
 interface ProxyGeneratorInterface
 {
     /**
