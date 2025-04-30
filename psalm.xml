@@ -105,20 +105,6 @@
                 <file name="tests/src/IntegrationTest/MixedTypeTest.php" />
             </errorLevel>
         </MissingPropertyType>
-        <DeprecatedClass>
-            <errorLevel type="suppress">
-                <file name="config/services.php" />
-                <file name="src/MapperFactory.php" />
-                <file name="src/Transformer/MainTransformerAwareTrait.php" />
-                <file name="src/Transformer/Implementation/ClassMethodTransformer.php" />
-                <file name="tests/src/IntegrationTest/MethodMapperTest.php" />
-                <file name="src/Transformer/Implementation/ArrayToObjectTransformer.php" />
-                <file name="src/Transformer/Implementation/ObjectToArrayTransformer.php" />
-                <file name="src/Serializer/AbstractSerializerContext.php" />
-                <file name="src/Serializer/DenormalizerContext.php" />
-                <file name="src/Serializer/NormalizerContext.php" />
-            </errorLevel>
-        </DeprecatedClass>
         <ClassMustBeFinal>
             <errorLevel type="suppress">
                 <directory name="tests/src" />

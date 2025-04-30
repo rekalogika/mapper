@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.16.0
+## 2.0.0
 
 * fix: static analysis
 * refactor: refactor proxy, introduce proxy metadata
@@ -10,6 +10,7 @@
 * fix: Doctrine-less installation
 * chore: rectorize
 * deps: avoid vulnerable twig version
+* chore: remove deprecations
 
 ## 1.14.1
 

@@ -53,14 +53,11 @@ use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\Implementation\ArrayLikeMeta
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\EagerPropertiesResolverInterface;
 use Rekalogika\Mapper\Transformer\EagerPropertiesResolver\Implementation\HeuristicsEagerPropertiesResolver;
 use Rekalogika\Mapper\Transformer\Implementation\ArrayObjectTransformer;
-use Rekalogika\Mapper\Transformer\Implementation\ArrayToObjectTransformer;
-use Rekalogika\Mapper\Transformer\Implementation\ClassMethodTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\CopyTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\DateTimeTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\NullToNullTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\NullTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectMapperTransformer;
-use Rekalogika\Mapper\Transformer\Implementation\ObjectToArrayTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToObjectTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ObjectToStringTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\PresetTransformer;
@@ -94,19 +91,6 @@ use Symfony\Component\PropertyInfo\PropertyInitializableExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
-use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
-use Symfony\Component\Serializer\Mapping\Loader\AttributeLoader;
-use Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer;
-use Symfony\Component\Serializer\Normalizer\DataUriNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateIntervalNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
-use Symfony\Component\Serializer\Normalizer\DateTimeZoneNormalizer;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\JsonSerializableNormalizer;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Normalizer\UidNormalizer;
-use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Uid\Factory\UuidFactory;
 
 /**
@@ -124,8 +108,6 @@ class MapperFactory
      */
     private array $objectMappers = [];
 
-    private ?Serializer $serializer = null;
-
     private ?NullToNullTransformer $nullToNullTransformer = null;
 
     private ?NullTransformer $nullTransformer = null;
@@ -140,12 +122,6 @@ class MapperFactory
 
     private ?StringToBackedEnumTransformer $stringToBackedEnumTransformer = null;
 
-    // @phpstan-ignore property.deprecatedClass
-    private ?ArrayToObjectTransformer $arrayToObjectTransformer = null;
-
-    // @phpstan-ignore property.deprecatedClass
-    private ?ObjectToArrayTransformer $objectToArrayTransformer = null;
-
     private ?ArrayObjectTransformer $arrayObjectTransformer = null;
 
     private ?DateTimeTransformer $dateTimeTransformer = null;
@@ -155,9 +131,6 @@ class MapperFactory
     private ?TraversableToTraversableTransformer $traversableToTraversableTransformer = null;
 
     private ?CopyTransformer $copyTransformer = null;
-
-    // @phpstan-ignore property.deprecatedClass
-    private ?ClassMethodTransformer $classMethodTransformer = null;
 
     private ?SymfonyUidTransformer $symfonyUidTransformer = null;
 
@@ -238,8 +211,6 @@ class MapperFactory
         private readonly array $additionalTransformers = [],
         private ?ReflectionExtractor $reflectionExtractor = null,
         private ?PhpStanExtractor $phpStanExtractor = null,
-        private readonly ?NormalizerInterface $normalizer = null,
-        private readonly ?DenormalizerInterface $denormalizer = null,
         private readonly CacheItemPoolInterface $propertyInfoExtractorCache = new ArrayAdapter(),
         private readonly LoggerInterface $logger = new NullLogger(),
     ) {}
@@ -363,52 +334,6 @@ class MapperFactory
     }
 
     //
-    // concrete services
-    //
-
-    private function getSerializer(): Serializer
-    {
-        if (null === $this->serializer) {
-            $classMetadataFactory = new ClassMetadataFactory(new AttributeLoader());
-
-            $this->serializer = new Serializer([
-                new UidNormalizer(),
-                new DateTimeNormalizer(),
-                new DateTimeZoneNormalizer(),
-                new DateIntervalNormalizer(),
-                new BackedEnumNormalizer(),
-                new DataUriNormalizer(),
-                new JsonSerializableNormalizer(),
-                new ObjectNormalizer($classMetadataFactory),
-            ], []);
-        }
-
-        return $this->serializer;
-    }
-
-    //
-    // interfaces
-    //
-
-    private function getNormalizer(): NormalizerInterface
-    {
-        if ($this->normalizer !== null) {
-            return $this->normalizer;
-        }
-
-        return $this->getSerializer();
-    }
-
-    private function getDenormalizer(): DenormalizerInterface
-    {
-        if ($this->denormalizer !== null) {
-            return $this->denormalizer;
-        }
-
-        return $this->getSerializer();
-    }
-
-    //
     // transformers
     //
 
@@ -479,34 +404,6 @@ class MapperFactory
         return $this->stringToBackedEnumTransformer;
     }
 
-    /**
-     * @deprecated
-     */
-    protected function getArrayToObjectTransformer(): TransformerInterface
-    {
-        if (null === $this->arrayToObjectTransformer) {
-            $this->arrayToObjectTransformer = new ArrayToObjectTransformer(
-                $this->getDenormalizer(),
-            );
-        }
-
-        return $this->arrayToObjectTransformer;
-    }
-
-    /**
-     * @deprecated
-     */
-    protected function getObjectToArrayTransformer(): TransformerInterface
-    {
-        if (null === $this->objectToArrayTransformer) {
-            $this->objectToArrayTransformer = new ObjectToArrayTransformer(
-                $this->getNormalizer(),
-            );
-        }
-
-        return $this->objectToArrayTransformer;
-    }
-
     protected function getArrayObjectTransformer(): TransformerInterface
     {
         $objectToObjectTransformer = $this->getObjectToObjectTransformer();
@@ -561,21 +458,6 @@ class MapperFactory
         }
 
         return $this->copyTransformer;
-    }
-
-    /**
-     * @deprecated
-     * @psalm-suppress DeprecatedClass
-     */
-    protected function getClassMethodTransformer(): ClassMethodTransformer
-    {
-        if (null === $this->classMethodTransformer) {
-            $this->classMethodTransformer = new ClassMethodTransformer(
-                $this->getSubMapperFactory(),
-            );
-        }
-
-        return $this->classMethodTransformer;
     }
 
     protected function getSymfonyUidTransformer(): SymfonyUidTransformer
@@ -682,28 +564,10 @@ class MapperFactory
         yield 'PresetTransformer'
             => $this->getPresetTransformer();
 
-        /**
-         * @psalm-suppress DeprecatedMethod
-         * @phpstan-ignore-next-line
-         */
-        yield 'ClassMethodTransformer' => $this->getClassMethodTransformer();
-
         yield 'TraversableToArrayAccessTransformer'
             => $this->getTraversableToArrayAccessTransformer();
         yield 'TraversableToTraversableTransformer'
             => $this->getTraversableToTraversableTransformer();
-
-        /**
-         * @psalm-suppress DeprecatedMethod
-         * @phpstan-ignore-next-line
-         */
-        yield 'ObjectToArrayTransformer' => $this->getObjectToArrayTransformer();
-
-        /**
-         * @psalm-suppress DeprecatedMethod
-         * @phpstan-ignore-next-line
-         */
-        yield 'ArrayToObjectTransformer' => $this->getArrayToObjectTransformer();
 
         yield 'ObjectToObjectTransformer'
             => $this->getObjectToObjectTransformer();

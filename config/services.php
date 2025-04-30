@@ -204,14 +204,6 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ->tag('rekalogika.mapper.transformer', ['priority' => -650]);
 
     $services
-        // @phpstan-ignore-next-line
-        ->set(ClassMethodTransformer::class)
-        ->args([
-            service('rekalogika.mapper.sub_mapper.factory'),
-        ])
-        ->tag('rekalogika.mapper.transformer', ['priority' => -700]);
-
-    $services
         ->set(TraversableToArrayAccessTransformer::class)
         ->args([
             service('rekalogika.mapper.array_like_metadata_factory'),

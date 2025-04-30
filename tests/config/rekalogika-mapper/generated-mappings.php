@@ -14,12 +14,6 @@ use Rekalogika\Mapper\CacheWarmer\MappingCollection;
 
 return function (MappingCollection $mappingCollection): void {
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MethodMapperTest.php on line 33
-        source: \Brick\Money\Money::class,
-        target: \Rekalogika\Mapper\Tests\Fixtures\MethodMapper\MoneyDto::class
-    );
-    
-    $mappingCollection->addObjectMapping(
         // tests/src/IntegrationTest/CustomTransformerTest.php on line 27
         source: \Brick\Money\Money::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Money\MoneyDto::class
@@ -650,30 +644,6 @@ return function (MappingCollection $mappingCollection): void {
         // tests/src/IntegrationTest/MapPropertyPathTest.php on line 349
         source: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Chapter::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Chapter2Dto::class
-    );
-    
-    $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MethodMapperTest.php on line 43
-        source: \Rekalogika\Mapper\Tests\Fixtures\MethodMapper\MoneyDto::class,
-        target: \Brick\Money\Money::class
-    );
-    
-    $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MethodMapperTest.php on line 118
-        source: \Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithCollectionProperty::class,
-        target: \Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithArrayPropertyDto::class
-    );
-    
-    $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MethodMapperTest.php on line 54
-        source: \Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarProperties::class,
-        target: \Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarPropertiesDto::class
-    );
-    
-    $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MethodMapperTest.php on line 91
-        source: \Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarPropertiesDto::class,
-        target: \Rekalogika\Mapper\Tests\Fixtures\MethodMapper\ObjectWithObjectWithScalarProperties::class
     );
     
     $mappingCollection->addObjectMapping(
