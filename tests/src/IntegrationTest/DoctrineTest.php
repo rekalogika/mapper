@@ -118,7 +118,7 @@ class DoctrineTest extends FrameworkTestCase
      * So that if in the future Doctrine supports persisting proxies, we'd know
      * about it.
      *
-     * @requires php >= 8.4
+     * @requires PHP >= 8.4
      */
     public function testPersistingProxy(): void
     {
