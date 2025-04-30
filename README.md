@@ -113,6 +113,8 @@ a few keystrokes.
   will be mapped eagerly to the target side, as they should not trigger the
   hydration of the source. As an example, API Platform will be able to generate
   IRIs without causing Doctrine to hydrate the entire object graph.
+* Uses native PHP > 8.4 lazy objects if available, and falls back to
+  `symfony/var-exporter` if not available.
 
 ### Arrays and Array-Like Objects
 
