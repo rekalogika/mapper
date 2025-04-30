@@ -29,7 +29,7 @@ final readonly class DoctrineEagerPropertiesResolver implements EagerPropertiesR
     {
         $manager = $this->managerRegistry->getManagerForClass($sourceClass);
 
-        if (!$manager) {
+        if ($manager === null) {
             return [];
         }
 

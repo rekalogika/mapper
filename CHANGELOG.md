@@ -8,6 +8,7 @@
 * refactor(proxy): remove deprecated classes, move dynamic properties checking to
   `DynamicPropertiesProxyFactory`
 * fix: Doctrine-less installation
+* chore: rectorize
 
 ## 1.14.1
 

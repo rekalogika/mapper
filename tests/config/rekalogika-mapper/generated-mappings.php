@@ -293,13 +293,13 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/BasicMappingTest.php on line 74
+        // tests/src/IntegrationTest/BasicMappingTest.php on line 75
         source: \Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithDogDto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithDog::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/BasicMappingTest.php on line 99
+        // tests/src/IntegrationTest/BasicMappingTest.php on line 101
         source: \Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithDogDto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\Basic\PersonWithImmutableDogWithoutSetter::class
     );
@@ -371,13 +371,13 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 237
+        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 238
         source: \Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\AnotherObjectExtendingStdClass::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 304
+        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 305
         source: \Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectWithNonNullPropertyThatCannotBeCastFromNull::class
     );
@@ -389,13 +389,13 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 182
+        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 183
         source: \Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWithExplicitScalarProperties::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ScalarDto\ObjectWithScalarPropertiesDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 312
+        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 313
         source: \Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectWithNullProperty::class,
         target: \stdClass::class
     );
@@ -419,7 +419,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on lines 66, 77, 86
+        // tests/src/IntegrationTest/ObjectEnumStringMappingTest.php on lines 66, 78, 88
         source: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithStringProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\EnumAndStringable\ObjectWithEnumProperty::class
     );
@@ -863,7 +863,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/RecursionTest.php on line 66
+        // tests/src/IntegrationTest/RecursionTest.php on line 70
         source: \Rekalogika\Mapper\Tests\Fixtures\Recursive\ObjectWithRefToItself::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\ObjectWithRefToItselfDto::class
     );
@@ -875,7 +875,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/RecursionTest.php on line 90
+        // tests/src/IntegrationTest/RecursionTest.php on line 94
         source: \Rekalogika\Mapper\Tests\Fixtures\Recursive\SelfReferencing::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\RecursiveDto\SelfReferencingDto::class
     );
@@ -965,7 +965,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 209
+        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 210
         source: \Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClass::class
     );
@@ -1008,7 +1008,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 196
+        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 197
         source: \Rekalogika\Mapper\Tests\Fixtures\Scalar\ObjectWithScalarProperties::class,
         target: \stdClass::class
     );
@@ -1146,7 +1146,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 260
+        // tests/src/IntegrationTest/DynamicPropertyTest.php on line 261
         source: \stdClass::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\DynamicProperty\ObjectExtendingStdClassWithProperties::class
     );
@@ -1158,7 +1158,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/DynamicPropertyTest.php on lines 279, 292
+        // tests/src/IntegrationTest/DynamicPropertyTest.php on lines 280, 293
         source: \stdClass::class,
         target: \stdClass::class
     );

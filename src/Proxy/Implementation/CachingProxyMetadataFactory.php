@@ -20,11 +20,11 @@ use Rekalogika\Mapper\Proxy\ProxyMetadataFactoryInterface;
 /**
  * @internal
  */
-final class CachingProxyMetadataFactory implements ProxyMetadataFactoryInterface
+final readonly class CachingProxyMetadataFactory implements ProxyMetadataFactoryInterface
 {
     public function __construct(
-        private readonly ProxyMetadataFactoryInterface $decorated,
-        private readonly CacheItemPoolInterface $cache,
+        private ProxyMetadataFactoryInterface $decorated,
+        private CacheItemPoolInterface $cache,
     ) {}
 
     #[\Override]

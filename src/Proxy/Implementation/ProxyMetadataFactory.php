@@ -38,7 +38,7 @@ final class ProxyMetadataFactory implements ProxyMetadataFactoryInterface
             $readOnly = $property->isReadOnly();
 
             if ($property->isPrivate()) {
-                $scopeNotation = "\0$class\0$name";
+                $scopeNotation = "\0{$class}\0{$name}";
 
                 $properties[$scopeNotation] = new PropertyMetadata(
                     class: $class,
@@ -60,7 +60,7 @@ final class ProxyMetadataFactory implements ProxyMetadataFactoryInterface
             );
 
             if ($property->isProtected()) {
-                $scopeNotation = "\0*\0$name";
+                $scopeNotation = "\0*\0{$name}";
 
                 $properties[$scopeNotation] = new PropertyMetadata(
                     class: $class,
@@ -81,7 +81,7 @@ final class ProxyMetadataFactory implements ProxyMetadataFactoryInterface
 
                     $name = $property->name;
                     $readOnly = $property->isReadOnly();
-                    $scopeNotation = "\0$class\0$name";
+                    $scopeNotation = "\0{$class}\0{$name}";
 
                     $properties[$scopeNotation] = new PropertyMetadata(
                         class: $class,
