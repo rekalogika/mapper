@@ -142,6 +142,7 @@ class TypeUtilTest extends TestCase
         ];
     }
 
+    /** @psalm-suppress DeprecatedClass */
     #[DataProvider('getTypeStringProvider')]
     public function testGetTypeString(Type $type, string $expected): void
     {
