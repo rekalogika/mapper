@@ -39,14 +39,18 @@ parameters:
         -
             message: '#Call to an undefined method ReflectionClass<.*>::isUninitializedLazyObject#'
             reportUnmatched: false
+        -
+            message: '#deprecated class Symfony\\Component\\PropertyInfo\\Type#'
+        -
+            message: '#of interface Symfony\\Component\\PropertyInfo\\PropertyTypeExtractorInterface:#'
+        -
+            message: '#deprecated method generateLazyGhost\(\) of class Symfony\\Component\\VarExporter\\ProxyHelper:#'
 
     banned_code:
         non_ignorable: false
     rekalogika-mapper:
         mapperDumpFile: tests/config/rekalogika-mapper/generated-mappings.php
-
 includes:
-    - phpstan-baseline.neon
     - vendor/phpstan/phpstan-phpunit/extension.neon
     - vendor/phpstan/phpstan-phpunit/rules.neon
     - vendor/phpstan/phpstan-deprecation-rules/rules.neon
