@@ -109,7 +109,7 @@ final class TraceableTransformer extends AbstractTransformerDecorator implements
         }
 
         try {
-            $id = substr(hash('xxh64', uniqid((string) mt_rand(), true)), 0, 6);
+            $id = substr(hash('xxh128', uniqid((string) mt_rand(), true)), 0, 6);
             $start = $this->stopwatch->start('transform()-' . $id, 'mapper');
             /** @var mixed */
             $result = $this->decorated->transform($source, $target, $sourceType, $targetType, $context);
