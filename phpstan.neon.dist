@@ -39,6 +39,15 @@ parameters:
         -
             message: '#Call to an undefined method ReflectionClass<.*>::isUninitializedLazyObject#'
             reportUnmatched: false
+        -
+            message: '#deprecated class Symfony\\Component\\PropertyInfo\\Type#'
+            reportUnmatched: false
+        -
+            message: '#of interface Symfony\\Component\\PropertyInfo\\PropertyTypeExtractorInterface:#'
+            reportUnmatched: false
+        -
+            message: '#deprecated method generateLazyGhost\(\) of class Symfony\\Component\\VarExporter\\ProxyHelper:#'
+            reportUnmatched: false
 
     banned_code:
         non_ignorable: false

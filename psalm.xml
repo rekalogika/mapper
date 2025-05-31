@@ -110,5 +110,17 @@
                 <directory name="tests/src" />
             </errorLevel>
         </ClassMustBeFinal>
+        <DeprecatedClass>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="tests/src" />
+            </errorLevel>
+        </DeprecatedClass>
+        <DeprecatedMethod>
+            <errorLevel type="suppress">
+                <directory name="src" />
+                <directory name="tests/src" />
+            </errorLevel>
+        </DeprecatedMethod>
     </issueHandlers>
 </psalm>

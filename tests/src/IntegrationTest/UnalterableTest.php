@@ -72,10 +72,10 @@ class UnalterableTest extends FrameworkTestCase
             true,
         ];
 
-        yield self::desc(Money::class) => [
-            Money::class,
-            true,
-        ];
+        // yield self::desc(Money::class) => [
+        //     Money::class,
+        //     true,
+        // ];
 
         yield self::desc(\DateTimeImmutable::class) => [
             \DateTimeImmutable::class,

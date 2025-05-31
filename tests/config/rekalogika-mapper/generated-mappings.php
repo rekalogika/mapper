@@ -305,7 +305,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 73
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 87
         source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorAndSetter::class
     );
@@ -317,13 +317,13 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 61
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 69
         source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithConstructorArgumentsAndPublicProperties::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 46
+        // tests/src/IntegrationTest/ConstructorAndPropertyTest.php on line 52
         source: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\SourceObject::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ConstructorAndProperty\ObjectWithIdOnlyOnConstructor::class
     );

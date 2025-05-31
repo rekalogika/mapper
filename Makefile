@@ -17,9 +17,17 @@ dump:
 phpstan:
 	$(PHP) vendor/bin/phpstan analyse
 
+.PHONY: phpstan-baseline
+phpstan-baseline:
+	$(PHP) vendor/bin/phpstan analyse --generate-baseline
+
 .PHONY: psalm
 psalm:
-	$(PHP) vendor/bin/psalm
+	$(PHP) vendor/bin/psalm --no-cache
+
+.PHONY: psalm-baseline
+psalm-baseline:
+	$(PHP) vendor/bin/psalm --no-cache --update-baseline
 
 .PHONY: clean
 clean:

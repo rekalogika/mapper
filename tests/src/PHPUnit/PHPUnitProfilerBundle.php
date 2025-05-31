@@ -36,7 +36,7 @@ class PHPUnitProfilerBundle extends Bundle
         $stopwatch = $this->container?->get('debug.stopwatch');
         \assert($stopwatch instanceof Stopwatch);
 
-        self::$stopwatchToken = substr(hash('xxh64', uniqid((string) mt_rand(), true)), 0, 6);
+        self::$stopwatchToken = substr(hash('xxh128', uniqid((string) mt_rand(), true)), 0, 6);
         $stopwatch->openSection();
     }
 
