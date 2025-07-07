@@ -85,13 +85,14 @@ final class MapperDataCollector extends AbstractDataCollector implements ResetIn
     }
 
     /**
-     * @return array<int,ObjectToObjectMetadata>
+     * @return list<ObjectToObjectMetadata>
      */
     public function getObjectToObjectMetadatas(): array
     {
         /**
          * @psalm-suppress MixedArgument
-         * @phpstan-ignore return.type, argument.type
+         * @var list<ObjectToObjectMetadata>
+         * @phpstan-ignore argument.type
          */
         return array_values($this->data['object_to_object_metadata'] ?? []);
     }
