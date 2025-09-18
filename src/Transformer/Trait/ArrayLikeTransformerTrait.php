@@ -215,6 +215,7 @@ trait ArrayLikeTransformerTrait
                  * @var mixed
                  * @psalm-suppress MixedArrayOffset
                  * @psalm-suppress MixedArrayTypeCoercion
+                 * @phpstan-ignore offsetAccess.invalidOffset
                  */
                 $targetMemberValue = $target[$targetMemberKey] ?? null;
             } else {

@@ -199,6 +199,7 @@ final class TraversableToArrayAccessTransformer implements
                         $target[] = $value;
                     }
                 } else {
+                    // @phpstan-ignore offsetAccess.invalidOffset
                     $target[$key] = $value;
                 }
 
@@ -226,6 +227,7 @@ final class TraversableToArrayAccessTransformer implements
             } else {
                 foreach ($target as $key => $value) {
                     if (!\in_array($value, $values, true)) {
+                        // @phpstan-ignore offsetAccess.invalidOffset
                         unset($target[$key]);
                     }
                 }
