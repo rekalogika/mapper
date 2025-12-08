@@ -62,7 +62,7 @@
         "symfony/dotenv": "^6.4 || ^7.0",
         "symfony/framework-bundle": "^6.4.20 || ^7.0",
         "symfony/http-kernel": "^6.4 || ^7.0",
-        "symfony/monolog-bundle": "^2.0 || ^3.0",
+        "symfony/monolog-bundle": "^4.0.1",
         "symfony/polyfill-php83": "^1.30",
         "symfony/runtime": "^6.4 || ^7.0",
         "symfony/stopwatch": "^6.4 || ^7.0",
