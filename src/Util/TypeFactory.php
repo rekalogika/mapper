@@ -304,15 +304,12 @@ final class TypeFactory
         $reflectionClass = new \ReflectionClass($type);
 
         $collectionReflection = $reflectionClass->getProperty('collection');
-        $collectionReflection->setAccessible(true);
         $collectionReflection->setValue($type, true);
 
         $collectionKeyTypeReflection = $reflectionClass->getProperty('collectionKeyType');
-        $collectionKeyTypeReflection->setAccessible(true);
         $collectionKeyTypeReflection->setValue($type, [$keyType]);
 
         $collectionValueTypeReflection = $reflectionClass->getProperty('collectionValueType');
-        $collectionValueTypeReflection->setAccessible(true);
         $collectionValueTypeReflection->setValue($type, [$valueType]);
 
         return $type;

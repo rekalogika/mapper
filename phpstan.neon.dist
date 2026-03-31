@@ -48,6 +48,9 @@ parameters:
         -
             message: '#deprecated method generateLazyGhost\(\) of class Symfony\\Component\\VarExporter\\ProxyHelper:#'
             reportUnmatched: false
+        -
+            message: '#non-test file /home/runner/work/mapper/mapper/src/Util/TypeUtil.php#'
+            reportUnmatched: false
 
     banned_code:
         non_ignorable: false

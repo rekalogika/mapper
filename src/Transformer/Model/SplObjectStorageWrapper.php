@@ -37,7 +37,7 @@ final readonly class SplObjectStorageWrapper implements
     #[\Override]
     public function offsetExists(mixed $offset): bool
     {
-        return $this->wrapped->contains($offset);
+        return $this->wrapped->offsetExists($offset);
     }
 
     #[\Override]

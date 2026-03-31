@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Tests\Common;
 
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Rekalogika\Mapper\RekalogikaMapperBundle;
 use Rekalogika\Mapper\Tests\PHPUnit\PHPUnitProfilerBundle;
@@ -75,7 +77,6 @@ class TestKernel extends Kernel
         $container->addCompilerPass(new MapperPass());
 
         parent::build($container);
-
     }
 
     #[\Override]
@@ -91,6 +92,16 @@ class TestKernel extends Kernel
 
         $loader->load(function (ContainerBuilder $container): void {
             $container->loadFromExtension('rekalogika_mapper', $this->config);
+
+            if (InstalledVersions::satisfies(new VersionParser(), 'doctrine/doctrine-bundle', '2.*')) {
+                $container->loadFromExtension('doctrine', [
+                    'orm' => [
+                        'auto_generate_proxy_classes' => true,
+                        'enable_lazy_ghost_objects' => true,
+                        'report_fields_where_declared' => true,
+                    ]
+                ]);
+            }
         });
     }
 
