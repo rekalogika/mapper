@@ -518,7 +518,9 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                 continue;
             }
 
+            /** @psalm-suppress TypeDoesNotContainType */
             if (is_int($sourceProperty)) {
+                /** @psalm-suppress InvalidCast */
                 $sourceProperty = (string) $sourceProperty;
             }
 
