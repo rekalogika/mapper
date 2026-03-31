@@ -64,15 +64,15 @@ final readonly class PropertyMappingResolver implements PropertyMappingResolverI
                 pairedClassProperties: $targetProperties,
             );
 
-            if (isset($skippedTargetProperties[$targetProperty])) {
-                continue;
-            }
-
             if ($targetProperty === null) {
                 if (($targetPropertyToSourceProperty[$sourceProperty] ?? null) === $sourceProperty) {
                     unset($targetPropertyToSourceProperty[$sourceProperty]);
                 }
 
+                continue;
+            }
+
+            if (isset($skippedTargetProperties[$targetProperty])) {
                 continue;
             }
 
