@@ -31,7 +31,7 @@ jobs:
     name: Symfony ${{ matrix.symfony }}, ${{ matrix.dep }} deps, PHP ${{ matrix.php }}, ${{ matrix.operating-system }}
 
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
 
     - name: Install PHP
       uses: shivammathur/setup-php@v2
