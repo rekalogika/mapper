@@ -518,6 +518,10 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                 continue;
             }
 
+            if (is_int($sourceProperty)) {
+                $sourceProperty = (string) $sourceProperty;
+            }
+
             try {
                 if (isset($target->{$sourceProperty})) {
                     /** @psalm-suppress MixedAssignment */
