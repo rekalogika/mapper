@@ -899,9 +899,9 @@ class MapperFactory
     {
         if (null === $this->application) {
             $this->application = new Application();
-            $this->application->add($this->getMappingCommand());
-            $this->application->add($this->getTryCommand());
-            $this->application->add($this->getTryPropertyCommand());
+            $this->application->addCommand($this->getMappingCommand());
+            $this->application->addCommand($this->getTryCommand());
+            $this->application->addCommand($this->getTryPropertyCommand());
         }
 
         return $this->application;
