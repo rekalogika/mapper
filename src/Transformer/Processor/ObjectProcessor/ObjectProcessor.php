@@ -541,7 +541,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                         sourceType: null,
                         targetTypes: [],
                         context: $context,
-                        path: (string) $sourceProperty, // @todo should not automatically cast to string, but to fix this we need to update the MainTransformerInterface
+                        path: $sourceProperty,
                     );
                 }
             } catch (\Throwable) {
