@@ -44,7 +44,7 @@
     },
     "require-dev": {
         "bnf/phpstan-psr-container": "^1.1",
-        "brick/money": "^0.11.1",
+        "brick/money": "^0.13.0",
         "dave-liddament/php-language-extensions": "^0.10",
         "dave-liddament/phpstan-php-language-extensions": "^0.10",
         "doctrine/doctrine-bundle": "^2.10 || ^3.0",
