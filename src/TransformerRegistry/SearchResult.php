@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TransformerRegistry;
 
-use Rekalogika\Mapper\Transformer\MixedType;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -23,8 +22,8 @@ use Symfony\Component\PropertyInfo\Type;
 final readonly class SearchResult implements \IteratorAggregate, \Countable
 {
     /**
-     * @param list<MixedType|Type> $sourceTypes
-     * @param list<MixedType|Type> $targetTypes
+     * @param list<Type> $sourceTypes
+     * @param list<Type> $targetTypes
      * @param array<int,SearchResultEntry> $entries
      */
     public function __construct(
@@ -46,7 +45,7 @@ final readonly class SearchResult implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return list<MixedType|Type>
+     * @return list<Type>
      */
     public function getSourceTypes(): array
     {
@@ -54,7 +53,7 @@ final readonly class SearchResult implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return list<MixedType|Type>
+     * @return list<Type>
      */
     public function getTargetTypes(): array
     {

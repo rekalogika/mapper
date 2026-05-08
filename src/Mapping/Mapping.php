@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Mapping;
 
-use Rekalogika\Mapper\Transformer\MixedType;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -41,8 +40,8 @@ final class Mapping implements \IteratorAggregate
     public function addEntry(
         string $id,
         string $class,
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
+        Type $sourceType,
+        Type $targetType,
         string $sourceTypeString,
         string $targetTypeString,
         bool $variantTargetType,

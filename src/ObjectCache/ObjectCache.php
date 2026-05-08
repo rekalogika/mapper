@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\ObjectCache\Exception\CircularReferenceException;
 use Rekalogika\Mapper\ObjectCache\Sentinel\CachedTargetObjectNotFoundSentinel;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final class ObjectCache
 {

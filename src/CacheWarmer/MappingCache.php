@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\CacheWarmer;
 
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final class MappingCache
 {

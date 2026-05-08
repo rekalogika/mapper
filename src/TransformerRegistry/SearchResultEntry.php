@@ -13,8 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TransformerRegistry;
 
-use Rekalogika\Mapper\Transformer\MixedType;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\TypeIdentifier;
 
 /**
  * @internal
@@ -23,18 +24,18 @@ final readonly class SearchResultEntry
 {
     public function __construct(
         private int $mappingOrder,
-        private Type|MixedType $sourceType,
-        private Type|MixedType $targetType,
+        private Type $sourceType,
+        private Type $targetType,
         private string $transformerServiceId,
         private bool $variantTargetType,
     ) {}
 
-    public function getSourceType(): Type|MixedType
+    public function getSourceType(): Type
     {
         return $this->sourceType;
     }
 
-    public function getTargetType(): Type|MixedType
+    public function getTargetType(): Type
     {
         return $this->targetType;
     }
@@ -46,11 +47,11 @@ final readonly class SearchResultEntry
 
     public function isVariantTargetType(): bool
     {
-        if ($this->targetType instanceof MixedType) {
+        if (TypeCheck::isMixed($this->targetType)) {
             return true;
         }
 
-        if ($this->targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+        if (!$this->targetType->isIdentifiedBy(TypeIdentifier::OBJECT)) {
             return false;
         }
 

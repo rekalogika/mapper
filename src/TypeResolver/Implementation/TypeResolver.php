@@ -13,10 +13,10 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TypeResolver\Implementation;
 
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
+use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -24,7 +24,7 @@ use Symfony\Component\PropertyInfo\Type;
 final readonly class TypeResolver implements TypeResolverInterface
 {
     #[\Override]
-    public function getTypeString(Type|MixedType $type): string
+    public function getTypeString(Type $type): string
     {
         return TypeUtil::getTypeString($type);
     }
@@ -36,11 +36,9 @@ final readonly class TypeResolver implements TypeResolverInterface
     }
 
     #[\Override]
-    public function getSimpleTypes(array|Type|MixedType $type): array
+    public function getSimpleTypes(array|Type $type): array
     {
-        if ($type instanceof MixedType) {
-            return [$type];
-        } elseif (\is_array($type)) {
+        if (\is_array($type)) {
             $simpleTypes = [];
 
             foreach ($type as $i) {
@@ -52,13 +50,17 @@ final readonly class TypeResolver implements TypeResolverInterface
             return $simpleTypes;
         }
 
+        if (TypeCheck::isMixed($type)) {
+            return [$type];
+        }
+
         return TypeUtil::getSimpleTypes($type);
     }
 
     #[\Override]
-    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array
+    public function getAcceptedTransformerInputTypeStrings(Type $type): array
     {
-        if ($type instanceof MixedType) {
+        if (TypeCheck::isMixed($type)) {
             return ['mixed'];
         }
 
@@ -70,7 +72,7 @@ final readonly class TypeResolver implements TypeResolverInterface
 
 
     #[\Override]
-    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array
+    public function getAcceptedTransformerOutputTypeStrings(Type $type): array
     {
         return $this->getAcceptedTransformerInputTypeStrings($type);
     }

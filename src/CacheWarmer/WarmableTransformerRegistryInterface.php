@@ -13,15 +13,14 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\CacheWarmer;
 
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 interface WarmableTransformerRegistryInterface
 {
     /**
-     * @param array<array-key,Type|MixedType> $sourceTypes
-     * @param array<array-key,Type|MixedType> $targetTypes
+     * @param array<array-key,Type> $sourceTypes
+     * @param array<array-key,Type> $targetTypes
      */
     public function warmingFindBySourceAndTargetTypes(
         array $sourceTypes,

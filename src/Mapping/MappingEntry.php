@@ -14,8 +14,9 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Mapping;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Rekalogika\Mapper\Transformer\MixedType;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\TypeIdentifier;
 
 /**
  * @internal
@@ -29,8 +30,8 @@ final class MappingEntry
     public function __construct(
         private readonly string $id,
         private readonly string $class,
-        private readonly Type|MixedType $sourceType,
-        private readonly Type|MixedType $targetType,
+        private readonly Type $sourceType,
+        private readonly Type $targetType,
         private readonly string $sourceTypeString,
         private readonly string $targetTypeString,
         private readonly bool $variantTargetType,
@@ -38,16 +39,16 @@ final class MappingEntry
         $this->order = ++self::$counter;
 
         if ($variantTargetType) {
-            if ($targetType instanceof MixedType) {
+            if (TypeCheck::isMixed($targetType)) {
                 throw new InvalidArgumentException(
-                    'Variant target type cannot be MixedType',
+                    'Variant target type cannot be mixed',
                 );
             }
 
-            if ($targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+            if (!$targetType->isIdentifiedBy(TypeIdentifier::OBJECT)) {
                 throw new InvalidArgumentException(\sprintf(
                     'Variant target type must be object, %s given',
-                    $targetType->getBuiltinType(),
+                    (string) $targetType,
                 ));
             }
         }
@@ -70,23 +71,23 @@ final class MappingEntry
 
     public function isVariantTargetType(): bool
     {
-        if ($this->targetType instanceof MixedType) {
+        if (TypeCheck::isMixed($this->targetType)) {
             return true;
         }
 
-        if ($this->targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+        if (!$this->targetType->isIdentifiedBy(TypeIdentifier::OBJECT)) {
             return false;
         }
 
         return $this->variantTargetType;
     }
 
-    public function getSourceType(): Type|MixedType
+    public function getSourceType(): Type
     {
         return $this->sourceType;
     }
 
-    public function getTargetType(): Type|MixedType
+    public function getTargetType(): Type
     {
         return $this->targetType;
     }

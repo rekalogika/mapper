@@ -13,9 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TransformerRegistry;
 
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -25,8 +24,8 @@ interface TransformerRegistryInterface
     public function get(string $id): TransformerInterface;
 
     /**
-     * @param array<array-key,Type|MixedType> $sourceTypes
-     * @param array<array-key,Type|MixedType> $targetTypes
+     * @param array<array-key,Type> $sourceTypes
+     * @param array<array-key,Type> $targetTypes
      */
     public function findBySourceAndTargetTypes(
         array $sourceTypes,

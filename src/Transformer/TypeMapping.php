@@ -14,37 +14,39 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\TypeIdentifier;
 
 final readonly class TypeMapping
 {
     public function __construct(
-        private Type|MixedType $sourceType,
-        private Type|MixedType $targetType,
+        private Type $sourceType,
+        private Type $targetType,
         private bool $variantTargetType = false,
     ) {
         if ($variantTargetType) {
-            if ($targetType instanceof MixedType) {
+            if (TypeCheck::isMixed($targetType)) {
                 throw new InvalidArgumentException(
-                    'Variant target type cannot be MixedType',
+                    'Variant target type cannot be mixed',
                 );
             }
 
-            if ($targetType->getBuiltinType() !== Type::BUILTIN_TYPE_OBJECT) {
+            if (!$targetType->isIdentifiedBy(TypeIdentifier::OBJECT)) {
                 throw new InvalidArgumentException(\sprintf(
                     'Variant target type must be object, %s given',
-                    $targetType->getBuiltinType(),
+                    (string) $targetType,
                 ));
             }
         }
     }
 
-    public function getSourceType(): Type|MixedType
+    public function getSourceType(): Type
     {
         return $this->sourceType;
     }
 
-    public function getTargetType(): Type|MixedType
+    public function getTargetType(): Type
     {
         return $this->targetType;
     }

@@ -17,14 +17,13 @@ use Psr\Container\ContainerInterface;
 use Rekalogika\Mapper\Exception\LogicException;
 use Rekalogika\Mapper\Mapping\MappingEntry;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
 use Rekalogika\Mapper\TransformerRegistry\SearchResultEntry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -67,8 +66,8 @@ final class TransformerRegistry implements TransformerRegistryInterface
      * @return array<int,MappingEntry>
      */
     private function getMappingBySourceAndTargetType(
-        Type|MixedType $sourceType,
-        Type|MixedType $targetType,
+        Type $sourceType,
+        Type $targetType,
     ): array {
         $sourceTypeStrings = $this->typeResolver
             ->getAcceptedTransformerInputTypeStrings($sourceType);
@@ -81,8 +80,8 @@ final class TransformerRegistry implements TransformerRegistryInterface
     }
 
     private function findBySourceAndTargetType(
-        MixedType|Type $sourceType,
-        MixedType|Type $targetType,
+        Type $sourceType,
+        Type $targetType,
     ): SearchResult {
         $mapping = $this->getMappingBySourceAndTargetType(
             $sourceType,

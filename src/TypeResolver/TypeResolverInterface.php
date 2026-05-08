@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TypeResolver;
 
-use Rekalogika\Mapper\Transformer\MixedType;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -24,15 +23,15 @@ interface TypeResolverInterface
     /**
      * Gets the string representation of a Type.
      */
-    public function getTypeString(Type|MixedType $type): string;
+    public function getTypeString(Type $type): string;
 
     /**
-     * Gets all the possible simple types from a Type
+     * Gets all the possible simple types from a Type.
      *
-     * @param array<array-key,Type|MixedType>|Type|MixedType $type
-     * @return array<int,Type|MixedType>
+     * @param array<array-key,Type>|Type $type
+     * @return array<int,Type>
      */
-    public function getSimpleTypes(array|Type|MixedType $type): array;
+    public function getSimpleTypes(array|Type $type): array;
 
     /**
      * Simple Type is a type that is not nullable, and does not have more
@@ -52,7 +51,7 @@ interface TypeResolverInterface
      *
      * @return array<int,string>
      */
-    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array;
+    public function getAcceptedTransformerInputTypeStrings(Type $type): array;
 
     /**
      * Example: If the variable type is
@@ -66,5 +65,5 @@ interface TypeResolverInterface
      *
      * @return array<int,string>
      */
-    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array;
+    public function getAcceptedTransformerOutputTypeStrings(Type $type): array;
 }

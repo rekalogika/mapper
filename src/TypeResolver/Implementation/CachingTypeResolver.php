@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\TypeResolver\Implementation;
 
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -35,12 +35,12 @@ final class CachingTypeResolver implements TypeResolverInterface
     // can be expensive in a loop. we cache using a weakmap
 
     /**
-     * @var \WeakMap<Type|MixedType,string>
+     * @var \WeakMap<Type,string>
      */
     private \WeakMap $typeStringCache;
 
     #[\Override]
-    public function getTypeString(Type|MixedType $type): string
+    public function getTypeString(Type $type): string
     {
         $result = $this->typeStringCache[$type] ?? null;
         if ($result !== null) {
@@ -56,14 +56,14 @@ final class CachingTypeResolver implements TypeResolverInterface
     // can be expensive in a loop. we cache using a weakmap
 
     /**
-     * @var array<string,array<int,MixedType|Type>>
+     * @var array<string,array<int,Type>>
      */
     private array $simpleTypesCache = [];
 
     #[\Override]
-    public function getSimpleTypes(array|Type|MixedType $type): array
+    public function getSimpleTypes(array|Type $type): array
     {
-        if ($type instanceof MixedType) {
+        if (!\is_array($type) && TypeCheck::isMixed($type)) {
             return [$type];
         }
 
@@ -109,7 +109,7 @@ final class CachingTypeResolver implements TypeResolverInterface
     private array $applicableTypeStringsCache = [];
 
     #[\Override]
-    public function getAcceptedTransformerInputTypeStrings(Type|MixedType $type): array
+    public function getAcceptedTransformerInputTypeStrings(Type $type): array
     {
         $typeString = $this->getTypeString($type);
 
@@ -124,7 +124,7 @@ final class CachingTypeResolver implements TypeResolverInterface
     }
 
     #[\Override]
-    public function getAcceptedTransformerOutputTypeStrings(Type|MixedType $type): array
+    public function getAcceptedTransformerOutputTypeStrings(Type $type): array
     {
         return $this->decorated->getAcceptedTransformerOutputTypeStrings($type);
     }

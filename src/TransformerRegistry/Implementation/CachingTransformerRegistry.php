@@ -16,11 +16,10 @@ namespace Rekalogika\Mapper\TransformerRegistry\Implementation;
 use Psr\Cache\CacheItemPoolInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableTransformerRegistryInterface;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\SearchResult;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -51,8 +50,8 @@ final class CachingTransformerRegistry implements
     }
 
     /**
-     * @param array<array-key,Type|MixedType> $sourceTypes
-     * @param array<array-key,Type|MixedType> $targetTypes
+     * @param array<array-key,Type> $sourceTypes
+     * @param array<array-key,Type> $targetTypes
      */
     private function getCacheKey(array $sourceTypes, array $targetTypes): string
     {
@@ -92,8 +91,8 @@ final class CachingTransformerRegistry implements
     }
 
     /**
-     * @param array<array-key,Type|MixedType> $sourceTypes
-     * @param array<array-key,Type|MixedType> $targetTypes
+     * @param array<array-key,Type> $sourceTypes
+     * @param array<array-key,Type> $targetTypes
      */
     #[\Override]
     public function warmingFindBySourceAndTargetTypes(

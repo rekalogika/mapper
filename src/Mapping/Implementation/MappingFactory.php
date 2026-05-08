@@ -19,10 +19,10 @@ use Rekalogika\Mapper\Exception\UnexpectedValueException;
 use Rekalogika\Mapper\Mapping\Mapping;
 use Rekalogika\Mapper\Mapping\MappingFactoryInterface;
 use Rekalogika\Mapper\Transformer\AbstractTransformerDecorator;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -171,11 +171,11 @@ final class MappingFactory implements MappingFactoryInterface
     }
 
     /**
-     * @return array<array-key,Type|MixedType>
+     * @return array<array-key,Type>
      */
-    private function getSimpleTypes(Type|MixedType $type): array
+    private function getSimpleTypes(Type $type): array
     {
-        if ($type instanceof MixedType) {
+        if (TypeCheck::isMixed($type)) {
             return [$type];
         }
 
