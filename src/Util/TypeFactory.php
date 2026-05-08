@@ -15,11 +15,10 @@ namespace Rekalogika\Mapper\Util;
 
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\InvalidClassException;
-use Rekalogika\Mapper\Transformer\MixedType;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
- * Convenience factory to instantiate Type objects
+ * Convenience factory to instantiate Type objects.
  */
 final class TypeFactory
 {
@@ -29,7 +28,7 @@ final class TypeFactory
      * Convert a string type notation to a Type object. Currently does not do
      * anything fancy. Just supports the built-in types and class names.
      */
-    public static function fromString(string $string): Type|MixedType
+    public static function fromString(string $string): Type
     {
         $result = match ($string) {
             'mixed' => self::mixed(),
@@ -53,10 +52,12 @@ final class TypeFactory
         }
 
         // remove possible nullable prefix
-        $string = preg_replace('/^\?/', '', $string) ?? throw new InvalidArgumentException(\sprintf('"%s" does not appear to be a valid type.', $string));
+        $string = preg_replace('/^\?/', '', $string)
+            ?? throw new InvalidArgumentException(\sprintf('"%s" does not appear to be a valid type.', $string));
 
         // remove generics notation
-        $string = preg_replace('/<.*>/', '', $string) ?? throw new InvalidArgumentException(\sprintf('"%s" does not appear to be a valid type.', $string));
+        $string = preg_replace('/<.*>/', '', $string)
+            ?? throw new InvalidArgumentException(\sprintf('"%s" does not appear to be a valid type.', $string));
 
         if (!TypeCheck::nameExists($string)) {
             throw new InvalidArgumentException(\sprintf('"%s" does not appear to be a valid type.', $string));
@@ -65,253 +66,114 @@ final class TypeFactory
         return self::objectOfClass($string);
     }
 
-    public static function mixed(): MixedType
+    public static function mixed(): Type
     {
-        return MixedType::instance();
+        return Type::mixed();
     }
-
-    private static ?Type $nullInstance = null;
 
     public static function null(): Type
     {
-        if (self::$nullInstance === null) {
-            self::$nullInstance = new Type(
-                builtinType: 'null',
-            );
-        }
-
-        return self::$nullInstance;
+        return Type::null();
     }
-
-    public static function scalar(string $type): Type
-    {
-        return match ($type) {
-            'string' => self::string(),
-            'int' => self::int(),
-            'float' => self::float(),
-            'bool' => self::bool(),
-            default => throw new InvalidArgumentException(\sprintf('"%s" is not a valid scalar type.', $type)),
-        };
-    }
-
-    private static ?Type $stringInstance = null;
 
     public static function string(): Type
     {
-        if (self::$stringInstance === null) {
-            self::$stringInstance = new Type(
-                builtinType: 'string',
-            );
-        }
-
-        return self::$stringInstance;
+        return Type::string();
     }
-
-    private static ?Type $intInstance = null;
 
     public static function int(): Type
     {
-        if (self::$intInstance === null) {
-            self::$intInstance = new Type(
-                builtinType: 'int',
-            );
-        }
-
-        return self::$intInstance;
+        return Type::int();
     }
-
-    private static ?Type $floatInstance = null;
 
     public static function float(): Type
     {
-        if (self::$floatInstance === null) {
-            self::$floatInstance = new Type(
-                builtinType: 'float',
-            );
-        }
-
-        return self::$floatInstance;
+        return Type::float();
     }
-
-    private static ?Type $boolInstance = null;
 
     public static function bool(): Type
     {
-        if (self::$boolInstance === null) {
-            self::$boolInstance = new Type(
-                builtinType: 'bool',
-            );
-        }
-
-        return self::$boolInstance;
+        return Type::bool();
     }
-
-    private static ?Type $resourceInstance = null;
 
     public static function resource(): Type
     {
-        if (self::$resourceInstance === null) {
-            self::$resourceInstance = new Type(
-                builtinType: 'resource',
-            );
-        }
-
-        return self::$resourceInstance;
+        return Type::resource();
     }
-
-    private static ?Type $trueInstance = null;
 
     public static function true(): Type
     {
-        if (self::$trueInstance === null) {
-            self::$trueInstance = new Type(
-                builtinType: 'true',
-            );
-        }
-
-        return self::$trueInstance;
+        return Type::true();
     }
-
-    private static ?Type $falseInstance = null;
 
     public static function false(): Type
     {
-        if (self::$falseInstance === null) {
-            self::$falseInstance = new Type(
-                builtinType: 'false',
-            );
-        }
-
-        return self::$falseInstance;
+        return Type::false();
     }
-
-    private static ?Type $callableInstance = null;
 
     public static function callable(): Type
     {
-        if (self::$callableInstance === null) {
-            self::$callableInstance = new Type(
-                builtinType: 'callable',
-            );
-        }
-
-        return self::$callableInstance;
+        return Type::callable();
     }
-
-    private static ?Type $arrayInstance = null;
 
     public static function array(): Type
     {
-        if (self::$arrayInstance === null) {
-            self::$arrayInstance = new Type(
-                builtinType: 'array',
-            );
-        }
-
-        return self::$arrayInstance;
+        return Type::array();
     }
-
-    private static ?Type $iterableInstance = null;
 
     public static function iterable(): Type
     {
-        if (self::$iterableInstance === null) {
-            self::$iterableInstance = new Type(
-                builtinType: 'iterable',
-            );
-        }
-
-        return self::$iterableInstance;
+        return Type::iterable();
     }
 
     public static function arrayWithKeyValue(
-        null|Type $keyType,
-        null|Type $valueType,
+        ?Type $keyType,
+        ?Type $valueType,
     ): Type {
-        return new Type(
-            builtinType: 'array',
-            collection: true,
-            collectionKeyType: $keyType,
-            collectionValueType: $valueType,
-        );
+        return Type::array($valueType, $keyType);
     }
-
-    /**
-     * @var array<class-string,Type>
-     */
-    private static array $instancesOfArrayOfObject = [];
 
     /**
      * @param class-string $class
      */
     public static function arrayOfObject(string $class): Type
     {
-        if (isset(self::$instancesOfArrayOfObject[$class])) {
-            return self::$instancesOfArrayOfObject[$class];
-        }
-
         if (!TypeCheck::nameExists($class)) {
             throw new InvalidArgumentException(\sprintf('"%s" is not a valid class.', $class));
         }
 
-        return self::$instancesOfArrayOfObject[$class] = new Type(
-            builtinType: 'array',
-            collection: true,
-            collectionValueType: self::objectOfClass($class),
-        );
+        return Type::array(self::objectOfClass($class));
     }
-
-    private static ?Type $objectInstance = null;
 
     public static function object(): Type
     {
-        if (self::$objectInstance === null) {
-            self::$objectInstance = new Type(
-                builtinType: 'object',
-            );
-        }
-
-        return self::$objectInstance;
+        return Type::object();
     }
 
     /**
-     * @var array<class-string,Type>
+     * @param class-string $class
      */
-    private static array $instancesOfObjectOfClass = [];
-
     public static function objectOfClass(string $class): Type
     {
-        if (isset(self::$instancesOfObjectOfClass[$class])) {
-            return self::$instancesOfObjectOfClass[$class];
-        }
-
         if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
             throw new InvalidClassException($class);
         }
 
-        return self::$instancesOfObjectOfClass[$class] = new Type(
-            builtinType: 'object',
-            class: $class,
-        );
+        return Type::object($class);
     }
 
+    /**
+     * @param class-string $class
+     */
     public static function objectWithKeyValue(
         string $class,
-        null|Type $keyType,
-        null|Type $valueType,
+        ?Type $keyType,
+        ?Type $valueType,
     ): Type {
-        $type = clone self::objectOfClass($class);
-        $reflectionClass = new \ReflectionClass($type);
+        if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
+            throw new InvalidClassException($class);
+        }
 
-        $collectionReflection = $reflectionClass->getProperty('collection');
-        $collectionReflection->setValue($type, true);
-
-        $collectionKeyTypeReflection = $reflectionClass->getProperty('collectionKeyType');
-        $collectionKeyTypeReflection->setValue($type, [$keyType]);
-
-        $collectionValueTypeReflection = $reflectionClass->getProperty('collectionValueType');
-        $collectionValueTypeReflection->setValue($type, [$valueType]);
-
-        return $type;
+        return Type::collection(Type::object($class), $valueType, $keyType);
     }
 }

@@ -22,56 +22,58 @@ use Rekalogika\Mapper\Tests\IntegrationTest\MapPropertyPathTest;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtil2Test;
 use Rekalogika\Mapper\Tests\UnitTest\Util\TypeUtilTest;
 use Rekalogika\Mapper\Transformer\Exception\NullSourceButMandatoryTargetException;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\BuiltinType;
+use Symfony\Component\TypeInfo\Type\CollectionType;
+use Symfony\Component\TypeInfo\Type\GenericType;
+use Symfony\Component\TypeInfo\Type\IntersectionType;
+use Symfony\Component\TypeInfo\Type\NullableType;
+use Symfony\Component\TypeInfo\Type\ObjectType;
+use Symfony\Component\TypeInfo\Type\UnionType;
+use Symfony\Component\TypeInfo\TypeIdentifier;
 
 final readonly class TypeUtil
 {
     private function __construct() {}
 
     /**
-     * Simple Type is a type that is not nullable, and does not have more
-     * than one key type or value type.
+     * Simple Type is a type that is not nullable, not a union, not an
+     * intersection, not bare iterable, and whose collection key/value generics
+     * (if any) are themselves simple.
      */
     #[Friend(TypeResolver::class, TypeUtilTest::class)]
     public static function isSimpleType(Type $type): bool
     {
-        if ($type->isNullable()) {
+        if (
+            $type instanceof NullableType
+            || $type instanceof UnionType
+            || $type instanceof IntersectionType
+        ) {
             return false;
         }
 
-        // iterable is Traversable|array
+        // iterable is Traversable|array — not simple
         if (TypeCheck::isIterable($type)) {
             return false;
         }
 
-        if ($type->isCollection()) {
-            $keyTypes = $type->getCollectionKeyTypes();
-            $valueTypes = $type->getCollectionValueTypes();
-
-            if (\count($keyTypes) > 1) {
-                return false;
+        if ($type instanceof CollectionType) {
+            $wrapped = $type->getWrappedType();
+            if ($wrapped instanceof GenericType) {
+                foreach ($wrapped->getVariableTypes() as $variableType) {
+                    if (!self::isSimpleType($variableType)) {
+                        return false;
+                    }
+                }
             }
-
-            if (\count($valueTypes) > 1) {
-                return false;
-            }
-
-            $keyTypeIsSimple = $keyTypes === []
-                || self::isSimpleType($keyTypes[0]);
-
-            $valueTypeIsSimple = $valueTypes === []
-                || self::isSimpleType($valueTypes[0]);
-
-            return $keyTypeIsSimple && $valueTypeIsSimple;
         }
 
         return true;
     }
 
     /**
-     * Gets all the possible simple types from a Type
+     * Gets all the possible simple types from a Type.
      *
      * @return array<int,Type>
      */
@@ -83,7 +85,7 @@ final readonly class TypeUtil
 
     /**
      * Generates all the possible simple type permutations from an array of
-     * Types
+     * Types.
      *
      * @param array<array-key,Type> $types
      * @return array<int,Type>
@@ -93,43 +95,42 @@ final readonly class TypeUtil
         bool $withParents = false,
     ): array {
         $permutations = [];
-
         $hasNullable = false;
 
         if ($withParents) {
             $newTypes = [];
 
             foreach ($types as $type) {
+                if ($type instanceof NullableType) {
+                    $hasNullable = true;
+                    $type = $type->getWrappedType();
+                }
+
                 if (TypeCheck::isIterable($type)) {
                     throw new InvalidArgumentException(
                         'Iterable are not supported in source or target specification. Use Traversable or array instead.',
                     );
                 }
 
-                if (
-                    TypeCheck::isObject($type)
-                    && null !== $type->getClassName()
-                ) {
-                    /** @var class-string */
-                    $typeClass = $type->getClassName();
+                $variants = $type instanceof UnionType ? $type->getTypes() : [$type];
 
-                    foreach (ClassUtil::getAllClassesFromObject($typeClass) as $class) {
-                        $newTypes[] = new Type(
-                            builtinType: $type->getBuiltinType(),
-                            nullable: $type->isNullable(),
-                            class: $class,
-                            collection: $type->isCollection(),
-                            collectionKeyType: $type->getCollectionKeyTypes(),
-                            collectionValueType: $type->getCollectionValueTypes(),
-                        );
+                foreach ($variants as $variant) {
+                    if ($variant instanceof BuiltinType && $variant->getTypeIdentifier() === TypeIdentifier::NULL) {
+                        $hasNullable = true;
+                        continue;
                     }
 
-                    $newTypes[] = new Type(
-                        builtinType: 'object',
-                        nullable: $type->isNullable(),
-                    );
-                } else {
-                    $newTypes[] = $type;
+                    $variantClass = self::getObjectClass($variant);
+
+                    if ($variantClass !== null) {
+                        foreach (ClassUtil::getAllClassesFromObject($variantClass) as $class) {
+                            $newTypes[] = self::reclassify($variant, $class);
+                        }
+
+                        $newTypes[] = TypeFactory::object();
+                    } else {
+                        $newTypes[] = $variant;
+                    }
                 }
             }
 
@@ -137,37 +138,55 @@ final readonly class TypeUtil
         }
 
         foreach ($types as $type) {
-            if ($type->isNullable()) {
+            if ($type instanceof NullableType) {
                 $hasNullable = true;
+                $type = $type->getWrappedType();
             }
 
-            if (!$type->isCollection()) {
-                // iterable is Traversable|array
+            if ($type instanceof UnionType) {
+                foreach ($type->getTypes() as $variant) {
+                    foreach (self::getTypePermutations([$variant], $withParents) as $perm) {
+                        $permutations[] = $perm;
+                    }
+                }
+                continue;
+            }
+
+            if ($type instanceof BuiltinType && $type->getTypeIdentifier() === TypeIdentifier::NULL) {
+                $hasNullable = true;
+                continue;
+            }
+
+            if (!$type instanceof CollectionType) {
+                $permutations[] = $type;
+                continue;
+            }
+
+            $wrapped = $type->getWrappedType();
+
+            if (!$wrapped instanceof GenericType) {
+                // bare CollectionType (no key/value generics)
                 if (TypeCheck::isIterable($type)) {
                     $permutations[] = TypeFactory::array();
                     $permutations[] = TypeFactory::objectOfClass(\Traversable::class);
                 } else {
-                    $permutations[] = new Type(
-                        builtinType: $type->getBuiltinType(),
-                        class: $type->getClassName(),
-                    );
+                    $permutations[] = $type;
                 }
-
                 continue;
             }
 
-            // the following is only applicable for collections
+            // Generic CollectionType with explicit key/value
+            $variableTypes = $wrapped->getVariableTypes();
+            $keyType = $variableTypes[0] ?? null;
+            $valueType = $variableTypes[1] ?? null;
 
-            $keyTypes = self::getTypePermutations(
-                $type->getCollectionKeyTypes(),
-                $withParents,
-            );
-            $valueTypes = self::getTypePermutations(
-                $type->getCollectionValueTypes(),
-                $withParents,
-            );
+            $keyTypes = $keyType !== null
+                ? self::getTypePermutations([$keyType], $withParents)
+                : [];
+            $valueTypes = $valueType !== null
+                ? self::getTypePermutations([$valueType], $withParents)
+                : [];
 
-            // 'mixed' key and value types
             if ($withParents) {
                 $keyTypes[] = null;
                 $valueTypes[] = null;
@@ -181,27 +200,13 @@ final readonly class TypeUtil
                 $valueTypes = [null];
             }
 
-            foreach ($keyTypes as $keyType) {
-                foreach ($valueTypes as $valueType) {
-                    // iterable is Traversable|array
+            foreach ($keyTypes as $kp) {
+                foreach ($valueTypes as $vp) {
                     if (TypeCheck::isIterable($type)) {
-                        $permutations[] = TypeFactory::arrayWithKeyValue(
-                            $keyType,
-                            $valueType,
-                        );
-                        $permutations[] = TypeFactory::objectWithKeyValue(
-                            \Traversable::class,
-                            $keyType,
-                            $valueType,
-                        );
+                        $permutations[] = TypeFactory::arrayWithKeyValue($kp, $vp);
+                        $permutations[] = TypeFactory::objectWithKeyValue(\Traversable::class, $kp, $vp);
                     } else {
-                        $permutations[] = new Type(
-                            builtinType: $type->getBuiltinType(),
-                            class: $type->getClassName(),
-                            collection: true,
-                            collectionKeyType: $keyType,
-                            collectionValueType: $valueType,
-                        );
+                        $permutations[] = self::reconstructCollection($wrapped, $kp, $vp);
                     }
                 }
             }
@@ -211,11 +216,7 @@ final readonly class TypeUtil
                     $permutations[] = TypeFactory::array();
                     $permutations[] = TypeFactory::objectOfClass(\Traversable::class);
                 } else {
-                    $permutations[] = new Type(
-                        builtinType: $type->getBuiltinType(),
-                        class: $type->getClassName(),
-                        collection: false,
-                    );
+                    $permutations[] = self::stripCollectionGenerics($wrapped);
                 }
             }
         }
@@ -228,9 +229,9 @@ final readonly class TypeUtil
     }
 
     /**
-     * @param null|Type|MixedType|array<array-key,Type|MixedType> $type
+     * @param null|Type|array<array-key,Type> $type
      */
-    public static function getDebugType(null|Type|MixedType|array $type): string
+    public static function getDebugType(null|Type|array $type): string
     {
         if ($type === null) {
             return 'null';
@@ -243,13 +244,13 @@ final readonly class TypeUtil
 
             $typeStrings = [];
             foreach ($type as $t) {
-                $typeStrings[] = TypeUtil::getTypeString($t);
+                $typeStrings[] = self::getTypeString($t);
             }
 
             return implode('|', $typeStrings);
         }
 
-        return TypeUtil::getTypeString($type);
+        return self::getTypeString($type);
     }
 
     #[Friend(
@@ -260,57 +261,87 @@ final readonly class TypeUtil
         MapPropertyPathTest::class,
         NullSourceButMandatoryTargetException::class,
     )]
-    public static function getTypeString(Type|MixedType $type): string
+    public static function getTypeString(Type $type): string
     {
-        if ($type instanceof MixedType) {
-            return 'mixed';
+        if ($type instanceof NullableType) {
+            return self::getTypeString($type->getWrappedType()) . '|null';
         }
 
-        $typeString = $type->getBuiltinType();
-        if ($typeString === 'object') {
-            $typeString = $type->getClassName();
-            if (null === $typeString) {
-                $typeString = 'object';
+        if ($type instanceof UnionType) {
+            $parts = [];
+            foreach ($type->getTypes() as $variant) {
+                $parts[] = self::getTypeString($variant);
             }
+            return implode('|', $parts);
         }
 
-        if ($type->isCollection()) {
-            $keyTypes = $type->getCollectionKeyTypes();
-
-            if ($keyTypes !== []) {
-                $keyTypesString = [];
-                foreach ($keyTypes as $keyType) {
-                    $keyTypesString[] = self::getTypeString($keyType);
-                }
-
-                $keyTypesString = implode('|', $keyTypesString);
-            } else {
-                $keyTypesString = 'mixed';
+        if ($type instanceof IntersectionType) {
+            $parts = [];
+            foreach ($type->getTypes() as $variant) {
+                $parts[] = self::getTypeString($variant);
             }
-
-            $valueTypes = $type->getCollectionValueTypes();
-
-            if ($valueTypes !== []) {
-                $valueTypesString = [];
-                foreach ($valueTypes as $valueType) {
-                    $valueTypesString[] = self::getTypeString($valueType);
-                }
-
-                $valueTypesString = implode('|', $valueTypesString);
-            } else {
-                $valueTypesString = 'mixed';
-            }
-
-            $typeString .= \sprintf('<%s,%s>', $keyTypesString, $valueTypesString);
+            return implode('&', $parts);
         }
 
-        return $typeString;
+        if ($type instanceof CollectionType) {
+            $wrapped = $type->getWrappedType();
+
+            if ($wrapped instanceof GenericType) {
+                $main = $wrapped->getWrappedType();
+                $mainString = self::mainTypeString($main);
+
+                $variableTypes = $wrapped->getVariableTypes();
+                $keyType = $variableTypes[0] ?? null;
+                $valueType = $variableTypes[1] ?? null;
+
+                $keyString = $keyType !== null
+                    ? self::getTypeString($keyType)
+                    : 'mixed';
+
+                $valueString = $valueType !== null
+                    ? self::getTypeString($valueType)
+                    : 'mixed';
+
+                return \sprintf('%s<%s,%s>', $mainString, $keyString, $valueString);
+            }
+
+            return self::mainTypeString($wrapped);
+        }
+
+        if ($type instanceof BuiltinType) {
+            return $type->getTypeIdentifier()->value;
+        }
+
+        if ($type instanceof ObjectType) {
+            return $type->getClassName();
+        }
+
+        if ($type instanceof GenericType) {
+            $main = $type->getWrappedType();
+            $mainString = self::mainTypeString($main);
+
+            $variableTypes = $type->getVariableTypes();
+            $keyType = $variableTypes[0] ?? null;
+            $valueType = $variableTypes[1] ?? null;
+
+            $keyString = $keyType !== null
+                ? self::getTypeString($keyType)
+                : 'mixed';
+
+            $valueString = $valueType !== null
+                ? self::getTypeString($valueType)
+                : 'mixed';
+
+            return \sprintf('%s<%s,%s>', $mainString, $keyString, $valueString);
+        }
+
+        return (string) $type;
     }
 
     /**
-     * @param Type|MixedType|array<int,Type|MixedType> $type
+     * @param Type|array<int,Type> $type
      */
-    public static function getTypeStringHtml(Type|MixedType|array $type): string
+    public static function getTypeStringHtml(Type|array $type): string
     {
         if (\is_array($type)) {
             if ($type === []) {
@@ -325,57 +356,60 @@ final readonly class TypeUtil
             return implode('|', $typeStrings);
         }
 
-        if ($type instanceof MixedType) {
-            return 'mixed';
+        if ($type instanceof NullableType) {
+            return self::getTypeStringHtml($type->getWrappedType()) . '|null';
         }
 
-        $typeString = $type->getBuiltinType();
-        if ($typeString === 'object') {
-            $typeString = $type->getClassName();
-
-            if (null === $typeString) {
-                $typeString = 'object';
-            } else {
-                $shortClassName = preg_replace('/^.*\\\\/', '', $typeString) ?? $typeString;
-                $typeString = \sprintf(
-                    '<abbr title="%s">%s</abbr>',
-                    htmlspecialchars($typeString),
-                    htmlspecialchars($shortClassName),
-                );
+        if ($type instanceof UnionType) {
+            $parts = [];
+            foreach ($type->getTypes() as $variant) {
+                $parts[] = self::getTypeStringHtml($variant);
             }
+            return implode('|', $parts);
         }
 
-        if ($type->isCollection()) {
-            $keyTypes = $type->getCollectionKeyTypes();
-
-            if ($keyTypes !== []) {
-                $keyTypesString = [];
-                foreach ($keyTypes as $keyType) {
-                    $keyTypesString[] = self::getTypeStringHtml($keyType);
-                }
-
-                $keyTypesString = implode('|', $keyTypesString);
-            } else {
-                $keyTypesString = 'mixed';
+        if ($type instanceof IntersectionType) {
+            $parts = [];
+            foreach ($type->getTypes() as $variant) {
+                $parts[] = self::getTypeStringHtml($variant);
             }
-
-            $valueTypes = $type->getCollectionValueTypes();
-
-            if ($valueTypes !== []) {
-                $valueTypesString = [];
-                foreach ($valueTypes as $valueType) {
-                    $valueTypesString[] = self::getTypeStringHtml($valueType);
-                }
-
-                $valueTypesString = implode('|', $valueTypesString);
-            } else {
-                $valueTypesString = 'mixed';
-            }
-
-            $typeString .= \sprintf('&lt;%s,%s&gt;', $keyTypesString, $valueTypesString);
+            return implode('&', $parts);
         }
 
-        return $typeString;
+        if ($type instanceof CollectionType) {
+            $wrapped = $type->getWrappedType();
+
+            $main = $wrapped instanceof GenericType ? $wrapped->getWrappedType() : $wrapped;
+            $mainString = self::mainTypeStringHtml($main);
+
+            if (!$wrapped instanceof GenericType) {
+                return $mainString;
+            }
+
+            $variableTypes = $wrapped->getVariableTypes();
+            $keyType = $variableTypes[0] ?? null;
+            $valueType = $variableTypes[1] ?? null;
+
+            $keyString = $keyType !== null
+                ? self::getTypeStringHtml($keyType)
+                : 'mixed';
+
+            $valueString = $valueType !== null
+                ? self::getTypeStringHtml($valueType)
+                : 'mixed';
+
+            return \sprintf('%s&lt;%s,%s&gt;', $mainString, $keyString, $valueString);
+        }
+
+        if ($type instanceof BuiltinType) {
+            return $type->getTypeIdentifier()->value;
+        }
+
+        if ($type instanceof ObjectType) {
+            return self::formatClassNameHtml($type->getClassName());
+        }
+
+        return (string) $type;
     }
 
     /**
@@ -406,14 +440,9 @@ final readonly class TypeUtil
     /**
      * @return array<int,Type>
      */
-    private static function getAttributesFromType(
-        Type|MixedType $type,
-    ): array {
-        if ($type instanceof MixedType) {
-            return [];
-        }
-
-        $class = $type->getClassName();
+    private static function getAttributesFromType(Type $type): array
+    {
+        $class = self::getObjectClass($type);
 
         if ($class === null) {
             return [];
@@ -432,20 +461,20 @@ final readonly class TypeUtil
         $attributeTypes = [];
 
         foreach ($attributes as $attribute) {
-            $attributeTypes[] = TypeFactory::objectOfClass($attribute->getName());
+            /** @var class-string $attributeClass */
+            $attributeClass = $attribute->getName();
+            $attributeTypes[] = TypeFactory::objectOfClass($attributeClass);
         }
 
         return $attributeTypes;
     }
 
     /**
-     * @param Type $type
      * @return array<int,string>
      */
     #[Friend(TypeResolver::class)]
-    public static function getAttributesTypeStrings(
-        Type|MixedType $type,
-    ): array {
+    public static function getAttributesTypeStrings(Type $type): array
+    {
         $attributes = self::getAttributesFromType($type);
 
         $attributeTypeStrings = [];
@@ -455,5 +484,160 @@ final readonly class TypeUtil
         }
 
         return $attributeTypeStrings;
+    }
+
+    private static function mainTypeString(Type $type): string
+    {
+        if ($type instanceof ObjectType) {
+            return $type->getClassName();
+        }
+
+        if ($type instanceof BuiltinType) {
+            return $type->getTypeIdentifier()->value;
+        }
+
+        return (string) $type;
+    }
+
+    private static function mainTypeStringHtml(Type $type): string
+    {
+        if ($type instanceof ObjectType) {
+            return self::formatClassNameHtml($type->getClassName());
+        }
+
+        if ($type instanceof BuiltinType) {
+            return $type->getTypeIdentifier()->value;
+        }
+
+        return (string) $type;
+    }
+
+    private static function formatClassNameHtml(string $className): string
+    {
+        $shortClassName = preg_replace('/^.*\\\\/', '', $className) ?? $className;
+
+        return \sprintf(
+            '<abbr title="%s">%s</abbr>',
+            htmlspecialchars($className),
+            htmlspecialchars($shortClassName),
+        );
+    }
+
+    /**
+     * Extracts the underlying object class name from any Type, walking through
+     * NullableType/CollectionType/GenericType wrapping. Returns null if the
+     * type is not (ultimately) an object with a known class.
+     *
+     * @return ?class-string
+     */
+    private static function getObjectClass(Type $type): ?string
+    {
+        if ($type instanceof NullableType) {
+            return self::getObjectClass($type->getWrappedType());
+        }
+
+        if ($type instanceof CollectionType) {
+            return self::getObjectClass($type->getWrappedType());
+        }
+
+        if ($type instanceof GenericType) {
+            return self::getObjectClass($type->getWrappedType());
+        }
+
+        if ($type instanceof ObjectType) {
+            /** @var class-string */
+            return $type->getClassName();
+        }
+
+        return null;
+    }
+
+    /**
+     * Produces a copy of $type with its underlying object class replaced with
+     * $newClass. Preserves CollectionType/GenericType wrapping.
+     *
+     * @param class-string $newClass
+     */
+    private static function reclassify(Type $type, string $newClass): Type
+    {
+        if ($type instanceof ObjectType) {
+            return TypeFactory::objectOfClass($newClass);
+        }
+
+        if ($type instanceof CollectionType) {
+            $wrapped = $type->getWrappedType();
+
+            if ($wrapped instanceof GenericType) {
+                $variableTypes = $wrapped->getVariableTypes();
+                $keyType = $variableTypes[0] ?? null;
+                $valueType = $variableTypes[1] ?? null;
+
+                return TypeFactory::objectWithKeyValue($newClass, $keyType, $valueType);
+            }
+
+            return TypeFactory::objectOfClass($newClass);
+        }
+
+        return $type;
+    }
+
+    /**
+     * Builds a CollectionType using the same outer Builtin/Object as $original,
+     * but with the supplied key/value types.
+     */
+    private static function reconstructCollection(
+        GenericType $original,
+        ?Type $keyType,
+        ?Type $valueType,
+    ): Type {
+        $main = $original->getWrappedType();
+
+        if ($main instanceof ObjectType) {
+            /** @var class-string $className */
+            $className = $main->getClassName();
+
+            return TypeFactory::objectWithKeyValue(
+                $className,
+                $keyType,
+                $valueType,
+            );
+        }
+
+        // Builtin (array/iterable)
+        if ($main->getTypeIdentifier() === TypeIdentifier::ARRAY) {
+            return TypeFactory::arrayWithKeyValue($keyType, $valueType);
+        }
+
+        if ($main->getTypeIdentifier() === TypeIdentifier::ITERABLE) {
+            return Type::iterable($valueType, $keyType);
+        }
+
+        // Fallback — shouldn't happen in practice.
+        return Type::collection($main, $valueType, $keyType);
+    }
+
+    /**
+     * Drops the generic key/value information, returning a bare equivalent.
+     */
+    private static function stripCollectionGenerics(GenericType $original): Type
+    {
+        $main = $original->getWrappedType();
+
+        if ($main instanceof ObjectType) {
+            /** @var class-string $className */
+            $className = $main->getClassName();
+
+            return TypeFactory::objectOfClass($className);
+        }
+
+        if ($main->getTypeIdentifier() === TypeIdentifier::ARRAY) {
+            return TypeFactory::array();
+        }
+
+        if ($main->getTypeIdentifier() === TypeIdentifier::ITERABLE) {
+            return TypeFactory::iterable();
+        }
+
+        return $main;
     }
 }
