@@ -21,7 +21,9 @@ use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 
 final readonly class RamseyUuidTransformer implements TransformerInterface
 {
@@ -47,7 +49,7 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
         // wants to convert string to uuid
 
         if (\is_string($source)) {
-            $targetClass = $targetType->getClassName();
+            $targetClass = $targetType instanceof ObjectType ? $targetType->getClassName() : null;
 
             if ($targetClass === null) {
                 throw new InvalidArgumentException(
@@ -66,9 +68,9 @@ final readonly class RamseyUuidTransformer implements TransformerInterface
         // wants to convert uuid to string
 
         if ($source instanceof UuidInterface) {
-            if ($targetType->getBuiltinType() === Type::BUILTIN_TYPE_STRING) {
+            if (TypeCheck::isString($targetType)) {
                 return $source->toString();
-            } elseif ($targetType->getClassName() === UuidInterface::class) {
+            } elseif ($targetType instanceof ObjectType && $targetType->getClassName() === UuidInterface::class) {
                 return $source;
             }
 

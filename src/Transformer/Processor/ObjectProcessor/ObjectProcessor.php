@@ -44,7 +44,8 @@ use Rekalogika\Mapper\Transformer\Processor\ObjectProcessorInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\CollectionType;
 
 /**
  * @internal
@@ -545,7 +546,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
                         source: $sourcePropertyValue,
                         target: $currentTargetPropertyValue,
                         sourceType: null,
-                        targetTypes: [],
+                        targetType: null,
                         context: $context,
                         path: $sourceProperty,
                     );
@@ -731,17 +732,17 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
 
         $targetTypes = $metadata->getTargetTypes();
 
-        if ($targetPropertyValue instanceof AdderRemoverProxy) {
-            $key = $targetTypes[0]->getCollectionKeyTypes();
-            $value = $targetTypes[0]->getCollectionValueTypes();
-
-            $targetTypes = [
-                TypeFactory::objectWithKeyValue(
-                    \ArrayAccess::class,
-                    $key[0],
-                    $value[0],
-                ),
-            ];
+        if ($targetPropertyValue instanceof AdderRemoverProxy && isset($targetTypes[0])) {
+            $first = $targetTypes[0];
+            if ($first instanceof CollectionType) {
+                $targetTypes = [
+                    TypeFactory::objectWithKeyValue(
+                        \ArrayAccess::class,
+                        $first->getCollectionKeyType(),
+                        $first->getCollectionValueType(),
+                    ),
+                ];
+            }
         }
 
         // guess source type, and get the compatible type from metadata, so
@@ -769,7 +770,7 @@ final readonly class ObjectProcessor implements ObjectProcessorInterface
             source: $sourcePropertyValue,
             target: $targetPropertyValue,
             sourceType: $sourceType,
-            targetTypes: $targetTypes,
+            targetType: TypeFactory::combine($targetTypes),
             context: $context,
             path: $metadata->getTargetProperty(),
         );

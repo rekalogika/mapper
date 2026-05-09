@@ -25,7 +25,7 @@ use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\PropertyAccess\Exception\ExceptionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -66,7 +66,7 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
             source: $source,
             target: $targetObject,
             sourceType: null,
-            targetTypes: [TypeFactory::objectOfClass($targetClass)],
+            targetType: TypeFactory::objectOfClass($targetClass),
             context: $context ?? $this->context,
         );
 
@@ -112,16 +112,15 @@ final class SubMapper implements SubMapperInterface, MainTransformerAwareInterfa
         }
 
 
-        /** @var array<int,Type>|null */
-        $targetPropertyTypes = $this->propertyTypeExtractor
-            ->getTypes($containingClass, $property);
+        $targetPropertyType = $this->propertyTypeExtractor
+            ->getType($containingClass, $property);
 
         /** @var mixed */
         $result = $this->getMainTransformer()->transform(
             source: $source,
             target: $targetPropertyValue,
             sourceType: null,
-            targetTypes: $targetPropertyTypes ?? [],
+            targetType: $targetPropertyType,
             context: $context ?? $this->context,
         );
 

@@ -13,8 +13,7 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\MainTransformer\Model;
 
-use Rekalogika\Mapper\Transformer\MixedType;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * Debug context for main transformer. Used for tracing.
@@ -25,7 +24,7 @@ use Symfony\Component\PropertyInfo\Type;
 final readonly class DebugContext
 {
     /**
-     * @param array<int,Type|MixedType> $targetTypes
+     * @param array<int,Type> $targetTypes
      */
     public function __construct(
         private Type $sourceType,
@@ -39,7 +38,7 @@ final readonly class DebugContext
     }
 
     /**
-     * @return array<int,Type|MixedType>
+     * @return array<int,Type>
      */
     public function getTargetTypes(): array
     {

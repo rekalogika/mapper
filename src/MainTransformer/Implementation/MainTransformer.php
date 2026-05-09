@@ -30,13 +30,12 @@ use Rekalogika\Mapper\ObjectCache\ObjectCacheFactoryInterface;
 use Rekalogika\Mapper\ObjectCache\Sentinel\CachedTargetObjectNotFoundSentinel;
 use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\TransformerRegistry\Implementation\CachingTransformerRegistry;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeGuesser;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
@@ -78,7 +77,7 @@ final class MainTransformer implements
         mixed $source,
         mixed $target,
         ?Type $sourceType,
-        array $targetTypes,
+        ?Type $targetType,
         Context $context,
         ?string $path = null,
     ): mixed {
@@ -104,11 +103,11 @@ final class MainTransformer implements
         // also not provided, then the target type is mixed.
 
         if ($target === null) {
-            if ($targetTypes === []) {
-                $targetTypes = [MixedType::instance()];
+            if ($targetType === null) {
+                $targetType = Type::mixed();
             }
-        } elseif ($targetTypes === []) {
-            $targetTypes = [TypeGuesser::guessTypeFromVariable($target)];
+        } elseif ($targetType === null) {
+            $targetType = TypeGuesser::guessTypeFromVariable($target);
         }
 
         // get or create object cache
@@ -149,7 +148,7 @@ final class MainTransformer implements
         $searchResult = $this->transformerRegistry
             ->findBySourceAndTargetTypes(
                 $sourceTypes,
-                $targetTypes,
+                [$targetType],
             );
 
         // if debug, inject debug context
@@ -175,14 +174,14 @@ final class MainTransformer implements
                 continue;
             }
 
-            // TransformerInterface doesn't accept MixedType, so we need to
-            // convert it to null
+            // TransformerInterface treats Type::mixed() as "no info" and
+            // expects null in that case
 
-            $sourceType = $searchResultEntry->getSourceType();
-            $sourceTypeForTransformer = $sourceType instanceof MixedType ? null : $sourceType;
+            $entrySourceType = $searchResultEntry->getSourceType();
+            $sourceTypeForTransformer = TypeCheck::isMixed($entrySourceType) ? null : $entrySourceType;
 
-            $targetType = $searchResultEntry->getTargetType();
-            $targetTypeForTransformer = $targetType instanceof MixedType ? null : $targetType;
+            $entryTargetType = $searchResultEntry->getTargetType();
+            $targetTypeForTransformer = TypeCheck::isMixed($entryTargetType) ? null : $entryTargetType;
 
             // if the target type is cached, return it. otherwise, pre-cache it
 
@@ -236,9 +235,9 @@ final class MainTransformer implements
             // check the result type
 
             if (
-                !TypeCheck::isVariableInstanceOf($result, $targetType)
+                !TypeCheck::isVariableInstanceOf($result, $entryTargetType)
             ) {
-                throw new TransformerReturnsUnexpectedValueException($source, $targetType, $result, $transformer, $context);
+                throw new TransformerReturnsUnexpectedValueException($source, $entryTargetType, $result, $transformer, $context);
             }
 
             // if the target type is not null, cache it
@@ -255,7 +254,7 @@ final class MainTransformer implements
             return $result;
         }
 
-        throw new CannotFindTransformerException($sourceTypes, array_values($targetTypes), context: $context);
+        throw new CannotFindTransformerException($sourceTypes, [$targetType], context: $context);
     }
 
     /**
@@ -282,14 +281,14 @@ final class MainTransformer implements
                 ->warmingFindBySourceAndTargetTypes([$sourceType], $targetTypes);
 
             foreach ($searchResult as $searchResultEntry) {
-                // TransformerInterface doesn't accept MixedType, so we need to
-                // convert it to null
+                // TransformerInterface treats Type::mixed() as "no info" and
+                // expects null in that case
 
-                $sourceType = $searchResultEntry->getSourceType();
-                $sourceTypeForTransformer = $sourceType instanceof MixedType ? null : $sourceType;
+                $entrySourceType = $searchResultEntry->getSourceType();
+                $sourceTypeForTransformer = TypeCheck::isMixed($entrySourceType) ? null : $entrySourceType;
 
-                $targetType = $searchResultEntry->getTargetType();
-                $targetTypeForTransformer = $targetType instanceof MixedType ? null : $targetType;
+                $entryTargetType = $searchResultEntry->getTargetType();
+                $targetTypeForTransformer = TypeCheck::isMixed($entryTargetType) ? null : $entryTargetType;
 
                 $transformerServiceId = $searchResultEntry->getTransformerServiceId();
 

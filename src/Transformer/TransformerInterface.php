@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\Transformer;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 interface TransformerInterface
 {

@@ -15,15 +15,14 @@ namespace Rekalogika\Mapper\MainTransformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final class CannotFindTransformerException extends UnexpectedValueException
 {
     /**
-     * @param array<int,Type|MixedType> $sourceTypes
-     * @param array<int,Type|MixedType> $targetTypes
+     * @param array<int,Type> $sourceTypes
+     * @param array<int,Type> $targetTypes
      */
     public function __construct(array $sourceTypes, array $targetTypes, Context $context)
     {

@@ -19,7 +19,8 @@ use Rekalogika\Mapper\Transformer\Exception\InvalidTypeInArgumentException;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 
 /**
  * @todo rename class to StringToEnumTransformer
@@ -38,7 +39,7 @@ final readonly class StringToBackedEnumTransformer implements TransformerInterfa
             throw new InvalidArgumentException(\sprintf('Source must be string, "%s" given', get_debug_type($source)), context: $context);
         }
 
-        $class = $targetType?->getClassName();
+        $class = $targetType instanceof ObjectType ? $targetType->getClassName() : null;
 
         if ($class === null || !enum_exists($class)) {
             throw new InvalidTypeInArgumentException('Target must be an enum class-string, "%s" given', $targetType, context: $context);

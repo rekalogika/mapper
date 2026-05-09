@@ -15,11 +15,10 @@ namespace Rekalogika\Mapper\Transformer\Implementation;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeCheck;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final readonly class CopyTransformer implements TransformerInterface
 {
@@ -51,6 +50,6 @@ final readonly class CopyTransformer implements TransformerInterface
     #[\Override]
     public function getSupportedTransformation(): iterable
     {
-        yield new TypeMapping(MixedType::instance(), MixedType::instance());
+        yield new TypeMapping(Type::mixed(), Type::mixed());
     }
 }

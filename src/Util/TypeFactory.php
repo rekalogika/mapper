@@ -176,4 +176,26 @@ final class TypeFactory
 
         return Type::collection(Type::object($class), $valueType, $keyType);
     }
+
+    /**
+     * Combines a list of alternative types into a single Type. Returns null if
+     * the list is empty, the lone Type if it has one element, or a UnionType /
+     * NullableType otherwise.
+     *
+     * @param array<array-key,Type> $types
+     */
+    public static function combine(array $types): ?Type
+    {
+        $types = array_values($types);
+
+        if ($types === []) {
+            return null;
+        }
+
+        if (\count($types) === 1) {
+            return $types[0];
+        }
+
+        return Type::union(...$types);
+    }
 }

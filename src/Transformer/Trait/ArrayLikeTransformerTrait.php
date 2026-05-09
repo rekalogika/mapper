@@ -18,7 +18,8 @@ use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\Model\AdderRemoverProxy;
 use Rekalogika\Mapper\Transformer\Model\SplObjectStorageWrapper;
 use Rekalogika\Mapper\Util\TypeCheck;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeFactory;
+use Symfony\Component\TypeInfo\Type;
 
 trait ArrayLikeTransformerTrait
 {
@@ -114,7 +115,7 @@ trait ArrayLikeTransformerTrait
                     source: $sourceMemberKey,
                     target: null,
                     sourceType: null,
-                    targetTypes: $metadata->getTargetMemberKeyTypes(),
+                    targetType: TypeFactory::combine($metadata->getTargetMemberKeyTypes()),
                     context: $context,
                     path: '(key)',
                 );
@@ -157,7 +158,7 @@ trait ArrayLikeTransformerTrait
                     source: $sourceMemberKey,
                     target: null,
                     sourceType: null,
-                    targetTypes: $metadata->getTargetMemberKeyTypes(),
+                    targetType: TypeFactory::combine($metadata->getTargetMemberKeyTypes()),
                     context: $context,
                     path: '(key)',
                 );
@@ -177,7 +178,7 @@ trait ArrayLikeTransformerTrait
                 source: $sourceMemberKey,
                 target: null,
                 sourceType: null,
-                targetTypes: $metadata->getTargetMemberKeyTypes(),
+                targetType: TypeFactory::combine($metadata->getTargetMemberKeyTypes()),
                 context: $context,
                 path: '(key)',
             );
@@ -240,7 +241,7 @@ trait ArrayLikeTransformerTrait
             source: $sourceMemberValue,
             target: $targetMemberValue,
             sourceType: null,
-            targetTypes: $metadata->getTargetMemberValueTypes(),
+            targetType: TypeFactory::combine($metadata->getTargetMemberValueTypes()),
             context: $context,
             path: $path,
         );

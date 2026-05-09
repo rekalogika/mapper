@@ -26,7 +26,8 @@ use Rekalogika\Mapper\Transformer\Processor\ObjectProcessorFactoryInterface;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 
 final class ObjectToObjectTransformer implements
     TransformerInterface,
@@ -74,11 +75,11 @@ final class ObjectToObjectTransformer implements
         if (\is_object($target)) {
             $targetClass = $target::class;
         } else {
-            $targetClass = $targetType->getClassName();
-
-            if (null === $targetClass) {
+            if (!$targetType instanceof ObjectType) {
                 throw new InvalidArgumentException("Cannot get the class name for the target type.", context: $context);
             }
+
+            $targetClass = $targetType->getClassName();
 
             if (!class_exists($targetClass) && !interface_exists($targetClass)) {
                 throw new NotAClassException($targetClass, context: $context);
@@ -124,15 +125,19 @@ final class ObjectToObjectTransformer implements
             return;
         }
 
+        if (!$sourceType instanceof ObjectType || !$targetType instanceof ObjectType) {
+            return;
+        }
+
         $sourceClass = $sourceType->getClassName();
 
-        if (null === $sourceClass || !class_exists($sourceClass)) {
+        if (!class_exists($sourceClass)) {
             return;
         }
 
         $targetClass = $targetType->getClassName();
 
-        if (null === $targetClass || !class_exists($targetClass)) {
+        if (!class_exists($targetClass)) {
             return;
         }
 

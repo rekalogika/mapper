@@ -27,7 +27,8 @@ use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 
 final class ObjectMapperTransformer implements
     TransformerInterface,
@@ -59,16 +60,14 @@ final class ObjectMapperTransformer implements
 
         // target class must be valid
 
+        if (!$targetType instanceof ObjectType) {
+            throw new InvalidArgumentException(\sprintf('Target type "%s" is not an object type.', (string) $targetType), context: $context);
+        }
+
         $targetClass = $targetType->getClassName();
 
-        if (
-            !\is_string($targetClass)
-            || (
-                !class_exists($targetClass)
-                && !interface_exists($targetClass)
-            )
-        ) {
-            throw new InvalidArgumentException(\sprintf('Target "%s" is not a valid class or interface.', (string) $targetClass), context: $context);
+        if (!class_exists($targetClass) && !interface_exists($targetClass)) {
+            throw new InvalidArgumentException(\sprintf('Target "%s" is not a valid class or interface.', $targetClass), context: $context);
         }
 
         // get source class
@@ -106,13 +105,14 @@ final class ObjectMapperTransformer implements
         Type $targetType,
         Context $context,
     ): void {
+        if (!$sourceType instanceof ObjectType || !$targetType instanceof ObjectType) {
+            return;
+        }
+
         $sourceClass = $sourceType->getClassName();
         $targetClass = $targetType->getClassName();
 
-        if (
-            ($sourceClass === null || !class_exists($sourceClass))
-            || ($targetClass === null || !class_exists($targetClass))
-        ) {
+        if (!class_exists($sourceClass) || !class_exists($targetClass)) {
             return;
         }
 

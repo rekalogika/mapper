@@ -19,7 +19,9 @@ use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Transformer\TypeMapping;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Rekalogika\Mapper\Util\TypeCheck;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Uid\Uuid;
 
@@ -47,7 +49,7 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
         // wants to convert string to uuid or ulid
 
         if (\is_string($source)) {
-            $targetClass = $targetType->getClassName();
+            $targetClass = $targetType instanceof ObjectType ? $targetType->getClassName() : null;
 
             if ($targetClass === null) {
                 throw new InvalidArgumentException(
@@ -72,9 +74,9 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
         // wants to convert uuid to string
 
         if ($source instanceof Uuid) {
-            if ($targetType->getBuiltinType() === Type::BUILTIN_TYPE_STRING) {
+            if (TypeCheck::isString($targetType)) {
                 return $source->toRfc4122();
-            } elseif ($targetType->getClassName() === Uuid::class) {
+            } elseif ($targetType instanceof ObjectType && $targetType->getClassName() === Uuid::class) {
                 return $source;
             }
 
@@ -84,9 +86,9 @@ final readonly class SymfonyUidTransformer implements TransformerInterface
         // wants to convert ulid to string
 
         if ($source instanceof Ulid) {
-            if ($targetType->getBuiltinType() === Type::BUILTIN_TYPE_STRING) {
+            if (TypeCheck::isString($targetType)) {
                 return $source->toBase32();
-            } elseif ($targetType->getClassName() === Ulid::class) {
+            } elseif ($targetType instanceof ObjectType && $targetType->getClassName() === Ulid::class) {
                 return $source;
             }
 

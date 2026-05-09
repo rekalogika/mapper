@@ -14,19 +14,21 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\MainTransformer;
 
 use Rekalogika\Mapper\Context\Context;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 interface MainTransformerInterface
 {
     /**
      * @param ?Type $sourceType If null, the source type will be guessed
-     * @param array<array-key,Type> $targetTypes
+     * @param ?Type $targetType The target type. May be a UnionType, NullableType
+     *     or any other composite. If null and $target is null, the type
+     *     defaults to mixed.
      */
     public function transform(
         mixed $source,
         mixed $target,
         ?Type $sourceType,
-        array $targetTypes,
+        ?Type $targetType,
         Context $context,
         ?string $path = null,
     ): mixed;

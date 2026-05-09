@@ -17,7 +17,7 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\ExceptionInterface;
 use Rekalogika\Mapper\Exception\RuntimeException;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final class CircularReferenceException extends RuntimeException implements ExceptionInterface
 {

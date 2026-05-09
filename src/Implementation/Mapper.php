@@ -62,7 +62,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface,
             source: $source,
             target: $target,
             sourceType: null,
-            targetTypes: [$targetType],
+            targetType: $targetType,
             context: $context ?? Context::create(),
         );
 
@@ -106,7 +106,7 @@ final readonly class Mapper implements MapperInterface, IterableMapperInterface,
                 source: $item,
                 target: null,
                 sourceType: null,
-                targetTypes: [$targetType],
+                targetType: $targetType,
                 context: $context ?? Context::create(),
             );
 

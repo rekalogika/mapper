@@ -16,16 +16,15 @@ namespace Rekalogika\Mapper\MainTransformer\Exception;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Debug\TraceableTransformer;
 use Rekalogika\Mapper\Exception\UnexpectedValueException;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final class TransformerReturnsUnexpectedValueException extends UnexpectedValueException
 {
     public function __construct(
         mixed $source,
-        Type|MixedType $targetType,
+        Type $targetType,
         mixed $target,
         TransformerInterface $transformer,
         Context $context,
