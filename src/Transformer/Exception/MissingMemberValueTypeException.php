@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\Exception;
 
 use Rekalogika\Mapper\Context\Context;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final class MissingMemberValueTypeException extends MissingMemberTypeException
 {
@@ -26,7 +25,7 @@ final class MissingMemberValueTypeException extends MissingMemberTypeException
         ?Context $context = null,
     ) {
         if (null === $sourceType) {
-            $sourceType = MixedType::instance();
+            $sourceType = Type::mixed();
         }
 
         parent::__construct(

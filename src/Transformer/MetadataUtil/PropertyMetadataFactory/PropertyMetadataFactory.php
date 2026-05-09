@@ -19,15 +19,15 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\Model\PropertyMetadata;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyAccessInfoExtractorInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactoryInterface;
 use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminerInterface;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
+use Rekalogika\Mapper\Util\TypeCheck;
 use Symfony\Component\PropertyInfo\PropertyReadInfo;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -320,18 +320,37 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     {
         // break property types into simple types
 
-        $originalPropertyTypes = $this->propertyTypeExtractor
-            ->getTypes($class, $property) ?? [];
+        // TypeInfo's resolver is stricter than legacy property-info — for
+        // example, it rejects `array<mixed,mixed>` as an invalid array key.
+        // On failure, fall back to the property's own type declaration so we
+        // still get useful type info.
+        try {
+            $originalPropertyType = $this->propertyTypeExtractor
+                ->getType($class, $property);
+        } catch (\Symfony\Component\TypeInfo\Exception\InvalidArgumentException) {
+            $originalPropertyType = $this->getDeclaredPropertyType($class, $property);
+        }
 
-        $originalPropertyTypes = array_values($originalPropertyTypes);
+        // Workaround for a property-info behavior change: getType() now
+        // returns BuiltinType<MIXED> when the accessor method declares a
+        // `mixed` return type, whereas the legacy getTypes() filtered out
+        // `mixed` and fell back to the property's own type declaration.
+        // Restore the legacy behavior by preferring the property declaration
+        // when it exists.
+        if (TypeCheck::isMixed($originalPropertyType)) {
+            $declared = $this->getDeclaredPropertyType($class, $property);
+            if ($declared !== null) {
+                $originalPropertyType = $declared;
+            }
+        }
 
         $types = [];
 
-        foreach ($originalPropertyTypes as $propertyType) {
-            $simpleTypes = $this->typeResolver->getSimpleTypes($propertyType);
+        if ($originalPropertyType !== null) {
+            $simpleTypes = $this->typeResolver->getSimpleTypes($originalPropertyType);
 
             foreach ($simpleTypes as $simpleType) {
-                if ($simpleType instanceof MixedType) {
+                if (TypeCheck::isMixed($simpleType)) {
                     continue;
                 }
 
@@ -342,18 +361,13 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
         // determine if it is a lone scalar type
 
         /** @var 'int'|'float'|'string'|'bool'|'null'|null */
-        $scalarType = Util::determineScalarType($originalPropertyTypes);
+        $scalarType = Util::determineScalarType(
+            $originalPropertyType !== null ? [$originalPropertyType] : [],
+        );
 
         // determine if nullable
 
-        $nullable = false;
-
-        foreach ($types as $type) {
-            if ($type->getBuiltinType() === 'null') {
-                $nullable = true;
-                break;
-            }
-        }
+        $nullable = $originalPropertyType?->isNullable() ?? false;
 
         return [$types, $scalarType, $nullable];
     }
@@ -361,6 +375,54 @@ final readonly class PropertyMetadataFactory implements PropertyMetadataFactoryI
     private function isPropertyPath(string $property): bool
     {
         return str_contains($property, '.') || str_contains($property, '[');
+    }
+
+    /**
+     * Returns the type from the property's own type declaration via reflection,
+     * if the property exists and has a typed declaration. Used as a fallback
+     * when the property-info extractor returns a useless `mixed` type from a
+     * loosely-typed accessor.
+     *
+     * @param class-string $class
+     */
+    private function getDeclaredPropertyType(string $class, string $property): ?Type
+    {
+        try {
+            $reflectionProperty = new \ReflectionProperty($class, $property);
+        } catch (\ReflectionException) {
+            return null;
+        }
+
+        $reflectionType = $reflectionProperty->getType();
+
+        if (!$reflectionType instanceof \ReflectionNamedType) {
+            return null;
+        }
+
+        $name = $reflectionType->getName();
+
+        if ($name === 'mixed' || $name === 'never' || $name === 'void') {
+            return null;
+        }
+
+        if ($reflectionType->isBuiltin()) {
+            try {
+                $type = Type::builtin($name);
+            } catch (\Throwable) {
+                return null;
+            }
+        } else {
+            if (!class_exists($name) && !interface_exists($name) && !enum_exists($name)) {
+                return null;
+            }
+
+            /** @var class-string $name */
+            $type = Type::object($name);
+        }
+
+        return $reflectionType->allowsNull() && $name !== 'null'
+            ? Type::nullable($type)
+            : $type;
     }
 
     /**

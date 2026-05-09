@@ -93,19 +93,19 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on lines 152, 335
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on lines 164, 347
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 202
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 214
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayInterfacePropertyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on lines 238, 348
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on lines 250, 360
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDto::class
     );
@@ -123,7 +123,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 253
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 265
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDto::class
     );
@@ -153,19 +153,19 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 367
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 379
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithArrayPropertyWithStringKey::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDtoWithIntKey::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 170
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 182
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithCollectionProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 220
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 232
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithCollectionProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayInterfacePropertyDto::class
     );
@@ -183,7 +183,7 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 188
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 200
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithNullCollectionProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithNotNullArrayAccessPropertyDto::class
     );
@@ -195,25 +195,25 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 275
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 287
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithSplObjectStorageProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyWithObjectKeyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 293
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 305
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithSplObjectStorageProperty::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on lines 101, 306, 390
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on lines 113, 318, 402
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayAccessPropertyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on lines 115, 320
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on lines 127, 332
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayPropertyDto::class
     );
@@ -231,19 +231,19 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 429
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 441
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithArrayWithGetterNoSetterDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 130
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 142
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionPropertyDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 407
+        // tests/src/IntegrationTest/TraversableToArrayAccessMappingTest.php on line 419
         source: \Rekalogika\Mapper\Tests\Fixtures\ArrayLike\ObjectWithTraversableProperties::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\ArrayLikeDto\ObjectWithCollectionWithGetterNoSetterDto::class
     );
@@ -623,25 +623,25 @@ return function (MappingCollection $mappingCollection): void {
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapPropertyPathTest.php on line 298
+        // tests/src/IntegrationTest/MapPropertyPathTest.php on line 266
         source: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookDto::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Book::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapPropertyPathTest.php on line 312
+        // tests/src/IntegrationTest/MapPropertyPathTest.php on line 280
         source: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Book::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Book2Dto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapPropertyPathTest.php on line 266
+        // tests/src/IntegrationTest/MapPropertyPathTest.php on line 234
         source: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Book::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\BookDto::class
     );
     
     $mappingCollection->addObjectMapping(
-        // tests/src/IntegrationTest/MapPropertyPathTest.php on line 350
+        // tests/src/IntegrationTest/MapPropertyPathTest.php on line 318
         source: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPath\Chapter::class,
         target: \Rekalogika\Mapper\Tests\Fixtures\MapPropertyPathDto\Chapter2Dto::class
     );

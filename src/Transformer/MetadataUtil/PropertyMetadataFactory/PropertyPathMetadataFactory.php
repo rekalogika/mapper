@@ -27,7 +27,11 @@ use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathIteratorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\CollectionType;
+use Symfony\Component\TypeInfo\Type\NullableType;
+use Symfony\Component\TypeInfo\Type\ObjectType;
+use Symfony\Component\TypeInfo\Type\UnionType;
 
 /**
  * @internal
@@ -63,14 +67,15 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
 
         $lastIsIndex = false;
 
-        /** @var list<Type>|null */
-        $types = null;
+        $type = null;
 
         foreach ($iterator as $propertyPathPart) {
             \assert(\is_string($propertyPathPart));
 
-            if ($types !== null) {
-                if (\count($types) > 1) {
+            if ($type !== null) {
+                $unwrapped = $type instanceof NullableType ? $type->getWrappedType() : $type;
+
+                if ($unwrapped instanceof UnionType) {
                     throw new PropertyPathAwarePropertyInfoExtractorException(
                         message: \sprintf('Cannot proceed because property "%s" has multiple types in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                         class: $class,
@@ -78,14 +83,19 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
                     );
                 }
 
-                $currentType = $types[0];
-                $currentClass = $currentType->getClassName();
+                $currentType = $unwrapped;
+                $currentClass = $currentType instanceof ObjectType ? $currentType->getClassName() : null;
             }
 
             if ($iterator->isIndex()) {
                 $lastIsIndex = true;
                 $currentPath .= '[' . $propertyPathPart . ']';
-                $types = $currentType?->getCollectionValueTypes();
+
+                if ($currentType instanceof CollectionType) {
+                    $type = $currentType->getCollectionValueType();
+                } else {
+                    $type = null;
+                }
             } else {
                 $lastIsIndex = false;
                 if ($currentClass === null) {
@@ -99,19 +109,18 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
                 $currentPath .= '.' . $propertyPathPart;
                 $currentProperty = $propertyPathPart;
                 $lastClass = $currentClass;
-                $types = $this->propertyTypeExtractor
-                    ->getTypes($currentClass, $propertyPathPart);
+
+                try {
+                    $type = $this->propertyTypeExtractor
+                        ->getType($currentClass, $propertyPathPart);
+                } catch (\Symfony\Component\TypeInfo\Exception\InvalidArgumentException) {
+                    $type = null;
+                }
             }
 
-            if ($types === null) {
+            if ($type === null) {
                 throw new PropertyPathAwarePropertyInfoExtractorException(
                     message: \sprintf('Property "%s" not found in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
-                    class: $class,
-                    propertyPath: $property,
-                );
-            } elseif (\count($types) === 0) {
-                throw new PropertyPathAwarePropertyInfoExtractorException(
-                    message: \sprintf('Cannot determine the type of property "%s" in class "%s"', $propertyPathPart, $currentClass ?? 'unknown'),
                     class: $class,
                     propertyPath: $property,
                 );
@@ -149,7 +158,7 @@ final readonly class PropertyPathMetadataFactory implements PropertyMetadataFact
             isIndex: $lastIsIndex,
         );
 
-        $types = array_values($types ?? []);
+        $types = $type !== null ? [$type] : [];
 
         $unalterable = $this->unalterableDeterminer
             ->isTypesUnalterable($types);

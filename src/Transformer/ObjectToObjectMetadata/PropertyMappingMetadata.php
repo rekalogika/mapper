@@ -17,7 +17,7 @@ use Rekalogika\Mapper\ServiceMethod\ServiceMethodSpecification;
 use Rekalogika\Mapper\Transformer\Context\SourcePropertyAttributes;
 use Rekalogika\Mapper\Transformer\Context\TargetPropertyAttributes;
 use Rekalogika\Mapper\Util\TypeCheck;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @immutable

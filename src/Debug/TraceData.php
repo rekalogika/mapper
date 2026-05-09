@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Debug;
 
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
 /**
@@ -51,7 +50,7 @@ final class TraceData
     private bool $refused = false;
 
     /**
-     * @param null|array<int,Type|MixedType> $possibleTargetTypes
+     * @param null|array<int,Type> $possibleTargetTypes
      * @param class-string<TransformerInterface> $transformerClass
      */
     public function __construct(
@@ -146,7 +145,7 @@ final class TraceData
     }
 
     /**
-     * @return null|array<int,Type|MixedType>
+     * @return null|array<int,Type>
      */
     public function getPossibleTargetTypes(): ?array
     {

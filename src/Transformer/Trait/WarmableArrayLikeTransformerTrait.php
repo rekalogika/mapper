@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Trait;
 use Rekalogika\Mapper\CacheWarmer\WarmableArrayLikeMetadataFactoryInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableMainTransformerInterface;
 use Rekalogika\Mapper\Context\Context;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 trait WarmableArrayLikeTransformerTrait
 {

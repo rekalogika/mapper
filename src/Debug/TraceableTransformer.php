@@ -23,7 +23,7 @@ use Rekalogika\Mapper\Transformer\Exception\RefuseToTransformException;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareInterface;
 use Rekalogika\Mapper\Transformer\MainTransformerAwareTrait;
 use Rekalogika\Mapper\Transformer\TransformerInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**

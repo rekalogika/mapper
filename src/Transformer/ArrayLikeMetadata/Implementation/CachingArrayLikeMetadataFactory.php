@@ -18,7 +18,7 @@ use Rekalogika\Mapper\CacheWarmer\WarmableArrayLikeMetadataFactoryInterface;
 use Rekalogika\Mapper\CacheWarmer\WarmableCacheInterface;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal

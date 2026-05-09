@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer\Exception;
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 final class InvalidTypeInArgumentException extends InvalidArgumentException
 {

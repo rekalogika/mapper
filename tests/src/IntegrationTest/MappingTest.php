@@ -27,18 +27,17 @@ use Rekalogika\Mapper\Transformer\Implementation\PresetTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\ScalarToScalarTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\StringToBackedEnumTransformer;
 use Rekalogika\Mapper\Transformer\Implementation\TraversableToArrayAccessTransformer;
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Symfony\Component\Clock\DatePoint;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 class MappingTest extends FrameworkTestCase
 {
     /**
      * Testing mapping against default mapping table
-     * @param array<int,Type|MixedType> $sources
-     * @param array<int,Type|MixedType> $targets
+     * @param array<int,Type> $sources
+     * @param array<int,Type> $targets
      * @param class-string $transformerClass
      */
     #[DataProvider('mappingTestProvider')]

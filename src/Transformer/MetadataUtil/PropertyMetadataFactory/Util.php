@@ -13,7 +13,8 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Transformer\MetadataUtil\PropertyMetadataFactory;
 
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\BuiltinType;
 
 /**
  * @internal
@@ -28,22 +29,23 @@ final readonly class Util
      */
     public static function determineScalarType(array $types): ?string
     {
-        /** @var 'int'|'float'|'string'|'bool'|'null'|null */
-        $scalarType = null;
-
-        if (\count($types) === 1) {
-            $propertyType = $types[0];
-            $propertyBuiltInType = $propertyType->getBuiltinType();
-
-            if (\in_array(
-                $propertyBuiltInType,
-                ['int', 'float', 'string', 'bool', 'null'],
-                true,
-            )) {
-                $scalarType = $propertyBuiltInType;
-            }
+        if (\count($types) !== 1) {
+            return null;
         }
 
-        return $scalarType;
+        $propertyType = $types[0];
+
+        if (!$propertyType instanceof BuiltinType) {
+            return null;
+        }
+
+        $identifier = $propertyType->getTypeIdentifier()->value;
+
+        if (\in_array($identifier, ['int', 'float', 'string', 'bool', 'null'], true)) {
+            /** @var 'int'|'float'|'string'|'bool'|'null' */
+            return $identifier;
+        }
+
+        return null;
     }
 }

@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Rekalogika\Mapper\Command;
 
-use Rekalogika\Mapper\Transformer\MixedType;
 use Rekalogika\Mapper\TransformerRegistry\TransformerRegistryInterface;
 use Rekalogika\Mapper\TypeResolver\TypeResolverInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -24,6 +23,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractorInterface;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal
@@ -69,19 +69,15 @@ final class TryPropertyCommand extends Command
         /** @var string */
         $targetProperty = $input->getArgument('targetProperty') ?? $sourceProperty;
 
-        $sourceTypes = $this->propertyInfoExtractor
-            ->getTypes($sourceClass, $sourceProperty);
+        $sourceType = $this->propertyInfoExtractor
+            ->getType($sourceClass, $sourceProperty);
 
-        if ($sourceTypes === null || $sourceTypes === []) {
-            $sourceTypes = [MixedType::instance()];
-        }
+        $sourceTypes = $sourceType !== null ? [$sourceType] : [Type::mixed()];
 
-        $targetTypes = $this->propertyInfoExtractor
-            ->getTypes($targetClass, $targetProperty);
+        $targetType = $this->propertyInfoExtractor
+            ->getType($targetClass, $targetProperty);
 
-        if ($targetTypes === null || $targetTypes === []) {
-            $targetTypes = [MixedType::instance()];
-        }
+        $targetTypes = $targetType !== null ? [$targetType] : [Type::mixed()];
 
         $rows[] = [
             'Source Type',

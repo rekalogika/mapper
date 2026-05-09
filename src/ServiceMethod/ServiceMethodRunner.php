@@ -18,7 +18,7 @@ use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\Exception\RefuseToMapException;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal

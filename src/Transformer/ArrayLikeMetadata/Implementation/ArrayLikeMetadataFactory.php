@@ -21,7 +21,13 @@ use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadata;
 use Rekalogika\Mapper\Transformer\ArrayLikeMetadata\ArrayLikeMetadataFactoryInterface;
 use Rekalogika\Mapper\Util\TypeCheck;
 use Rekalogika\Mapper\Util\TypeFactory;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\BuiltinType;
+use Symfony\Component\TypeInfo\Type\CollectionType;
+use Symfony\Component\TypeInfo\Type\ObjectType;
+use Symfony\Component\TypeInfo\Type\UnionType;
+use Symfony\Component\TypeInfo\Type\WrappingTypeInterface;
+use Symfony\Component\TypeInfo\TypeIdentifier;
 
 /**
  * @internal
@@ -33,8 +39,8 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
         Type $sourceType,
         Type $targetType,
     ): ArrayLikeMetadata {
-        $sourceMemberKeyTypes = $sourceType->getCollectionKeyTypes();
-        $targetMemberKeyTypes = $targetType->getCollectionKeyTypes();
+        $sourceMemberKeyTypes = self::extractMemberKeyTypes($sourceType);
+        $targetMemberKeyTypes = self::extractMemberKeyTypes($targetType);
 
         if ($sourceMemberKeyTypes === []) {
             $sourceMemberKeyTypes = [
@@ -50,18 +56,18 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             ];
         }
 
-        $sourceMemberValueTypes = $sourceType->getCollectionValueTypes();
-        $targetMemberValueTypes = $targetType->getCollectionValueTypes();
+        $sourceMemberValueTypes = self::extractMemberValueTypes($sourceType);
+        $targetMemberValueTypes = self::extractMemberValueTypes($targetType);
 
         $isSourceArray = TypeCheck::isArray($sourceType);
         $isTargetArray = TypeCheck::isArray($targetType);
 
-        $sourceClass = $sourceType->getClassName();
+        $sourceClass = self::extractClassName($sourceType);
         if ($sourceClass !== null && (!class_exists($sourceClass) && !interface_exists($sourceClass))) {
             throw new InvalidArgumentException(\sprintf('Source class "%s" does not exist', $sourceClass));
         }
 
-        $targetClass = $targetType->getClassName();
+        $targetClass = self::extractClassName($targetType);
         if ($targetClass !== null && (!class_exists($targetClass) && !interface_exists($targetClass))) {
             throw new InvalidArgumentException(\sprintf('Target class "%s" does not exist', $targetClass));
         }
@@ -94,7 +100,12 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             }
         }
 
-        $targetMemberValueIsUntyped = $targetMemberValueTypes === [];
+        $targetMemberValueIsUntyped = $targetMemberValueTypes === []
+            || (\count($targetMemberValueTypes) === 1 && TypeCheck::isMixed($targetMemberValueTypes[0]));
+
+        if ($targetMemberValueIsUntyped) {
+            $targetMemberValueTypes = [];
+        }
 
         // determine if target can be lazy
 
@@ -129,5 +140,63 @@ final readonly class ArrayLikeMetadataFactory implements ArrayLikeMetadataFactor
             targetMemberKeyCanBeOtherThanIntOrString: $targetMemberKeyTypeCanBeOtherThanIntOrString,
             targetMemberValueIsUntyped: $targetMemberValueIsUntyped,
         );
+    }
+
+    /**
+     * @return list<Type>
+     */
+    private static function extractMemberKeyTypes(Type $type): array
+    {
+        if (!$type instanceof CollectionType) {
+            return [];
+        }
+
+        return self::flattenUnion($type->getCollectionKeyType());
+    }
+
+    /**
+     * @return list<Type>
+     */
+    private static function extractMemberValueTypes(Type $type): array
+    {
+        if (!$type instanceof CollectionType) {
+            return [];
+        }
+
+        return self::flattenUnion($type->getCollectionValueType());
+    }
+
+    /**
+     * @return list<Type>
+     */
+    private static function flattenUnion(Type $type): array
+    {
+        if ($type instanceof UnionType) {
+            return $type->getTypes();
+        }
+
+        return [$type];
+    }
+
+    /**
+     * @return ?class-string
+     */
+    private static function extractClassName(Type $type): ?string
+    {
+        $unwrapped = $type;
+        while ($unwrapped instanceof WrappingTypeInterface) {
+            $unwrapped = $unwrapped->getWrappedType();
+        }
+
+        if ($unwrapped instanceof ObjectType) {
+            /** @var class-string */
+            return $unwrapped->getClassName();
+        }
+
+        if ($unwrapped instanceof BuiltinType && $unwrapped->getTypeIdentifier() === TypeIdentifier::OBJECT) {
+            return null;
+        }
+
+        return null;
     }
 }

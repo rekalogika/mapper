@@ -15,11 +15,13 @@ namespace Rekalogika\Mapper\Tests\UnitTest\Util;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Rekalogika\Mapper\TypeResolver\Implementation\TypeResolver;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeGuesser;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\BuiltinType;
+use Symfony\Component\TypeInfo\Type\CollectionType;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 
 class TypeUtilTest extends TestCase
 {
@@ -29,11 +31,27 @@ class TypeUtilTest extends TestCase
         string $builtInType,
         ?string $className = null,
     ): void {
-        $typeResolver = new TypeResolver();
         $type = TypeGuesser::guessTypeFromVariable($object);
 
-        $this->assertSame($builtInType, $type->getBuiltinType());
-        $this->assertSame($className, $type->getClassName());
+        if ($type instanceof ObjectType) {
+            $this->assertSame('object', $builtInType);
+            $this->assertSame($className, $type->getClassName());
+
+            return;
+        }
+
+        if ($type instanceof CollectionType) {
+            $wrapped = $type->getWrappedType();
+            $this->assertInstanceOf(BuiltinType::class, $wrapped);
+            $this->assertSame($builtInType, $wrapped->getTypeIdentifier()->value);
+            $this->assertNull($className);
+
+            return;
+        }
+
+        $this->assertInstanceOf(BuiltinType::class, $type);
+        $this->assertSame($builtInType, $type->getTypeIdentifier()->value);
+        $this->assertNull($className);
     }
 
     /**
@@ -90,54 +108,30 @@ class TypeUtilTest extends TestCase
         ];
 
         yield [
-            new Type(
-                builtinType: 'iterable',
-                collectionKeyType: [
-                    TypeFactory::string(),
-                ],
-                collectionValueType: [
-                    TypeFactory::int(),
-                ],
-            ),
+            Type::iterable(TypeFactory::int(), TypeFactory::string()),
             false,
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                collectionKeyType: [
-                    TypeFactory::string(),
-                ],
-                collectionValueType: [
-                    TypeFactory::int(),
-                ],
+            TypeFactory::objectWithKeyValue(
+                \Traversable::class,
+                TypeFactory::string(),
+                TypeFactory::int(),
             ),
             true,
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                collection: true,
-                collectionKeyType: [
-                    TypeFactory::string(),
-                    TypeFactory::int(),
-                ],
-                collectionValueType: [
-                    TypeFactory::int(),
-                ],
+            TypeFactory::objectWithKeyValue(
+                \Traversable::class,
+                Type::union(TypeFactory::string(), TypeFactory::int()),
+                TypeFactory::int(),
             ),
             false,
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                nullable: true,
-            ),
+            Type::nullable(TypeFactory::objectOfClass(\Traversable::class)),
             false,
         ];
     }
@@ -188,49 +182,27 @@ class TypeUtilTest extends TestCase
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                collection: true,
-                collectionKeyType: [
+            TypeFactory::objectWithKeyValue(
+                \Traversable::class,
+                TypeFactory::string(),
+                TypeFactory::objectWithKeyValue(
+                    \Traversable::class,
                     TypeFactory::string(),
-                ],
-                collectionValueType: [
-                    new Type(
-                        builtinType: 'object',
-                        class: \Traversable::class,
-                        collection: true,
-                        collectionKeyType: [
-                            TypeFactory::string(),
-                        ],
-                        collectionValueType: [
-                            TypeFactory::int(),
-                        ],
-                    ),
-                ],
+                    TypeFactory::int(),
+                ),
             ),
             'Traversable<string,Traversable<string,int>>',
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                collection: true,
-                collectionKeyType: null,
-                collectionValueType: [
-                    new Type(
-                        builtinType: 'object',
-                        class: \Traversable::class,
-                        collection: true,
-                        collectionKeyType: [
-                            TypeFactory::string(),
-                        ],
-                        collectionValueType: [
-                            TypeFactory::int(),
-                        ],
-                    ),
-                ],
+            TypeFactory::objectWithKeyValue(
+                \Traversable::class,
+                null,
+                TypeFactory::objectWithKeyValue(
+                    \Traversable::class,
+                    TypeFactory::string(),
+                    TypeFactory::int(),
+                ),
             ),
             'Traversable<mixed,Traversable<string,int>>',
         ];

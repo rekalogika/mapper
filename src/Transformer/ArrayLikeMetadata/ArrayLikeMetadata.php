@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Rekalogika\Mapper\Transformer\ArrayLikeMetadata;
 
 use Rekalogika\Mapper\Exception\LogicException;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal

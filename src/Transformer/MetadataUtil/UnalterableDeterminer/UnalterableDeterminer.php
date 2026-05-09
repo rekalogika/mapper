@@ -21,7 +21,11 @@ use Rekalogika\Mapper\Transformer\MetadataUtil\UnalterableDeterminerInterface;
 use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfo;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\NullableType;
+use Symfony\Component\TypeInfo\Type\ObjectType;
+use Symfony\Component\TypeInfo\Type\UnionType;
+use Symfony\Component\TypeInfo\Type\WrappingTypeInterface;
 
 /**
  * @internal
@@ -172,14 +176,17 @@ final class UnalterableDeterminer implements UnalterableDeterminerInterface
 
     private function isPropertyTypeUnalterable(string $class, string $property): bool
     {
-        $types = $this->propertyTypeExtractor->getTypes($class, $property) ?? [];
-        $types = array_values($types);
-
-        if ($types === []) {
+        try {
+            $type = $this->propertyTypeExtractor->getType($class, $property);
+        } catch (\Symfony\Component\TypeInfo\Exception\InvalidArgumentException) {
             return false;
         }
 
-        return $this->isTypesUnalterable($types);
+        if ($type === null) {
+            return false;
+        }
+
+        return $this->isTypesUnalterable([$type]);
     }
 
     /**
@@ -192,38 +199,55 @@ final class UnalterableDeterminer implements UnalterableDeterminerInterface
         // unalterable value object
 
         foreach ($types as $type) {
-            $builtInType = $type->getBuiltinType();
-
-            // if not an object, then it is an unalterable value object, we
-            // cannot change it if we only have a read access to the variable
-
-            if ($builtInType !== Type::BUILTIN_TYPE_OBJECT) {
-                continue;
-            }
-
-            $class = $type->getClassName();
-
-            // if class is not known, then we consider it not an unalterable
-            // value object
-
-            if ($class === null) {
-                return false;
-            }
-
-            // if the class is invalid, then we consider it not an unalterable
-            // value object
-
-            if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
-                return false;
-            }
-
-            // check the class if it is an unalterable value object
-
-            if (!$this->isClassUnalterable($class)) {
+            if (!$this->isTypeUnalterable($type)) {
                 return false;
             }
         }
 
         return true;
+    }
+
+    private function isTypeUnalterable(Type $type): bool
+    {
+        // walk into nullable / union to ensure all branches are unalterable
+        if ($type instanceof NullableType) {
+            return $this->isTypeUnalterable($type->getWrappedType());
+        }
+
+        if ($type instanceof UnionType) {
+            foreach ($type->getTypes() as $variant) {
+                if (!$this->isTypeUnalterable($variant)) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // unwrap CollectionType / GenericType to find the inner type
+        $unwrapped = $type;
+        while ($unwrapped instanceof WrappingTypeInterface) {
+            $unwrapped = $unwrapped->getWrappedType();
+        }
+
+        // if not an object, then it is an unalterable value object, we
+        // cannot change it if we only have a read access to the variable
+
+        if (!$unwrapped instanceof ObjectType) {
+            return true;
+        }
+
+        $class = $unwrapped->getClassName();
+
+        // if the class is invalid, then we consider it not an unalterable
+        // value object
+
+        if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
+            return false;
+        }
+
+        // check the class if it is an unalterable value object
+
+        return $this->isClassUnalterable($class);
     }
 }

@@ -20,7 +20,7 @@ use Rekalogika\Mapper\SubMapper\SubMapperFactoryInterface;
 use Rekalogika\Mapper\SubMapper\SubMapperInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal

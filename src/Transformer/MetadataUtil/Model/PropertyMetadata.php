@@ -16,7 +16,7 @@ namespace Rekalogika\Mapper\Transformer\MetadataUtil\Model;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\ReadMode;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\Visibility;
 use Rekalogika\Mapper\Transformer\ObjectToObjectMetadata\WriteMode;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal

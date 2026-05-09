@@ -15,7 +15,7 @@ namespace Rekalogika\Mapper\SubMapper;
 
 use Rekalogika\Mapper\Context\Context;
 use Rekalogika\Mapper\MainTransformer\MainTransformerInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 /**
  * @internal

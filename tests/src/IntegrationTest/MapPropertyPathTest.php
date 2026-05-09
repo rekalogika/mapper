@@ -37,7 +37,7 @@ use Symfony\Component\PropertyInfo\PropertyListExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyReadInfoExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\PropertyWriteInfoExtractorInterface;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 class MapPropertyPathTest extends FrameworkTestCase
 {
@@ -125,11 +125,7 @@ class MapPropertyPathTest extends FrameworkTestCase
             Book::class,
             'chapters[0].book',
             [
-                new Type(
-                    builtinType: 'object',
-                    class: Book::class,
-                    nullable: true,
-                ),
+                Type::nullable(Type::object(Book::class)),
             ],
             [
                 new SomeAttribute('chapter-book'),
@@ -140,20 +136,10 @@ class MapPropertyPathTest extends FrameworkTestCase
             Book::class,
             'chapters[0].book.chapters',
             [
-                new Type(
-                    builtinType: 'object',
-                    class: Collection::class,
-                    nullable: false,
-                    collection: true,
-                    collectionKeyType: new Type(
-                        builtinType: 'int',
-                        nullable: false,
-                    ),
-                    collectionValueType: new Type(
-                        builtinType: 'object',
-                        class: Chapter::class,
-                        nullable: false,
-                    ),
+                Type::collection(
+                    Type::object(Collection::class),
+                    Type::object(Chapter::class),
+                    Type::int(),
                 ),
             ],
             [
@@ -165,11 +151,7 @@ class MapPropertyPathTest extends FrameworkTestCase
             Chapter::class,
             'book.shelf.library',
             [
-                new Type(
-                    builtinType: 'object',
-                    class: Library::class,
-                    nullable: true,
-                ),
+                Type::nullable(Type::object(Library::class)),
             ],
             [
                 new SomeAttribute('shelf-library'),
@@ -180,11 +162,7 @@ class MapPropertyPathTest extends FrameworkTestCase
             Library::class,
             'shelves[1].books[0].chapters[0].book',
             [
-                new Type(
-                    builtinType: 'object',
-                    class: Book::class,
-                    nullable: true,
-                ),
+                Type::nullable(Type::object(Book::class)),
             ],
             [
                 new SomeAttribute('chapter-book'),
@@ -195,11 +173,7 @@ class MapPropertyPathTest extends FrameworkTestCase
             Library::class,
             'shelves[1].books[0].chapters[0]',
             [
-                new Type(
-                    builtinType: 'object',
-                    class: Chapter::class,
-                    nullable: false,
-                ),
+                Type::object(Chapter::class),
             ],
             [
                 new SomeAttribute('book-chapters'),
@@ -216,15 +190,9 @@ class MapPropertyPathTest extends FrameworkTestCase
             Book::class,
             'parts[foo]',
             [
-                new Type(
-                    builtinType: 'object',
-                    class: Chapter::class,
-                    nullable: false,
-                ),
-                new Type(
-                    builtinType: 'object',
-                    class: Section::class,
-                    nullable: false,
+                Type::union(
+                    Type::object(Chapter::class),
+                    Type::object(Section::class),
                 ),
             ],
         ];

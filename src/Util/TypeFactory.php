@@ -16,6 +16,7 @@ namespace Rekalogika\Mapper\Util;
 use Rekalogika\Mapper\Exception\InvalidArgumentException;
 use Rekalogika\Mapper\Exception\InvalidClassException;
 use Symfony\Component\TypeInfo\Type;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 
 /**
  * Convenience factory to instantiate Type objects.
@@ -130,12 +131,16 @@ final class TypeFactory
         ?Type $keyType,
         ?Type $valueType,
     ): Type {
-        return Type::array($valueType, $keyType);
+        // Arrays must have int|string keys; preserve the legacy "no info"
+        // semantics by defaulting a missing key to the array-key union and a
+        // missing value to mixed. Always produces a generic CollectionType
+        // (mirrors legacy `collection: true` flag).
+        return Type::array(
+            $valueType ?? Type::mixed(),
+            $keyType ?? Type::arrayKey(),
+        );
     }
 
-    /**
-     * @param class-string $class
-     */
     public static function arrayOfObject(string $class): Type
     {
         if (!TypeCheck::nameExists($class)) {
@@ -150,31 +155,31 @@ final class TypeFactory
         return Type::object();
     }
 
-    /**
-     * @param class-string $class
-     */
     public static function objectOfClass(string $class): Type
     {
-        if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
+        if (!TypeCheck::nameExists($class)) {
             throw new InvalidClassException($class);
         }
 
         return Type::object($class);
     }
 
-    /**
-     * @param class-string $class
-     */
     public static function objectWithKeyValue(
         string $class,
         ?Type $keyType,
         ?Type $valueType,
     ): Type {
-        if (!class_exists($class) && !interface_exists($class) && !enum_exists($class)) {
+        if (!TypeCheck::nameExists($class)) {
             throw new InvalidClassException($class);
         }
 
-        return Type::collection(Type::object($class), $valueType, $keyType);
+        // Always produces a generic CollectionType (mirrors legacy
+        // `collection: true` flag). A missing key or value type means "mixed".
+        return Type::collection(
+            new ObjectType($class),
+            $valueType ?? Type::mixed(),
+            $keyType ?? Type::mixed(),
+        );
     }
 
     /**

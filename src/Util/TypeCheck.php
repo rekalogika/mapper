@@ -349,7 +349,10 @@ final readonly class TypeCheck
         }
 
         if ($unwrapped instanceof ObjectType) {
-            return [TypeIdentifier::OBJECT, $unwrapped->getClassName()];
+            /** @var class-string $className */
+            $className = $unwrapped->getClassName();
+
+            return [TypeIdentifier::OBJECT, $className];
         }
 
         throw new LogicException(\sprintf(

@@ -40,17 +40,11 @@ parameters:
             message: '#Call to an undefined method ReflectionClass<.*>::isUninitializedLazyObject#'
             reportUnmatched: false
         -
-            message: '#deprecated class Symfony\\Component\\PropertyInfo\\Type#'
-            reportUnmatched: false
-        -
-            message: '#of interface Symfony\\Component\\PropertyInfo\\PropertyTypeExtractorInterface:#'
-            reportUnmatched: false
-        -
             message: '#deprecated method generateLazyGhost\(\) of class Symfony\\Component\\VarExporter\\ProxyHelper:#'
             reportUnmatched: false
         -
-            message: '#non-test file /home/runner/work/mapper/mapper/src/Util/TypeUtil.php#'
-            reportUnmatched: false
+            identifier: ekinoBannedCode.test
+            path: src/Util/TypeUtil.php
 
     banned_code:
         non_ignorable: false

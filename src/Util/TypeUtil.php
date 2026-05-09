@@ -584,6 +584,8 @@ final readonly class TypeUtil
     /**
      * Builds a CollectionType using the same outer Builtin/Object as $original,
      * but with the supplied key/value types.
+     *
+     * @param GenericType<BuiltinType<TypeIdentifier::ARRAY>|BuiltinType<TypeIdentifier::ITERABLE>|ObjectType<class-string>> $original
      */
     private static function reconstructCollection(
         GenericType $original,
@@ -608,16 +610,13 @@ final readonly class TypeUtil
             return TypeFactory::arrayWithKeyValue($keyType, $valueType);
         }
 
-        if ($main->getTypeIdentifier() === TypeIdentifier::ITERABLE) {
-            return Type::iterable($valueType, $keyType);
-        }
-
-        // Fallback — shouldn't happen in practice.
-        return Type::collection($main, $valueType, $keyType);
+        return Type::iterable($valueType, $keyType);
     }
 
     /**
      * Drops the generic key/value information, returning a bare equivalent.
+     *
+     * @param GenericType<BuiltinType<TypeIdentifier::ARRAY>|BuiltinType<TypeIdentifier::ITERABLE>|ObjectType<class-string>> $original
      */
     private static function stripCollectionGenerics(GenericType $original): Type
     {

@@ -17,7 +17,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Rekalogika\Mapper\Util\TypeFactory;
 use Rekalogika\Mapper\Util\TypeUtil;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\TypeInfo\Type;
 
 class TypeUtil2Test extends TestCase
 {
@@ -117,9 +117,7 @@ class TypeUtil2Test extends TestCase
         ];
 
         yield [
-            new Type(
-                builtinType: 'iterable',
-            ),
+            TypeFactory::iterable(),
             [
                 'array',
                 'Traversable',
@@ -127,16 +125,7 @@ class TypeUtil2Test extends TestCase
         ];
 
         yield [
-            new Type(
-                builtinType: 'iterable',
-                collection: true,
-                collectionKeyType: [
-                    TypeFactory::string(),
-                ],
-                collectionValueType: [
-                    TypeFactory::int(),
-                ],
-            ),
+            Type::iterable(TypeFactory::int(), TypeFactory::string()),
             [
                 'array<string,int>',
                 'Traversable<string,int>',
@@ -144,162 +133,114 @@ class TypeUtil2Test extends TestCase
         ];
 
         yield [
-            new Type(
-                builtinType: 'iterable',
-                collection: true,
-                collectionKeyType: [
-                    TypeFactory::string(),
-                    TypeFactory::int(),
-                ],
-                collectionValueType: [
+            Type::iterable(
+                Type::union(
                     TypeFactory::int(),
                     TypeFactory::objectOfClass(\DateTime::class),
-                ],
+                ),
+                Type::union(TypeFactory::string(), TypeFactory::int()),
             ),
             [
-                "array<string,int>",
-                "Traversable<string,int>",
-                "array<string,DateTime>",
-                "Traversable<string,DateTime>",
-                "array<int,int>",
-                "Traversable<int,int>",
-                "array<int,DateTime>",
-                "Traversable<int,DateTime>",
-            ],
-        ];
-
-        yield [
-            new Type(
-                builtinType: 'iterable',
-                nullable: true,
-                collection: true,
-                collectionKeyType: [
-                    TypeFactory::string(),
-                    TypeFactory::int(),
-                ],
-                collectionValueType: [
-                    TypeFactory::int(),
-                    TypeFactory::objectOfClass(\DateTime::class),
-                ],
-            ),
-            [
-                'array<string,int>',
-                'Traversable<string,int>',
-                'array<string,DateTime>',
-                'Traversable<string,DateTime>',
-                'array<int,int>',
-                'Traversable<int,int>',
                 'array<int,DateTime>',
                 'Traversable<int,DateTime>',
-                'null',
+                'array<int,int>',
+                'Traversable<int,int>',
+                'array<string,DateTime>',
+                'Traversable<string,DateTime>',
+                'array<string,int>',
+                'Traversable<string,int>',
             ],
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                nullable: true,
-                collection: true,
-                collectionKeyType: [
-                    TypeFactory::string(),
-                    TypeFactory::int(),
-                ],
-                collectionValueType: [
+            Type::nullable(Type::iterable(
+                Type::union(
                     TypeFactory::int(),
                     TypeFactory::objectOfClass(\DateTime::class),
-                ],
-            ),
+                ),
+                Type::union(TypeFactory::string(), TypeFactory::int()),
+            )),
             [
-                'Traversable<string,int>',
-                'Traversable<string,DateTime>',
-                'Traversable<int,int>',
+                'array<int,DateTime>',
                 'Traversable<int,DateTime>',
+                'array<int,int>',
+                'Traversable<int,int>',
+                'array<string,DateTime>',
+                'Traversable<string,DateTime>',
+                'array<string,int>',
+                'Traversable<string,int>',
                 'null',
             ],
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                nullable: true,
-                collection: true,
-                collectionKeyType: [
+            Type::nullable(TypeFactory::objectWithKeyValue(
+                \Traversable::class,
+                Type::union(TypeFactory::string(), TypeFactory::int()),
+                Type::union(
                     TypeFactory::int(),
-                ],
-                collectionValueType: [
-                    new Type(
-                        builtinType: 'object',
-                        class: \Traversable::class,
-                        collection: true,
-                        collectionKeyType: [
-                            TypeFactory::string(),
-                            TypeFactory::int(),
-                        ],
-                        collectionValueType: [
-                            TypeFactory::int(),
-                            TypeFactory::objectOfClass(\DateTime::class),
-                        ],
-                    ),
-                ],
-            ),
+                    TypeFactory::objectOfClass(\DateTime::class),
+                ),
+            )),
             [
-                "Traversable<int,Traversable<string,int>>",
-                "Traversable<int,Traversable<string,DateTime>>",
-                "Traversable<int,Traversable<int,int>>",
-                "Traversable<int,Traversable<int,DateTime>>",
-                "null",
+                'Traversable<int,DateTime>',
+                'Traversable<int,int>',
+                'Traversable<string,DateTime>',
+                'Traversable<string,int>',
+                'null',
             ],
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \ArrayObject::class,
-                nullable: true,
-                collection: true,
-                collectionKeyType: [
-                    TypeFactory::int(),
-                ],
-                collectionValueType: [
-                    new Type(
-                        builtinType: 'object',
-                        class: \ArrayObject::class,
-                        collection: true,
-                        collectionKeyType: [
-                            TypeFactory::string(),
-                            TypeFactory::int(),
-                        ],
-                        collectionValueType: [
-                            TypeFactory::int(),
-                            TypeFactory::objectOfClass(\DateTime::class),
-                        ],
+            Type::nullable(TypeFactory::objectWithKeyValue(
+                \Traversable::class,
+                TypeFactory::int(),
+                TypeFactory::objectWithKeyValue(
+                    \Traversable::class,
+                    Type::union(TypeFactory::string(), TypeFactory::int()),
+                    Type::union(
+                        TypeFactory::int(),
+                        TypeFactory::objectOfClass(\DateTime::class),
                     ),
-                ],
-            ),
+                ),
+            )),
             [
-                "ArrayObject<int,ArrayObject<string,int>>",
-                "ArrayObject<int,ArrayObject<string,DateTime>>",
-                "ArrayObject<int,ArrayObject<int,int>>",
-                "ArrayObject<int,ArrayObject<int,DateTime>>",
-                "null",
+                'Traversable<int,Traversable<int,DateTime>>',
+                'Traversable<int,Traversable<int,int>>',
+                'Traversable<int,Traversable<string,DateTime>>',
+                'Traversable<int,Traversable<string,int>>',
+                'null',
             ],
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \IteratorAggregate::class,
-                nullable: true,
-                collection: true,
-                collectionKeyType: [
-                    TypeFactory::int(),
-                ],
-                collectionValueType: [
-                    TypeFactory::string(),
-                ],
-            ),
+            Type::nullable(TypeFactory::objectWithKeyValue(
+                \ArrayObject::class,
+                TypeFactory::int(),
+                TypeFactory::objectWithKeyValue(
+                    \ArrayObject::class,
+                    Type::union(TypeFactory::string(), TypeFactory::int()),
+                    Type::union(
+                        TypeFactory::int(),
+                        TypeFactory::objectOfClass(\DateTime::class),
+                    ),
+                ),
+            )),
+            [
+                'ArrayObject<int,ArrayObject<int,DateTime>>',
+                'ArrayObject<int,ArrayObject<int,int>>',
+                'ArrayObject<int,ArrayObject<string,DateTime>>',
+                'ArrayObject<int,ArrayObject<string,int>>',
+                'null',
+            ],
+        ];
+
+        yield [
+            Type::nullable(TypeFactory::objectWithKeyValue(
+                \IteratorAggregate::class,
+                TypeFactory::int(),
+                TypeFactory::string(),
+            )),
             [
                 'IteratorAggregate<int,string>',
                 'IteratorAggregate<int,mixed>',
@@ -319,26 +260,14 @@ class TypeUtil2Test extends TestCase
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                collection: true,
-                collectionKeyType: [
+            TypeFactory::objectWithKeyValue(
+                \Traversable::class,
+                TypeFactory::int(),
+                TypeFactory::objectWithKeyValue(
+                    \IteratorAggregate::class,
                     TypeFactory::int(),
-                ],
-                collectionValueType: [
-                    new Type(
-                        builtinType: 'object',
-                        class: \IteratorAggregate::class,
-                        collection: true,
-                        collectionKeyType: [
-                            TypeFactory::int(),
-                        ],
-                        collectionValueType: [
-                            TypeFactory::string(),
-                        ],
-                    ),
-                ],
+                    TypeFactory::string(),
+                ),
             ),
             [
                 "Traversable<int,IteratorAggregate<int,string>>",
@@ -373,27 +302,14 @@ class TypeUtil2Test extends TestCase
         ];
 
         yield [
-            new Type(
-                builtinType: 'object',
-                class: \Traversable::class,
-                collection: true,
-                collectionKeyType: [
+            TypeFactory::objectWithKeyValue(
+                \Traversable::class,
+                TypeFactory::int(),
+                Type::nullable(TypeFactory::objectWithKeyValue(
+                    \IteratorAggregate::class,
                     TypeFactory::int(),
-                ],
-                collectionValueType: [
-                    new Type(
-                        builtinType: 'object',
-                        class: \IteratorAggregate::class,
-                        nullable: true,
-                        collection: true,
-                        collectionKeyType: [
-                            TypeFactory::int(),
-                        ],
-                        collectionValueType: [
-                            TypeFactory::string(),
-                        ],
-                    ),
-                ],
+                    TypeFactory::string(),
+                )),
             ),
             [
                 "Traversable<int,IteratorAggregate<int,string>>",
